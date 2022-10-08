@@ -120,19 +120,19 @@ def _get_tile_by_text(text: str) -> Tile:
     if len(text) != 2:
         raise ValueError(f"invalid arguments: text={text}")
 
-    if text[0].lower() == 'm':
+    if text[1].lower() == 'm':
         tile_type = TileType.M
-    elif text[0].lower() == 's':
+    elif text[1].lower() == 's':
         tile_type = TileType.S
-    elif text[0].lower() == 'p':
+    elif text[1].lower() == 'p':
         tile_type = TileType.P
-    elif text[0].lower() == 'z':
+    elif text[1].lower() == 'z':
         tile_type = TileType.Z
     else:
         raise ValueError(f"invalid arguments: text={text}")
 
     try:
-        num = int(text[1])
+        num = int(text[0])
     except ValueError as e:
         raise ValueError(f"invalid arguments: text={text}") from e
 
