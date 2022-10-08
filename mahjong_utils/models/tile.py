@@ -37,8 +37,12 @@ class Tile:
         else:
             return self.num
 
-    # def code(self) -> int:
-    #     return tile_type_index_mapping[self.tile_type] * 10 + self.num
+    @property
+    def code(self):
+        return tile_type_index_mapping[self.tile_type] * 10 + self.num
+
+    def __hash__(self):
+        return self.code
 
     def __cmp__(self, other):
         if not isinstance(other, Tile):

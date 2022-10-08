@@ -1,8 +1,9 @@
-from typing import List, Callable
+from typing import List, Callable, NamedTuple
 
 from mahjong_utils.models.mentsu import Mentsu, Kotsu, Shuntsu
 from mahjong_utils.models.tatsu import Tatsu, Toitsu, Kanchan, Ryanmen, Penchan
-from mahjong_utils.models.tile import Tile, tile_type_index_mapping, tile_type_reversed_index_mapping, tile
+from mahjong_utils.models.tile import Tile, tile_type_index_mapping, tile_type_reversed_index_mapping, tile, TileType
+from mahjong_utils.utils.bit import generate_k_bit_number
 
 
 def _encode(t: Tile) -> int:
@@ -16,22 +17,21 @@ def _decode(code: int) -> Tile:
 
 
 class HandSearcher:
-    def __init__(self, hand: List[Tile], callback: Callable[[Tile, List[Mentsu], List[Tatsu], List[Tile]], None]):
+    class Result(NamedTuple):
+        jyantou: Tile
+        mentsu: List[Mentsu]
+        tatsu: List[Tatsu]
+        remaining: List[Tile]
+
+    def __init__(self, k: int, hand: List[Tile],
+                 callback: Callable[[Result], None]):
         self.hand = hand
         self.callback = callback
 
         self._count = [0] * (3 * 9 + 7)
         self._n = len(hand)
+        self._k = k
 
-        if len(hand) < 3 or len(hand) > 14 or (len(hand) - 2) % 3 == 1:
-            raise ValueError(f"invalid length of hand: {len(hand)}")
-
-        if (len(hand) - 2) % 3 == 0:
-            self._k = (len(hand) - 2) // 3
-        else:
-            self._k = (len(hand) - 1) // 3
-
-        self._jyantou = None
         self._mentsu = []
         self._tatsu = []
         self._stop = False
@@ -45,165 +45,182 @@ class HandSearcher:
 
         self._dfs_kotsu()
 
-    def _do_callback(self):
-        remaining = []
-        for i in range(3 * 9 + 7):
-            if self._count[i] > 0:
-                t = _decode(i)
-                for j in range(self._count[i]):
-                    remaining.append(t)
-        self.callback(self._jyantou, self._mentsu, self._tatsu, remaining)
+    def stop(self):
+        self._stop = True
 
-    def _dfs_kotsu(self):
+    def _dfs_kotsu(self, begin=0):
+        # begin用于限制从哪张牌开始枚举（下同）
+        # 其目的是避免搜索时按不同顺序取了相同的刻字，优化性能
+
         if self._stop:
             return
 
-        self._dfs_shuntsu()
-
         if self._n >= 3:
-            for i in range(3 * 9 + 7):
+            for i in range(begin, 3 * 9 + 7):
                 if self._count[i] >= 3:
                     self._n -= 3
                     self._count[i] -= 3
                     self._mentsu.append(Kotsu(_decode(i)))
-                    self._dfs_kotsu()
+                    self._dfs_kotsu(i)
                     self._n += 3
                     self._count[i] += 3
                     self._mentsu.pop()
 
-    def _dfs_shuntsu(self):
+        self._dfs_shuntsu()
+
+    def _dfs_shuntsu(self, begin=0):
         if self._stop:
             return
 
-        taken = False
-
         if self._n >= 3:
-            for i in range(3):  # m/p/s
+            for i in range(begin // 9, 3):  # m/p/s
                 for j in range(7):  # 1~7
                     x = i * 9 + j
                     y = x + 1
                     z = x + 2
 
+                    if x < begin:
+                        continue
+
                     if self._count[x] > 0 and self._count[y] > 0 and self._count[z] > 0:
-                        taken = True
                         self._n -= 3
                         self._count[x] -= 1
                         self._count[y] -= 1
                         self._count[z] -= 1
                         self._mentsu.append(Shuntsu(_decode(x)))
-                        self._dfs_kotsu()
+                        self._dfs_shuntsu(x)
                         self._n += 3
                         self._count[x] += 1
                         self._count[y] += 1
                         self._count[z] += 1
                         self._mentsu.pop()
 
-        if not taken:
-            self._dfs_jyantou()
-
-    def _dfs_jyantou(self):
-        if self._stop:
-            return
-
-        if self._n < 2:
-            self._do_callback()
-            return
-
         self._dfs_tatsu()
 
-        for i in range(3 * 9 + 7):
-            if self._count[i] >= 2:
-                self._n -= 2
-                self._count[i] -= 2
-                self._jyantou = _decode(i)
-                self._dfs_tatsu()
-                self._n += 2
-                self._count[i] += 2
-                self._jyantou = None
+    def _dfs_tatsu(self, begin=0, tatsu_type_limitation=0):
+        # tatsu_type_limitation用于限制能够取什么样的以begin为第一张牌的搭子（0可以取所有类型，1不可以取对子、2不可以取对子和坎张、3不可以取对子坎张两面）
+        # 其目的是避免搜索时按不同顺序取了相同的搭子，优化性能
+        # 故当for循环执行了一趟以后就将tatsu_type_limitation置0
 
-    def _dfs_tatsu(self):
         if self._stop:
-            return
-
-        if self._n < 2 or len(self._mentsu) + len(self._tatsu) >= self._k:
-            self._do_callback()
             return
 
         taken = False
 
-        for i in range(3 * 9 + 7):
-            if self._count[i] >= 2:
-                taken = True
-                self._n -= 2
-                self._count[i] -= 2
-                self._tatsu.append(Toitsu(_decode(i)))
-                self._dfs_tatsu()
-                self._n += 2
-                self._count[i] += 2
-                self._tatsu.pop()
+        if self._n >= 2:
+            for i in range(begin, 3 * 9 + 7):
+                t = _decode(i)
 
-        for i in range(3):  # m / p / s
-            for j in range(7):  # 1 ~ 7
-                x = i * 9 + j
-                z = x + 2
-
-                if self._count[x] > 0 and self._count[z] > 0:
+                # toitsu
+                if tatsu_type_limitation == 0 and self._count[i] >= 2:
                     taken = True
                     self._n -= 2
-                    self._count[x] -= 1
-                    self._count[z] -= 1
-                    self._tatsu.append(Kanchan(_decode(x)))
-                    self._dfs_tatsu()
+                    self._count[i] -= 2
+                    self._tatsu.append(Toitsu(_decode(i)))
+                    self._dfs_tatsu(i, 0)
                     self._n += 2
-                    self._count[x] += 1
-                    self._count[z] += 1
+                    self._count[i] += 2
                     self._tatsu.pop()
 
-            for j in range(1, 7):  # 2 ~ 7
-                x = i * 9 + j
-                y = x + 1
+                # kanchan
+                if tatsu_type_limitation <= 1 and t.tile_type != TileType.Z and t.num != 9:
+                    j = i + 2
+                    if self._count[i] > 0 and self._count[j] > 0:
+                        taken = True
+                        self._n -= 2
+                        self._count[i] -= 1
+                        self._count[j] -= 1
+                        self._tatsu.append(Kanchan(t))
+                        self._dfs_tatsu(i, 1)
+                        self._n += 2
+                        self._count[i] += 1
+                        self._count[j] += 1
+                        self._tatsu.pop()
 
-                if self._count[x] > 0 and self._count[y] > 0:
-                    taken = True
-                    self._n -= 2
-                    self._count[x] -= 1
-                    self._count[y] -= 1
-                    self._tatsu.append(Ryanmen(_decode(x)))
-                    self._dfs_tatsu()
-                    self._n += 2
-                    self._count[x] += 1
-                    self._count[y] += 1
-                    self._tatsu.pop()
+                # ryanmen
+                if tatsu_type_limitation <= 2 and t.tile_type != TileType.Z and 2 <= t.num <= 7:
+                    j = i + 1
+                    if self._count[i] > 0 and self._count[j] > 0:
+                        taken = True
+                        self._n -= 2
+                        self._count[i] -= 1
+                        self._count[j] -= 1
+                        self._tatsu.append(Ryanmen(t))
+                        self._dfs_tatsu(i, 2)
+                        self._n += 2
+                        self._count[i] += 1
+                        self._count[j] += 1
+                        self._tatsu.pop()
 
-            x = i * 9  # 1
-            y = x + 1
+                # penchan
+                if tatsu_type_limitation <= 3 and t.tile_type != TileType.Z and (t.num == 1 or t.num == 8):
+                    j = i + 1
+                    if self._count[i] > 0 and self._count[j] > 0:
+                        taken = True
+                        self._n -= 2
+                        self._count[i] -= 1
+                        self._count[j] -= 1
+                        self._tatsu.append(Penchan(t))
+                        self._dfs_tatsu(i, 3)
+                        self._n += 2
+                        self._count[i] += 1
+                        self._count[j] += 1
+                        self._tatsu.pop()
 
-            if self._count[x] > 0 and self._count[y] > 0:
-                taken = True
-                self._n -= 2
-                self._count[x] -= 1
-                self._count[y] -= 1
-                self._tatsu.append(Penchan(_decode(x)))
-                self._dfs_tatsu()
-                self._n += 2
-                self._count[x] += 1
-                self._count[y] += 1
-                self._tatsu.pop()
-
-            x = i * 9 + 6  # 7
-            y = x + 1
-
-            if self._count[x] > 0 and self._count[y] > 0:
-                taken = True
-                self._n -= 2
-                self._count[x] -= 1
-                self._count[y] -= 1
-                self._tatsu.append(Penchan(_decode(x)))
-                self._dfs_tatsu()
-                self._n += 2
-                self._count[x] += 1
-                self._count[y] += 1
-                self._tatsu.pop()
+                tatsu_type_limitation = 0
 
         if not taken:
-            self._do_callback()
+            self._on_result()
+
+    def _on_result(self):
+        for jyantou, mentsu, tatsu, remaining in self._normalize():
+            self.callback(self.Result(jyantou, mentsu.copy(), tatsu.copy(), remaining.copy()))
+
+    def _normalize(self):
+        # 将搜索结果处理为（雀头，面子，搭子，浮牌）的形式，且面子数+搭子数不超过k
+        remaining = []
+        for i in range(3 * 9 + 7):
+            if self._count[i] > 0:
+                t = _decode(i)
+                for j in range(self._count[i]):
+                    remaining.append(t)
+
+        has_toitsu = False
+
+        # enumerate jyantou
+        for i, tt in enumerate(self._tatsu):
+            if isinstance(tt, Toitsu):
+                has_toitsu = True
+
+                remaining_tatsu = self._tatsu[0:i] + self._tatsu[i + 1:]
+
+                for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu),
+                                                                                  remaining_tatsu):
+                    yield tt.first, self._mentsu, tatsu_chosen, remaining + tatsu_not_chosen_as_tiles
+
+        if not has_toitsu:
+            for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu), self._tatsu):
+                yield None, self._mentsu, tatsu_chosen, remaining + tatsu_not_chosen_as_tiles
+
+    @staticmethod
+    def _choose_tatsu(k: int, tatsu: List[Tatsu]):
+        # 选择k个搭子
+        if k >= len(tatsu):
+            yield tatsu, []
+        else:
+            maximum = 1 << len(tatsu)
+            for mask in generate_k_bit_number(k):
+                if mask >= maximum:
+                    break
+
+                tatsu_chosen = []
+                tatsu_not_chosen_as_tiles = []
+
+                for i in range(len(tatsu)):
+                    if mask & (1 << i):
+                        tatsu_chosen.append(tatsu[i])
+                    else:
+                        tatsu_not_chosen_as_tiles.append(tatsu[i].first)
+                        tatsu_not_chosen_as_tiles.append(tatsu[i].second)
+
+                yield tatsu_chosen, tatsu_not_chosen_as_tiles
