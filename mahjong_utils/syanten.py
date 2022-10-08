@@ -1,7 +1,7 @@
 from typing import List, Tuple, Set, Dict
 
-from mahjong_utils.algorithm.hand_searcher import HandSearcher
-from mahjong_utils.algorithm.tile_cling import tile_cling
+from mahjong_utils.internal.hand_searcher import HandSearcher
+from mahjong_utils.internal.tile_cling import tile_cling
 from mahjong_utils.models.tile import Tile
 
 
@@ -82,3 +82,6 @@ def syanten_with_got_tile(hand: List[Tile]) -> Tuple[int, Dict[Tile, Set[Tile]]]
                 discard_advance_mapping[discard] |= advance
 
     return syanten, discard_advance_mapping
+
+
+__all__ = ("syanten", "syanten_with_got_tile",)

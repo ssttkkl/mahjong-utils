@@ -1,4 +1,4 @@
-from mahjong_utils.algorithm.syanten import syanten_with_got_tile
+from mahjong_utils.syanten import syanten_with_got_tile
 from mahjong_utils.models.tile import tiles
 
 hand = tiles("34568m235p368s")
