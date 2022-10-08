@@ -1,9 +1,10 @@
 from typing import List, Callable, NamedTuple
 
+from mahjong_utils.internal.utils.bit import generate_k_bit_number
 from mahjong_utils.models.mentsu import Mentsu, Kotsu, Shuntsu
 from mahjong_utils.models.tatsu import Tatsu, Toitsu, Kanchan, Ryanmen, Penchan
-from mahjong_utils.models.tile import Tile, tile_type_index_mapping, tile_type_reversed_index_mapping, tile, TileType
-from mahjong_utils.internal.utils.bit import generate_k_bit_number
+from mahjong_utils.models.tile import Tile, tile
+from mahjong_utils.models.tile_type import tile_type_index_mapping, tile_type_reversed_index_mapping, TileType
 
 
 def _encode(t: Tile) -> int:

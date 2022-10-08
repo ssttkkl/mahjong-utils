@@ -1,25 +1,8 @@
 from dataclasses import dataclass
-from enum import Enum
 from io import StringIO
 from typing import Union, overload, List, Iterable
 
-
-class TileType(str, Enum):
-    M = "M"
-    P = "P"
-    S = "S"
-    Z = "Z"
-
-    @property
-    def num_range(self):
-        if self == TileType.Z:
-            return range(1, 8)
-        else:
-            return range(0, 10)
-
-
-tile_type_index_mapping = {TileType.M: 0, TileType.P: 1, TileType.S: 2, TileType.Z: 3}
-tile_type_reversed_index_mapping = [TileType.M, TileType.P, TileType.S, TileType.Z]
+from mahjong_utils.models.tile_type import TileType, tile_type_index_mapping, tile_type_reversed_index_mapping
 
 
 @dataclass(frozen=True)
@@ -226,6 +209,11 @@ def tile_text(tile: Union[Tile, Iterable[Tile]]) -> str:
         return sio.getvalue()
 
 
-__all__ = ("TileType", "Tile",
-           "tile", "tiles", "tile_text",
-           "tile_type_index_mapping", "tile_type_reversed_index_mapping")
+yaochu = {*tiles("19m19s19p1234567z")}
+
+
+def is_yaochu(t: Tile) -> bool:
+    return t in yaochu
+
+
+__all__ = ("Tile", "tile", "tiles", "tile_text", "yaochu")

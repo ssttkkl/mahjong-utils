@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from typing import Set, overload, Sequence
 
 from .mentsu import Mentsu, Shuntsu, Kotsu
-from .tile import Tile, tiles, TileType, tile_text
+from .tile import Tile, tiles, tile_text
+from .tile_type import TileType
 
 
 @dataclass(frozen=True)

@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, overload, Sequence
 
-from .tile import Tile, TileType, tiles, tile_text
+from .tile import Tile, tiles, tile_text
+from .tile_type import TileType
 
 
 @dataclass(frozen=True)
