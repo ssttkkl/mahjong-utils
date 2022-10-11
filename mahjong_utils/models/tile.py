@@ -212,8 +212,33 @@ def tile_text(tile: Union[Tile, Iterable[Tile]]) -> str:
 yaochu = {*tiles("19m19s19p1234567z")}
 
 
+def is_m(t: Tile) -> bool:
+    return t.tile_type == TileType.M
+
+
+def is_p(t: Tile) -> bool:
+    return t.tile_type == TileType.P
+
+
+def is_s(t: Tile) -> bool:
+    return t.tile_type == TileType.S
+
+
+def is_z(t: Tile) -> bool:
+    return t.tile_type == TileType.Z
+
+
 def is_yaochu(t: Tile) -> bool:
     return t in yaochu
 
 
-__all__ = ("Tile", "tile", "tiles", "tile_text", "yaochu")
+def is_wind(t: Tile) -> bool:
+    return t.tile_type == TileType.Z and 1 <= t.num <= 4
+
+
+def is_sangen(t: Tile) -> bool:
+    return t.tile_type == TileType.Z and 5 <= t.num <= 7
+
+
+__all__ = ("Tile", "tile", "tiles", "tile_text", "yaochu",
+           "is_m", "is_p", "is_s", "is_wind", "is_sangen", "is_yaochu")

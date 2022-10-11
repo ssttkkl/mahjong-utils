@@ -1,8 +1,8 @@
-from typing import List, Tuple, Set, Dict
+from typing import List, Tuple, Set, Dict, Union
 
 from mahjong_utils.internal.hand_searcher import HandSearcher
 from mahjong_utils.internal.tile_cling import tile_cling
-from mahjong_utils.models.tile import Tile, is_yaochu, yaochu
+from mahjong_utils.models.tile import Tile, is_yaochu, yaochu, tiles
 
 
 # ======== 标准形 ========
@@ -49,7 +49,10 @@ def get_std_advance(k: int, result: HandSearcher.Result):
     return advance
 
 
-def std_syanten(hand: List[Tile]) -> Tuple[int, Set[Tile]]:
+def std_syanten(hand: Union[List[Tile], str]) -> Tuple[int, Set[Tile]]:
+    if isinstance(hand, str):
+        hand = tiles(hand)
+
     if len(hand) < 1 or len(hand) > 13 or len(hand) % 3 != 1:
         raise ValueError(f"invalid length of hand: {len(hand)}")
 
@@ -63,7 +66,10 @@ def std_syanten(hand: List[Tile]) -> Tuple[int, Set[Tile]]:
     return syanten, advance
 
 
-def std_syanten_with_got_tile(hand: List[Tile]) -> Tuple[int, Dict[Tile, Set[Tile]]]:
+def std_syanten_with_got_tile(hand: Union[List[Tile], str]) -> Tuple[int, Dict[Tile, Set[Tile]]]:
+    if isinstance(hand, str):
+        hand = tiles(hand)
+
     if len(hand) < 2 or len(hand) > 14 or len(hand) % 3 != 2:
         raise ValueError(f"invalid length of hand: {len(hand)}")
 
@@ -86,7 +92,10 @@ def std_syanten_with_got_tile(hand: List[Tile]) -> Tuple[int, Dict[Tile, Set[Til
 
 
 # ======== 七对子 ========
-def chitoi_syanten(hand: List[Tile]) -> Tuple[int, Set[Tile]]:
+def chitoi_syanten(hand: Union[List[Tile], str]) -> Tuple[int, Set[Tile]]:
+    if isinstance(hand, str):
+        hand = tiles(hand)
+
     if len(hand) != 13:
         raise ValueError(f"invalid length of hand: {len(hand)}")
 
@@ -105,7 +114,10 @@ def chitoi_syanten(hand: List[Tile]) -> Tuple[int, Set[Tile]]:
     return 6 - tot_pair, advance
 
 
-def chitoi_syanten_with_got_tile(hand: List[Tile]) -> Tuple[int, Dict[Tile, Set[Tile]]]:
+def chitoi_syanten_with_got_tile(hand: Union[List[Tile], str]) -> Tuple[int, Dict[Tile, Set[Tile]]]:
+    if isinstance(hand, str):
+        hand = tiles(hand)
+
     if len(hand) != 14:
         raise ValueError(f"invalid length of hand: {len(hand)}")
 
@@ -131,7 +143,10 @@ def chitoi_syanten_with_got_tile(hand: List[Tile]) -> Tuple[int, Dict[Tile, Set[
 
 
 # ======== 国士无双 ========
-def kokushi_syanten(hand: List[Tile]) -> Tuple[int, Set[Tile]]:
+def kokushi_syanten(hand: Union[List[Tile], str]) -> Tuple[int, Set[Tile]]:
+    if isinstance(hand, str):
+        hand = tiles(hand)
+
     if len(hand) != 13:
         raise ValueError(f"invalid length of hand: {len(hand)}")
 
@@ -153,7 +168,10 @@ def kokushi_syanten(hand: List[Tile]) -> Tuple[int, Set[Tile]]:
         return 13 - len(cnt), yaochu.copy()
 
 
-def kokushi_syanten_with_got_tile(hand: List[Tile]) -> Tuple[int, Dict[Tile, Set[Tile]]]:
+def kokushi_syanten_with_got_tile(hand: Union[List[Tile], str]) -> Tuple[int, Dict[Tile, Set[Tile]]]:
+    if isinstance(hand, str):
+        hand = tiles(hand)
+
     if len(hand) != 14:
         raise ValueError(f"invalid length of hand: {len(hand)}")
 
@@ -193,7 +211,10 @@ def kokushi_syanten_with_got_tile(hand: List[Tile]) -> Tuple[int, Dict[Tile, Set
 
 
 # ======== union ========
-def syanten(hand: List[Tile]) -> Tuple[int, Set[Tile]]:
+def syanten(hand: Union[List[Tile], str]) -> Tuple[int, Set[Tile]]:
+    if isinstance(hand, str):
+        hand = tiles(hand)
+
     std, std_advance = std_syanten(hand)
     chitoi, chitoi_advance = chitoi_syanten(hand)
     kokushi, kokushi_advance = kokushi_syanten(hand)
@@ -211,7 +232,10 @@ def syanten(hand: List[Tile]) -> Tuple[int, Set[Tile]]:
     return syanten, advance
 
 
-def syanten_with_got_tile(hand: List[Tile]) -> Tuple[int, Dict[Tile, Set[Tile]]]:
+def syanten_with_got_tile(hand: Union[List[Tile], str]) -> Tuple[int, Dict[Tile, Set[Tile]]]:
+    if isinstance(hand, str):
+        hand = tiles(hand)
+
     std, std_mapping = std_syanten_with_got_tile(hand)
     chitoi, chitoi_mapping = chitoi_syanten_with_got_tile(hand)
     kokushi, kokushi_mapping = kokushi_syanten_with_got_tile(hand)
