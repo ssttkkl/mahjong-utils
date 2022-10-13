@@ -1,7 +1,8 @@
-from typing import List, Callable, NamedTuple
+from typing import List, Callable
 
 from mahjong_utils.internal.utils.bit import generate_k_bit_number
-from mahjong_utils.models.mentsu import Mentsu, Kotsu, Shuntsu
+from mahjong_utils.models.hand import StdHand
+from mahjong_utils.models.mentsu import Kotsu, Shuntsu
 from mahjong_utils.models.tatsu import Tatsu, Toitsu, Kanchan, Ryanmen, Penchan
 from mahjong_utils.models.tile import Tile, tile
 from mahjong_utils.models.tile_type import tile_type_index_mapping, tile_type_reversed_index_mapping, TileType
@@ -17,15 +18,9 @@ def _decode(code: int) -> Tile:
     return tile(tile_type, num)
 
 
-class HandSearcher:
-    class Result(NamedTuple):
-        jyantou: Tile
-        mentsu: List[Mentsu]
-        tatsu: List[Tatsu]
-        remaining: List[Tile]
-
+class StdHandSearcher:
     def __init__(self, k: int, hand: List[Tile],
-                 callback: Callable[[Result], None]):
+                 callback: Callable[[StdHand], None]):
         self.hand = hand
         self.callback = callback
 
@@ -175,7 +170,7 @@ class HandSearcher:
 
     def _on_result(self):
         for jyantou, mentsu, tatsu, remaining in self._normalize():
-            self.callback(self.Result(jyantou, mentsu.copy(), tatsu.copy(), remaining.copy()))
+            self.callback(StdHand(jyantou, mentsu.copy(), tatsu.copy(), remaining.copy()))
 
     def _normalize(self):
         # 将搜索结果处理为（雀头，面子，搭子，浮牌）的形式，且面子数+搭子数不超过k
@@ -225,3 +220,6 @@ class HandSearcher:
                         tatsu_not_chosen_as_tiles.append(tatsu[i].second)
 
                 yield tatsu_chosen, tatsu_not_chosen_as_tiles
+
+
+__all__ = ("StdHandSearcher",)

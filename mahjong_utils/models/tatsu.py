@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Set, overload, Sequence
 
 from .mentsu import Mentsu, Shuntsu, Kotsu
-from .tile import Tile, tiles, tile_text
+from .tile import Tile, parse_tiles, tile_text
 from .tile_type import TileType
 
 
@@ -137,7 +137,7 @@ def tatsu(t: Sequence[Tile]) -> Tatsu:
 
 def tatsu(t) -> Tatsu:
     if isinstance(t, str):
-        t = tiles(t)
+        t = parse_tiles(t)
 
     if len(t) != 2:
         raise ValueError("tiles must has length of 2")

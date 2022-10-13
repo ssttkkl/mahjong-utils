@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from io import StringIO
-from typing import Union, overload, List, Iterable
+from typing import Union, overload, List, Iterable, Dict, Set
 
 from mahjong_utils.models.tile_type import TileType, tile_type_index_mapping, tile_type_reversed_index_mapping
 
@@ -171,7 +171,7 @@ def tile(*args) -> Tile:
         raise ValueError("invalid arguments")
 
 
-def tiles(text: str) -> List[Tile]:
+def parse_tiles(text: str) -> List[Tile]:
     ans: List[Tile] = []
     pending = []
     for c in text:
@@ -209,7 +209,7 @@ def tile_text(tile: Union[Tile, Iterable[Tile]]) -> str:
         return sio.getvalue()
 
 
-yaochu = {*tiles("19m19s19p1234567z")}
+yaochu = {*parse_tiles("19m19s19p1234567z")}
 
 
 def is_m(t: Tile) -> bool:
@@ -239,6 +239,26 @@ def is_wind(t: Tile) -> bool:
 def is_sangen(t: Tile) -> bool:
     return t.tile_type == TileType.Z and 5 <= t.num <= 7
 
+tile_cling: Dict[Tile, Set[Tile]] = {}
 
-__all__ = ("Tile", "tile", "tiles", "tile_text", "yaochu",
-           "is_m", "is_p", "is_s", "is_wind", "is_sangen", "is_yaochu")
+for i in range(3):
+    tile_type = tile_type_reversed_index_mapping[i]
+
+    for j in range(1, 10):
+        t = tile(tile_type, j)
+        tile_cling[t] = set()
+
+        for k in {-2, -1, 0, 1, 2}:
+            if 1 <= j + k <= 9:
+                tile_cling[t].add(tile(tile_type, j + k))
+
+    tile_cling[tile(tile_type, 0)] = tile_cling[tile(tile_type, 5)]
+
+for j in range(1, 8):
+    t = tile(TileType.Z, j)
+    tile_cling[t] = {t}
+
+
+__all__ = ("Tile", "tile", "parse_tiles", "tile_text", "yaochu",
+           "is_m", "is_p", "is_s", "is_wind", "is_sangen", "is_yaochu",
+           "tile_cling")

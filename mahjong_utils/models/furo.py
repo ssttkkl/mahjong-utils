@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List, overload, Sequence
 
 from .mentsu import Shuntsu, Kotsu, Mentsu
-from .tile import Tile, tiles
+from .tile import Tile, parse_tiles
 from .tile_type import TileType
 
 
@@ -59,7 +59,7 @@ def furo(t: Sequence[Tile]) -> Furo:
 
 def furo(t) -> Furo:
     if isinstance(t, str):
-        t = tiles(t)
+        t = parse_tiles(t)
 
     if len(t) == 3:
         if t[0] == t[1] == t[2]:

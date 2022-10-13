@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, overload, Sequence
 
-from .tile import Tile, tiles, tile_text
+from .tile import Tile, parse_tiles, tile_text
 from .tile_type import TileType
 
 
@@ -57,7 +57,7 @@ def mentsu(t: Sequence[Tile]) -> Mentsu:
 
 def mentsu(t) -> Mentsu:
     if isinstance(t, str):
-        t = tiles(t)
+        t = parse_tiles(t)
 
     if len(t) != 3:
         raise ValueError("tiles must has length of 3")

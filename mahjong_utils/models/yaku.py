@@ -4,7 +4,7 @@ from mahjong_utils.models.furo import Kan
 from mahjong_utils.models.hora import Hora, StdHora, ChitoiHora, KokushiHora
 from mahjong_utils.models.mentsu import Shuntsu, Kotsu
 from mahjong_utils.models.tatsu import Toitsu
-from mahjong_utils.models.tile import is_yaochu, Tile, tile, is_sangen, is_z, is_wind, tiles
+from mahjong_utils.models.tile import is_yaochu, Tile, tile, is_sangen, is_z, is_wind, parse_tiles
 from mahjong_utils.models.tile_type import TileType, tile_type_index_mapping
 
 
@@ -466,7 +466,7 @@ def tsuiso(hora: Hora) -> bool:
 
 shousushi = Yaku("Shousushi", 13, 0, sushi_series_checker_factory(3, True))
 
-lyu = {*tiles("23468s6z")}
+lyu = {*parse_tiles("23468s6z")}
 
 
 @yaku("Lyuiso", 13, 0)
