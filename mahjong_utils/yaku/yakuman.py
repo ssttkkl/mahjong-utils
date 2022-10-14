@@ -9,17 +9,17 @@ from mahjong_utils.yaku.checker_factory import kantsu_series_checker_factory, an
 from mahjong_utils.yaku.extra import tenhou, chihou
 
 
-@_yaku(13, 13)
+@_yaku(13, 13, True)
 def kokushi(hora_hand: HoraHand) -> bool:
     return isinstance(hora_hand, KokushiHoraHand) and not hora_hand.thirteen_waiting
 
 
-suanko = Yaku(13, 13, anko_series_checker_factory(4))
+suanko = Yaku("suanko", 13, 13, True, anko_series_checker_factory(4, False))
 
-daisangen = Yaku(13, 0, sangen_series_checker_factory(3, False))
+daisangen = Yaku("daisangen", 13, 0, True, sangen_series_checker_factory(3, False))
 
 
-@_yaku(13, 0)
+@_yaku(13, 0, True)
 def tsuiso(hora_hand: HoraHand) -> bool:
     for t in hora_hand.tiles:
         if not is_z(t):
@@ -27,12 +27,12 @@ def tsuiso(hora_hand: HoraHand) -> bool:
     return True
 
 
-shousushi = Yaku(13, 0, sushi_series_checker_factory(3, True))
+shousushi = Yaku("shousushi", 13, 0, True, sushi_series_checker_factory(3, True))
 
 lyu = {*parse_tiles("23468s6z")}
 
 
-@_yaku(13, 0)
+@_yaku(13, 0, True)
 def lyuiso(hora_hand: HoraHand) -> bool:
     for t in hora_hand.tiles:
         if t not in lyu:
@@ -40,31 +40,31 @@ def lyuiso(hora_hand: HoraHand) -> bool:
     return True
 
 
-chinroto = Yaku(13, 0, yaochu_series_checker_factory(False, False))
+chinroto = Yaku("chinroto", 13, 0, True, yaochu_series_checker_factory(False, False))
 
-sukantsu = Yaku(13, 0, kantsu_series_checker_factory(4))
+sukantsu = Yaku("sukantsu", 13, 0, True, kantsu_series_checker_factory(4))
 
-churen = Yaku(13, 13, churen_series_checker_factory(False))
+churen = Yaku("churen", 13, 13, True, churen_series_checker_factory(False))
 
-daisushi = Yaku(26, 0, sushi_series_checker_factory(4, False))
+daisushi = Yaku("daisushi", 26, 0, True, sushi_series_checker_factory(4, False))
 
-churen9 = Yaku(26, 26, churen_series_checker_factory(True))
+churen9 = Yaku("churen9", 26, 26, True, churen_series_checker_factory(True))
 
-suanko_tanki = Yaku(26, 26, anko_series_checker_factory(4, True))
+suanko_tanki = Yaku("suanko_tanki", 26, 26, True, anko_series_checker_factory(4, True))
 
 
-@_yaku(26, 26)
+@_yaku(26, 26, True)
 def kokushi13(hora_hand: HoraHand) -> bool:
     return isinstance(hora_hand, KokushiHoraHand) and hora_hand.thirteen_waiting
 
 
 all_yakuman: Set[Yaku] = {
-    tenhou, chihou, kokushi, suanko, daisangen, shousushi, lyuiso, chinroto, sukantsu, churen,
+    tenhou, chihou, kokushi, suanko, daisangen, tsuiso, shousushi, lyuiso, chinroto, sukantsu, churen,
     daisushi, churen9, suanko_tanki, kokushi13
 }
 
 __all__ = (
     "all_yakuman",
-    "tenhou", "chihou", "kokushi", "suanko", "daisangen", "shousushi", "lyuiso", "chinroto", "sukantsu", "churen",
+    "tenhou", "chihou", "kokushi", "suanko", "daisangen", "tsuiso", "shousushi", "lyuiso", "chinroto", "sukantsu", "churen",
     "daisushi", "churen9", "suanko_tanki", "kokushi13"
 )

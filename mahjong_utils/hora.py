@@ -42,7 +42,17 @@ class Hora(BaseModel):
         亲家和牌点数
         :return: (荣和点数, 自摸各家点数)
         """
-        return get_parent_point_by_han_hu(self.han, self.hand.hu)
+        if len(self.yaku) == 0:
+            return 0, 0
+        elif next(iter(self.yaku)).is_yakuman:
+            times = 0
+            for yaku in self.yaku:
+                times += yaku.han // 13
+
+            ans = get_parent_point_by_han_hu(self.han, self.hand.hu)
+            return ans[0] * times, ans[1] * times
+        else:
+            return get_parent_point_by_han_hu(self.han, self.hand.hu)
 
     @property
     def child_point(self) -> Tuple[int, int, int]:
@@ -50,7 +60,17 @@ class Hora(BaseModel):
         子家X番Y符的点数
         :return: (荣和点数, 自摸庄家点数, 自摸闲家点数)
         """
-        return get_child_point_by_han_hu(self.han, self.hand.hu)
+        if len(self.yaku) == 0:
+            return 0, 0, 0
+        elif next(iter(self.yaku)).is_yakuman:
+            times = 0
+            for yaku in self.yaku:
+                times += yaku.han // 13
+
+            ans = get_child_point_by_han_hu(13, 20)
+            return ans[0] * times, ans[1] * times, ans[2] * times
+        else:
+            return get_child_point_by_han_hu(self.han, self.hand.hu)
 
 
 def build_hora(tiles: List[Tile], furo: Optional[List[Furo]], agari: Tile,

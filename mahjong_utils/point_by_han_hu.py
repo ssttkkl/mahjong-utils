@@ -1,5 +1,14 @@
-def ceil100(x):
-    return x // 100 * 100
+def _ceil100(x):
+    if x % 100 > 0:
+        x += 100 - x % 100
+    return x
+
+
+def _calc_parent_point(han: int, hu: int):
+    a = hu * (2 ** (han + 2))
+    if a > 2000:
+        a = 2000
+    return _ceil100(6 * a), _ceil100(2 * a)
 
 
 def build_han_hu_to_parent_point(mapping):
@@ -10,10 +19,8 @@ def build_han_hu_to_parent_point(mapping):
     """
     for han in range(1, 5):
         for hu in range(20, 120, 10):
-            a = hu * (2 ** (han + 2))
-            if a > 2000:
-                a = 2000
-            mapping[han, hu] = ceil100(6 * a), ceil100(2 * a)
+            mapping[han, hu] = _calc_parent_point(han, hu)
+        mapping[han, 25] = _calc_parent_point(han, 25)
 
     mapping[5, 20] = 12000, 4000
     mapping[6, 20] = 18000, 6000
@@ -23,9 +30,14 @@ def build_han_hu_to_parent_point(mapping):
     mapping[10, 20] = 24000, 8000
     mapping[11, 20] = 36000, 12000
     mapping[12, 20] = 36000, 12000
+    mapping[13, 20] = 48000, 16000
 
-    for yakuman in range(1, 7):
-        mapping[13 * yakuman, 20] = 48000 * yakuman, 16000 * yakuman
+
+def _calc_child_point(han: int, hu: int):
+    a = hu * (2 ** (han + 2))
+    if a > 2000:
+        a = 2000
+    return _ceil100(4 * a), _ceil100(2 * a), _ceil100(a)
 
 
 def build_han_hu_to_child_point(mapping):
@@ -36,10 +48,8 @@ def build_han_hu_to_child_point(mapping):
     """
     for han in range(1, 5):
         for hu in range(20, 120, 10):
-            a = hu * (2 ** (han + 2))
-            if a > 2000:
-                a = 2000
-            mapping[han, hu] = ceil100(6 * a), ceil100(2 * a)
+            mapping[han, hu] = _calc_child_point(han, hu)
+        mapping[han, 25] = _calc_child_point(han, 25)
 
     mapping[5, 20] = 8000, 4000, 2000
     mapping[6, 20] = 12000, 6000, 3000
@@ -49,9 +59,7 @@ def build_han_hu_to_child_point(mapping):
     mapping[10, 20] = 16000, 8000, 4000
     mapping[11, 20] = 24000, 12000, 6000
     mapping[12, 20] = 24000, 12000, 6000
-
-    for yakuman in range(1, 7):
-        mapping[13 * yakuman, 20] = 32000 * yakuman, 16000 * yakuman, 8000 * yakuman
+    mapping[13, 20] = 32000, 16000, 8000
 
 
 parent_han_hu_mapping = {}
@@ -68,6 +76,8 @@ def get_parent_point_by_han_hu(han: int, hu: int):
     :param hu: 符
     :return: (荣和点数, 自摸各家点数)
     """
+    if han >= 13:
+        han = 13
     if han >= 5:
         hu = 20
     if (han, hu) not in parent_han_hu_mapping:
@@ -83,6 +93,8 @@ def get_child_point_by_han_hu(han: int, hu: int):
     :param hu: 符
     :return: (荣和点数, 自摸庄家点数, 自摸闲家点数)
     """
+    if han >= 13:
+        han = 13
     if han >= 5:
         hu = 20
     if (han, hu) not in child_han_hu_mapping:

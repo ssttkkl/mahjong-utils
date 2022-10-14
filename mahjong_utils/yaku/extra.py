@@ -2,15 +2,15 @@ from typing import Set
 
 from mahjong_utils.yaku import Yaku
 
-richi = Yaku(1, 1)
-ippatsu = Yaku(1, 1)
-rinshan = Yaku(1, 0)
-chankan = Yaku(1, 0)
-haitei = Yaku(1, 0)
-houtei = Yaku(1, 0)
-w_richi = Yaku(2, 2)
-tenhou = Yaku(13, 13)
-chihou = Yaku(13, 13)
+richi = Yaku("richi", 1, 1)
+ippatsu = Yaku("ippatsu", 1, 1)
+rinshan = Yaku("rinshan", 1, 0)
+chankan = Yaku("chankan", 1, 0)
+haitei = Yaku("haitei", 1, 0)
+houtei = Yaku("houtei", 1, 0)
+w_richi = Yaku("w_richi", 2, 2)
+tenhou = Yaku("tenhou", 13, 13, True)
+chihou = Yaku("chihou", 13, 13, True)
 
 all_extra_yaku: Set[Yaku] = {
     richi,

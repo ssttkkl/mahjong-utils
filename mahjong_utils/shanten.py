@@ -2,17 +2,16 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List, Tuple, Set, Dict, Literal, Optional
 
-from mahjong_utils.internal.hand_searcher import StdHandSearcher
+from mahjong_utils.internal.regular_hand_searcher import RegularHandSearcher
 from mahjong_utils.internal.tile_cling import tile_cling
 from mahjong_utils.models.furo import Furo
-from mahjong_utils.models.hand import StdHand, Hand, ChitoiHand, KokushiHand
-from mahjong_utils.models.mentsu import Kotsu
+from mahjong_utils.models.hand import RegularHand, Hand, ChitoiHand, KokushiHand
 from mahjong_utils.models.tile import Tile, is_yaochu, all_yaochu, tile
 
 
 @dataclass(frozen=True)
 class ShantenResult(ABC):
-    type: Literal['std', 'chitoi', 'kokushi', 'union']
+    type: Literal['regular', 'chitoi', 'kokushi', 'union']
     shanten: int
     advance: Set[Tile]
     advance_of_each_hand: List[Tuple[Hand, Set[Tile]]]
@@ -20,14 +19,14 @@ class ShantenResult(ABC):
 
 @dataclass(frozen=True)
 class UnionShantenResult(ShantenResult):
-    std: ShantenResult
+    regular: ShantenResult
     chitoi: Optional[ShantenResult]
     kokushi: Optional[ShantenResult]
 
 
 @dataclass(frozen=True)
 class ShantenWithGotTileResult:
-    type: Literal['std', 'chitoi', 'kokushi', 'union']
+    type: Literal['regular', 'chitoi', 'kokushi', 'union']
     shanten: int
     discard_to_advance: Dict[Tile, Set[Tile]]
     discard_to_advance_of_each_hand: List[Tuple[Hand, Dict[Tile, Set[Tile]]]]
@@ -35,17 +34,17 @@ class ShantenWithGotTileResult:
 
 @dataclass(frozen=True)
 class UnionShantenWithGotTileResult(ShantenWithGotTileResult):
-    std: ShantenWithGotTileResult
+    regular: ShantenWithGotTileResult
     chitoi: Optional[ShantenWithGotTileResult]
     kokushi: Optional[ShantenWithGotTileResult]
 
 
 # ======== 标准形 ========
-def _std_search(k: int, tiles: List[Tile]) -> Tuple[int, List[StdHand]]:
+def _regular_search(k: int, tiles: List[Tile]) -> Tuple[int, List[RegularHand]]:
     shanten = 10000
     hands = []
 
-    def callback(hand: StdHand):
+    def callback(hand: RegularHand):
         nonlocal shanten, hands
 
         pending_shanten = 2 * (k - len(hand.menzen_mentsu)) - len(hand.tatsu)
@@ -58,13 +57,13 @@ def _std_search(k: int, tiles: List[Tile]) -> Tuple[int, List[StdHand]]:
         elif pending_shanten == shanten:
             hands.append(hand)
 
-    searcher = StdHandSearcher(k, tiles, callback)
+    searcher = RegularHandSearcher(k, tiles, callback)
     searcher.run()
 
     return shanten, hands
 
 
-def _get_std_advance(k: int, result: StdHand) -> Set[Tile]:
+def _get_regular_advance(k: int, result: RegularHand) -> Set[Tile]:
     advance = set()
 
     # 搭子的进张
@@ -84,7 +83,7 @@ def _get_std_advance(k: int, result: StdHand) -> Set[Tile]:
     return advance
 
 
-def calc_std_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> ShantenResult:
+def calc_regular_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> ShantenResult:
     if len(tiles) < 1 or len(tiles) > 13 or len(tiles) % 3 != 1:
         raise ValueError(f"invalid length of hand: {len(tiles)}")
 
@@ -92,21 +91,22 @@ def calc_std_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> Sh
         furo = []
 
     k = (len(tiles) - 1) // 3
-    shanten, hands = _std_search(k, tiles)
+    shanten, hands = _regular_search(k, tiles)
 
     advance_aggregated = set()
     advance_of_each_hand = list()
     for hand in hands:
         hand.furo = furo
 
-        advance = _get_std_advance(k, hand)
+        advance = _get_regular_advance(k, hand)
         advance_aggregated |= advance
         advance_of_each_hand.append((hand, advance))
 
-    return ShantenResult("std", shanten, advance_aggregated, advance_of_each_hand)
+    return ShantenResult("regular", shanten, advance_aggregated, advance_of_each_hand)
 
 
-def calc_std_shanten_with_got_tile(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> ShantenWithGotTileResult:
+def calc_regular_shanten_with_got_tile(tiles: List[Tile],
+                                       furo: Optional[List[Furo]] = None) -> ShantenWithGotTileResult:
     if len(tiles) < 2 or len(tiles) > 14 or len(tiles) % 3 != 2:
         raise ValueError(f"invalid length of hand: {len(tiles)}")
 
@@ -114,7 +114,7 @@ def calc_std_shanten_with_got_tile(tiles: List[Tile], furo: Optional[List[Furo]]
         furo = []
 
     k = (len(tiles) - 2) // 3
-    shanten, hands = _std_search(k, tiles)
+    shanten, hands = _regular_search(k, tiles)
 
     discard_to_advance_aggregated = dict()
     discard_to_advance_of_each_hand = list()
@@ -127,7 +127,7 @@ def calc_std_shanten_with_got_tile(tiles: List[Tile], furo: Optional[List[Furo]]
             hand_after_discard = hand.copy(update={
                 "remaining": hand.remaining[0:i] + hand.remaining[i + 1:]
             })
-            advance = _get_std_advance(k, hand_after_discard)
+            advance = _get_regular_advance(k, hand_after_discard)
             discard_to_advance[discard] = advance
 
             if discard not in discard_to_advance_aggregated:
@@ -136,7 +136,7 @@ def calc_std_shanten_with_got_tile(tiles: List[Tile], furo: Optional[List[Furo]]
                 discard_to_advance_aggregated[discard] |= advance
         discard_to_advance_of_each_hand.append((hand, discard_to_advance))
 
-    return ShantenWithGotTileResult("std", shanten, discard_to_advance_aggregated, discard_to_advance_of_each_hand)
+    return ShantenWithGotTileResult("regular", shanten, discard_to_advance_aggregated, discard_to_advance_of_each_hand)
 
 
 # ======== 七对子 ========
@@ -272,22 +272,22 @@ def calc_kokushi_shanten_with_got_tile(tiles: List[Tile]) -> ShantenWithGotTileR
 # ======== union ========
 def calc_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShantenResult:
     if len(tiles) != 13:
-        std = calc_std_shanten(tiles, furo)
-        return UnionShantenResult("union", std.shanten,
-                                  std.advance, std.advance_of_each_hand,
-                                  std, None, None)
+        regular = calc_regular_shanten(tiles, furo)
+        return UnionShantenResult("union", regular.shanten,
+                                  regular.advance, regular.advance_of_each_hand,
+                                  regular, None, None)
 
-    std = calc_std_shanten(tiles, furo)
+    regular = calc_regular_shanten(tiles, furo)
     chitoi = calc_chitoi_shanten(tiles)
     kokushi = calc_kokushi_shanten(tiles)
 
-    shanten = min(std.shanten, chitoi.shanten, kokushi.shanten)
+    shanten = min(regular.shanten, chitoi.shanten, kokushi.shanten)
     advance_aggregated = set()
     advance_of_each_hand = list()
 
-    if std.shanten == shanten:
-        advance_aggregated |= std.advance
-        advance_of_each_hand += std.advance_of_each_hand
+    if regular.shanten == shanten:
+        advance_aggregated |= regular.advance
+        advance_of_each_hand += regular.advance_of_each_hand
     if chitoi.shanten == shanten:
         advance_aggregated |= chitoi.advance
         advance_of_each_hand += chitoi.advance_of_each_hand
@@ -296,27 +296,27 @@ def calc_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionS
         advance_of_each_hand += kokushi.advance_of_each_hand
 
     return UnionShantenResult("union", shanten, advance_aggregated, advance_of_each_hand,
-                              std, chitoi, kokushi)
+                              regular, chitoi, kokushi)
 
 
 def calc_shanten_with_got_tile(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShantenWithGotTileResult:
     if len(tiles) != 14:
-        std = calc_std_shanten_with_got_tile(tiles, furo)
-        return UnionShantenWithGotTileResult("union", std.shanten,
-                                             std.discard_to_advance, std.discard_to_advance_of_each_hand,
-                                             std, None, None)
+        regular = calc_regular_shanten_with_got_tile(tiles, furo)
+        return UnionShantenWithGotTileResult("union", regular.shanten,
+                                             regular.discard_to_advance, regular.discard_to_advance_of_each_hand,
+                                             regular, None, None)
 
-    std = calc_std_shanten_with_got_tile(tiles)
+    regular = calc_regular_shanten_with_got_tile(tiles)
     chitoi = calc_chitoi_shanten_with_got_tile(tiles)
     kokushi = calc_kokushi_shanten_with_got_tile(tiles)
 
-    shanten = min(std.shanten, chitoi.shanten, kokushi.shanten)
+    shanten = min(regular.shanten, chitoi.shanten, kokushi.shanten)
     discard_to_advance_aggregated = dict()
     discard_to_advance_of_each_hand = list()
 
-    if std.shanten == shanten:
-        discard_to_advance_of_each_hand += std.discard_to_advance_of_each_hand
-        for discard, advance in std.discard_to_advance.items():
+    if regular.shanten == shanten:
+        discard_to_advance_of_each_hand += regular.discard_to_advance_of_each_hand
+        for discard, advance in regular.discard_to_advance.items():
             if discard not in discard_to_advance_aggregated:
                 discard_to_advance_aggregated[discard] = set()
             discard_to_advance_aggregated[discard] |= advance
@@ -335,10 +335,10 @@ def calc_shanten_with_got_tile(tiles: List[Tile], furo: Optional[List[Furo]] = N
 
     return UnionShantenWithGotTileResult("union", shanten,
                                          discard_to_advance_aggregated, discard_to_advance_of_each_hand,
-                                         std, chitoi, kokushi)
+                                         regular, chitoi, kokushi)
 
 
-__all__ = ("calc_std_shanten", "calc_std_shanten_with_got_tile",
+__all__ = ("calc_regular_shanten", "calc_regular_shanten_with_got_tile",
            "calc_chitoi_shanten", "calc_chitoi_shanten_with_got_tile",
            "calc_kokushi_shanten", "calc_kokushi_shanten_with_got_tile",
            "calc_shanten", "calc_shanten_with_got_tile",

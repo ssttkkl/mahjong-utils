@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel, root_validator
 
 from mahjong_utils.models.furo import Pon, Kan
-from mahjong_utils.models.hand import StdHand, Hand, ChitoiHand, KokushiHand
+from mahjong_utils.models.hand import RegularHand, Hand, ChitoiHand, KokushiHand
 from mahjong_utils.models.mentsu import Kotsu
 from mahjong_utils.models.tatsu import Penchan, Kanchan, Tatsu
 from mahjong_utils.models.tile import Tile, all_yaochu
@@ -21,7 +21,7 @@ class HoraHand(BaseModel, Hand, ABC):
     round_wind: Optional[Wind]
 
 
-class StdHoraHand(HoraHand, StdHand):
+class RegularHoraHand(HoraHand, RegularHand):
     agari_tatsu: Optional[Tatsu]
     hu: int = 0  # 在__init__中计算
 
@@ -127,11 +127,11 @@ class KokushiHoraHand(HoraHand, KokushiHand):
         return values
 
 
-def _build_std_hora_hand(hand: StdHand,
+def _build_std_hora_hand(hand: RegularHand,
                          agari: Tile,
                          tsumo: bool,
                          self_wind: Optional[Wind] = None,
-                         round_wind: Optional[Wind] = None) -> StdHoraHand:
+                         round_wind: Optional[Wind] = None) -> RegularHoraHand:
     if not hand.tenpai:
         raise ValueError("hand is not tenpai")
 
@@ -140,22 +140,22 @@ def _build_std_hora_hand(hand: StdHand,
         menzen_mentsu = hand.menzen_mentsu.copy()
         menzen_mentsu.append(agari_tatsu.with_waiting(agari))
 
-        return StdHoraHand(agari=agari,
-                           tsumo=tsumo,
-                           self_wind=self_wind,
-                           round_wind=round_wind,
-                           agari_tatsu=agari_tatsu,
-                           jyantou=hand.jyantou,
-                           menzen_mentsu=menzen_mentsu,
-                           furo=hand.furo)
+        return RegularHoraHand(agari=agari,
+                               tsumo=tsumo,
+                               self_wind=self_wind,
+                               round_wind=round_wind,
+                               agari_tatsu=agari_tatsu,
+                               jyantou=hand.jyantou,
+                               menzen_mentsu=menzen_mentsu,
+                               furo=hand.furo)
     else:
-        return StdHoraHand(agari=agari,
-                           tsumo=tsumo,
-                           self_wind=self_wind,
-                           round_wind=round_wind,
-                           jyantou=agari,
-                           menzen_mentsu=hand.menzen_mentsu,
-                           furo=hand.furo)
+        return RegularHoraHand(agari=agari,
+                               tsumo=tsumo,
+                               self_wind=self_wind,
+                               round_wind=round_wind,
+                               jyantou=agari,
+                               menzen_mentsu=hand.menzen_mentsu,
+                               furo=hand.furo)
 
 
 def _build_chitoi_hora_hand(hand: ChitoiHand,
@@ -216,7 +216,7 @@ def build_hora_hand(hand: Hand,
                     tsumo: bool,
                     self_wind: Optional[Wind] = None,
                     round_wind: Optional[Wind] = None) -> HoraHand:
-    if isinstance(hand, StdHand):
+    if isinstance(hand, RegularHand):
         return _build_std_hora_hand(hand, agari, tsumo, self_wind, round_wind)
     elif isinstance(hand, ChitoiHand):
         return _build_chitoi_hora_hand(hand, agari, tsumo, self_wind, round_wind)

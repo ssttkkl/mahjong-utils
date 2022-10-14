@@ -25,7 +25,7 @@ class Hand(ABC):
         raise NotImplementedError()
 
 
-class StdHand(BaseModel, Hand):
+class RegularHand(BaseModel, Hand):
     """
     表示一个结构分析后的以标准形为目标的手牌
     """
@@ -54,6 +54,15 @@ class StdHand(BaseModel, Hand):
         for mt in self.mentsu:
             if isinstance(mt, Kotsu):
                 yield mt
+
+    @property
+    def anko(self) -> Iterable[Kotsu]:
+        for mt in self.menzen_mentsu:
+            if isinstance(mt, Kotsu):
+                yield mt
+        for fr in self.furo:
+            if isinstance(fr, Kan) and fr.ankan:
+                yield fr
 
     @property
     def menzen_tiles(self) -> Iterable[Tile]:
@@ -155,4 +164,4 @@ class KokushiHand(BaseModel, Hand):
         return shanten == 0
 
 
-__all__ = ("Hand", "StdHand", "ChitoiHand", "KokushiHand")
+__all__ = ("Hand", "RegularHand", "ChitoiHand", "KokushiHand")

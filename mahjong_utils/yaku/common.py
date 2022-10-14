@@ -1,6 +1,6 @@
 from typing import Set
 
-from mahjong_utils.models.hora_hand import HoraHand, StdHoraHand, ChitoiHoraHand
+from mahjong_utils.models.hora_hand import HoraHand, RegularHoraHand, ChitoiHoraHand
 from mahjong_utils.models.tatsu import Toitsu
 from mahjong_utils.models.tile import tile, is_yaochu
 from mahjong_utils.models.tile_type import TileType
@@ -17,7 +17,7 @@ def tsumo(hora_hand: HoraHand) -> bool:
 
 @_yaku(1, 1)
 def pinhu(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, StdHoraHand):
+    if not isinstance(hora_hand, RegularHoraHand):
         return False
     if hora_hand.tsumo:
         return hora_hand.hu == 20
@@ -33,12 +33,12 @@ def tanyao(hora_hand: HoraHand) -> bool:
     return True
 
 
-ipe = Yaku(1, 1, peko_series_checker_factory(1))
+ipe = Yaku("ipe", 1, 1, checker=peko_series_checker_factory(1))
 
 
 @_yaku(1, 0)
 def self_wind(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, StdHoraHand) or hora_hand.self_wind is None:
+    if not isinstance(hora_hand, RegularHoraHand) or hora_hand.self_wind is None:
         return False
 
     for mt in hora_hand.mentsu:
@@ -48,7 +48,7 @@ def self_wind(hora_hand: HoraHand) -> bool:
 
 @_yaku(1, 0)
 def round_wind(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, StdHoraHand) or hora_hand.round_wind is None:
+    if not isinstance(hora_hand, RegularHoraHand) or hora_hand.round_wind is None:
         return False
 
     for mt in hora_hand.mentsu:
@@ -56,16 +56,16 @@ def round_wind(hora_hand: HoraHand) -> bool:
             return True
 
 
-haku = Yaku(1, 0, yakuhai_checker_factory(tile(TileType.Z, 5)))
+haku = Yaku("haku", 1, 0, checker=yakuhai_checker_factory(tile(TileType.Z, 5)))
 
-hatsu = Yaku(1, 0, yakuhai_checker_factory(tile(TileType.Z, 6)))
+hatsu = Yaku("hatsu", 1, 0, checker=yakuhai_checker_factory(tile(TileType.Z, 6)))
 
-chun = Yaku(1, 0, yakuhai_checker_factory(tile(TileType.Z, 7)))
+chun = Yaku("chun", 1, 0, checker=yakuhai_checker_factory(tile(TileType.Z, 7)))
 
 
 @_yaku(2, 1)
 def sanshoku(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, StdHoraHand):
+    if not isinstance(hora_hand, RegularHoraHand):
         return False
 
     shuntsu = list(hora_hand.shuntsu)
@@ -88,7 +88,7 @@ def sanshoku(hora_hand: HoraHand) -> bool:
 
 @_yaku(2, 1)
 def ittsu(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, StdHoraHand):
+    if not isinstance(hora_hand, RegularHoraHand):
         return False
 
     shuntsu = list(hora_hand.mentsu)
@@ -108,7 +108,7 @@ def ittsu(hora_hand: HoraHand) -> bool:
     return False
 
 
-chanta = Yaku(2, 1, yaochu_series_checker_factory(True, True))
+chanta = Yaku("chanta", 2, 1, checker=yaochu_series_checker_factory(True, True))
 
 
 @_yaku(2, 2)
@@ -118,7 +118,7 @@ def chitoi(hora_hand: HoraHand) -> bool:
 
 @_yaku(2, 0)
 def toitoi(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, StdHoraHand):
+    if not isinstance(hora_hand, RegularHoraHand):
         return False
 
     if len(list(hora_hand.shuntsu)) != 0:
@@ -127,14 +127,14 @@ def toitoi(hora_hand: HoraHand) -> bool:
     return not hora_hand.menzen or (isinstance(hora_hand.agari_tatsu, Toitsu) and not hora_hand.tsumo)  # 非四暗刻的情况
 
 
-sananko = Yaku(2, 0, anko_series_checker_factory(3))
+sananko = Yaku("sananko", 2, 0, checker=anko_series_checker_factory(3))
 
-honroto = Yaku(2, 0, yaochu_series_checker_factory(False, True))
+honroto = Yaku("honroto", 2, 0, checker=yaochu_series_checker_factory(False, True))
 
 
 @_yaku(2, 0)
 def sandoko(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, StdHoraHand):
+    if not isinstance(hora_hand, RegularHoraHand):
         return False
 
     kotsu = list(hora_hand.kotsu)
@@ -155,17 +155,17 @@ def sandoko(hora_hand: HoraHand) -> bool:
     return False
 
 
-sankantsu = Yaku(2, 0, kantsu_series_checker_factory(3))
+sankantsu = Yaku("sankantsu", 2, 0, checker=kantsu_series_checker_factory(3))
 
-shosangen = Yaku(2, 0, sangen_series_checker_factory(2, True))
+shosangen = Yaku("shosangen", 2, 0, checker=sangen_series_checker_factory(2, True))
 
-honitsu = Yaku(3, 1, itsu_series_checker_factory(True))
+honitsu = Yaku("honitsu", 3, 1, checker=itsu_series_checker_factory(True))
 
-junchan = Yaku(3, 1, yaochu_series_checker_factory(True, False))
+junchan = Yaku("junchan", 3, 1, checker=yaochu_series_checker_factory(True, False))
 
-ryanpe = Yaku(3, 3, peko_series_checker_factory(2))
+ryanpe = Yaku("ryanpe", 3, 3, checker=peko_series_checker_factory(2))
 
-chinitsu = Yaku(6, 1, itsu_series_checker_factory(False))
+chinitsu = Yaku("chinitsu", 6, 1, checker=itsu_series_checker_factory(False))
 
 all_common_yaku: Set[Yaku] = {
     tsumo, pinhu, tanyao, ipe, self_wind, round_wind, haku, hatsu, chun,
