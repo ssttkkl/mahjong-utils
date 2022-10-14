@@ -120,7 +120,7 @@ class StdHandSearcher:
                     self._tatsu.pop()
 
                 # kanchan
-                if tatsu_type_limitation <= 1 and t.tile_type != TileType.Z and t.num != 9:
+                if tatsu_type_limitation <= 1 and t.tile_type != TileType.Z and t.num <= 7:
                     j = i + 2
                     if self._count[i] > 0 and self._count[j] > 0:
                         taken = True
@@ -208,6 +208,12 @@ class StdHandSearcher:
         # 选择k个搭子
         if k >= len(tatsu):
             yield tatsu, []
+        elif k == 0:
+            tiles = []
+            for tt in tatsu:
+                tiles.append(tt.first)
+                tiles.append(tt.second)
+            yield [], tiles
         else:
             maximum = 1 << len(tatsu)
             for mask in generate_k_bit_number(k):

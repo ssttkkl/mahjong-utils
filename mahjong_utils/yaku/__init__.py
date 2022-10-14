@@ -4,7 +4,6 @@ from mahjong_utils.models.hora_hand import HoraHand
 
 
 class Yaku(NamedTuple):
-    name: str
     han: int
     furo_loss: int
     checker: Optional[Callable[[HoraHand], bool]] = None
@@ -16,9 +15,9 @@ class Yaku(NamedTuple):
             return False
 
 
-def _yaku(name: str, han: int, furo_loss: int):
+def _yaku(han: int, furo_loss: int):
     def decorator(func):
-        return Yaku(name, han, furo_loss, func)
+        return Yaku(han, furo_loss, func)
 
     return decorator
 

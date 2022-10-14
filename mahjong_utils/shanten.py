@@ -6,7 +6,8 @@ from mahjong_utils.internal.hand_searcher import StdHandSearcher
 from mahjong_utils.internal.tile_cling import tile_cling
 from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.hand import StdHand, Hand, ChitoiHand, KokushiHand
-from mahjong_utils.models.tile import Tile, is_yaochu, all_yaochu
+from mahjong_utils.models.mentsu import Kotsu
+from mahjong_utils.models.tile import Tile, is_yaochu, all_yaochu, tile
 
 
 @dataclass(frozen=True)
@@ -145,6 +146,8 @@ def calc_chitoi_shanten(tiles: List[Tile]) -> ShantenResult:
 
     cnt = {}
     for t in tiles:
+        if t.num == 0:
+            t = tile(t.tile_type, 5)
         cnt[t] = cnt.get(t, 0) + 1
 
     pairs = []
@@ -170,6 +173,8 @@ def calc_chitoi_shanten_with_got_tile(tiles: List[Tile]) -> ShantenWithGotTileRe
 
     cnt = {}
     for t in tiles:
+        if t.num == 0:
+            t = tile(t.tile_type, 5)
         cnt[t] = cnt.get(t, 0) + 1
 
     pairs = []
@@ -185,9 +190,10 @@ def calc_chitoi_shanten_with_got_tile(tiles: List[Tile]) -> ShantenWithGotTileRe
             remaining.append(t)
 
     discard_to_advance = {}
-    for t in advance:
+    for t in remaining:
         advance_after_discard = advance.copy()
-        advance_after_discard.remove(t)
+        if t in advance_after_discard:
+            advance_after_discard.remove(t)
         discard_to_advance[t] = advance_after_discard
 
     hand = ChitoiHand(pairs=pairs, remaining=remaining)
@@ -265,7 +271,7 @@ def calc_kokushi_shanten_with_got_tile(tiles: List[Tile]) -> ShantenWithGotTileR
 
 # ======== union ========
 def calc_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShantenResult:
-    if furo is not None:
+    if len(tiles) != 13:
         std = calc_std_shanten(tiles, furo)
         return UnionShantenResult("union", std.shanten,
                                   std.advance, std.advance_of_each_hand,
@@ -294,7 +300,7 @@ def calc_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionS
 
 
 def calc_shanten_with_got_tile(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShantenWithGotTileResult:
-    if furo is not None:
+    if len(tiles) != 14:
         std = calc_std_shanten_with_got_tile(tiles, furo)
         return UnionShantenWithGotTileResult("union", std.shanten,
                                              std.discard_to_advance, std.discard_to_advance_of_each_hand,

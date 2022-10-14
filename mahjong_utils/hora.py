@@ -28,8 +28,8 @@ class Hora(BaseModel):
     han: int = 0  # 在__init__中计算
     yaku: Set[Yaku] = Field(default_factory=set)  # 在__init__中计算
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         self.yaku = check_yaku(self.hand, self.extra_yaku)
         self.han = _calc_han(self.yaku, self.hand.menzen)

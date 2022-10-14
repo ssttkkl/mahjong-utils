@@ -12,10 +12,7 @@ class Furo(Mentsu, ABC):
     副露
     """
 
-    @property
-    @abstractmethod
-    def tiles(self) -> List[Tile]:
-        raise NotImplementedError()
+    pass
 
 
 @dataclass(frozen=True)

@@ -78,7 +78,7 @@ class Tile(NamedTuple):
         if pending_num in self.tile_type.num_range:
             return tile(self.tile_type, pending_num)
         else:
-            raise ValueError("num is out of range")
+            raise ValueError("num out of range")
 
     def __sub__(self, other):
         if isinstance(other, int):
