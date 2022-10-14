@@ -97,16 +97,6 @@ class RegularHoraHand(HoraHand, RegularHand):
 class ChitoiHoraHand(HoraHand, ChitoiHand):
     hu: int = 25
 
-    @root_validator
-    def validator(cls, values):
-        if len(values["pairs"]) != 6:
-            raise ValueError("must have exactly 6 pairs")
-        elif len(values["remaining"]) != 1:
-            raise ValueError("must have exactly 1 remaining")
-        elif values["agari"] != values["remaining"][0]:
-            raise ValueError("agari is not waiting")
-        return values
-
 
 class KokushiHoraHand(HoraHand, KokushiHand):
     repeated: Tile
