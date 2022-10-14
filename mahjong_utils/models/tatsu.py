@@ -91,7 +91,7 @@ class Kanchan(Tatsu):
 
     def with_waiting(self, tile: Tile) -> Mentsu:
         if tile == self.first + 1:
-            return Shuntsu(tile)
+            return Shuntsu(self.first)
         else:
             raise ValueError(f"tile {tile} is not waiting")
 

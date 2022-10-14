@@ -124,7 +124,7 @@ def toitoi(hora_hand: HoraHand) -> bool:
     if len(list(hora_hand.shuntsu)) != 0:
         return False
 
-    return not hora_hand.menzen or (isinstance(hora_hand.tatsu, Toitsu) and not hora_hand.tsumo)  # 非四暗刻的情况
+    return not hora_hand.menzen or (isinstance(hora_hand.agari_tatsu, Toitsu) and not hora_hand.tsumo)  # 非四暗刻的情况
 
 
 sananko = Yaku("Sananko", 2, 0, anko_series_checker_factory(3))

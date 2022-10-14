@@ -33,7 +33,7 @@ class StdHoraHand(HoraHand, StdHand):
         ans = 20
 
         # 单骑、边张、坎张听牌
-        if self.tatsu is None or isinstance(self.tatsu, Penchan) or isinstance(self.tatsu, Kanchan):
+        if self.agari_tatsu is None or isinstance(self.agari_tatsu, Penchan) or isinstance(self.agari_tatsu, Kanchan):
             ans += 2
 
         # 明刻、杠
@@ -64,7 +64,7 @@ class StdHoraHand(HoraHand, StdHand):
                     ans += 4
 
         # 对碰荣和时该刻子计为明刻
-        if isinstance(self.tatsu, Kotsu):
+        if isinstance(self.agari_tatsu, Kotsu):
             ans -= 2
 
         # 役牌雀头（连风算4符）
@@ -86,6 +86,10 @@ class StdHoraHand(HoraHand, StdHand):
         # 非门清最低30符
         if not self.menzen and ans < 30:
             ans = 30
+
+        # 切上
+        if ans % 10 != 0:
+            ans += 10 - ans % 10
 
         return ans
 

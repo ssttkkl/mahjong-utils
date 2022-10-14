@@ -122,15 +122,15 @@ def anko_series_checker_factory(anko_count: int, tanki: Optional[bool] = None):
             if isinstance(mt, Kotsu):
                 anko += 1
 
-        if isinstance(hora_hand.tatsu, Toitsu) and not hora_hand.tsumo:  # 双碰听牌荣和，算一个明刻
+        if isinstance(hora_hand.agari_tatsu, Toitsu) and not hora_hand.tsumo:  # 双碰听牌荣和，算一个明刻
             anko -= 1
 
         if tanki is None:
             return anko == anko_count
         elif tanki:
-            return anko == anko_count and hora_hand.tatsu is None
+            return anko == anko_count and hora_hand.agari_tatsu is None
         else:
-            return anko == anko_count and hora_hand.tatsu is not None
+            return anko == anko_count and hora_hand.agari_tatsu is not None
 
     return checker
 
