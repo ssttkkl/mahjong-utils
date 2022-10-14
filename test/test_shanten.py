@@ -1,4 +1,4 @@
-from mahjong_utils.models.tile import tile, yaochu
+from mahjong_utils.models.tile import tile, all_yaochu
 
 
 def test_std_shanten():
@@ -79,7 +79,7 @@ def test_kokushi_shanten_2():
     result = kokushi_shanten(tiles)
 
     assert result.shanten == 3
-    assert result.advance == yaochu
+    assert result.advance == all_yaochu
 
 
 def test_kokushi_shanten_3():
@@ -117,9 +117,9 @@ def test_kokushi_shanten_with_got_tile_2():
 
     assert result.shanten == 3
     assert result.discard_to_advance == {
-        tile("2s"): yaochu,
-        tile("6s"): yaochu,
-        tile("3s"): yaochu
+        tile("2s"): all_yaochu,
+        tile("6s"): all_yaochu,
+        tile("3s"): all_yaochu
     }
 
 

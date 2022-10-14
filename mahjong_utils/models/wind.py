@@ -5,6 +5,10 @@ from mahjong_utils.models.tile_type import TileType
 
 
 class Wind(int, Enum):
+    """
+    风
+    """
+
     east = 0
     south = 1
     west = 2

@@ -1,7 +1,8 @@
 from typing import Dict, Set
 
+from mahjong_utils.internal.tile_type_mapping import tile_type_reversed_index_mapping
 from mahjong_utils.models.tile import Tile, tile
-from mahjong_utils.models.tile_type import tile_type_reversed_index_mapping, TileType
+from mahjong_utils.models.tile_type import TileType
 
 tile_cling: Dict[Tile, Set[Tile]] = {}
 

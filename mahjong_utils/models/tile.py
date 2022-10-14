@@ -1,12 +1,15 @@
-from dataclasses import dataclass
 from io import StringIO
-from typing import Union, overload, List, Iterable, Dict, Set
+from typing import Union, overload, List, Iterable, Optional, NamedTuple
 
-from mahjong_utils.models.tile_type import TileType, tile_type_index_mapping, tile_type_reversed_index_mapping
+from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping, tile_type_reversed_index_mapping
+from mahjong_utils.models.tile_type import TileType
 
 
-@dataclass(frozen=True)
-class Tile:
+class Tile(NamedTuple):
+    """
+    牌
+    """
+
     tile_type: TileType
     num: int
 
@@ -86,7 +89,7 @@ class Tile:
             return self.num - other.num
 
 
-tile_pool: List[Tile] = []
+tile_pool: List[Optional[Tile]] = []
 
 for i in range(0, 10):
     tile_pool.append(Tile(TileType.M, i))
@@ -209,56 +212,57 @@ def tile_text(tile: Union[Tile, Iterable[Tile]]) -> str:
         return sio.getvalue()
 
 
-yaochu = {*parse_tiles("19m19s19p1234567z")}
+all_yaochu = {*parse_tiles("19m19s19p1234567z")}
 
 
 def is_m(t: Tile) -> bool:
+    """
+    判断该牌是否为万子
+    """
     return t.tile_type == TileType.M
 
 
 def is_p(t: Tile) -> bool:
+    """
+    判断该牌是否为筒子
+    """
     return t.tile_type == TileType.P
 
 
 def is_s(t: Tile) -> bool:
+    """
+    判断该牌是否为索子
+    """
     return t.tile_type == TileType.S
 
 
 def is_z(t: Tile) -> bool:
+    """
+    判断该牌是否为字牌
+    """
     return t.tile_type == TileType.Z
 
 
 def is_yaochu(t: Tile) -> bool:
-    return t in yaochu
+    """
+    判断该牌是否为幺九牌
+    """
+    return t in all_yaochu
 
 
 def is_wind(t: Tile) -> bool:
+    """
+    判断该牌是否为风牌
+    """
     return t.tile_type == TileType.Z and 1 <= t.num <= 4
 
 
 def is_sangen(t: Tile) -> bool:
+    """
+    判断该牌是否为三元牌
+    """
     return t.tile_type == TileType.Z and 5 <= t.num <= 7
 
-tile_cling: Dict[Tile, Set[Tile]] = {}
 
-for i in range(3):
-    tile_type = tile_type_reversed_index_mapping[i]
-
-    for j in range(1, 10):
-        t = tile(tile_type, j)
-        tile_cling[t] = set()
-
-        for k in {-2, -1, 0, 1, 2}:
-            if 1 <= j + k <= 9:
-                tile_cling[t].add(tile(tile_type, j + k))
-
-    tile_cling[tile(tile_type, 0)] = tile_cling[tile(tile_type, 5)]
-
-for j in range(1, 8):
-    t = tile(TileType.Z, j)
-    tile_cling[t] = {t}
-
-
-__all__ = ("Tile", "tile", "parse_tiles", "tile_text", "yaochu",
-           "is_m", "is_p", "is_s", "is_wind", "is_sangen", "is_yaochu",
-           "tile_cling")
+__all__ = ("Tile", "tile", "parse_tiles", "tile_text", "all_yaochu",
+           "is_m", "is_p", "is_s", "is_z", "is_wind", "is_sangen", "is_yaochu")

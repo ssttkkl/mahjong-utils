@@ -1,57 +1,52 @@
+from abc import ABC
 from dataclasses import dataclass
-from typing import List, Tuple, Set, Dict, Union
+from typing import List, Tuple, Set, Dict, Union, Literal
 
 from mahjong_utils.internal.hand_searcher import StdHandSearcher
 from mahjong_utils.internal.tile_cling import tile_cling
-from mahjong_utils.models.hand import StdHand
-from mahjong_utils.models.tile import Tile, is_yaochu, yaochu, parse_tiles
+from mahjong_utils.models.hand import StdHand, Hand, ChitoiHand, KokushiHand
+from mahjong_utils.models.tile import Tile, is_yaochu, all_yaochu, parse_tiles
 
 
 @dataclass(frozen=True)
-class ShantenResult:
+class ShantenResult(ABC):
+    type: Literal['std', 'chitoi', 'kokushi', 'union']
     shanten: int
     advance: Set[Tile]
-
-
-@dataclass(frozen=True)
-class StdShantenResult(ShantenResult):
-    possible_hand: List[StdHand]
+    advance_of_each_hand: List[Tuple[Hand, Set[Tile]]]
 
 
 @dataclass(frozen=True)
 class UnionShantenResult(ShantenResult):
-    std: StdShantenResult
+    std: ShantenResult
     chitoi: ShantenResult
     kokushi: ShantenResult
 
 
 @dataclass(frozen=True)
 class ShantenWithGotTileResult:
+    type: Literal['std', 'chitoi', 'kokushi', 'union']
     shanten: int
     discard_to_advance: Dict[Tile, Set[Tile]]
-
-
-@dataclass(frozen=True)
-class StdShantenWithGotTileResult(ShantenWithGotTileResult):
-    possible_hands: List[StdHand]
+    discard_to_advance_of_each_hand: List[Tuple[Hand, Dict[Tile, Set[Tile]]]]
 
 
 @dataclass(frozen=True)
 class UnionShantenWithGotTileResult(ShantenWithGotTileResult):
-    std: StdShantenWithGotTileResult
+    std: ShantenWithGotTileResult
     chitoi: ShantenWithGotTileResult
     kokushi: ShantenWithGotTileResult
 
 
 # ======== 标准形 ========
-def _std_search(k: int, hand: List[Tile]) -> Tuple[int, List[StdHand]]:
+def _std_search(k: int, tiles: List[Tile]) -> Tuple[int, List[StdHand]]:
     shanten = 10000
     hands = []
 
     def callback(hand: StdHand):
         nonlocal shanten, hands
 
-        pending_shanten = 2 * (k - len(hand.mentsu)) - len(hand.tatsu)
+        pending_shanten = 2 * (k - len(hand.menzen_mentsu)) - len(hand.tatsu)
         if hand.jyantou is not None:
             pending_shanten -= 1
 
@@ -61,7 +56,7 @@ def _std_search(k: int, hand: List[Tile]) -> Tuple[int, List[StdHand]]:
         elif pending_shanten == shanten:
             hands.append(hand)
 
-    searcher = StdHandSearcher(k, hand, callback)
+    searcher = StdHandSearcher(k, tiles, callback)
     searcher.run()
 
     return shanten, hands
@@ -75,7 +70,7 @@ def _get_std_advance(k: int, result: StdHand) -> Set[Tile]:
         advance |= tt.waiting
 
     # 浮张的靠张
-    if len(result.mentsu) + len(result.tatsu) < k:
+    if len(result.menzen_mentsu) + len(result.tatsu) < k:
         for t in result.remaining:
             advance |= tile_cling[t]
 
@@ -87,7 +82,7 @@ def _get_std_advance(k: int, result: StdHand) -> Set[Tile]:
     return advance
 
 
-def std_shanten(tiles: Union[List[Tile], str]) -> StdShantenResult:
+def std_shanten(tiles: Union[List[Tile], str]) -> ShantenResult:
     if isinstance(tiles, str):
         tiles = parse_tiles(tiles)
 
@@ -97,14 +92,17 @@ def std_shanten(tiles: Union[List[Tile], str]) -> StdShantenResult:
     k = (len(tiles) - 1) // 3
     shanten, hands = _std_search(k, tiles)
 
-    advance = set()
-    for result in hands:
-        advance |= _get_std_advance(k, result)
+    advance_aggregated = set()
+    advance_of_each_hand = list()
+    for hand in hands:
+        advance = _get_std_advance(k, hand)
+        advance_aggregated |= advance
+        advance_of_each_hand.append((hand, advance))
 
-    return StdShantenResult(shanten, advance, hands)
+    return ShantenResult("std", shanten, advance_aggregated, advance_of_each_hand)
 
 
-def std_shanten_with_got_tile(tiles: Union[List[Tile], str]) -> StdShantenWithGotTileResult:
+def std_shanten_with_got_tile(tiles: Union[List[Tile], str]) -> ShantenWithGotTileResult:
     if isinstance(tiles, str):
         tiles = parse_tiles(tiles)
 
@@ -114,19 +112,25 @@ def std_shanten_with_got_tile(tiles: Union[List[Tile], str]) -> StdShantenWithGo
     k = (len(tiles) - 2) // 3
     shanten, hands = _std_search(k, tiles)
 
-    discard_to_advance: Dict[Tile, Set[Tile]] = {}
+    discard_to_advance_aggregated = dict()
+    discard_to_advance_of_each_hand = list()
 
-    for result in hands:
-        for i, discard in enumerate(result.remaining):
-            advance = _get_std_advance(k, StdHand(result.jyantou, result.mentsu, result.tatsu,
-                                                  result.remaining[0:i] + result.remaining[i + 1:]))
+    for hand in hands:
+        discard_to_advance = {}
+        for i, discard in enumerate(hand.remaining):
+            hand_after_discard = hand.copy(update={
+                "remaining": hand.remaining[0:i] + hand.remaining[i + 1:]
+            })
+            advance = _get_std_advance(k, hand_after_discard)
+            discard_to_advance[discard] = advance
 
-            if discard not in discard_to_advance:
-                discard_to_advance[discard] = advance
+            if discard not in discard_to_advance_aggregated:
+                discard_to_advance_aggregated[discard] = advance
             else:
-                discard_to_advance[discard] |= advance
+                discard_to_advance_aggregated[discard] |= advance
+        discard_to_advance_of_each_hand.append((hand, discard_to_advance))
 
-    return StdShantenWithGotTileResult(shanten, discard_to_advance, hands)
+    return ShantenWithGotTileResult("std", shanten, discard_to_advance_aggregated, discard_to_advance_of_each_hand)
 
 
 # ======== 七对子 ========
@@ -141,15 +145,21 @@ def chitoi_shanten(tiles: Union[List[Tile], str]) -> ShantenResult:
     for t in tiles:
         cnt[t] = cnt.get(t, 0) + 1
 
-    tot_pair = 0
+    pairs = []
+    remaining = []
     advance = set()
     for t in cnt:
         if cnt[t] >= 2:
-            tot_pair += 1
+            pairs.append(t)
+            for i in range(cnt[t] - 2):
+                remaining.append(t)
         elif cnt[t] == 1:
             advance.add(t)
+            remaining.append(t)
 
-    return ShantenResult(6 - tot_pair, advance)
+    hand = ChitoiHand(pairs=pairs, remaining=remaining)
+    return ShantenResult("chitoi", 6 - len(pairs), advance,
+                         [(hand, advance)])
 
 
 def chitoi_shanten_with_got_tile(tiles: Union[List[Tile], str]) -> ShantenWithGotTileResult:
@@ -163,13 +173,17 @@ def chitoi_shanten_with_got_tile(tiles: Union[List[Tile], str]) -> ShantenWithGo
     for t in tiles:
         cnt[t] = cnt.get(t, 0) + 1
 
-    tot_pair = 0
+    pairs = []
+    remaining = []
     advance = set()
     for t in cnt:
         if cnt[t] >= 2:
-            tot_pair += 1
+            pairs.append(t)
+            for i in range(cnt[t] - 2):
+                remaining.append(t)
         elif cnt[t] == 1:
             advance.add(t)
+            remaining.append(t)
 
     discard_to_advance = {}
     for t in advance:
@@ -177,19 +191,21 @@ def chitoi_shanten_with_got_tile(tiles: Union[List[Tile], str]) -> ShantenWithGo
         advance_after_discard.remove(t)
         discard_to_advance[t] = advance_after_discard
 
-    return ShantenWithGotTileResult(6 - tot_pair, discard_to_advance)
+    hand = ChitoiHand(pairs=pairs, remaining=remaining)
+    return ShantenWithGotTileResult("chitoi", 6 - len(pairs), discard_to_advance,
+                                    [(hand, discard_to_advance)])
 
 
 # ======== 国士无双 ========
-def kokushi_shanten(hand: Union[List[Tile], str]) -> ShantenResult:
-    if isinstance(hand, str):
-        hand = parse_tiles(hand)
+def kokushi_shanten(tiles: Union[List[Tile], str]) -> ShantenResult:
+    if isinstance(tiles, str):
+        tiles = parse_tiles(tiles)
 
-    if len(hand) != 13:
-        raise ValueError(f"invalid length of hand: {len(hand)}")
+    if len(tiles) != 13:
+        raise ValueError(f"invalid length of hand: {len(tiles)}")
 
     cnt = {}
-    for t in hand:
+    for t in tiles:
         if is_yaochu(t):
             cnt[t] = cnt.get(t, 0) + 1
 
@@ -199,11 +215,15 @@ def kokushi_shanten(hand: Union[List[Tile], str]) -> ShantenResult:
             pair = t
             break
 
+    hand = KokushiHand(tiles=tiles)
     if pair is not None:
-        advance = yaochu - cnt.keys()
-        return ShantenResult(12 - len(cnt), advance)
+        advance = all_yaochu - cnt.keys()
+        shanten = 12 - len(cnt)
     else:
-        return ShantenResult(13 - len(cnt), yaochu.copy())
+        advance = all_yaochu.copy()
+        shanten = 13 - len(cnt)
+    return ShantenResult("kokushi", shanten, advance,
+                         [(hand, advance)])
 
 
 def kokushi_shanten_with_got_tile(tiles: Union[List[Tile], str]) -> ShantenWithGotTileResult:
@@ -245,7 +265,9 @@ def kokushi_shanten_with_got_tile(tiles: Union[List[Tile], str]) -> ShantenWithG
             discard_to_advance[t] = pending.advance
         tiles.append(t)
 
-    return ShantenWithGotTileResult(shanten, discard_to_advance)
+    hand = KokushiHand(tiles=tiles)
+    return ShantenWithGotTileResult("kokushi", shanten, discard_to_advance,
+                                    [(hand, discard_to_advance)])
 
 
 # ======== union ========
@@ -258,16 +280,21 @@ def shanten(tiles: Union[List[Tile], str]) -> UnionShantenResult:
     kokushi = kokushi_shanten(tiles)
 
     shanten = min(std.shanten, chitoi.shanten, kokushi.shanten)
-    advance = set()
+    advance_aggregated = set()
+    advance_of_each_hand = list()
 
     if std.shanten == shanten:
-        advance |= std.advance
+        advance_aggregated |= std.advance
+        advance_of_each_hand += std.advance_of_each_hand
     if chitoi.shanten == shanten:
-        advance |= chitoi.advance
+        advance_aggregated |= chitoi.advance
+        advance_of_each_hand += chitoi.advance_of_each_hand
     if kokushi.shanten == shanten:
-        advance |= kokushi.advance
+        advance_aggregated |= kokushi.advance
+        advance_of_each_hand += kokushi.advance_of_each_hand
 
-    return UnionShantenResult(shanten, advance, std, chitoi, kokushi)
+    return UnionShantenResult("union", shanten, advance_aggregated, advance_of_each_hand,
+                              std, chitoi, kokushi)
 
 
 def shanten_with_got_tile(tiles: Union[List[Tile], str]) -> UnionShantenWithGotTileResult:
@@ -279,25 +306,31 @@ def shanten_with_got_tile(tiles: Union[List[Tile], str]) -> UnionShantenWithGotT
     kokushi = kokushi_shanten_with_got_tile(tiles)
 
     shanten = min(std.shanten, chitoi.shanten, kokushi.shanten)
-    mapping = dict()
+    discard_to_advance_aggregated = dict()
+    discard_to_advance_of_each_hand = list()
 
     if std.shanten == shanten:
+        discard_to_advance_of_each_hand += std.discard_to_advance_of_each_hand
         for discard, advance in std.discard_to_advance.items():
-            if discard not in mapping:
-                mapping[discard] = set()
-            mapping[discard] |= advance
+            if discard not in discard_to_advance_aggregated:
+                discard_to_advance_aggregated[discard] = set()
+            discard_to_advance_aggregated[discard] |= advance
     if chitoi.shanten == shanten:
+        discard_to_advance_of_each_hand += chitoi.discard_to_advance_of_each_hand
         for discard, advance in chitoi.discard_to_advance.items():
-            if discard not in mapping:
-                mapping[discard] = set()
-            mapping[discard] |= advance
+            if discard not in discard_to_advance_aggregated:
+                discard_to_advance_aggregated[discard] = set()
+            discard_to_advance_aggregated[discard] |= advance
     if kokushi.shanten == shanten:
+        discard_to_advance_of_each_hand += kokushi.discard_to_advance_of_each_hand
         for discard, advance in kokushi.discard_to_advance.items():
-            if discard not in mapping:
-                mapping[discard] = set()
-            mapping[discard] |= advance
+            if discard not in discard_to_advance_aggregated:
+                discard_to_advance_aggregated[discard] = set()
+            discard_to_advance_aggregated[discard] |= advance
 
-    return UnionShantenWithGotTileResult(shanten, mapping, std, chitoi, kokushi)
+    return UnionShantenWithGotTileResult("union", shanten,
+                                         discard_to_advance_aggregated, discard_to_advance_of_each_hand,
+                                         std, chitoi, kokushi)
 
 
 __all__ = ("std_shanten", "std_shanten_with_got_tile",
@@ -305,5 +338,4 @@ __all__ = ("std_shanten", "std_shanten_with_got_tile",
            "kokushi_shanten", "kokushi_shanten_with_got_tile",
            "shanten", "shanten_with_got_tile",
            "ShantenResult", "ShantenWithGotTileResult",
-           "StdShantenResult", "StdShantenWithGotTileResult",
            "UnionShantenResult", "UnionShantenWithGotTileResult")

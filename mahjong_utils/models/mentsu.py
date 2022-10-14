@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, overload, Sequence
+from typing import List, Sequence, Union
 
 from .tile import Tile, parse_tiles, tile_text
 from .tile_type import TileType
@@ -45,17 +45,7 @@ class Shuntsu(Mentsu):
         return [self.tile, self.tile + 1, self.tile + 2]
 
 
-@overload
-def mentsu(t: str) -> Mentsu:
-    ...
-
-
-@overload
-def mentsu(t: Sequence[Tile]) -> Mentsu:
-    ...
-
-
-def mentsu(t) -> Mentsu:
+def parse_mentsu(t: Union[Sequence[Tile], str]) -> Mentsu:
     if isinstance(t, str):
         t = parse_tiles(t)
 
@@ -74,4 +64,4 @@ def mentsu(t) -> Mentsu:
             raise ValueError(f"invalid tiles: {t}")
 
 
-__all__ = ("Mentsu", "Kotsu", "Shuntsu", "mentsu")
+__all__ = ("Mentsu", "Kotsu", "Shuntsu", "parse_mentsu")

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Set, overload, Sequence
+from typing import Set, Sequence, Union
 
 from .mentsu import Mentsu, Shuntsu, Kotsu
 from .tile import Tile, parse_tiles, tile_text
@@ -36,9 +36,6 @@ class Ryanmen(Tatsu):
     两面
     """
 
-    def post_init(self):
-        assert self.first.tile_type != TileType.Z and 1 < self.first < 7
-
     @property
     def second(self) -> Tile:
         return self.first + 1
@@ -60,9 +57,6 @@ class Penchan(Tatsu):
     """
     边张
     """
-
-    def post_init(self):
-        assert self.first.tile_type != TileType.Z and (self.first == 1 or self.first == 7)
 
     @property
     def second(self) -> Tile:
@@ -86,9 +80,6 @@ class Kanchan(Tatsu):
     """
     坎张
     """
-
-    def post_init(self):
-        assert self.first.tile_type != TileType.Z and self.first < 8
 
     @property
     def second(self) -> Tile:
@@ -125,17 +116,7 @@ class Toitsu(Tatsu):
             raise ValueError(f"tile {tile} is not waiting")
 
 
-@overload
-def tatsu(t: str) -> Tatsu:
-    ...
-
-
-@overload
-def tatsu(t: Sequence[Tile]) -> Tatsu:
-    ...
-
-
-def tatsu(t) -> Tatsu:
+def parse_tatsu(t: Union[Sequence[Tile], str]) -> Tatsu:
     if isinstance(t, str):
         t = parse_tiles(t)
 
@@ -162,4 +143,4 @@ def tatsu(t) -> Tatsu:
             raise ValueError(f"invalid tiles: {t}")
 
 
-__all__ = ("Tatsu", "Toitsu", "Kanchan", "Ryanmen", "Penchan", "tatsu")
+__all__ = ("Tatsu", "Toitsu", "Kanchan", "Ryanmen", "Penchan", "parse_tatsu")

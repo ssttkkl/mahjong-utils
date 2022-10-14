@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, overload, Sequence
+from typing import List, Sequence, Union
 
 from .mentsu import Shuntsu, Kotsu, Mentsu
 from .tile import Tile, parse_tiles
@@ -47,17 +47,7 @@ class Kan(Kotsu, Furo):
         return [self.tile] * 4
 
 
-@overload
-def furo(t: str) -> Furo:
-    ...
-
-
-@overload
-def furo(t: Sequence[Tile]) -> Furo:
-    ...
-
-
-def furo(t) -> Furo:
+def parse_furo(t: Union[Sequence[Tile], str]) -> Furo:
     if isinstance(t, str):
         t = parse_tiles(t)
 

@@ -1,11 +1,12 @@
 from typing import List, Callable
 
+from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping, tile_type_reversed_index_mapping
 from mahjong_utils.internal.utils.bit import generate_k_bit_number
 from mahjong_utils.models.hand import StdHand
 from mahjong_utils.models.mentsu import Kotsu, Shuntsu
 from mahjong_utils.models.tatsu import Tatsu, Toitsu, Kanchan, Ryanmen, Penchan
 from mahjong_utils.models.tile import Tile, tile
-from mahjong_utils.models.tile_type import tile_type_index_mapping, tile_type_reversed_index_mapping, TileType
+from mahjong_utils.models.tile_type import TileType
 
 
 def _encode(t: Tile) -> int:
@@ -134,7 +135,7 @@ class StdHandSearcher:
                         self._tatsu.pop()
 
                 # ryanmen
-                if tatsu_type_limitation <= 2 and t.tile_type != TileType.Z and 2 <= t.num <= 7:
+                if tatsu_type_limitation <= 2 <= t.num <= 7 and t.tile_type != TileType.Z:
                     j = i + 1
                     if self._count[i] > 0 and self._count[j] > 0:
                         taken = True
@@ -170,7 +171,11 @@ class StdHandSearcher:
 
     def _on_result(self):
         for jyantou, mentsu, tatsu, remaining in self._normalize():
-            self.callback(StdHand(jyantou, mentsu.copy(), tatsu.copy(), remaining.copy()))
+            self.callback(StdHand(jyantou=jyantou,
+                                  menzen_mentsu=mentsu.copy(),
+                                  furo=[],
+                                  tatsu=tatsu.copy(),
+                                  remaining=remaining.copy()))
 
     def _normalize(self):
         # 将搜索结果处理为（雀头，面子，搭子，浮牌）的形式，且面子数+搭子数不超过k
