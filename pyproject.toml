@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "mahjong-utils"
-version = "0.1.0"
+version = "0.1.0-alpha.01"
 description = ""
 authors = ["ssttkkl <huang.wen.long@hotmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "mahjong_utils"}]
+packages = [{ include = "mahjong_utils" }]
 
 [tool.poetry.dependencies]
 python = "^3.7"
