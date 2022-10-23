@@ -1,3 +1,6 @@
+from typing import Dict, Tuple
+
+
 def _ceil100(x):
     if x % 100 > 0:
         x += 100 - x % 100
@@ -62,8 +65,8 @@ def build_han_hu_to_child_point(mapping):
     mapping[13, 20] = 32000, 16000, 8000
 
 
-parent_han_hu_mapping = {}
-child_han_hu_mapping = {}
+parent_han_hu_mapping: Dict[Tuple[int, int], Tuple[int, int, int]] = {}
+child_han_hu_mapping: Dict[Tuple[int, int], Tuple[int, int]] = {}
 
 build_han_hu_to_parent_point(parent_han_hu_mapping)
 build_han_hu_to_child_point(child_han_hu_mapping)

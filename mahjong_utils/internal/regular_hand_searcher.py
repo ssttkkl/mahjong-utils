@@ -3,7 +3,7 @@ from typing import List, Callable
 from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping, tile_type_reversed_index_mapping
 from mahjong_utils.internal.utils.bit import generate_k_bit_number
 from mahjong_utils.models.hand import RegularHand
-from mahjong_utils.models.mentsu import Kotsu, Shuntsu
+from mahjong_utils.models.mentsu import Kotsu, Shuntsu, Mentsu
 from mahjong_utils.models.tatsu import Tatsu, Toitsu, Kanchan, Ryanmen, Penchan
 from mahjong_utils.models.tile import Tile, tile
 from mahjong_utils.models.tile_type import TileType
@@ -29,8 +29,8 @@ class RegularHandSearcher:
         self._n = len(hand)
         self._k = k
 
-        self._mentsu = []
-        self._tatsu = []
+        self._mentsu: List[Mentsu] = []
+        self._tatsu: List[Tatsu] = []
         self._stop = False
 
     def run(self):
@@ -170,12 +170,8 @@ class RegularHandSearcher:
             self._on_result()
 
     def _on_result(self):
-        for jyantou, mentsu, tatsu, remaining in self._normalize():
-            self.callback(RegularHand(jyantou=jyantou,
-                                      menzen_mentsu=mentsu.copy(),
-                                      furo=[],
-                                      tatsu=tatsu.copy(),
-                                      remaining=remaining.copy()))
+        for hand in self._normalize():
+            self.callback(hand)
 
     def _normalize(self):
         # 将搜索结果处理为（雀头，面子，搭子，浮牌）的形式，且面子数+搭子数不超过k
@@ -197,17 +193,23 @@ class RegularHandSearcher:
 
                 for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu),
                                                                                   remaining_tatsu):
-                    yield tt.first, self._mentsu, tatsu_chosen, remaining + tatsu_not_chosen_as_tiles
+                    yield RegularHand(jyantou=tt.first,
+                                      menzen_mentsu=self._mentsu.copy(),
+                                      tatsu=tatsu_chosen,
+                                      remaining=remaining + tatsu_not_chosen_as_tiles)
 
         if not has_toitsu:
             for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu), self._tatsu):
-                yield None, self._mentsu, tatsu_chosen, remaining + tatsu_not_chosen_as_tiles
+                yield RegularHand(jyantou=None,
+                                  menzen_mentsu=self._mentsu.copy(),
+                                  tatsu=tatsu_chosen,
+                                  remaining=remaining + tatsu_not_chosen_as_tiles)
 
     @staticmethod
     def _choose_tatsu(k: int, tatsu: List[Tatsu]):
         # 选择k个搭子
         if k >= len(tatsu):
-            yield tatsu, []
+            yield tatsu.copy(), []
         elif k == 0:
             tiles = []
             for tt in tatsu:

@@ -16,6 +16,7 @@ def yakuhai_checker_factory(tile: Tile):
         for kt in hora_hand.kotsu:
             if kt.tile == tile:
                 return True
+        return False
 
     return checker
 

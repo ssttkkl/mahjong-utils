@@ -13,7 +13,7 @@ class Tile(NamedTuple):
     tile_type: TileType
     num: int
 
-    def __str__(self):
+    def __repr__(self):
         return f"{self.num}{self.tile_type}"
 
     @property
@@ -125,10 +125,7 @@ def _get_tile_by_text(text: str) -> Tile:
     return _get_tile_by_type_and_num(tile_type, num)
 
 
-def _get_tile_by_type_and_num(tile_type: Union[TileType, str], num: int) -> Tile:
-    if isinstance(tile_type, str):
-        tile_type = TileType[tile_type]
-
+def _get_tile_by_type_and_num(tile_type: TileType, num: int) -> Tile:
     tile_type_index = tile_type_index_mapping[tile_type]
 
     if 0 <= tile_type_index * 10 + num < len(tile_pool):
@@ -146,7 +143,7 @@ def _get_tile_by_code(code: int) -> Tile:
 
 
 @overload
-def tile(tile_type: Union[TileType, str], num: int) -> Tile:
+def tile(tile_type: TileType, num: int) -> Tile:
     ...
 
 
@@ -160,23 +157,37 @@ def tile(code: int) -> Tile:
     ...
 
 
-def tile(*args) -> Tile:
+def tile(*args, **kwargs) -> Tile:
+    text: Optional[str] = kwargs.get("text", None)
+    code: Optional[int] = kwargs.get("code", None)
+    tile_type: Optional[TileType] = kwargs.get("tile_type", None)
+    num: Optional[int] = kwargs.get("num", None)
+
     if len(args) == 1:
-        if isinstance(args[0], str):
-            return _get_tile_by_text(args[0])
-        elif isinstance(args[0], int):
-            return _get_tile_by_code(args[0])
-        else:
-            raise ValueError("invalid arguments")
+        a = args[0]
+        if isinstance(a, str):
+            text = a
+        elif isinstance(a, int):
+            code = a
     elif len(args) == 2:
-        return _get_tile_by_type_and_num(args[0], args[1])
-    else:
-        raise ValueError("invalid arguments")
+        a, b = args[0], args[1]
+        if isinstance(a, TileType) and isinstance(b, int):
+            tile_type = a
+            num = b
+
+    if text is not None:
+        return _get_tile_by_text(text)
+    elif code is not None:
+        return _get_tile_by_code(code)
+    elif tile_type is not None and num is not None:
+        return _get_tile_by_type_and_num(tile_type, num)
+
+    raise ValueError("invalid arguments")
 
 
 def parse_tiles(text: str) -> List[Tile]:
     ans: List[Tile] = []
-    pending = []
+    pending: List[int] = []
     for c in text:
         if c.upper() in ("M", "P", "S", "Z"):
             tile_type = TileType[c.upper()]
@@ -194,13 +205,13 @@ def parse_tiles(text: str) -> List[Tile]:
     return ans
 
 
-def tile_text(tile: Union[Tile, Iterable[Tile]]) -> str:
-    if isinstance(tile, Tile):
-        return str(tile)
+def tiles_text(tiles: Union[Tile, Iterable[Tile]]) -> str:
+    if isinstance(tiles, Tile):
+        return str(tiles)
 
     prev = None
     with StringIO() as sio:
-        for t in tile:
+        for t in tiles:
             if prev and prev.tile_type != t.tile_type:
                 sio.write(prev.tile_type)
             sio.write(str(t.num))
@@ -264,5 +275,5 @@ def is_sangen(t: Tile) -> bool:
     return t.tile_type == TileType.Z and 5 <= t.num <= 7
 
 
-__all__ = ("Tile", "tile", "parse_tiles", "tile_text", "all_yaochu",
+__all__ = ("Tile", "tile", "parse_tiles", "tiles_text", "all_yaochu",
            "is_m", "is_p", "is_s", "is_z", "is_wind", "is_sangen", "is_yaochu")

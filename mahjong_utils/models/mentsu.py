@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, Sequence, Union
 
-from .tile import Tile, parse_tiles, tile_text
+from .tile import Tile, parse_tiles, tiles_text
 from .tile_type import TileType
 
 
@@ -13,8 +13,8 @@ class Mentsu(ABC):
     """
     tile: Tile
 
-    def __str__(self):
-        return tile_text(self.tiles)
+    def __repr__(self):
+        return tiles_text(self.tiles)
 
     @property
     @abstractmethod
@@ -57,7 +57,7 @@ def parse_mentsu(t: Union[Sequence[Tile], str]) -> Mentsu:
     else:
         if t[0].tile_type == TileType.Z or t[1].tile_type == TileType.Z or t[2].tile_type == TileType.Z:
             raise ValueError(f"invalid tiles: {t}")
-        t.sort()
+        t = sorted(t)
         if t[1] - t[0] == 1 and t[2] - t[1] == 1:
             return Shuntsu(t[0])
         else:

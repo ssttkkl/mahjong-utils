@@ -1,7 +1,7 @@
 from abc import ABC
-from typing import Optional
+from typing import Optional, Dict, List
 
-from pydantic import BaseModel, root_validator
+from pydantic import Field
 
 from mahjong_utils.models.furo import Pon, Kan
 from mahjong_utils.models.hand import RegularHand, Hand, ChitoiHand, KokushiHand
@@ -13,7 +13,7 @@ from mahjong_utils.models.tile_type import TileType
 from mahjong_utils.models.wind import Wind
 
 
-class HoraHand(BaseModel, Hand, ABC):
+class HoraHand(Hand, ABC):
     agari: Tile
     tsumo: bool
     hu: int
@@ -25,8 +25,10 @@ class RegularHoraHand(HoraHand, RegularHand):
     agari_tatsu: Optional[Tatsu]
     hu: int = 0  # 在__init__中计算
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    jyantou: Tile
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.hu = self._calc_hu()
 
     def _calc_hu(self) -> int:
@@ -104,17 +106,8 @@ class KokushiHoraHand(HoraHand, KokushiHand):
 
     hu: int = 20
 
-    @root_validator
-    def validator(cls, values):
-        # fill tiles
-        tiles = []
-        for t in all_yaochu:
-            tiles.append(t)
-        if not values["thirteen_waiting"]:
-            tiles.append(values["repeated"])
-            tiles.remove(values["agari"])
-        values["tiles"] = tiles
-        return values
+    yaochu: List[Tile] = Field(default_factory=lambda: list(all_yaochu))
+    remaining: List[Tile] = Field(default_factory=list)
 
 
 def _build_std_hora_hand(hand: RegularHand,
@@ -122,9 +115,6 @@ def _build_std_hora_hand(hand: RegularHand,
                          tsumo: bool,
                          self_wind: Optional[Wind] = None,
                          round_wind: Optional[Wind] = None) -> RegularHoraHand:
-    if not hand.tenpai:
-        raise ValueError("hand is not tenpai")
-
     if hand.jyantou is not None:
         agari_tatsu = hand.tatsu[0]
         menzen_mentsu = hand.menzen_mentsu.copy()
@@ -153,9 +143,6 @@ def _build_chitoi_hora_hand(hand: ChitoiHand,
                             tsumo: bool,
                             self_wind: Optional[Wind] = None,
                             round_wind: Optional[Wind] = None) -> ChitoiHoraHand:
-    if not hand.tenpai:
-        raise ValueError("hand is not tenpai")
-
     if hand.remaining[0] != agari:
         raise ValueError("agari is not waiting")
 
@@ -174,9 +161,6 @@ def _build_kokushi_hora_hand(hand: KokushiHand,
                              tsumo: bool,
                              self_wind: Optional[Wind] = None,
                              round_wind: Optional[Wind] = None) -> KokushiHoraHand:
-    if not hand.tenpai:
-        raise ValueError("hand is not tenpai")
-
     if agari in hand.tiles:
         repeated = agari
         thirteen_waiting = True
@@ -184,7 +168,7 @@ def _build_kokushi_hora_hand(hand: KokushiHand,
         repeated = None
         thirteen_waiting = False
 
-        cnt = {}
+        cnt: Dict[Tile, int] = {}
         for t in hand.tiles:
             cnt[t] = cnt.get(t, 0) + 1
 
@@ -206,6 +190,9 @@ def build_hora_hand(hand: Hand,
                     tsumo: bool,
                     self_wind: Optional[Wind] = None,
                     round_wind: Optional[Wind] = None) -> HoraHand:
+    if hand.shanten != 0:
+        raise ValueError("hand is not tenpai")
+
     if isinstance(hand, RegularHand):
         return _build_std_hora_hand(hand, agari, tsumo, self_wind, round_wind)
     elif isinstance(hand, ChitoiHand):

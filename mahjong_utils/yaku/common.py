@@ -44,6 +44,7 @@ def self_wind(hora_hand: HoraHand) -> bool:
     for mt in hora_hand.mentsu:
         if mt.tile == hora_hand.self_wind.tile:
             return True
+    return False
 
 
 @_yaku(1, 0)
@@ -54,6 +55,7 @@ def round_wind(hora_hand: HoraHand) -> bool:
     for mt in hora_hand.mentsu:
         if mt.tile == hora_hand.round_wind.tile:
             return True
+    return False
 
 
 haku = Yaku("haku", 1, 0, checker=yakuhai_checker_factory(tile(TileType.Z, 5)))

@@ -3,21 +3,21 @@ from mahjong_utils.models.tile import tile, all_yaochu
 
 
 def test_shanten_1():
-    from mahjong_utils.shanten import calc_shanten
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
-    result = calc_shanten(parse_tiles("34568m235p68s"), [parse_furo("123m")])
+    result = shanten(parse_tiles("34568m235p68s"), [parse_furo("123m")])
 
     assert result.shanten == 2
     assert result.advance == {*parse_tiles("3678m12345p678s"), }
 
 
 def test_shanten_with_got_tile_1():
-    from mahjong_utils.shanten import calc_shanten_with_got_tile
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("34568m235p368s")
-    result = calc_shanten_with_got_tile(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 2
     assert result.discard_to_advance == {
@@ -34,22 +34,22 @@ def test_shanten_with_got_tile_1():
 
 
 def test_shanten_2():
-    from mahjong_utils.shanten import calc_shanten
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("3344z6699p11345s")
-    result = calc_shanten(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 1
     assert result.advance == {*parse_tiles("345s"), }
 
 
 def test_shanten_with_got_tile_2():
-    from mahjong_utils.shanten import calc_shanten_with_got_tile
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("3344z6699p11345s8m")
-    result = calc_shanten_with_got_tile(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 1
     assert result.discard_to_advance == {
@@ -61,22 +61,22 @@ def test_shanten_with_got_tile_2():
 
 
 def test_shanten_3():
-    from mahjong_utils.shanten import calc_shanten
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("112233p44556s12z")
-    result = calc_shanten(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 1
     assert result.advance == {*parse_tiles("36s12z"), }
 
 
 def test_shanten_with_got_tile_3():
-    from mahjong_utils.shanten import calc_shanten_with_got_tile
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("112233p44556s127z")
-    result = calc_shanten_with_got_tile(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 1
     assert result.discard_to_advance == {
@@ -88,33 +88,33 @@ def test_shanten_with_got_tile_3():
 
 
 def test_shanten_4():
-    from mahjong_utils.shanten import calc_shanten
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("1112345678999p")
-    result = calc_shanten(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 0
     assert result.advance == {*parse_tiles("123456789p"), }
 
 
 def test_shanten_with_got_tile_4():
-    from mahjong_utils.shanten import calc_shanten_with_got_tile
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("11123456789999p")
-    result = calc_shanten_with_got_tile(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == -1
     assert result.discard_to_advance == {}
 
 
 def test_shanten_with_got_tile_5():
-    from mahjong_utils.shanten import calc_shanten_with_got_tile
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("1112345678999s1z")
-    result = calc_shanten_with_got_tile(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 0
     assert result.discard_to_advance == {
@@ -126,22 +126,22 @@ def test_shanten_with_got_tile_5():
 
 
 def test_shanten_6():
-    from mahjong_utils.shanten import calc_shanten
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("114514p1919810s")
-    result = calc_shanten(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 2
     assert result.advance == {*parse_tiles("234567p3456789s"), }
 
 
 def test_shanten_with_got_tile_6():
-    from mahjong_utils.shanten import calc_shanten_with_got_tile
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("114514p1919810s8p")
-    result = calc_shanten_with_got_tile(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 2
     assert result.discard_to_advance == {
@@ -157,11 +157,11 @@ def test_shanten_with_got_tile_6():
 
 
 def test_shanten_with_got_tile_7():
-    from mahjong_utils.shanten import calc_shanten_with_got_tile
+    from mahjong_utils.shanten import shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("111p456p123s678p23s")
-    result = calc_shanten_with_got_tile(tiles)
+    result = shanten(tiles)
 
     assert result.shanten == 0
     assert result.discard_to_advance == {
@@ -173,44 +173,44 @@ def test_shanten_with_got_tile_7():
 
 
 def test_kokushi_shanten_1():
-    from mahjong_utils.shanten import calc_kokushi_shanten
+    from mahjong_utils.shanten import kokushi_shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("119m19p19266s135z")
-    result = calc_kokushi_shanten(tiles)
+    result = kokushi_shanten(tiles)
 
     assert result.shanten == 3
     assert result.advance == {*parse_tiles("2467z"), }
 
 
 def test_kokushi_shanten_2():
-    from mahjong_utils.shanten import calc_kokushi_shanten
+    from mahjong_utils.shanten import kokushi_shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("19m19p19266s1235z")
-    result = calc_kokushi_shanten(tiles)
+    result = kokushi_shanten(tiles)
 
     assert result.shanten == 3
     assert result.advance == all_yaochu
 
 
 def test_kokushi_shanten_3():
-    from mahjong_utils.shanten import calc_kokushi_shanten
+    from mahjong_utils.shanten import kokushi_shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("1119m19p19s12355z")
-    result = calc_kokushi_shanten(tiles)
+    result = kokushi_shanten(tiles)
 
     assert result.shanten == 2
     assert result.advance == {*parse_tiles("467z"), }
 
 
 def test_kokushi_shanten_with_got_tile_1():
-    from mahjong_utils.shanten import calc_kokushi_shanten_with_got_tile
+    from mahjong_utils.shanten import kokushi_shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("119m19p19266s135z3s")
-    result = calc_kokushi_shanten_with_got_tile(tiles)
+    result = kokushi_shanten(tiles)
 
     assert result.shanten == 3
     assert result.discard_to_advance == {
@@ -221,11 +221,11 @@ def test_kokushi_shanten_with_got_tile_1():
 
 
 def test_kokushi_shanten_with_got_tile_2():
-    from mahjong_utils.shanten import calc_kokushi_shanten_with_got_tile
+    from mahjong_utils.shanten import kokushi_shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("19m19p19266s1235z3s")
-    result = calc_kokushi_shanten_with_got_tile(tiles)
+    result = kokushi_shanten(tiles)
 
     assert result.shanten == 3
     assert result.discard_to_advance == {
@@ -236,11 +236,11 @@ def test_kokushi_shanten_with_got_tile_2():
 
 
 def test_kokushi_shanten_with_got_tile_3():
-    from mahjong_utils.shanten import calc_kokushi_shanten_with_got_tile
+    from mahjong_utils.shanten import kokushi_shanten
     from mahjong_utils.models.tile import parse_tiles
 
     tiles = parse_tiles("1119m19p19s12355z3s")
-    result = calc_kokushi_shanten_with_got_tile(tiles)
+    result = kokushi_shanten(tiles)
 
     assert result.shanten == 2
     assert result.discard_to_advance == {

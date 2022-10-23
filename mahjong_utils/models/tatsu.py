@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Set, Sequence, Union
 
 from .mentsu import Mentsu, Shuntsu, Kotsu
-from .tile import Tile, parse_tiles, tile_text
+from .tile import Tile, parse_tiles, tiles_text
 from .tile_type import TileType
 
 
@@ -19,8 +19,8 @@ class Tatsu(ABC):
     def second(self) -> Tile:
         raise NotImplementedError()
 
-    def __str__(self):
-        return tile_text([self.first, self.second])
+    def __repr__(self):
+        return tiles_text([self.first, self.second])
 
     @property
     @abstractmethod
@@ -123,24 +123,26 @@ def parse_tatsu(t: Union[Sequence[Tile], str]) -> Tatsu:
     if len(t) != 2:
         raise ValueError("tiles must has length of 2")
 
-    if t[0] > t[1]:
-        t[0], t[1] = t[1], t[0]
+    first, second = t[0], t[1]
 
-    if t[0] == t[1]:
-        return Toitsu(t[0])
+    if first > second:
+        first, second = second, first
+
+    if first == second:
+        return Toitsu(first)
     else:
-        if t[0].tile_type == TileType.Z or t[1].tile_type == TileType.Z:
+        if first.tile_type == TileType.Z or second.tile_type == TileType.Z:
             raise ValueError(f"invalid tiles: {t}")
 
-        if t[1] - t[0] == 1:
-            if t[0].num == 1 or t[0].num == 7:
-                return Penchan(t[0])
+        if second - first == 1:
+            if first.num == 1 or first.num == 7:
+                return Penchan(first)
             else:
-                return Ryanmen(t[0])
-        elif t[1] - t[0] == 2:
-            return Kanchan(t[0])
+                return Ryanmen(first)
+        elif second - first == 2:
+            return Kanchan(first)
         else:
-            raise ValueError(f"invalid tiles: {t}")
+            raise ValueError(f"invalid tiles: {first}, {second}")
 
 
 __all__ = ("Tatsu", "Toitsu", "Kanchan", "Ryanmen", "Penchan", "parse_tatsu")
