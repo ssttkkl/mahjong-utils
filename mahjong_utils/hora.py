@@ -40,6 +40,7 @@ class Hora(BaseModel):
     def parent_point(self) -> Tuple[int, int]:
         """
         亲家和牌点数
+
         :return: (荣和点数, 自摸各家点数)
         """
         if len(self.yaku) == 0:
@@ -58,6 +59,7 @@ class Hora(BaseModel):
     def child_point(self) -> Tuple[int, int, int]:
         """
         子家X番Y符的点数
+
         :return: (荣和点数, 自摸庄家点数, 自摸闲家点数)
         """
         if len(self.yaku) == 0:
