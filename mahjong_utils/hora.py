@@ -125,22 +125,9 @@ def build_hora_from_shanten_result(shanten_result: ShantenResult, agari: Tile,
     :param extra_yaku: 额外役
     :return: Hora
     """
-    with_got = shanten_result.advance is None
-
-    if with_got:
-        if shanten_result.shanten != -1:
-            raise ValueError("hand is not agari")
-    else:
-        if shanten_result.shanten != 0:
-            raise ValueError("hand is not tenpai")
-        if agari not in shanten_result.advance:
-            raise ValueError("agari is not waiting")
-
     possible_hora = []
 
     for hand in shanten_result.hands:
-        if hand.with_got and agari not in hand.tiles:
-            raise ValueError("agari is not in hand")
         if not hand.with_got and agari not in hand.advance:
             continue
 

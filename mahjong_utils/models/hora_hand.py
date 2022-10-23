@@ -131,9 +131,6 @@ def _build_regular_hora_hand(hand: RegularHand,
         raise ValueError("hand.k must be 4")
 
     if not hand.with_got:
-        assert hand.shanten == 0
-        assert agari in hand.advance
-
         if hand.jyantou is not None:
             yield RegularHoraHand(agari=agari,
                                   tsumo=tsumo,
@@ -153,9 +150,6 @@ def _build_regular_hora_hand(hand: RegularHand,
                                   menzen_mentsu=hand.menzen_mentsu,
                                   furo=hand.furo)
     else:
-        assert hand.shanten == -1
-        assert agari in hand.tiles
-
         for excluded_hand in hand_exclude_got_regular(hand, agari):
             for h in _build_regular_hora_hand(excluded_hand, agari, tsumo, self_wind, round_wind):
                 yield h
@@ -227,6 +221,17 @@ def build_hora_hand(hand: Hand,
     :param round_wind: 场风
     :return: 当Hand为摸牌状态时，返回所有可能的HoraHand。否则返回一个对应的HoraHand。
     """
+    if not hand.with_got:
+        if hand.shanten != 0:
+            raise ValueError("hand is not tenpai")
+        if agari not in hand.advance:
+            raise ValueError("agari is not waiting")
+    else:
+        if hand.shanten != -1:
+            raise ValueError("hand is not agari")
+        if agari not in hand.tiles:
+            raise ValueError("agari is not in hand")
+
     if isinstance(hand, RegularHand):
         return _build_regular_hora_hand(hand, agari, tsumo, self_wind, round_wind)
     elif isinstance(hand, ChitoiHand):

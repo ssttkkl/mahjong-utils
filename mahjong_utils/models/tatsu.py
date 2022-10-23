@@ -32,6 +32,7 @@ class Tatsu(ABC):
         raise NotImplementedError()
 
 
+@dataclass(frozen=True)
 class Ryanmen(Tatsu):
     """
     两面
@@ -54,6 +55,7 @@ class Ryanmen(Tatsu):
             raise ValueError(f"tile {tile} is not waiting")
 
 
+@dataclass(frozen=True)
 class Penchan(Tatsu):
     """
     边张
@@ -77,6 +79,7 @@ class Penchan(Tatsu):
             raise ValueError(f"tile {tile} is not waiting")
 
 
+@dataclass(frozen=True)
 class Kanchan(Tatsu):
     """
     坎张
@@ -97,6 +100,7 @@ class Kanchan(Tatsu):
             raise ValueError(f"tile {tile} is not waiting")
 
 
+@dataclass(frozen=True)
 class Toitsu(Tatsu):
     """
     对子

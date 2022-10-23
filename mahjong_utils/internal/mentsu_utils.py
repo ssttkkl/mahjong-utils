@@ -20,7 +20,7 @@ def shuntsu_try_exclude_got(shuntsu: Shuntsu, got: Tile) -> Optional[Union[Pench
             return Ryanmen(got + 1)
     elif got == shuntsu.tile + 1:
         return Kanchan(shuntsu.tile)
-    else:
+    elif got == shuntsu.tile + 2:
         if got.num == 1:
             return Penchan(shuntsu.tile)
         else:

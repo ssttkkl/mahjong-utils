@@ -23,6 +23,7 @@ class Mentsu(ABC):
         raise NotImplementedError()
 
 
+@dataclass(frozen=True)
 class Kotsu(Mentsu):
     """
     刻子
@@ -33,6 +34,7 @@ class Kotsu(Mentsu):
         return [self.tile] * 3
 
 
+@dataclass(frozen=True)
 class Shuntsu(Mentsu):
     """
     顺子

@@ -33,7 +33,7 @@ def test_build_hora_2():
 def test_build_hora_3():
     from mahjong_utils.hora import build_hora
 
-    hora = build_hora(parse_tiles("1345556m111z"), [parse_furo("789m")], tile("2m"), True)
+    hora = build_hora(parse_tiles("1345556m111z2m"), [parse_furo("789m")], tile("2m"), True)
 
     assert hora.yaku == {ittsu, honitsu}
     assert hora.han == 3
@@ -45,7 +45,7 @@ def test_build_hora_3():
 def test_build_hora_4():
     from mahjong_utils.hora import build_hora
 
-    hora = build_hora(parse_tiles("12323467m11z"), [parse_furo("789p")], tile("5m"), True, dora=13)
+    hora = build_hora(parse_tiles("12323467m11z5m"), [parse_furo("789p")], tile("5m"), True, dora=13)
 
     assert len(hora.yaku) == 0
     assert hora.han == 0
