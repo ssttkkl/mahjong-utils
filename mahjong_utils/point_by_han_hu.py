@@ -7,11 +7,33 @@ def _ceil100(x):
     return x
 
 
+no_ron = {
+    (1, 20), (1, 25),
+    (2, 20),
+    (3, 20),
+    (4, 20)
+}
+
+no_tsumo = {
+    (2, 25),
+    (1, 110)
+}
+
+
 def _calc_parent_point(han: int, hu: int):
     a = hu * (2 ** (han + 2))
     if a > 2000:
         a = 2000
-    return _ceil100(6 * a), _ceil100(2 * a)
+
+    ron = _ceil100(6 * a)
+    tsumo = _ceil100(2 * a)
+
+    if (han, hu) in no_ron:
+        ron = 0
+    if (han, hu) in no_tsumo:
+        tsumo = 0
+
+    return ron, tsumo
 
 
 def build_han_hu_to_parent_point(mapping):
@@ -40,7 +62,18 @@ def _calc_child_point(han: int, hu: int):
     a = hu * (2 ** (han + 2))
     if a > 2000:
         a = 2000
-    return _ceil100(4 * a), _ceil100(2 * a), _ceil100(a)
+
+    ron = _ceil100(4 * a)
+    tsumo_parent = _ceil100(2 * a)
+    tsumo_child = _ceil100(a)
+
+    if (han, hu) in no_ron:
+        ron = 0
+    if (han, hu) in no_tsumo:
+        tsumo_parent = 0
+        tsumo_child = 0
+
+    return ron, tsumo_parent, tsumo_child
 
 
 def build_han_hu_to_child_point(mapping):
