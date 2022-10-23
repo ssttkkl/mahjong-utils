@@ -35,6 +35,7 @@ class RegularHand(Hand):
     表示一个结构分析后的以标准形为目标的手牌
     """
 
+    k: int
     jyantou: Optional[Tile] = None
     menzen_mentsu: List[Mentsu] = Field(default_factory=list)
     furo: List[Furo] = Field(default_factory=list)

@@ -1,11 +1,10 @@
-from copy import deepcopy
 from dataclasses import dataclass
-from typing import List, Tuple, Set, Dict, Literal, Optional, Mapping, Sequence
+from typing import List, Set, Dict, Literal, Optional, Mapping, Sequence
 
-from mahjong_utils.internal.regular_hand_searcher import RegularHandSearcher
-from mahjong_utils.internal.tile_cling import tile_cling
+from mahjong_utils.internal.hand_utils import calc_regular_advance
+from mahjong_utils.internal.regular_hand_searcher import regular_hand_search
 from mahjong_utils.models.furo import Furo
-from mahjong_utils.models.hand import RegularHand, Hand, ChitoiHand, KokushiHand
+from mahjong_utils.models.hand import Hand, ChitoiHand, KokushiHand
 from mahjong_utils.models.tile import Tile, is_yaochu, all_yaochu, tile
 
 
@@ -26,54 +25,6 @@ class UnionShantenResult(ShantenResult):
 
 
 # ======== 标准形 ========
-def _regular_search(k: int, tiles: List[Tile]) -> Tuple[int, List[RegularHand]]:
-    shanten = 10000
-    hands = []
-
-    def callback(hand: RegularHand):
-        nonlocal shanten, hands
-
-        hand.shanten = _calc_regular_shanten(k, hand)
-
-        if hand.shanten < shanten:
-            shanten = hand.shanten
-            hands = [hand]
-        elif hand.shanten == shanten:
-            hands.append(hand)
-
-    searcher = RegularHandSearcher(k, tiles, callback)
-    searcher.run()
-
-    return shanten, hands
-
-
-def _calc_regular_shanten(k: int, hand: RegularHand):
-    shanten = 2 * (k - len(hand.menzen_mentsu)) - len(hand.tatsu)
-    if hand.jyantou is not None:
-        shanten -= 1
-    return shanten
-
-
-def _calc_regular_advance(k: int, hand: RegularHand) -> Set[Tile]:
-    advance = set()
-
-    # 搭子的进张
-    for tt in hand.tatsu:
-        advance |= tt.waiting
-
-    # 浮张的靠张
-    if len(hand.menzen_mentsu) + len(hand.tatsu) < k:
-        for t in hand.remaining:
-            advance |= tile_cling[t]
-
-    # 无雀头
-    if hand.jyantou is None:
-        for t in hand.remaining:
-            advance.add(t)
-
-    return advance
-
-
 def regular_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> ShantenResult:
     if len(tiles) < 1 or len(tiles) > 14 or len(tiles) % 3 == 0:
         raise ValueError(f"invalid length of hand: {len(tiles)}")
@@ -84,21 +35,25 @@ def regular_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> Sha
     with_got = len(tiles) % 3 == 2
     k = len(tiles) // 3
 
-    shanten, hands = _regular_search(k, tiles)
+    hands = regular_hand_search(k, tiles)
+
+    for hand in hands:
+        hand.with_got = with_got
+        hand.furo = furo
+        hand.k += len(furo)
 
     if with_got:
         advance_aggregated = None
         discard_to_advance_aggregated = dict()
 
         for hand in hands:
-            hand.furo = furo
-
             hand.discard_to_advance = {}
             for i, discard in enumerate(hand.remaining):
-                hand_after_discard = deepcopy(hand)
-                hand_after_discard.remaining = hand.remaining[0:i] + hand.remaining[i + 1:]
+                hand_after_discard = hand.copy(update={
+                    "remaining": hand.remaining[0:i] + hand.remaining[i + 1:]
+                })
 
-                advance = _calc_regular_advance(k, hand_after_discard)
+                advance = calc_regular_advance(hand_after_discard)
                 hand.discard_to_advance[discard] = advance
 
                 if discard not in discard_to_advance_aggregated:
@@ -110,13 +65,11 @@ def regular_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> Sha
         discard_to_advance_aggregated = None
 
         for hand in hands:
-            hand.with_got = with_got
-            hand.furo = furo
-            hand.advance = _calc_regular_advance(k, hand)
+            hand.advance = calc_regular_advance(hand)
             advance_aggregated |= hand.advance
 
     result = ShantenResult(type="regular",
-                           shanten=shanten,
+                           shanten=hands[0].shanten,
                            hands=hands,
                            advance=advance_aggregated,
                            discard_to_advance=discard_to_advance_aggregated)

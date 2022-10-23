@@ -79,6 +79,26 @@ def build_hora(tiles: List[Tile], furo: Optional[List[Furo]], agari: Tile,
                dora: int = 0,
                self_wind: Optional[Wind] = None, round_wind: Optional[Wind] = None,
                extra_yaku: Optional[Set[Yaku]] = None) -> Hora:
+    """
+    根据手牌构造Hora
+
+    :param tiles: 手牌
+    :param furo: 副露
+    :param agari: 和牌
+    :param tsumo: 是否自摸
+    :param dora: 宝牌数
+    :param self_wind: 自风
+    :param round_wind: 场风
+    :param extra_yaku: 额外役
+    :return: Hora
+    """
+    if furo is None:
+        furo = []
+
+    k = len(tiles) // 3 + len(furo)
+    if k != 4:
+        raise ValueError("invalid length of tiles")
+
     shanten_result = shanten(tiles, furo)
     return build_hora_from_shanten_result(shanten_result, agari, tsumo,
                                           dora=dora, self_wind=self_wind, round_wind=round_wind,
@@ -91,25 +111,45 @@ def build_hora_from_shanten_result(shanten_result: ShantenResult, agari: Tile,
                                    dora: int = 0,
                                    self_wind: Optional[Wind] = None, round_wind: Optional[Wind] = None,
                                    extra_yaku: Optional[Set[Yaku]] = None) -> Hora:
-    if shanten_result.shanten != 0:
-        raise ValueError("shanten_result.shanten must be 0")
+    """
+    根据向听分析结果构造Hora
+
+    :param shanten_result: 向听分析结果
+    :param agari: 和牌
+    :param tsumo: 是否自摸
+    :param dora: 宝牌数
+    :param self_wind: 自风
+    :param round_wind: 场风
+    :param extra_yaku: 额外役
+    :return: Hora
+    """
+    with_got = shanten_result.advance is None
+
+    if with_got:
+        if shanten_result.shanten != -1:
+            raise ValueError("hand is not agari")
+    else:
+        if shanten_result.shanten != 0:
+            raise ValueError("hand is not tenpai")
+        if agari not in shanten_result.advance:
+            raise ValueError("agari is not waiting")
 
     possible_hora = []
 
     for hand in shanten_result.hands:
-        if agari not in hand.advance:
+        if hand.with_got and agari not in hand.tiles:
+            raise ValueError("agari is not in hand")
+        if not hand.with_got and agari not in hand.advance:
             continue
 
-        hora_hand = build_hora_hand(hand, agari, tsumo, self_wind, round_wind)
-        hora = Hora(hand=hora_hand, dora=dora, extra_yaku=extra_yaku)
-        possible_hora.append(hora)
+        for hora_hand in build_hora_hand(hand, agari, tsumo, self_wind, round_wind):
+            hora = Hora(hand=hora_hand, dora=dora, extra_yaku=extra_yaku)
+            possible_hora.append(hora)
 
     best_hora = possible_hora[0]
-
     for hora in possible_hora:
         if hora.han > best_hora.han or (hora.han == best_hora.han and hora.hand.hu > best_hora.hand.hu):
             best_hora = hora
-
     return best_hora
 
 

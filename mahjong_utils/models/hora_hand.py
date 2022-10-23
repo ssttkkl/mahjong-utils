@@ -1,13 +1,16 @@
 from abc import ABC
-from typing import Optional, Dict, List
+from typing import List
+from typing import Optional, Iterable
 
-from pydantic import Field
+from pydantic import Field, root_validator
 
+from mahjong_utils.internal.hand_utils import hand_exclude_got_regular
 from mahjong_utils.models.furo import Pon, Kan
 from mahjong_utils.models.hand import RegularHand, Hand, ChitoiHand, KokushiHand
 from mahjong_utils.models.mentsu import Kotsu
 from mahjong_utils.models.tatsu import Penchan, Kanchan, Tatsu
-from mahjong_utils.models.tile import Tile, all_yaochu
+from mahjong_utils.models.tile import Tile
+from mahjong_utils.models.tile import all_yaochu
 from mahjong_utils.models.tile import is_yaochu
 from mahjong_utils.models.tile_type import TileType
 from mahjong_utils.models.wind import Wind
@@ -25,7 +28,13 @@ class RegularHoraHand(HoraHand, RegularHand):
     agari_tatsu: Optional[Tatsu]
     hu: int = 0  # 在__init__中计算
 
+    k: int = 4
     jyantou: Tile
+
+    @root_validator
+    def validate_k(cls, values):
+        assert len(values["menzen_mentsu"]) + len(values["furo"]) == 4
+        return values
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -102,99 +111,124 @@ class ChitoiHoraHand(HoraHand, ChitoiHand):
 
 class KokushiHoraHand(HoraHand, KokushiHand):
     repeated: Tile
-    thirteen_waiting: bool = False
 
     hu: int = 20
 
     yaochu: List[Tile] = Field(default_factory=lambda: list(all_yaochu))
     remaining: List[Tile] = Field(default_factory=list)
 
+    @property
+    def thirteen_waiting(self) -> bool:
+        return self.agari == self.repeated
 
-def _build_std_hora_hand(hand: RegularHand,
-                         agari: Tile,
-                         tsumo: bool,
-                         self_wind: Optional[Wind] = None,
-                         round_wind: Optional[Wind] = None) -> RegularHoraHand:
-    if hand.jyantou is not None:
-        agari_tatsu = hand.tatsu[0]
-        menzen_mentsu = hand.menzen_mentsu.copy()
-        menzen_mentsu.append(agari_tatsu.with_waiting(agari))
 
-        return RegularHoraHand(agari=agari,
-                               tsumo=tsumo,
-                               self_wind=self_wind,
-                               round_wind=round_wind,
-                               agari_tatsu=agari_tatsu,
-                               jyantou=hand.jyantou,
-                               menzen_mentsu=menzen_mentsu,
-                               furo=hand.furo)
+def _build_regular_hora_hand(hand: RegularHand,
+                             agari: Tile,
+                             tsumo: bool,
+                             self_wind: Optional[Wind] = None,
+                             round_wind: Optional[Wind] = None) -> Iterable[RegularHoraHand]:
+    if hand.k != 4:
+        raise ValueError("hand.k must be 4")
+
+    if not hand.with_got:
+        assert hand.shanten == 0
+        assert agari in hand.advance
+
+        if hand.jyantou is not None:
+            yield RegularHoraHand(agari=agari,
+                                  tsumo=tsumo,
+                                  self_wind=self_wind,
+                                  round_wind=round_wind,
+                                  agari_tatsu=hand.tatsu[0],
+                                  jyantou=hand.jyantou,
+                                  menzen_mentsu=hand.menzen_mentsu + [hand.tatsu[0].with_waiting(agari)],
+                                  furo=hand.furo)
+        else:
+            yield RegularHoraHand(agari=agari,
+                                  tsumo=tsumo,
+                                  self_wind=self_wind,
+                                  round_wind=round_wind,
+                                  agari_tatsu=None,
+                                  jyantou=agari,
+                                  menzen_mentsu=hand.menzen_mentsu,
+                                  furo=hand.furo)
     else:
-        return RegularHoraHand(agari=agari,
-                               tsumo=tsumo,
-                               self_wind=self_wind,
-                               round_wind=round_wind,
-                               jyantou=agari,
-                               menzen_mentsu=hand.menzen_mentsu,
-                               furo=hand.furo)
+        assert hand.shanten == -1
+        assert agari in hand.tiles
+
+        for excluded_hand in hand_exclude_got_regular(hand, agari):
+            for h in _build_regular_hora_hand(excluded_hand, agari, tsumo, self_wind, round_wind):
+                yield h
 
 
 def _build_chitoi_hora_hand(hand: ChitoiHand,
                             agari: Tile,
                             tsumo: bool,
                             self_wind: Optional[Wind] = None,
-                            round_wind: Optional[Wind] = None) -> ChitoiHoraHand:
-    if hand.remaining[0] != agari:
-        raise ValueError("agari is not waiting")
+                            round_wind: Optional[Wind] = None) -> Iterable[ChitoiHoraHand]:
+    if not hand.with_got:
+        if agari not in hand.advance:
+            raise ValueError("agari is not waiting")
 
-    pairs = hand.pairs.copy()
-    pairs.append(agari)
+        pairs = hand.pairs.copy()
+        pairs.append(agari)
 
-    return ChitoiHoraHand(agari=agari,
-                          tsumo=tsumo,
-                          self_wind=self_wind,
-                          round_wind=round_wind,
-                          pairs=pairs)
+        yield ChitoiHoraHand(agari=agari,
+                             tsumo=tsumo,
+                             self_wind=self_wind,
+                             round_wind=round_wind,
+                             pairs=pairs)
+    else:
+        if agari not in hand.pairs:
+            raise ValueError("agari is not in hand")
+
+        yield ChitoiHoraHand(agari=agari,
+                             tsumo=tsumo,
+                             self_wind=self_wind,
+                             round_wind=round_wind,
+                             pairs=hand.pairs)
 
 
 def _build_kokushi_hora_hand(hand: KokushiHand,
                              agari: Tile,
                              tsumo: bool,
                              self_wind: Optional[Wind] = None,
-                             round_wind: Optional[Wind] = None) -> KokushiHoraHand:
-    if agari in hand.tiles:
-        repeated = agari
-        thirteen_waiting = True
+                             round_wind: Optional[Wind] = None) -> Iterable[KokushiHoraHand]:
+    if not hand.with_got:
+        if agari not in hand.advance:
+            raise ValueError("agari is not waiting")
+
+        if hand.repeated is None:
+            repeated = agari
+        else:
+            repeated = hand.repeated
     else:
-        repeated = None
-        thirteen_waiting = False
+        repeated = hand.repeated
 
-        cnt: Dict[Tile, int] = {}
-        for t in hand.tiles:
-            cnt[t] = cnt.get(t, 0) + 1
-
-        for t in cnt:
-            if cnt[t] == 2:
-                repeated = t
-                break
-
-    return KokushiHoraHand(agari=agari,
-                           tsumo=tsumo,
-                           self_wind=self_wind,
-                           round_wind=round_wind,
-                           repeated=repeated,
-                           thirteen_waiting=thirteen_waiting)
+    yield KokushiHoraHand(agari=agari,
+                          tsumo=tsumo,
+                          self_wind=self_wind,
+                          round_wind=round_wind,
+                          repeated=repeated)
 
 
 def build_hora_hand(hand: Hand,
                     agari: Tile,
                     tsumo: bool,
                     self_wind: Optional[Wind] = None,
-                    round_wind: Optional[Wind] = None) -> HoraHand:
-    if hand.shanten != 0:
-        raise ValueError("hand is not tenpai")
+                    round_wind: Optional[Wind] = None) -> Iterable[HoraHand]:
+    """
+    根据给定Hand构造HoraHand。当Hand为摸牌状态时，返回所有可能的HoraHand。否则返回一个对应的HoraHand。
 
+    :param hand: Hand
+    :param agari: 和牌
+    :param tsumo: 是否自摸
+    :param self_wind: 自风
+    :param round_wind: 场风
+    :return: 当Hand为摸牌状态时，返回所有可能的HoraHand。否则返回一个对应的HoraHand。
+    """
     if isinstance(hand, RegularHand):
-        return _build_std_hora_hand(hand, agari, tsumo, self_wind, round_wind)
+        return _build_regular_hora_hand(hand, agari, tsumo, self_wind, round_wind)
     elif isinstance(hand, ChitoiHand):
         return _build_chitoi_hora_hand(hand, agari, tsumo, self_wind, round_wind)
     elif isinstance(hand, KokushiHand):

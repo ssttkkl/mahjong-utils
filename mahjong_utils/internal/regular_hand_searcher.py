@@ -1,5 +1,6 @@
 from typing import List, Callable
 
+from mahjong_utils.internal.hand_utils import calc_regular_shanten
 from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping, tile_type_reversed_index_mapping
 from mahjong_utils.internal.utils.bit import generate_k_bit_number
 from mahjong_utils.models.hand import RegularHand
@@ -193,14 +194,16 @@ class RegularHandSearcher:
 
                 for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu),
                                                                                   remaining_tatsu):
-                    yield RegularHand(jyantou=tt.first,
+                    yield RegularHand(k=self._k,
+                                      jyantou=tt.first,
                                       menzen_mentsu=self._mentsu.copy(),
                                       tatsu=tatsu_chosen,
                                       remaining=remaining + tatsu_not_chosen_as_tiles)
 
         if not has_toitsu:
             for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu), self._tatsu):
-                yield RegularHand(jyantou=None,
+                yield RegularHand(k=self._k,
+                                  jyantou=None,
                                   menzen_mentsu=self._mentsu.copy(),
                                   tatsu=tatsu_chosen,
                                   remaining=remaining + tatsu_not_chosen_as_tiles)
@@ -233,6 +236,27 @@ class RegularHandSearcher:
                         tatsu_not_chosen_as_tiles.append(tatsu[i].second)
 
                 yield tatsu_chosen, tatsu_not_chosen_as_tiles
+
+
+def regular_hand_search(k: int, tiles: List[Tile]) -> List[RegularHand]:
+    shanten = 10000
+    hands = []
+
+    def callback(hand: RegularHand):
+        nonlocal shanten, hands
+
+        hand.shanten = calc_regular_shanten(hand)
+
+        if hand.shanten < shanten:
+            shanten = hand.shanten
+            hands = [hand]
+        elif hand.shanten == shanten:
+            hands.append(hand)
+
+    searcher = RegularHandSearcher(k, tiles, callback)
+    searcher.run()
+
+    return hands
 
 
 __all__ = ("RegularHandSearcher",)
