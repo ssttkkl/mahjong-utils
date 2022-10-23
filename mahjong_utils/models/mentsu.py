@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from typing import List, Sequence, Union
+
+from pydantic.dataclasses import dataclass
 
 from .tile import Tile, parse_tiles, tiles_text
 from .tile_type import TileType

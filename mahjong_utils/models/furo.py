@@ -1,6 +1,7 @@
 from abc import ABC
-from dataclasses import dataclass
 from typing import List, Sequence, Union
+
+from pydantic.dataclasses import dataclass
 
 from .mentsu import Shuntsu, Kotsu, Mentsu
 from .tile import Tile, parse_tiles
