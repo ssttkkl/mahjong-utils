@@ -56,7 +56,7 @@ class Tile(NamedTuple):
                 return 1
 
     def __eq__(self, other):
-        return self.__cmp__(other) == 0
+        return other is not None and self.__cmp__(other) == 0
 
     def __ne__(self, other):
         return self.__cmp__(other) != 0
