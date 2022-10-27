@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Set, Dict, Literal, Optional, Mapping, Sequence
 
 from mahjong_utils.internal.hand_utils import calc_regular_advance
+from mahjong_utils.internal.legal_tiles_checker import ensure_legal_tiles
 from mahjong_utils.internal.regular_hand_searcher import regular_hand_search
 from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.hand import Hand, ChitoiHand, KokushiHand
@@ -26,8 +27,7 @@ class UnionShantenResult(ShantenResult):
 
 # ======== 标准形 ========
 def regular_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> ShantenResult:
-    if len(tiles) < 1 or len(tiles) > 14 or len(tiles) % 3 == 0:
-        raise ValueError(f"invalid length of hand: {len(tiles)}")
+    ensure_legal_tiles(tiles)
 
     if furo is None:
         furo = []
@@ -78,8 +78,7 @@ def regular_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> Sha
 
 # ======== 七对子 ========
 def chitoi_shanten(tiles: List[Tile]) -> ShantenResult:
-    if len(tiles) != 13 and len(tiles) != 14:
-        raise ValueError(f"invalid length of hand: {len(tiles)}")
+    ensure_legal_tiles(tiles, False)
 
     cnt: Dict[Tile, int] = {}
     for t in tiles:
@@ -136,8 +135,7 @@ def chitoi_shanten(tiles: List[Tile]) -> ShantenResult:
 
 # ======== 国士无双 ========
 def kokushi_shanten(tiles: List[Tile]) -> ShantenResult:
-    if len(tiles) != 13 and len(tiles) != 14:
-        raise ValueError(f"invalid length of hand: {len(tiles)}")
+    ensure_legal_tiles(tiles, False)
 
     yaochu = set()
     repeated = set()
@@ -243,8 +241,7 @@ def kokushi_shanten(tiles: List[Tile]) -> ShantenResult:
 
 # ======== union ========
 def shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShantenResult:
-    if len(tiles) < 1 or len(tiles) > 14 or len(tiles) % 3 == 0:
-        raise ValueError(f"invalid length of hand: {len(tiles)}")
+    ensure_legal_tiles(tiles)
 
     if furo is None:
         furo = []
