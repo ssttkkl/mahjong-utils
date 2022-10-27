@@ -51,8 +51,11 @@ class Kan(Kotsu, Furo):
         return [self.tile] * 4
 
 
-def parse_furo(t: Union[Sequence[Tile], str]) -> Furo:
+def parse_furo(t: Union[Sequence[Tile], str], ankan: bool = False) -> Furo:
     if isinstance(t, str):
+        if len(t) == 5 and t[0] == t[3] == '0' and t[1] == t[2]:
+            t = t[1] + t[1] + t[1] + t[1] + t[4]
+            ankan = True
         t = parse_tiles(t)
 
     if len(t) == 3:
@@ -68,9 +71,6 @@ def parse_furo(t: Union[Sequence[Tile], str]) -> Furo:
                 raise ValueError(f"invalid tiles: {t}")
     elif len(t) == 4:
         if t[0] == t[1] == t[2] == t[3]:
-            return Kan(t[0], False)
-        elif t[0] == t[3] and t[1] == t[2] and t[0].tile_type == t[1].tile_type and t[0].num == 0:
-            #  0880p 这样的文本表示暗杠
-            return Kan(t[1], True)
+            return Kan(t[0], ankan)
 
     raise ValueError(f"invalid tiles: {t}")
