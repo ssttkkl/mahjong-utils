@@ -231,13 +231,18 @@ def churen_series_checker_factory(nine_waiting: bool):
         if type_cnt != 1 or type_found[3]:
             return False
 
+        num_cnt[0] -= 2
+        num_cnt[8] -= 2
+
+        for i in range(9):
+            num_cnt[i] -= 1
+            if num_cnt[i] < 0:
+                return False
+
         even = -1
         for i in range(9):
-            if num_cnt[i] % 2 == 0:
-                if even == -1:
-                    even = i
-                else:
-                    return False
+            if num_cnt[i] == 1:
+                even = i
 
         return nine_waiting and hora_hand.agari.num == even + 1 or not nine_waiting and hora_hand.agari.num != even + 1
 
