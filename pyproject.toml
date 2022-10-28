@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mahjong-utils"
-version = "0.1.0-alpha.06"
+version = "0.1.0-alpha.07"
 description = ""
 authors = ["ssttkkl <huang.wen.long@hotmail.com>"]
 license = "MIT"
