@@ -235,7 +235,7 @@ def kokushi_shanten(tiles: List[Tile]) -> ShantenResult:
         return ShantenResult(type="kokushi",
                              shanten=shanten,
                              hands=hands,
-                             advance=advance,
+                             advance=None,
                              discard_to_advance=discard_to_advance)
 
 
@@ -263,43 +263,43 @@ def shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShante
     hands = list()
 
     if not with_got:
-        advance = set()
-        discard_to_advance = None
+        advance_aggregated = set()
+        discard_to_advance_aggregated = None
 
         if regular.shanten == shanten:
-            advance |= regular.advance
+            advance_aggregated |= regular.advance
             hands += regular.hands
         if chitoi.shanten == shanten:
-            advance |= chitoi.advance
+            advance_aggregated |= chitoi.advance
             hands += chitoi.hands
         if kokushi.shanten == shanten:
-            advance |= kokushi.advance
+            advance_aggregated |= kokushi.advance
             hands += kokushi.hands
     else:
-        advance = None
-        discard_to_advance = dict()
+        advance_aggregated = None
+        discard_to_advance_aggregated = dict()
 
         if regular.shanten == shanten:
             hands += regular.hands
             for discard, advance in regular.discard_to_advance.items():
-                if discard not in discard_to_advance:
-                    discard_to_advance[discard] = set()
-                discard_to_advance[discard] |= advance
+                if discard not in discard_to_advance_aggregated:
+                    discard_to_advance_aggregated[discard] = set()
+                discard_to_advance_aggregated[discard] |= advance
         if chitoi.shanten == shanten:
             hands += chitoi.hands
             for discard, advance in chitoi.discard_to_advance.items():
-                if discard not in discard_to_advance:
-                    discard_to_advance[discard] = set()
-                discard_to_advance[discard] |= advance
+                if discard not in discard_to_advance_aggregated:
+                    discard_to_advance_aggregated[discard] = set()
+                discard_to_advance_aggregated[discard] |= advance
         if kokushi.shanten == shanten:
             hands += kokushi.hands
             for discard, advance in kokushi.discard_to_advance.items():
-                if discard not in discard_to_advance:
-                    discard_to_advance[discard] = set()
-                discard_to_advance[discard] |= advance
+                if discard not in discard_to_advance_aggregated:
+                    discard_to_advance_aggregated[discard] = set()
+                discard_to_advance_aggregated[discard] |= advance
 
     return UnionShantenResult(type="union", shanten=shanten, hands=hands,
-                              advance=advance, discard_to_advance=discard_to_advance,
+                              advance=advance_aggregated, discard_to_advance=discard_to_advance_aggregated,
                               regular=regular, chitoi=None, kokushi=None)
 
 

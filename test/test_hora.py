@@ -1,3 +1,4 @@
+from mahjong_utils.hora import build_hora
 from mahjong_utils.models.furo import parse_furo
 from mahjong_utils.models.tile import tile, parse_tiles
 from mahjong_utils.models.wind import Wind
@@ -8,8 +9,6 @@ from mahjong_utils.yaku.yakuman import churen, tsuiso, daisushi, suanko_tanki, s
 
 
 def test_build_hora():
-    from mahjong_utils.hora import build_hora
-
     hora = build_hora(parse_tiles("1112356778899p"), None, tile("4p"), True, dora=4, extra_yaku={richi})
 
     assert hora.yaku == {richi, ittsu, chinitsu, ipe, tsumo, pinhu}
@@ -20,8 +19,6 @@ def test_build_hora():
 
 
 def test_build_hora_2():
-    from mahjong_utils.hora import build_hora
-
     hora = build_hora(parse_tiles("1112356789999p"), None, tile("4p"), True, extra_yaku={richi})
 
     assert hora.yaku == {churen}
@@ -31,8 +28,6 @@ def test_build_hora_2():
 
 
 def test_build_hora_3():
-    from mahjong_utils.hora import build_hora
-
     hora = build_hora(parse_tiles("1345556m111z2m"), [parse_furo("789m")], tile("2m"), True)
 
     assert hora.yaku == {ittsu, honitsu}
@@ -43,8 +38,6 @@ def test_build_hora_3():
 
 
 def test_build_hora_4():
-    from mahjong_utils.hora import build_hora
-
     hora = build_hora(parse_tiles("12323467m11z5m"), [parse_furo("789p")], tile("5m"), True, dora=13)
 
     assert len(hora.yaku) == 0
@@ -55,8 +48,6 @@ def test_build_hora_4():
 
 
 def test_build_hora_5():
-    from mahjong_utils.hora import build_hora
-
     hora = build_hora(parse_tiles("1112223334445z"), None, tile("5z"), True, extra_yaku={tenhou})
 
     assert hora.yaku == {tsuiso, daisushi, suanko_tanki, tenhou}
@@ -66,8 +57,6 @@ def test_build_hora_5():
 
 
 def test_build_hora_6():
-    from mahjong_utils.hora import build_hora
-
     hora = build_hora(parse_tiles("6z"),
                       [parse_furo("3333s"), parse_furo("2222s"), parse_furo("0440s"), parse_furo("8888s")], tile("6z"),
                       True)
@@ -79,8 +68,6 @@ def test_build_hora_6():
 
 
 def test_build_hora_7():
-    from mahjong_utils.hora import build_hora
-
     hora = build_hora(parse_tiles("6z"),
                       [parse_furo("0330s"), parse_furo("0220s"), parse_furo("0440s"), parse_furo("0880s")], tile("6z"),
                       True)
@@ -92,8 +79,6 @@ def test_build_hora_7():
 
 
 def test_build_hora_8():
-    from mahjong_utils.hora import build_hora
-
     hora = build_hora(parse_tiles("111333555z22s44p"), None, tile("2s"), False, dora=4,
                       self_wind=Wind.west, round_wind=Wind.east,
                       extra_yaku={richi, ippatsu})
