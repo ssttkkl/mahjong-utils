@@ -25,7 +25,7 @@ def pinhu(hora_hand: HoraHand) -> bool:
         return hora_hand.hu == 30
 
 
-@_yaku(1, 1)
+@_yaku(1, 0)
 def tanyao(hora_hand: HoraHand) -> bool:
     for t in hora_hand.tiles:
         if is_yaochu(t):

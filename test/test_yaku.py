@@ -85,7 +85,11 @@ def test_tanyao():
         tsumo=True
     )
     assert tanyao(regular_hand)
-    print(regular_hand)
+
+    regular_hand.jyantou = tile("1m")
+    regular_hand.agari = tile("1m")
+
+    assert not tanyao(regular_hand)
 
 
 def test_chitoi(regular_hora_hand_menzen, kokushi_hora_hand, chitoi_hora_hand):
