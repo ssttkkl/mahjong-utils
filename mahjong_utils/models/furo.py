@@ -21,7 +21,8 @@ class Chi(Shuntsu, Furo):
     """
 
     def __repr__(self):
-        return super(Shuntsu, self).__repr__()
+        return f"{self.tile.num}{self.tile.num + 1}{self.tile.num + 2}{self.tile.tile_type}"
+
 
 @dataclass(frozen=True)
 class Pon(Kotsu, Furo):
@@ -30,7 +31,7 @@ class Pon(Kotsu, Furo):
     """
 
     def __repr__(self):
-        return super(Kotsu, self).__repr__()
+        return f"{self.tile.num}{self.tile.num}{self.tile.num}{self.tile.tile_type}"
 
 
 @dataclass(frozen=True)
