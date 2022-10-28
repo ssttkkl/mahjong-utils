@@ -3,7 +3,7 @@ from typing import List, Sequence, Union
 
 from pydantic.dataclasses import dataclass
 
-from .tile import Tile, parse_tiles, tiles_text
+from .tile import Tile, parse_tiles
 from .tile_type import TileType
 
 
@@ -13,9 +13,6 @@ class Mentsu(ABC):
     面子
     """
     tile: Tile
-
-    def __repr__(self):
-        return tiles_text(self.tiles)
 
     @property
     @abstractmethod
@@ -29,6 +26,9 @@ class Kotsu(Mentsu):
     刻子
     """
 
+    def __repr__(self):
+        return f"{self.tile.num}{self.tile.num}{self.tile.num}{self.tile.tile_type}"
+
     @property
     def tiles(self) -> List[Tile]:
         return [self.tile] * 3
@@ -39,6 +39,9 @@ class Shuntsu(Mentsu):
     """
     顺子
     """
+
+    def __repr__(self):
+        return f"{self.tile.num}{self.tile.num + 1}{self.tile.num + 2}{self.tile.tile_type}"
 
     def __post_init__(self):
         assert self.tile.tile_type != TileType.Z and self.tile.num < 8

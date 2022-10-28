@@ -13,23 +13,24 @@ class Furo(Mentsu, ABC):
     副露
     """
 
-    pass
-
 
 @dataclass(frozen=True)
 class Chi(Shuntsu, Furo):
     """
     吃
     """
-    pass
 
+    def __repr__(self):
+        return super(Shuntsu, self).__repr__()
 
 @dataclass(frozen=True)
 class Pon(Kotsu, Furo):
     """
     碰
     """
-    pass
+
+    def __repr__(self):
+        return super(Kotsu, self).__repr__()
 
 
 @dataclass(frozen=True)

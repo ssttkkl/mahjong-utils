@@ -5,7 +5,7 @@ from mahjong_utils.models.hora_hand import RegularHoraHand, ChitoiHoraHand, Koku
 from mahjong_utils.models.mentsu import parse_mentsu
 from mahjong_utils.models.tatsu import parse_tatsu
 from mahjong_utils.models.tile import tile, parse_tiles
-from mahjong_utils.yaku.common import tsumo, chitoi
+from mahjong_utils.yaku.common import tsumo, chitoi, tanyao
 from mahjong_utils.yaku.yakuman import churen, daisangen, daisushi, kokushi, kokushi13, tsuiso, suanko, shousushi, \
     lyuiso, chinroto, sukantsu, churen9, suanko_tanki
 
@@ -73,6 +73,19 @@ def test_tsumo(regular_hora_hand_menzen, regular_hora_hand_furo):
     assert not tsumo(regular_hora_hand_furo)
     regular_hora_hand_furo.tsumo = False
     assert not tsumo(regular_hora_hand_furo)
+
+
+def test_tanyao():
+    regular_hand = RegularHoraHand(
+        jyantou=tile("3p"),
+        menzen_mentsu=[parse_mentsu("234p"), parse_mentsu("456p")],
+        furo=[parse_furo("777s"), parse_furo("0880m")],
+        agari_tatsu=None,
+        agari=tile("3p"),
+        tsumo=True
+    )
+    assert tanyao(regular_hand)
+    print(regular_hand)
 
 
 def test_chitoi(regular_hora_hand_menzen, kokushi_hora_hand, chitoi_hora_hand):
