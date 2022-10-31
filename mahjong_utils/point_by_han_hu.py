@@ -44,7 +44,7 @@ def build_han_hu_to_parent_point(mapping):
     """
     for han in range(1, 5):
         for hu in range(20, 120, 10):
-            if (han, hu) not in no_ron and (han, hu) not in no_tsumo:
+            if not ((han, hu) in no_ron and (han, hu) in no_tsumo):
                 mapping[han, hu] = _calc_parent_point(han, hu)
 
     for han in range(2, 4):
@@ -87,7 +87,7 @@ def build_han_hu_to_child_point(mapping):
     """
     for han in range(1, 5):
         for hu in range(20, 120, 10):
-            if (han, hu) not in no_ron and (han, hu) not in no_tsumo:
+            if not ((han, hu) in no_ron and (han, hu) in no_tsumo):
                 mapping[han, hu] = _calc_child_point(han, hu)
 
     for han in range(2, 4):
