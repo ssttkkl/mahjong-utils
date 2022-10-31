@@ -37,6 +37,26 @@ class Hora(BaseModel):
             self.han += self.dora
 
     @property
+    def hu(self) -> int:
+        return self.hand.hu
+
+    @property
+    def tsumo(self) -> bool:
+        return self.hand.tsumo
+
+    @property
+    def self_wind(self) -> Optional[Wind]:
+        return self.hand.self_wind
+
+    @property
+    def round_wind(self) -> Optional[Wind]:
+        return self.hand.round_wind
+
+    @property
+    def agari(self) -> Tile:
+        return self.hand.agari
+
+    @property
     def parent_point(self) -> Tuple[int, int]:
         """
         亲家和牌点数
