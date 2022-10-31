@@ -85,6 +85,8 @@ def build_han_hu_to_child_point(mapping):
     for han in range(1, 5):
         for hu in range(20, 120, 10):
             mapping[han, hu] = _calc_child_point(han, hu)
+
+    for han in range(2, 4):
         mapping[han, 25] = _calc_child_point(han, 25)
 
     mapping[5, 20] = 8000, 4000, 2000
