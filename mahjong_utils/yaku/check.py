@@ -1,12 +1,12 @@
 from typing import Set, Optional
 
-from mahjong_utils.models.hora_hand import HoraHand
+from mahjong_utils.models.hora_hand_pattern import HoraHandPattern
 from mahjong_utils.yaku import Yaku
 from mahjong_utils.yaku.common import all_common_yaku
 from mahjong_utils.yaku.yakuman import all_yakuman
 
 
-def check_yaku(hand: HoraHand, extra_yaku: Optional[Set[Yaku]] = None) -> Set[Yaku]:
+def check_yaku(hand: HoraHandPattern, extra_yaku: Optional[Set[Yaku]] = None) -> Set[Yaku]:
     ans = set()
     has_yakuman = False
 

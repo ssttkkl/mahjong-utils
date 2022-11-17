@@ -2,15 +2,15 @@ from typing import Optional
 
 from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping
 from mahjong_utils.models.furo import Kan
-from mahjong_utils.models.hora_hand import HoraHand, RegularHoraHand
+from mahjong_utils.models.hora_hand_pattern import HoraHandPattern, RegularHoraHandPattern
 from mahjong_utils.models.mentsu import Shuntsu, Kotsu
 from mahjong_utils.models.tatsu import Toitsu
 from mahjong_utils.models.tile import is_yaochu, Tile, is_sangen, is_z, is_wind
 
 
 def yakuhai_checker_factory(tile: Tile):
-    def checker(hora_hand: HoraHand) -> bool:
-        if not isinstance(hora_hand, RegularHoraHand):
+    def checker(hora_hand: HoraHandPattern) -> bool:
+        if not isinstance(hora_hand, RegularHoraHandPattern):
             return False
 
         for kt in hora_hand.kotsu:
@@ -29,8 +29,8 @@ def yaochu_series_checker_factory(shuntsu: bool, z: bool):
     :return: checker
     """
 
-    def checker(hora_hand: HoraHand) -> bool:
-        if not isinstance(hora_hand, RegularHoraHand):
+    def checker(hora_hand: HoraHandPattern) -> bool:
+        if not isinstance(hora_hand, RegularHoraHandPattern):
             return False
 
         if not is_yaochu(hora_hand.jyantou):
@@ -65,7 +65,7 @@ def itsu_series_checker_factory(z: bool):
     :return: checker
     """
 
-    def checker(hora_hand: HoraHand) -> bool:
+    def checker(hora_hand: HoraHandPattern) -> bool:
         cnt = [0] * 4
 
         for t in hora_hand.tiles:
@@ -91,8 +91,8 @@ def peko_series_checker_factory(peko_count: int):
     :return: checker
     """
 
-    def checker(hora_hand: HoraHand) -> bool:
-        if not isinstance(hora_hand, RegularHoraHand) or not hora_hand.menzen:
+    def checker(hora_hand: HoraHandPattern) -> bool:
+        if not isinstance(hora_hand, RegularHoraHandPattern) or not hora_hand.menzen:
             return False
 
         cnt = 0
@@ -114,8 +114,8 @@ def anko_series_checker_factory(anko_count: int, tanki: Optional[bool] = None):
     :return: checker
     """
 
-    def checker(hora_hand: HoraHand) -> bool:
-        if not isinstance(hora_hand, RegularHoraHand):
+    def checker(hora_hand: HoraHandPattern) -> bool:
+        if not isinstance(hora_hand, RegularHoraHandPattern):
             return False
 
         anko = 0
@@ -143,8 +143,8 @@ def kantsu_series_checker_factory(kan_count: int):
     :return: checker
     """
 
-    def checker(hora_hand: HoraHand) -> bool:
-        if not isinstance(hora_hand, RegularHoraHand):
+    def checker(hora_hand: HoraHandPattern) -> bool:
+        if not isinstance(hora_hand, RegularHoraHandPattern):
             return False
 
         kan = 0
@@ -165,8 +165,8 @@ def sangen_series_checker_factory(sangen_kotsu_count: int, sangen_jyantou: bool)
     :return: checker
     """
 
-    def checker(hora_hand: HoraHand) -> bool:
-        if not isinstance(hora_hand, RegularHoraHand):
+    def checker(hora_hand: HoraHandPattern) -> bool:
+        if not isinstance(hora_hand, RegularHoraHandPattern):
             return False
 
         sangen_kotsu = 0
@@ -189,8 +189,8 @@ def sushi_series_checker_factory(wind_kotsu_count: int, wind_jyantou: bool):
     :return: checker
     """
 
-    def checker(hora_hand: HoraHand) -> bool:
-        if not isinstance(hora_hand, RegularHoraHand):
+    def checker(hora_hand: HoraHandPattern) -> bool:
+        if not isinstance(hora_hand, RegularHoraHandPattern):
             return False
 
         wind_kotsu = 0
@@ -212,8 +212,8 @@ def churen_series_checker_factory(nine_waiting: bool):
     :return: checker
     """
 
-    def checker(hora_hand: HoraHand) -> bool:
-        if not isinstance(hora_hand, RegularHoraHand):
+    def checker(hora_hand: HoraHandPattern) -> bool:
+        if not isinstance(hora_hand, RegularHoraHandPattern):
             return False
 
         type_found = [False] * 4

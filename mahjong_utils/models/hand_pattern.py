@@ -1,36 +1,36 @@
-from abc import ABC, abstractmethod
-from typing import List, Iterable, Optional, Set, Dict
+from abc import abstractmethod
+from typing import List, Iterable, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+from pydantic.main import BaseModel
 
 from mahjong_utils.models.furo import Furo, Kan
 from mahjong_utils.models.mentsu import Mentsu, Shuntsu, Kotsu
+from mahjong_utils.models.shanten import Shanten, ShantenInfoMixin
 from mahjong_utils.models.tatsu import Tatsu
 from mahjong_utils.models.tile import Tile
 
 
-class Hand(BaseModel, ABC):
+class HandPattern(BaseModel, ShantenInfoMixin):
     """
     表示一个结构分析后的手牌
     """
 
-    @property
-    @abstractmethod
-    def tiles(self) -> Iterable[Tile]:
-        raise NotImplementedError()
+    with_got: bool
+    shanten_info: Optional[Shanten]
 
     @property
     @abstractmethod
     def menzen(self) -> bool:
         raise NotImplementedError()
 
-    with_got: bool = False
-    shanten: Optional[int] = None
-    advance: Optional[Set[Tile]] = None
-    discard_to_advance: Optional[Dict[Tile, Set[Tile]]] = None
+    @property
+    @abstractmethod
+    def tiles(self) -> Iterable[Tile]:
+        raise NotImplementedError()
 
 
-class RegularHand(Hand):
+class RegularHandPattern(HandPattern):
     """
     表示一个结构分析后的以标准形为目标的手牌
     """
@@ -92,7 +92,7 @@ class RegularHand(Hand):
         return True
 
 
-class ChitoiHand(Hand):
+class ChitoiHandPattern(HandPattern):
     """
     表示一个结构分析后的以七对子为目标的手牌
     """
@@ -113,7 +113,7 @@ class ChitoiHand(Hand):
         return True
 
 
-class KokushiHand(Hand):
+class KokushiHandPattern(HandPattern):
     """
     表示一个结构分析后的以国士无双为目标的手牌
     """
@@ -136,4 +136,4 @@ class KokushiHand(Hand):
         return True
 
 
-__all__ = ("Hand", "RegularHand", "ChitoiHand", "KokushiHand")
+__all__ = ("HandPattern", "RegularHandPattern", "ChitoiHandPattern", "KokushiHandPattern")

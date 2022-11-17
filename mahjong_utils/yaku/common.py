@@ -1,6 +1,6 @@
 from typing import Set
 
-from mahjong_utils.models.hora_hand import HoraHand, RegularHoraHand, ChitoiHoraHand
+from mahjong_utils.models.hora_hand_pattern import HoraHandPattern, RegularHoraHandPattern, ChitoiHoraHandPattern
 from mahjong_utils.models.tatsu import Toitsu
 from mahjong_utils.models.tile import tile, is_yaochu
 from mahjong_utils.models.tile_type import TileType
@@ -11,13 +11,13 @@ from mahjong_utils.yaku.checker_factory import kantsu_series_checker_factory, ya
 
 
 @_yaku(1, 1)
-def tsumo(hora_hand: HoraHand) -> bool:
+def tsumo(hora_hand: HoraHandPattern) -> bool:
     return hora_hand.menzen and hora_hand.tsumo
 
 
 @_yaku(1, 1)
-def pinhu(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, RegularHoraHand):
+def pinhu(hora_hand: HoraHandPattern) -> bool:
+    if not isinstance(hora_hand, RegularHoraHandPattern):
         return False
     if hora_hand.tsumo:
         return hora_hand.hu == 20
@@ -26,7 +26,7 @@ def pinhu(hora_hand: HoraHand) -> bool:
 
 
 @_yaku(1, 0)
-def tanyao(hora_hand: HoraHand) -> bool:
+def tanyao(hora_hand: HoraHandPattern) -> bool:
     for t in hora_hand.tiles:
         if is_yaochu(t):
             return False
@@ -37,8 +37,8 @@ ipe = Yaku("ipe", 1, 1, checker=peko_series_checker_factory(1))
 
 
 @_yaku(1, 0)
-def self_wind(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, RegularHoraHand) or hora_hand.self_wind is None:
+def self_wind(hora_hand: HoraHandPattern) -> bool:
+    if not isinstance(hora_hand, RegularHoraHandPattern) or hora_hand.self_wind is None:
         return False
 
     for mt in hora_hand.mentsu:
@@ -48,8 +48,8 @@ def self_wind(hora_hand: HoraHand) -> bool:
 
 
 @_yaku(1, 0)
-def round_wind(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, RegularHoraHand) or hora_hand.round_wind is None:
+def round_wind(hora_hand: HoraHandPattern) -> bool:
+    if not isinstance(hora_hand, RegularHoraHandPattern) or hora_hand.round_wind is None:
         return False
 
     for mt in hora_hand.mentsu:
@@ -66,8 +66,8 @@ chun = Yaku("chun", 1, 0, checker=yakuhai_checker_factory(tile(TileType.Z, 7)))
 
 
 @_yaku(2, 1)
-def sanshoku(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, RegularHoraHand):
+def sanshoku(hora_hand: HoraHandPattern) -> bool:
+    if not isinstance(hora_hand, RegularHoraHandPattern):
         return False
 
     shuntsu = list(hora_hand.shuntsu)
@@ -89,8 +89,8 @@ def sanshoku(hora_hand: HoraHand) -> bool:
 
 
 @_yaku(2, 1)
-def ittsu(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, RegularHoraHand):
+def ittsu(hora_hand: HoraHandPattern) -> bool:
+    if not isinstance(hora_hand, RegularHoraHandPattern):
         return False
 
     shuntsu = list(hora_hand.mentsu)
@@ -114,13 +114,13 @@ chanta = Yaku("chanta", 2, 1, checker=yaochu_series_checker_factory(True, True))
 
 
 @_yaku(2, 2)
-def chitoi(hora_hand: HoraHand) -> bool:
-    return isinstance(hora_hand, ChitoiHoraHand)
+def chitoi(hora_hand: HoraHandPattern) -> bool:
+    return isinstance(hora_hand, ChitoiHoraHandPattern)
 
 
 @_yaku(2, 0)
-def toitoi(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, RegularHoraHand):
+def toitoi(hora_hand: HoraHandPattern) -> bool:
+    if not isinstance(hora_hand, RegularHoraHandPattern):
         return False
 
     if len(list(hora_hand.shuntsu)) != 0:
@@ -135,8 +135,8 @@ honroto = Yaku("honroto", 2, 0, checker=yaochu_series_checker_factory(False, Tru
 
 
 @_yaku(2, 0)
-def sandoko(hora_hand: HoraHand) -> bool:
-    if not isinstance(hora_hand, RegularHoraHand):
+def sandoko(hora_hand: HoraHandPattern) -> bool:
+    if not isinstance(hora_hand, RegularHoraHandPattern):
         return False
 
     kotsu = list(hora_hand.kotsu)

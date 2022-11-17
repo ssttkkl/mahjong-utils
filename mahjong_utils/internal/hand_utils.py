@@ -2,11 +2,11 @@ from typing import Iterable, Set
 
 from mahjong_utils.internal.mentsu_utils import mentsu_try_exclude_got
 from mahjong_utils.internal.tile_cling import tile_cling
-from mahjong_utils.models.hand import RegularHand
+from mahjong_utils.models.hand_pattern import RegularHandPattern
 from mahjong_utils.models.tile import Tile
 
 
-def calc_regular_shanten(hand: RegularHand):
+def calc_regular_shanten(hand: RegularHandPattern):
     """
     计算向听数
 
@@ -19,7 +19,7 @@ def calc_regular_shanten(hand: RegularHand):
     return shanten
 
 
-def calc_regular_advance(hand: RegularHand) -> Set[Tile]:
+def calc_regular_advance(hand: RegularHandPattern) -> Set[Tile]:
     """
     计算进张
 
@@ -45,7 +45,7 @@ def calc_regular_advance(hand: RegularHand) -> Set[Tile]:
     return advance
 
 
-def hand_exclude_got_regular(hand: RegularHand, got: Tile) -> Iterable[RegularHand]:
+def hand_exclude_got_regular(hand: RegularHandPattern, got: Tile) -> Iterable[RegularHandPattern]:
     """
     hand为已摸牌状态的手牌，获取所有可能的未摸牌状态的手牌
     :param hand:

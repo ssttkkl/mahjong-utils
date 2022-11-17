@@ -29,9 +29,13 @@ def test_shanten_with_got_tile():
         tiles = parse_tiles(tiles)
         result = test_func(tiles)
 
+        actual_discard_to_advance = dict()
+        for k, v in result.discard_to_advance.items():
+            actual_discard_to_advance[k] = v.advance
+
         assert result.shanten == expected_shanten
         assert result.advance is None
-        assert result.discard_to_advance == expected_discard_to_advance
+        assert actual_discard_to_advance == expected_discard_to_advance
 
     test("34568m235p368s", 2, {
         tile("5p"): {*parse_tiles("3678m1234p3678s"), },

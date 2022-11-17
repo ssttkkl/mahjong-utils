@@ -3,8 +3,9 @@ from typing import List, Callable
 from mahjong_utils.internal.hand_utils import calc_regular_shanten
 from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping, tile_type_reversed_index_mapping
 from mahjong_utils.internal.utils.bit import generate_k_bit_number
-from mahjong_utils.models.hand import RegularHand
+from mahjong_utils.models.hand_pattern import RegularHandPattern
 from mahjong_utils.models.mentsu import Kotsu, Shuntsu, Mentsu
+from mahjong_utils.models.shanten import ShantenWithGot, ShantenWithoutGot
 from mahjong_utils.models.tatsu import Tatsu, Toitsu, Kanchan, Ryanmen, Penchan
 from mahjong_utils.models.tile import Tile, tile
 from mahjong_utils.models.tile_type import TileType
@@ -22,13 +23,14 @@ def _decode(code: int) -> Tile:
 
 class RegularHandSearcher:
     def __init__(self, k: int, hand: List[Tile],
-                 callback: Callable[[RegularHand], None]):
+                 callback: Callable[[RegularHandPattern], None]):
         self.hand = hand
         self.callback = callback
 
         self._count = [0] * (3 * 9 + 7)
         self._n = len(hand)
         self._k = k
+        self._with_got = self._n % 3 == 2
 
         self._mentsu: List[Mentsu] = []
         self._tatsu: List[Tatsu] = []
@@ -194,19 +196,21 @@ class RegularHandSearcher:
 
                 for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu),
                                                                                   remaining_tatsu):
-                    yield RegularHand(k=self._k,
-                                      jyantou=tt.first,
-                                      menzen_mentsu=self._mentsu.copy(),
-                                      tatsu=tatsu_chosen,
-                                      remaining=remaining + tatsu_not_chosen_as_tiles)
+                    yield RegularHandPattern(k=self._k,
+                                             jyantou=tt.first,
+                                             menzen_mentsu=self._mentsu.copy(),
+                                             tatsu=tatsu_chosen,
+                                             remaining=remaining + tatsu_not_chosen_as_tiles,
+                                             with_got=self._with_got)
 
         if not has_toitsu:
             for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu), self._tatsu):
-                yield RegularHand(k=self._k,
-                                  jyantou=None,
-                                  menzen_mentsu=self._mentsu.copy(),
-                                  tatsu=tatsu_chosen,
-                                  remaining=remaining + tatsu_not_chosen_as_tiles)
+                yield RegularHandPattern(k=self._k,
+                                         jyantou=None,
+                                         menzen_mentsu=self._mentsu.copy(),
+                                         tatsu=tatsu_chosen,
+                                         remaining=remaining + tatsu_not_chosen_as_tiles,
+                                         with_got=self._with_got)
 
     @staticmethod
     def _choose_tatsu(k: int, tatsu: List[Tatsu]):
@@ -238,20 +242,28 @@ class RegularHandSearcher:
                 yield tatsu_chosen, tatsu_not_chosen_as_tiles
 
 
-def regular_hand_search(k: int, tiles: List[Tile]) -> List[RegularHand]:
-    shanten = 10000
+def regular_hand_search(k: int, tiles: List[Tile]) -> List[RegularHandPattern]:
+    with_got = len(tiles) % 3 == 2
+
+    cur_shanten = 10000
     hands = []
 
-    def callback(hand: RegularHand):
-        nonlocal shanten, hands
+    def callback(hand: RegularHandPattern):
+        nonlocal cur_shanten, hands
 
-        hand.shanten = calc_regular_shanten(hand)
-
-        if hand.shanten < shanten:
-            shanten = hand.shanten
+        shanten = calc_regular_shanten(hand)
+        if shanten < cur_shanten:
+            cur_shanten = shanten
             hands = [hand]
-        elif hand.shanten == shanten:
+        elif shanten == cur_shanten:
             hands.append(hand)
+        else:
+            return
+
+        if with_got:
+            hand.shanten_info = ShantenWithGot(shanten=shanten)
+        else:
+            hand.shanten_info = ShantenWithoutGot(shanten=shanten)
 
     searcher = RegularHandSearcher(k, tiles, callback)
     searcher.run()

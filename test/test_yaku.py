@@ -1,7 +1,7 @@
 import pytest
 
 from mahjong_utils.models.furo import parse_furo
-from mahjong_utils.models.hora_hand import RegularHoraHand, ChitoiHoraHand, KokushiHoraHand
+from mahjong_utils.models.hora_hand_pattern import RegularHoraHandPattern, ChitoiHoraHandPattern, KokushiHoraHandPattern
 from mahjong_utils.models.mentsu import parse_mentsu
 from mahjong_utils.models.tatsu import parse_tatsu
 from mahjong_utils.models.tile import tile, parse_tiles
@@ -12,7 +12,7 @@ from mahjong_utils.yaku.yakuman import churen, daisangen, daisushi, kokushi, kok
 
 @pytest.fixture
 def chitoi_hora_hand():
-    chitoi_hand = ChitoiHoraHand(
+    chitoi_hand = ChitoiHoraHandPattern(
         pairs=parse_tiles("1234567p"),
         agari=tile("7p"),
         tsumo=False
@@ -22,7 +22,7 @@ def chitoi_hora_hand():
 
 @pytest.fixture
 def kokushi_hora_hand():
-    kokushi_hand = KokushiHoraHand(
+    kokushi_hand = KokushiHoraHandPattern(
         repeated=tile("5z"),
         agari=tile("1z"),
         tsumo=True
@@ -32,7 +32,7 @@ def kokushi_hora_hand():
 
 @pytest.fixture
 def kokushi_hora_hand_thirteen_waiting():
-    kokushi_hand = KokushiHoraHand(
+    kokushi_hand = KokushiHoraHandPattern(
         repeated=tile("5z"),
         agari=tile("5z"),
         tsumo=True
@@ -42,7 +42,7 @@ def kokushi_hora_hand_thirteen_waiting():
 
 @pytest.fixture
 def regular_hora_hand_menzen():
-    hand = RegularHoraHand(
+    hand = RegularHoraHandPattern(
         jyantou=tile("1m"),
         menzen_mentsu=[parse_mentsu("333m"), parse_mentsu("789m"), parse_mentsu("666s"), parse_mentsu("234p")],
         agari_tatsu=parse_tatsu("23p"),
@@ -54,7 +54,7 @@ def regular_hora_hand_menzen():
 
 @pytest.fixture
 def regular_hora_hand_furo():
-    hand = RegularHoraHand(
+    hand = RegularHoraHandPattern(
         jyantou=tile("1m"),
         menzen_mentsu=[parse_mentsu("789m"), parse_mentsu("666s"), parse_mentsu("234p")],
         furo=[parse_furo("333m")],
@@ -76,7 +76,7 @@ def test_tsumo(regular_hora_hand_menzen, regular_hora_hand_furo):
 
 
 def test_tanyao():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("3p"),
         menzen_mentsu=[parse_mentsu("234p"), parse_mentsu("456p")],
         furo=[parse_furo("777s"), parse_furo("0880m")],
@@ -106,7 +106,7 @@ def test_kokushi(regular_hora_hand_menzen, chitoi_hora_hand, kokushi_hora_hand, 
 
 
 def test_suanko():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("8p"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("777z")],
         agari_tatsu=parse_tatsu("77z"),
@@ -118,7 +118,7 @@ def test_suanko():
     regular_hand.tsumo = False
     assert not suanko(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("5z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("444z")],
         agari_tatsu=None,
@@ -129,7 +129,7 @@ def test_suanko():
 
 
 def test_daisangen():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("2z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("555z"), parse_mentsu("666z"), parse_mentsu("777z")],
         agari_tatsu=None,
@@ -138,7 +138,7 @@ def test_daisangen():
     )
     assert daisangen(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("5z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("666z"), parse_mentsu("777z")],
         agari_tatsu=None,
@@ -149,7 +149,7 @@ def test_daisangen():
 
 
 def test_tsuiso():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("5z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("444z")],
         agari_tatsu=None,
@@ -158,7 +158,7 @@ def test_tsuiso():
     )
     assert tsuiso(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("8p"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("777z")],
         agari_tatsu=None,
@@ -169,7 +169,7 @@ def test_tsuiso():
 
 
 def test_shousushi():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("5z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("444z")],
         agari_tatsu=None,
@@ -178,7 +178,7 @@ def test_shousushi():
     )
     assert not shousushi(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("4z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("777z")],
         agari_tatsu=None,
@@ -189,7 +189,7 @@ def test_shousushi():
 
 
 def test_lyuiso():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("5z"),
         menzen_mentsu=[parse_mentsu("345s"), parse_mentsu("234s"), parse_mentsu("666s"), parse_mentsu("888s")],
         agari_tatsu=None,
@@ -198,7 +198,7 @@ def test_lyuiso():
     )
     assert not lyuiso(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("6z"),
         menzen_mentsu=[parse_mentsu("234s"), parse_mentsu("234s"), parse_mentsu("666s"), parse_mentsu("888s")],
         agari_tatsu=None,
@@ -209,7 +209,7 @@ def test_lyuiso():
 
 
 def test_chinroto():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("1z"),
         menzen_mentsu=[parse_mentsu("111m"), parse_mentsu("999m"), parse_mentsu("111s"), parse_mentsu("999s")],
         agari_tatsu=None,
@@ -218,7 +218,7 @@ def test_chinroto():
     )
     assert not chinroto(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("1p"),
         menzen_mentsu=[parse_mentsu("111m"), parse_mentsu("999m"), parse_mentsu("111s"), parse_mentsu("999s")],
         agari_tatsu=None,
@@ -229,7 +229,7 @@ def test_chinroto():
 
 
 def test_sukantsu():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("1z"),
         menzen_mentsu=[parse_mentsu("111m"), parse_mentsu("999m"), parse_mentsu("111s"), parse_mentsu("999s")],
         agari_tatsu=None,
@@ -238,7 +238,7 @@ def test_sukantsu():
     )
     assert not sukantsu(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("1p"), furo=[parse_furo("0550z"), parse_furo("1111p"), parse_furo("7777p"), parse_furo("6666m")],
         agari_tatsu=None,
         agari=tile("1p"),
@@ -248,7 +248,7 @@ def test_sukantsu():
 
 
 def test_churen():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("1m"),
         menzen_mentsu=[parse_mentsu("123m"), parse_mentsu("456m"), parse_mentsu("789m"), parse_mentsu("999m")],
         agari_tatsu=parse_tatsu("23m"),
@@ -257,7 +257,7 @@ def test_churen():
     )
     assert churen(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("1m"),
         menzen_mentsu=[parse_mentsu("123m"), parse_mentsu("456m"), parse_mentsu("789m"), parse_mentsu("999m")],
         agari_tatsu=parse_tatsu("99m"),
@@ -266,7 +266,7 @@ def test_churen():
     )
     assert not churen(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("8m"),
         menzen_mentsu=[parse_mentsu("123m"), parse_mentsu("789m"), parse_mentsu("222m"), parse_mentsu("456m")],
         agari_tatsu=parse_tatsu("22m"),
@@ -275,7 +275,7 @@ def test_churen():
     )
     assert not churen(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("2m"),
         menzen_mentsu=[parse_mentsu("123m"), parse_mentsu("456m"), parse_mentsu("789m"), parse_mentsu("888m")],
         agari_tatsu=parse_tatsu("78m"),
@@ -286,7 +286,7 @@ def test_churen():
 
 
 def test_daisushi():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("5z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("444z")],
         agari_tatsu=None,
@@ -295,7 +295,7 @@ def test_daisushi():
     )
     assert daisushi(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("4z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("777z")],
         agari_tatsu=None,
@@ -306,7 +306,7 @@ def test_daisushi():
 
 
 def test_churen9():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("1m"),
         menzen_mentsu=[parse_mentsu("123m"), parse_mentsu("456m"), parse_mentsu("789m"), parse_mentsu("999m")],
         agari_tatsu=parse_tatsu("23m"),
@@ -315,7 +315,7 @@ def test_churen9():
     )
     assert not churen9(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("1m"),
         menzen_mentsu=[parse_mentsu("123m"), parse_mentsu("456m"), parse_mentsu("789m"), parse_mentsu("999m")],
         agari_tatsu=parse_tatsu("99m"),
@@ -324,7 +324,7 @@ def test_churen9():
     )
     assert churen9(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("8m"),
         menzen_mentsu=[parse_mentsu("123m"), parse_mentsu("789m"), parse_mentsu("222m"), parse_mentsu("456m")],
         agari_tatsu=parse_tatsu("22m"),
@@ -333,7 +333,7 @@ def test_churen9():
     )
     assert not churen9(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("2m"),
         menzen_mentsu=[parse_mentsu("123m"), parse_mentsu("456m"), parse_mentsu("789m"), parse_mentsu("888m")],
         agari_tatsu=parse_tatsu("78m"),
@@ -344,7 +344,7 @@ def test_churen9():
 
 
 def test_suanko_tanki():
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("8p"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("777z")],
         agari_tatsu=parse_tatsu("77z"),
@@ -353,7 +353,7 @@ def test_suanko_tanki():
     )
     assert not suanko_tanki(regular_hand)
 
-    regular_hand = RegularHoraHand(
+    regular_hand = RegularHoraHandPattern(
         jyantou=tile("5z"),
         menzen_mentsu=[parse_mentsu("111z"), parse_mentsu("222z"), parse_mentsu("333z"), parse_mentsu("444z")],
         agari_tatsu=None,

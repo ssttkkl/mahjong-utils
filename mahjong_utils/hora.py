@@ -4,7 +4,7 @@ from typing import Tuple
 from pydantic import BaseModel, Field
 
 from mahjong_utils.models.furo import Furo
-from mahjong_utils.models.hora_hand import HoraHand, build_hora_hand
+from mahjong_utils.models.hora_hand_pattern import HoraHandPattern, build_hora_hand
 from mahjong_utils.models.tile import Tile
 from mahjong_utils.models.wind import Wind
 from mahjong_utils.point_by_han_hu import get_parent_point_by_han_hu, get_child_point_by_han_hu
@@ -22,7 +22,7 @@ def _calc_han(yaku: Set[Yaku], menzen: bool) -> int:
 
 
 class Hora(BaseModel):
-    hand: HoraHand
+    hand: HoraHandPattern
     dora: int = 0
     extra_yaku: Optional[Set[Yaku]]
     han: int = 0  # 在__init__中计算

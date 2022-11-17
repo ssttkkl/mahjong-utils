@@ -1,6 +1,6 @@
 from typing import Callable, NamedTuple, Optional
 
-from mahjong_utils.models.hora_hand import HoraHand
+from mahjong_utils.models.hora_hand_pattern import HoraHandPattern
 
 
 class Yaku(NamedTuple):
@@ -8,9 +8,9 @@ class Yaku(NamedTuple):
     han: int
     furo_loss: int
     is_yakuman: bool = False
-    checker: Optional[Callable[[HoraHand], bool]] = None
+    checker: Optional[Callable[[HoraHandPattern], bool]] = None
 
-    def __call__(self, hora_hand: "HoraHand") -> bool:
+    def __call__(self, hora_hand: "HoraHandPattern") -> bool:
         if self.checker:
             return self.checker(hora_hand)
         else:

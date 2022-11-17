@@ -1,24 +1,22 @@
-from dataclasses import dataclass
-from typing import List, Set, Dict, Literal, Optional, Mapping, Sequence
+from typing import List, Dict, Literal, Optional, Sequence
+
+from pydantic import BaseModel
 
 from mahjong_utils.internal.hand_utils import calc_regular_advance
 from mahjong_utils.internal.legal_tiles_checker import ensure_legal_tiles
 from mahjong_utils.internal.regular_hand_searcher import regular_hand_search
 from mahjong_utils.models.furo import Furo
-from mahjong_utils.models.hand import Hand, ChitoiHand, KokushiHand
+from mahjong_utils.models.hand_pattern import HandPattern, ChitoiHandPattern, KokushiHandPattern
+from mahjong_utils.models.shanten import ShantenWithGot, ShantenWithoutGot, Shanten, ShantenInfoMixin
 from mahjong_utils.models.tile import Tile, is_yaochu, all_yaochu, tile
 
 
-@dataclass
-class ShantenResult:
+class ShantenResult(BaseModel, ShantenInfoMixin):
     type: Literal['regular', 'chitoi', 'kokushi', 'union']
-    shanten: int
-    hands: Sequence[Hand]
-    advance: Optional[Set[Tile]]
-    discard_to_advance: Optional[Mapping[Tile, Set[Tile]]]
+    hands: Sequence[HandPattern]
+    shanten_info: Optional[Shanten]
 
 
-@dataclass
 class UnionShantenResult(ShantenResult):
     regular: ShantenResult
     chitoi: Optional[ShantenResult]
@@ -38,16 +36,13 @@ def regular_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> Sha
     hands = regular_hand_search(k, tiles)
 
     for hand in hands:
-        hand.with_got = with_got
         hand.furo = furo
         hand.k += len(furo)
 
     if with_got:
-        advance_aggregated = None
         discard_to_advance_aggregated = dict()
 
         for hand in hands:
-            hand.discard_to_advance = {}
             for i, discard in enumerate(hand.remaining):
                 hand_after_discard = hand.copy(update={
                     "remaining": hand.remaining[0:i] + hand.remaining[i + 1:]
@@ -60,19 +55,34 @@ def regular_shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> Sha
                     discard_to_advance_aggregated[discard] = advance
                 else:
                     discard_to_advance_aggregated[discard] |= advance
+
+        for discard in list(discard_to_advance_aggregated.keys()):
+            advance = discard_to_advance_aggregated[discard]
+            discard_to_advance_aggregated[discard] = ShantenWithoutGot(
+                shanten=hands[0].shanten,
+                advance=advance,
+            )
+            # TODO：一向听的牌分析好型率
+
+        shanten_info = ShantenWithGot(shanten=hands[0].shanten,
+                                      discard_to_advance=discard_to_advance_aggregated)
     else:
         advance_aggregated = set()
-        discard_to_advance_aggregated = None
 
         for hand in hands:
-            hand.advance = calc_regular_advance(hand)
-            advance_aggregated |= hand.advance
+            advance = calc_regular_advance(hand)
+            hand.shanten_info.advance = advance
+            # TODO：一向听的牌分析好型率
+            advance_aggregated |= advance
+
+        shanten_info = ShantenWithoutGot(
+            shanten=hands[0].shanten,
+            advance=advance_aggregated,
+        )
 
     result = ShantenResult(type="regular",
-                           shanten=hands[0].shanten,
                            hands=hands,
-                           advance=advance_aggregated,
-                           discard_to_advance=discard_to_advance_aggregated)
+                           shanten_info=shanten_info)
     return result
 
 
@@ -101,36 +111,41 @@ def chitoi_shanten(tiles: List[Tile]) -> ShantenResult:
     shanten = 6 - len(pairs)
 
     if len(tiles) == 13:
-        hand = ChitoiHand(with_got=False,
-                          shanten=shanten,
-                          advance=advance,
-                          pairs=pairs,
-                          remaining=remaining)
+        hand = ChitoiHandPattern(with_got=False,
+                                 pairs=pairs,
+                                 remaining=remaining)
 
-        return ShantenResult(type="chitoi",
-                             shanten=shanten,
-                             hands=[hand],
-                             advance=advance,
-                             discard_to_advance=None)
+        shanten_info = ShantenWithoutGot(
+            shanten=shanten,
+            advance=advance,
+        )
     else:
+        hand = ChitoiHandPattern(with_got=True,
+                                 pairs=pairs,
+                                 remaining=remaining)
+
+        hand_tiles = list(hand.tiles)
+
         discard_to_advance = {}
         for t in remaining:
             advance_after_discard = advance.copy()
             if t in advance_after_discard:
                 advance_after_discard.remove(t)
-            discard_to_advance[t] = advance_after_discard
 
-        hand = ChitoiHand(with_got=True,
-                          shanten=shanten,
-                          discard_to_advance=discard_to_advance,
-                          pairs=pairs,
-                          remaining=remaining)
+            hand_tiles.remove(t)
+            discard_to_advance[t] = ShantenWithoutGot(
+                shanten=shanten,
+                advance=advance_after_discard,
+            )
+            hand_tiles.append(t)
 
-        return ShantenResult(type="chitoi",
-                             shanten=shanten,
-                             hands=[hand],
-                             advance=None,
-                             discard_to_advance=discard_to_advance)
+        shanten_info = ShantenWithGot(shanten=shanten,
+                                      discard_to_advance=discard_to_advance)
+
+    hand.shanten_info = shanten_info
+    return ShantenResult(type="chitoi",
+                         hands=[hand],
+                         shanten_info=shanten_info)
 
 
 # ======== 国士无双 ========
@@ -161,30 +176,27 @@ def kokushi_shanten(tiles: List[Tile]) -> ShantenResult:
             advance = all_yaochu - yaochu
 
             for t in repeated:
-                hand = KokushiHand(with_got=False,
-                                   shanten=shanten,
-                                   advance=advance,
-                                   yaochu=list(yaochu),
-                                   repeated=t,
-                                   remaining=[*remaining, *repeated.difference([t])])
+                hand = KokushiHandPattern(with_got=False,
+                                          yaochu=list(yaochu),
+                                          repeated=t,
+                                          remaining=[*remaining, *repeated.difference([t])])
                 hands.append(hand)
         else:
             shanten = 13 - len(yaochu)
             advance = all_yaochu.copy()
 
-            hand = KokushiHand(with_got=False,
-                               shanten=shanten,
-                               advance=advance,
-                               yaochu=list(yaochu),
-                               repeated=None,
-                               remaining=remaining)
+            hand = KokushiHandPattern(with_got=False,
+                                      yaochu=list(yaochu),
+                                      repeated=None,
+                                      remaining=remaining)
             hands.append(hand)
 
-        return ShantenResult(type="kokushi",
-                             shanten=shanten,
-                             hands=hands,
-                             advance=advance,
-                             discard_to_advance=None)
+        shanten_info = ShantenWithoutGot(
+            shanten=shanten,
+            advance=advance,
+        )
+        for hand in hands:
+            hand.shanten_info = shanten_info
     else:
         hands = []
 
@@ -193,50 +205,70 @@ def kokushi_shanten(tiles: List[Tile]) -> ShantenResult:
             advance = all_yaochu - yaochu
 
             for t in repeated:
+                hand = KokushiHandPattern(with_got=True,
+                                          yaochu=list(yaochu),
+                                          repeated=t,
+                                          remaining=[*remaining, *repeated.difference([t])])
+                hands.append(hand)
+
+                shanten_info = ShantenWithoutGot(
+                    shanten=shanten,
+                    advance=advance,
+                )
+
                 discard_to_advance = {}
                 for discard in remaining:
-                    discard_to_advance[discard] = advance
+                    discard_to_advance[discard] = shanten_info
                 for discard in repeated:
                     if discard == t:
                         continue
-                    discard_to_advance[discard] = advance
+                    discard_to_advance[discard] = shanten_info
 
-                hand = KokushiHand(with_got=True,
-                                   shanten=shanten,
-                                   discard_to_advance=discard_to_advance,
-                                   yaochu=list(yaochu),
-                                   repeated=t,
-                                   remaining=[*remaining, *repeated.difference([t])])
-                hands.append(hand)
+                hand.shanten_info = ShantenWithGot(
+                    shanten=shanten,
+                    discard_to_advance=discard_to_advance
+                )
 
-            discard_to_advance = {}
-
-            for h in hands:
-                for discard, advance in h.discard_to_advance.items():
-                    if discard not in discard_to_advance:
-                        discard_to_advance[discard] = set()
-                    discard_to_advance[discard] |= advance
+            discard_to_advance_aggregated = dict()
+            for hand in hands:
+                for discard, shanten_info in hand.discard_to_advance.items():
+                    if discard not in discard_to_advance_aggregated:
+                        discard_to_advance_aggregated[discard] = set()
+                    discard_to_advance_aggregated[discard] |= shanten_info.advance
+            for discard in list(discard_to_advance_aggregated.keys()):
+                advance = discard_to_advance_aggregated[discard]
+                discard_to_advance_aggregated[discard] = ShantenWithoutGot(
+                    shanten=shanten,
+                    advance=advance,
+                )
         else:
             shanten = 13 - len(yaochu)
-            advance = all_yaochu.copy()
 
             discard_to_advance = {}
             for discard in remaining:
-                discard_to_advance[discard] = advance
+                discard_to_advance[discard] = ShantenWithoutGot(
+                    shanten=shanten,
+                    advance=all_yaochu.copy()
+                )
 
-            hand = KokushiHand(with_got=True,
-                               shanten=shanten,
-                               discard_to_advance=discard_to_advance,
-                               yaochu=list(yaochu),
-                               repeated=None,
-                               remaining=remaining)
+            hand = KokushiHandPattern(with_got=True,
+                                      yaochu=list(yaochu),
+                                      repeated=None,
+                                      remaining=remaining)
+            hand.shanten_info = ShantenWithGot(
+                shanten=shanten,
+                discard_to_advance=discard_to_advance,
+            )
             hands.append(hand)
 
-        return ShantenResult(type="kokushi",
-                             shanten=shanten,
-                             hands=hands,
-                             advance=None,
-                             discard_to_advance=discard_to_advance)
+            discard_to_advance_aggregated = discard_to_advance
+
+        shanten_info = ShantenWithGot(shanten=shanten,
+                                      discard_to_advance=discard_to_advance_aggregated)
+
+    return ShantenResult(type="kokushi",
+                         hands=hands,
+                         shanten_info=shanten_info)
 
 
 # ======== union ========
@@ -251,8 +283,7 @@ def shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShante
 
     if k != 4:
         regular = regular_shanten(tiles, furo)
-        return UnionShantenResult(type="union", shanten=regular.shanten, hands=regular.hands,
-                                  advance=regular.advance, discard_to_advance=regular.discard_to_advance,
+        return UnionShantenResult(type="union", hands=regular.hands, shanten_info=regular.shanten_info,
                                   regular=regular, chitoi=None, kokushi=None)
 
     regular = regular_shanten(tiles, furo)
@@ -264,7 +295,6 @@ def shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShante
 
     if not with_got:
         advance_aggregated = set()
-        discard_to_advance_aggregated = None
 
         if regular.shanten == shanten:
             advance_aggregated |= regular.advance
@@ -275,32 +305,45 @@ def shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShante
         if kokushi.shanten == shanten:
             advance_aggregated |= kokushi.advance
             hands += kokushi.hands
+
+        shanten_info = ShantenWithoutGot(
+            shanten=shanten,
+            advance=advance_aggregated,
+        )
     else:
-        advance_aggregated = None
         discard_to_advance_aggregated = dict()
 
         if regular.shanten == shanten:
             hands += regular.hands
-            for discard, advance in regular.discard_to_advance.items():
+            for discard, inner in regular.discard_to_advance.items():
                 if discard not in discard_to_advance_aggregated:
                     discard_to_advance_aggregated[discard] = set()
-                discard_to_advance_aggregated[discard] |= advance
+                discard_to_advance_aggregated[discard] |= inner.advance
         if chitoi.shanten == shanten:
             hands += chitoi.hands
-            for discard, advance in chitoi.discard_to_advance.items():
+            for discard, inner in chitoi.discard_to_advance.items():
                 if discard not in discard_to_advance_aggregated:
                     discard_to_advance_aggregated[discard] = set()
-                discard_to_advance_aggregated[discard] |= advance
+                discard_to_advance_aggregated[discard] |= inner.advance
         if kokushi.shanten == shanten:
             hands += kokushi.hands
-            for discard, advance in kokushi.discard_to_advance.items():
+            for discard, inner in kokushi.discard_to_advance.items():
                 if discard not in discard_to_advance_aggregated:
                     discard_to_advance_aggregated[discard] = set()
-                discard_to_advance_aggregated[discard] |= advance
+                discard_to_advance_aggregated[discard] |= inner.advance
 
-    return UnionShantenResult(type="union", shanten=shanten, hands=hands,
-                              advance=advance_aggregated, discard_to_advance=discard_to_advance_aggregated,
-                              regular=regular, chitoi=None, kokushi=None)
+        for discard in list(discard_to_advance_aggregated.keys()):
+            advance = discard_to_advance_aggregated[discard]
+            discard_to_advance_aggregated[discard] = ShantenWithoutGot(
+                shanten=shanten,
+                advance=advance,
+            )
+
+        shanten_info = ShantenWithGot(shanten=shanten,
+                                      discard_to_advance=discard_to_advance_aggregated)
+
+    return UnionShantenResult(type="union", hands=hands, shanten_info=shanten_info,
+                              regular=regular, chitoi=chitoi, kokushi=kokushi)
 
 
 __all__ = ("regular_shanten",
