@@ -181,3 +181,8 @@ def test_shanten_with_got_tile():
     })
 
     shanten_with_got_tester("19m19p19s12345667z", -1, {})
+
+    shanten_with_got_tester("35m11223399p7799s", 0, {
+        tile("3m"): {*parse_tiles("5m"), },
+        tile("5m"): {*parse_tiles("3m"), }
+    })

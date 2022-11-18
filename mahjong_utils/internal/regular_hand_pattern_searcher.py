@@ -124,7 +124,7 @@ class RegularHandPatternSearcher:
                         self._tatsu.pop()
 
                 # ryanmen
-                if tatsu_type_limitation <= 2 <= t.num <= 7 and t.tile_type != TileType.Z:
+                if tatsu_type_limitation <= 2 and 2 <= t.num <= 7 and t.tile_type != TileType.Z:
                     j = i + 1
                     if self._count[i] > 0 and self._count[j] > 0:
                         taken = True

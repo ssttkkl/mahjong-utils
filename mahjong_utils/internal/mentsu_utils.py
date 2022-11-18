@@ -16,6 +16,8 @@ def shuntsu_after_discard(shuntsu: Shuntsu, got: Tile) -> Optional[Union[Penchan
     if got == shuntsu.tile:
         if got.num == 7:
             return Penchan(got + 1)
+        elif got.num == 3:
+            return Penchan(got - 2)
         else:
             return Ryanmen(got + 1)
     elif got == shuntsu.tile + 1:
