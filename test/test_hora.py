@@ -9,17 +9,17 @@ from mahjong_utils.yaku.yakuman import churen, tsuiso, daisushi, suanko_tanki, s
 
 
 def test_build_hora():
-    hora = build_hora(parse_tiles("1112356778899p"), None, tile("4p"), True, dora=4, extra_yaku={richi})
+    hora = build_hora(parse_tiles("11123456778899p"), None, tile("4p"), True, dora=4, extra_yaku={richi})
 
     assert hora.yaku == {richi, ittsu, chinitsu, ipe, tsumo, pinhu}
     assert hora.han == 16
-    assert hora.hand.hu == 20
+    assert hora.hu == 20
     assert hora.parent_point == (48000, 16000)
     assert hora.child_point == (32000, 16000, 8000)
 
 
 def test_build_hora_2():
-    hora = build_hora(parse_tiles("1112356789999p"), None, tile("4p"), True, extra_yaku={richi})
+    hora = build_hora(parse_tiles("11123456789999p"), None, tile("4p"), True, extra_yaku={richi})
 
     assert hora.yaku == {churen}
     assert hora.han == 13
@@ -32,7 +32,7 @@ def test_build_hora_3():
 
     assert hora.yaku == {ittsu, honitsu}
     assert hora.han == 3
-    assert hora.hand.hu == 40
+    assert hora.hu == 40
     assert hora.parent_point == (7700, 2600)
     assert hora.child_point == (5200, 2600, 1300)
 
@@ -42,13 +42,13 @@ def test_build_hora_4():
 
     assert len(hora.yaku) == 0
     assert hora.han == 0
-    assert hora.hand.hu == 30
+    assert hora.hu == 30
     assert hora.parent_point == (0, 0)
     assert hora.child_point == (0, 0, 0)
 
 
 def test_build_hora_5():
-    hora = build_hora(parse_tiles("1112223334445z"), None, tile("5z"), True, extra_yaku={tenhou})
+    hora = build_hora(parse_tiles("11122233344455z"), None, tile("5z"), True, extra_yaku={tenhou})
 
     assert hora.yaku == {tsuiso, daisushi, suanko_tanki, tenhou}
     assert hora.han == 13 * 6
@@ -57,7 +57,7 @@ def test_build_hora_5():
 
 
 def test_build_hora_6():
-    hora = build_hora(parse_tiles("6z"),
+    hora = build_hora(parse_tiles("66z"),
                       [parse_furo("3333s"), parse_furo("2222s"), parse_furo("0440s"), parse_furo("8888s")], tile("6z"),
                       True)
 
@@ -68,7 +68,7 @@ def test_build_hora_6():
 
 
 def test_build_hora_7():
-    hora = build_hora(parse_tiles("6z"),
+    hora = build_hora(parse_tiles("66z"),
                       [parse_furo("0330s"), parse_furo("0220s"), parse_furo("0440s"), parse_furo("0880s")], tile("6z"),
                       True)
 
@@ -79,12 +79,12 @@ def test_build_hora_7():
 
 
 def test_build_hora_8():
-    hora = build_hora(parse_tiles("111333555z22s44p"), None, tile("2s"), False, dora=4,
+    hora = build_hora(parse_tiles("111333555z222s44p"), None, tile("2s"), False, dora=4,
                       self_wind=Wind.west, round_wind=Wind.east,
                       extra_yaku={richi, ippatsu})
 
     assert hora.yaku == {sananko, toitoi, richi, ippatsu, self_wind, round_wind, haku}
     assert hora.han == 13
-    assert hora.hand.hu == 60
+    assert hora.hu == 60
     assert hora.parent_point == (48000, 16000)
     assert hora.child_point == (32000, 16000, 8000)

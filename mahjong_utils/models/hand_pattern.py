@@ -1,4 +1,5 @@
-from typing import Iterable, Optional, Union, Tuple, FrozenSet
+from abc import abstractmethod, ABC
+from typing import Iterable, Optional, Tuple, FrozenSet
 
 from pydantic import Field
 from pydantic.main import BaseModel
@@ -9,7 +10,22 @@ from mahjong_utils.models.tatsu import Tatsu
 from mahjong_utils.models.tile import Tile
 
 
-class RegularHandPattern(BaseModel):
+class HandPattern(BaseModel, ABC):
+    @property
+    @abstractmethod
+    def menzen(self) -> bool:
+        raise NotImplementedError()
+
+    @property
+    @abstractmethod
+    def tiles(self) -> Iterable[Tile]:
+        raise NotImplementedError()
+
+    def __hash__(self):
+        return hash(self.__class__) + hash(tuple(self.__dict__.values()))
+
+
+class RegularHandPattern(HandPattern):
     """
     表示一个结构分析后的以标准形为目标的手牌
     """
@@ -49,11 +65,29 @@ class RegularHandPattern(BaseModel):
             if isinstance(fr, Kan) and fr.ankan:
                 yield fr
 
-    class Config:
-        frozen = True
+    @property
+    def menzen(self) -> bool:
+        for fr in self.furo:
+            if not isinstance(fr, Kan) or not fr.ankan:
+                return False
+        return True
+
+    @property
+    def tiles(self) -> Iterable[Tile]:
+        if self.jyantou is not None:
+            yield self.jyantou
+            yield self.jyantou
+        for mt in self.mentsu:
+            for t in mt.tiles:
+                yield t
+        for tt in self.tatsu:
+            yield tt.first
+            yield tt.second
+        for t in self.remaining:
+            yield t
 
 
-class ChitoiHandPattern(BaseModel):
+class ChitoiHandPattern(HandPattern):
     """
     表示一个结构分析后的以七对子为目标的手牌
     """
@@ -61,11 +95,20 @@ class ChitoiHandPattern(BaseModel):
     pairs: FrozenSet[Tile] = Field(default_factory=frozenset)
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
 
-    class Config:
-        frozen = True
+    @property
+    def menzen(self) -> bool:
+        return True
+
+    @property
+    def tiles(self) -> Iterable[Tile]:
+        for p in self.pairs:
+            yield p
+            yield p
+        for t in self.remaining:
+            yield t
 
 
-class KokushiHandPattern(BaseModel):
+class KokushiHandPattern(HandPattern):
     """
     表示一个结构分析后的以国士无双为目标的手牌
     """
@@ -74,10 +117,18 @@ class KokushiHandPattern(BaseModel):
     repeated: Optional[Tile] = None
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
 
-    class Config:
-        frozen = True
+    @property
+    def menzen(self) -> bool:
+        return True
 
+    @property
+    def tiles(self) -> Iterable[Tile]:
+        for t in self.yaochu:
+            if self.repeated == t:
+                yield t
+            yield t
+        for t in self.remaining:
+            yield t
 
-HandPattern = Union[RegularHandPattern, ChitoiHandPattern, KokushiHandPattern]
 
 __all__ = ("HandPattern", "RegularHandPattern", "ChitoiHandPattern", "KokushiHandPattern")

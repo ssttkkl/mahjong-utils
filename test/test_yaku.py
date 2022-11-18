@@ -13,7 +13,7 @@ from mahjong_utils.yaku.yakuman import churen, daisangen, daisushi, kokushi, kok
 @pytest.fixture
 def chitoi_hora_hand():
     chitoi_hand = ChitoiHoraHandPattern(
-        pairs=parse_tiles("1234567p"),
+        pairs=frozenset(parse_tiles("1234567p")),
         agari=tile("7p"),
         tsumo=False
     )

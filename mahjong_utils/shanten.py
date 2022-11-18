@@ -322,18 +322,23 @@ def shanten(tiles: List[Tile], furo: Optional[List[Furo]] = None) -> UnionShante
                 discard_to_advance_aggregated[discard] = advance
             elif discard_to_advance_aggregated[discard].shanten == advance.shanten:
                 discard_to_advance_aggregated[discard].advance |= advance.advance
+        patterns += regular.hand.patterns
+
         for discard, advance in chitoi.discard_to_advance.items():
             if (discard not in discard_to_advance_aggregated
                     or discard_to_advance_aggregated[discard].shanten > advance.shanten):
                 discard_to_advance_aggregated[discard] = advance
             elif discard_to_advance_aggregated[discard].shanten == advance.shanten:
                 discard_to_advance_aggregated[discard].advance |= advance.advance
+        patterns += chitoi.hand.patterns
+
         for discard, advance in kokushi.discard_to_advance.items():
             if (discard not in discard_to_advance_aggregated
                     or discard_to_advance_aggregated[discard].shanten > advance.shanten):
                 discard_to_advance_aggregated[discard] = advance
             elif discard_to_advance_aggregated[discard].shanten == advance.shanten:
                 discard_to_advance_aggregated[discard].advance |= advance.advance
+        patterns += kokushi.hand.patterns
 
         shanten_info = ShantenWithGot(
             shanten=shanten,

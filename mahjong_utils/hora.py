@@ -8,7 +8,7 @@ from mahjong_utils.models.hora_hand_pattern import HoraHandPattern, build_hora_h
 from mahjong_utils.models.tile import Tile
 from mahjong_utils.models.wind import Wind
 from mahjong_utils.point_by_han_hu import get_parent_point_by_han_hu, get_child_point_by_han_hu
-from mahjong_utils.shanten import ShantenResult, shanten
+from mahjong_utils.shanten import ShantenResult, shanten, UnionShantenResult
 from mahjong_utils.yaku import Yaku
 from mahjong_utils.yaku.check import check_yaku
 
@@ -22,7 +22,7 @@ def _calc_han(yaku: Set[Yaku], menzen: bool) -> int:
 
 
 class Hora(BaseModel):
-    hand: HoraHandPattern
+    pattern: HoraHandPattern
     dora: int = 0
     extra_yaku: Optional[Set[Yaku]]
     han: int = 0  # 在__init__中计算
@@ -31,30 +31,30 @@ class Hora(BaseModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.yaku = check_yaku(self.hand, self.extra_yaku)
-        self.han = _calc_han(self.yaku, self.hand.menzen)
+        self.yaku = check_yaku(self.pattern, self.extra_yaku)
+        self.han = _calc_han(self.yaku, self.pattern.menzen)
         if self.han > 0:
             self.han += self.dora
 
     @property
     def hu(self) -> int:
-        return self.hand.hu
+        return self.pattern.hu
 
     @property
     def tsumo(self) -> bool:
-        return self.hand.tsumo
+        return self.pattern.tsumo
 
     @property
     def self_wind(self) -> Optional[Wind]:
-        return self.hand.self_wind
+        return self.pattern.self_wind
 
     @property
     def round_wind(self) -> Optional[Wind]:
-        return self.hand.round_wind
+        return self.pattern.round_wind
 
     @property
     def agari(self) -> Tile:
-        return self.hand.agari
+        return self.pattern.agari
 
     @property
     def parent_point(self) -> Tuple[int, int]:
@@ -70,10 +70,10 @@ class Hora(BaseModel):
             for yaku in self.yaku:
                 times += yaku.han // 13
 
-            ans = get_parent_point_by_han_hu(self.han, self.hand.hu)
+            ans = get_parent_point_by_han_hu(self.han, self.pattern.hu)
             return ans[0] * times, ans[1] * times
         else:
-            return get_parent_point_by_han_hu(self.han, self.hand.hu)
+            return get_parent_point_by_han_hu(self.han, self.pattern.hu)
 
     @property
     def child_point(self) -> Tuple[int, int, int]:
@@ -92,7 +92,7 @@ class Hora(BaseModel):
             ans = get_child_point_by_han_hu(13, 20)
             return ans[0] * times, ans[1] * times, ans[2] * times
         else:
-            return get_child_point_by_han_hu(self.han, self.hand.hu)
+            return get_child_point_by_han_hu(self.han, self.pattern.hu)
 
 
 def build_hora(tiles: List[Tile], furo: Optional[List[Furo]], agari: Tile,
@@ -127,12 +127,14 @@ def build_hora(tiles: List[Tile], furo: Optional[List[Furo]], agari: Tile,
                                           extra_yaku=extra_yaku)
 
 
-def build_hora_from_shanten_result(shanten_result: ShantenResult, agari: Tile,
-                                   tsumo: bool,
-                                   *,
-                                   dora: int = 0,
-                                   self_wind: Optional[Wind] = None, round_wind: Optional[Wind] = None,
-                                   extra_yaku: Optional[Set[Yaku]] = None) -> Hora:
+def build_hora_from_shanten_result(
+        shanten_result: ShantenResult,
+        agari: Tile,
+        tsumo: bool,
+        *, dora: int = 0,
+        self_wind: Optional[Wind] = None, round_wind: Optional[Wind] = None,
+        extra_yaku: Optional[Set[Yaku]] = None
+) -> Hora:
     """
     根据向听分析结果构造Hora
 
@@ -145,19 +147,33 @@ def build_hora_from_shanten_result(shanten_result: ShantenResult, agari: Tile,
     :param extra_yaku: 额外役
     :return: Hora
     """
+    if not shanten_result.with_got:
+        raise ValueError("shanten_result without got")
+    if shanten_result.shanten != -1:
+        raise ValueError("shanten != -1")
+
     possible_hora = []
 
-    for hand in shanten_result.hand:
-        if not hand.with_got and agari not in hand.advance:
-            continue
+    patterns = []
 
-        for hora_hand in build_hora_hand(hand, agari, tsumo, self_wind, round_wind):
-            hora = Hora(hand=hora_hand, dora=dora, extra_yaku=extra_yaku)
+    if isinstance(shanten_result, UnionShantenResult):
+        if shanten_result.regular.shanten == -1:
+            patterns += shanten_result.regular.hand.patterns
+        if shanten_result.chitoi is not None and shanten_result.chitoi.shanten == -1:
+            patterns += shanten_result.regular.hand.patterns
+        if shanten_result.kokushi is not None and shanten_result.kokushi.shanten == -1:
+            patterns += shanten_result.regular.hand.patterns
+    else:
+        patterns = shanten_result.hand.patterns
+
+    for pat in patterns:
+        for hora_hand in build_hora_hand(pat, agari, tsumo, self_wind, round_wind):
+            hora = Hora(pattern=hora_hand, dora=dora, extra_yaku=extra_yaku)
             possible_hora.append(hora)
 
     best_hora = possible_hora[0]
     for hora in possible_hora:
-        if hora.han > best_hora.han or (hora.han == best_hora.han and hora.hand.hu > best_hora.hand.hu):
+        if hora.han > best_hora.han or (hora.han == best_hora.han and hora.hu > best_hora.hu):
             best_hora = hora
     return best_hora
 

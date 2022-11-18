@@ -35,7 +35,7 @@ class RegularHandPatternSearcher:
             self._count[_encode(t)] += 1
 
         self._n = len(tiles)
-        self._k = self._n // 3 + len(furo)
+        self._k = self._n // 3
 
         self._mentsu: List[Mentsu] = []
         self._tatsu: List[Tatsu] = []
@@ -183,7 +183,7 @@ class RegularHandPatternSearcher:
 
                 for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu),
                                                                                   remaining_tatsu):
-                    yield RegularHandPattern(k=self._k,
+                    yield RegularHandPattern(k=self._k + len(self._furo),
                                              jyantou=tt.first,
                                              menzen_mentsu=tuple(self._mentsu),
                                              furo=self._furo,
@@ -192,7 +192,7 @@ class RegularHandPatternSearcher:
 
         if not has_toitsu:
             for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu), self._tatsu):
-                yield RegularHandPattern(k=self._k,
+                yield RegularHandPattern(k=self._k + len(self._furo),
                                          jyantou=None,
                                          menzen_mentsu=tuple(self._mentsu),
                                          furo=self._furo,
@@ -231,22 +231,22 @@ class RegularHandPatternSearcher:
 
 def regular_hand_pattern_search(tiles: Sequence[Tile], furo: Sequence[Furo]) -> Tuple[int, List[RegularHandPattern]]:
     cur_shanten = 10000
-    hands = []
+    patterns = []
 
-    def callback(hand: RegularHandPattern):
-        nonlocal cur_shanten, hands
+    def callback(pattern: RegularHandPattern):
+        nonlocal cur_shanten, patterns
 
-        shanten = calc_regular_shanten(hand)
+        shanten = calc_regular_shanten(pattern)
         if shanten < cur_shanten:
             cur_shanten = shanten
-            hands = [hand]
+            patterns = [pattern]
         elif shanten == cur_shanten:
-            hands.append(hand)
+            patterns.append(pattern)
 
     searcher = RegularHandPatternSearcher(tiles, furo, callback)
     searcher.run()
 
-    return cur_shanten, hands
+    return cur_shanten, patterns
 
 
 __all__ = ("regular_hand_pattern_search",)

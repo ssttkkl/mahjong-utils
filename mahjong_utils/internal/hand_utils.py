@@ -13,7 +13,7 @@ def calc_regular_shanten(pattern: RegularHandPattern):
     :param pattern:
     :return:
     """
-    shanten = 2 * (pattern.k - len(pattern.menzen_mentsu)) - len(pattern.tatsu)
+    shanten = 2 * (pattern.k - len(pattern.menzen_mentsu) - len(pattern.furo)) - len(pattern.tatsu)
     if pattern.jyantou is not None:
         shanten -= 1
     return shanten

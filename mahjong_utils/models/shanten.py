@@ -1,4 +1,4 @@
-from typing import Set, Dict, Optional
+from typing import Set, Dict, Optional, Mapping, AbstractSet
 
 from pydantic import BaseModel, Field
 
@@ -36,3 +36,7 @@ class ShantenInfoMixin:
     @property
     def discard_to_advance(self) -> Optional[Dict[Tile, ShantenWithoutGot]]:
         return getattr(self.shanten_info, "discard_to_advance", None)
+
+    @property
+    def with_got(self) -> bool:
+        return self.discard_to_advance is not None
