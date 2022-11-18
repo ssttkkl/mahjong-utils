@@ -5,7 +5,7 @@ from typing import Optional, Iterable
 from pydantic import Field, root_validator
 
 from mahjong_utils.internal.attr_dict import attr_dict
-from mahjong_utils.internal.hand_utils import hand_exclude_got_regular
+from mahjong_utils.internal.hand_utils import regular_pattern_after_discard
 from mahjong_utils.models.furo import Pon, Kan
 from mahjong_utils.models.hand_pattern import RegularHandPattern, HandPattern, ChitoiHandPattern, KokushiHandPattern
 from mahjong_utils.models.mentsu import Kotsu
@@ -152,7 +152,7 @@ def _build_regular_hora_hand(hand: RegularHandPattern,
                                          menzen_mentsu=hand.menzen_mentsu,
                                          furo=hand.furo)
     else:
-        for excluded_hand in hand_exclude_got_regular(hand, agari):
+        for excluded_hand in regular_pattern_after_discard(hand, agari):
             for h in _build_regular_hora_hand(excluded_hand, agari, tsumo, self_wind, round_wind):
                 yield h
 
@@ -177,7 +177,7 @@ def _build_chitoi_hora_hand(hand: ChitoiHandPattern,
                                     pairs=pairs)
     else:
         if agari not in hand.pairs:
-            raise ValueError("agari is not in hand")
+            raise ValueError("agari is not in _tiles")
 
         yield ChitoiHoraHandPattern(with_got=True,
                                     agari=agari,
@@ -228,14 +228,14 @@ def build_hora_hand(hand: HandPattern,
     """
     if not hand.with_got:
         if hand.shanten != 0:
-            raise ValueError("hand is not tenpai")
+            raise ValueError("_tiles is not tenpai")
         if agari not in hand.advance:
             raise ValueError("agari is not waiting")
     else:
         if hand.shanten != -1:
-            raise ValueError("hand is not agari")
+            raise ValueError("_tiles is not agari")
         if agari not in hand.tiles:
-            raise ValueError("agari is not in hand")
+            raise ValueError("agari is not in _tiles")
 
     if isinstance(hand, RegularHandPattern):
         return _build_regular_hora_hand(hand, agari, tsumo, self_wind, round_wind)
@@ -244,4 +244,4 @@ def build_hora_hand(hand: HandPattern,
     elif isinstance(hand, KokushiHandPattern):
         return _build_kokushi_hora_hand(hand, agari, tsumo, self_wind, round_wind)
     else:
-        raise TypeError(f"unexpected type of hand: {type(hand)}")
+        raise TypeError(f"unexpected type of _tiles: {type(hand)}")

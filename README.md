@@ -73,7 +73,7 @@ hora = build_hora(
 
 # hora.yaku == {self_wind, round_wind}
 # hora.han == 6
-# hora.hand.hu == 30
+# hora._tiles.hu == 30
 # hora.parent_point == (18000, 6000)
 # hora.child_point == (12000, 6000, 3000)
 ```

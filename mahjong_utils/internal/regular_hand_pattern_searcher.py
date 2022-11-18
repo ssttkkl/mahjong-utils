@@ -1,11 +1,11 @@
-from typing import List, Callable
+from typing import List, Callable, Tuple, Generator, Sequence
 
 from mahjong_utils.internal.hand_utils import calc_regular_shanten
 from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping, tile_type_reversed_index_mapping
 from mahjong_utils.internal.utils.bit import generate_k_bit_number
+from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.hand_pattern import RegularHandPattern
 from mahjong_utils.models.mentsu import Kotsu, Shuntsu, Mentsu
-from mahjong_utils.models.shanten import ShantenWithGot, ShantenWithoutGot
 from mahjong_utils.models.tatsu import Tatsu, Toitsu, Kanchan, Ryanmen, Penchan
 from mahjong_utils.models.tile import Tile, tile
 from mahjong_utils.models.tile_type import TileType
@@ -21,39 +21,31 @@ def _decode(code: int) -> Tile:
     return tile(tile_type, num)
 
 
-class RegularHandSearcher:
-    def __init__(self, k: int, hand: List[Tile],
+class RegularHandPatternSearcher:
+    def __init__(self, tiles: Sequence[Tile], furo: Sequence[Furo],
                  callback: Callable[[RegularHandPattern], None]):
-        self.hand = hand
-        self.callback = callback
+        self._callback = callback
+
+        if not isinstance(furo, tuple):
+            furo = tuple(furo)
+        self._furo = furo
 
         self._count = [0] * (3 * 9 + 7)
-        self._n = len(hand)
-        self._k = k
-        self._with_got = self._n % 3 == 2
+        for t in tiles:
+            self._count[_encode(t)] += 1
+
+        self._n = len(tiles)
+        self._k = self._n // 3 + len(furo)
 
         self._mentsu: List[Mentsu] = []
         self._tatsu: List[Tatsu] = []
-        self._stop = False
 
     def run(self):
-        if self._stop:
-            raise RuntimeError("already stopped")
-
-        for t in self.hand:
-            self._count[_encode(t)] += 1
-
         self._dfs_kotsu()
-
-    def stop(self):
-        self._stop = True
 
     def _dfs_kotsu(self, begin=0):
         # begin用于限制从哪张牌开始枚举（下同）
         # 其目的是避免搜索时按不同顺序取了相同的刻字，优化性能
-
-        if self._stop:
-            return
 
         if self._n >= 3:
             for i in range(begin, 3 * 9 + 7):
@@ -69,9 +61,6 @@ class RegularHandSearcher:
         self._dfs_shuntsu()
 
     def _dfs_shuntsu(self, begin=0):
-        if self._stop:
-            return
-
         if self._n >= 3:
             for i in range(begin // 9, 3):  # m/p/s
                 for j in range(7):  # 1~7
@@ -101,9 +90,6 @@ class RegularHandSearcher:
         # tatsu_type_limitation用于限制能够取什么样的以begin为第一张牌的搭子（0可以取所有类型，1不可以取对子、2不可以取对子和坎张、3不可以取对子坎张两面）
         # 其目的是避免搜索时按不同顺序取了相同的搭子，优化性能
         # 故当for循环执行了一趟以后就将tatsu_type_limitation置0
-
-        if self._stop:
-            return
 
         taken = False
 
@@ -174,7 +160,7 @@ class RegularHandSearcher:
 
     def _on_result(self):
         for hand in self._normalize():
-            self.callback(hand)
+            self._callback(hand)
 
     def _normalize(self):
         # 将搜索结果处理为（雀头，面子，搭子，浮牌）的形式，且面子数+搭子数不超过k
@@ -184,6 +170,7 @@ class RegularHandSearcher:
                 t = _decode(i)
                 for j in range(self._count[i]):
                     remaining.append(t)
+        remaining = tuple(remaining)
 
         has_toitsu = False
 
@@ -198,31 +185,31 @@ class RegularHandSearcher:
                                                                                   remaining_tatsu):
                     yield RegularHandPattern(k=self._k,
                                              jyantou=tt.first,
-                                             menzen_mentsu=self._mentsu.copy(),
+                                             menzen_mentsu=tuple(self._mentsu),
+                                             furo=self._furo,
                                              tatsu=tatsu_chosen,
-                                             remaining=remaining + tatsu_not_chosen_as_tiles,
-                                             with_got=self._with_got)
+                                             remaining=remaining + tatsu_not_chosen_as_tiles)
 
         if not has_toitsu:
             for tatsu_chosen, tatsu_not_chosen_as_tiles in self._choose_tatsu(self._k - len(self._mentsu), self._tatsu):
                 yield RegularHandPattern(k=self._k,
                                          jyantou=None,
-                                         menzen_mentsu=self._mentsu.copy(),
+                                         menzen_mentsu=tuple(self._mentsu),
+                                         furo=self._furo,
                                          tatsu=tatsu_chosen,
-                                         remaining=remaining + tatsu_not_chosen_as_tiles,
-                                         with_got=self._with_got)
+                                         remaining=remaining + tatsu_not_chosen_as_tiles)
 
     @staticmethod
-    def _choose_tatsu(k: int, tatsu: List[Tatsu]):
+    def _choose_tatsu(k: int, tatsu: List[Tatsu]) -> Generator[Tuple[Tuple[Tatsu], Tuple[Tile]], None, None]:
         # 选择k个搭子
         if k >= len(tatsu):
-            yield tatsu.copy(), []
+            yield tuple(tatsu), tuple()
         elif k == 0:
             tiles = []
             for tt in tatsu:
                 tiles.append(tt.first)
                 tiles.append(tt.second)
-            yield [], tiles
+            yield tuple(), tuple(tiles)
         else:
             maximum = 1 << len(tatsu)
             for mask in generate_k_bit_number(k):
@@ -239,12 +226,10 @@ class RegularHandSearcher:
                         tatsu_not_chosen_as_tiles.append(tatsu[i].first)
                         tatsu_not_chosen_as_tiles.append(tatsu[i].second)
 
-                yield tatsu_chosen, tatsu_not_chosen_as_tiles
+                yield tuple(tatsu_chosen), tuple(tatsu_not_chosen_as_tiles)
 
 
-def regular_hand_search(k: int, tiles: List[Tile]) -> List[RegularHandPattern]:
-    with_got = len(tiles) % 3 == 2
-
+def regular_hand_pattern_search(tiles: Sequence[Tile], furo: Sequence[Furo]) -> Tuple[int, List[RegularHandPattern]]:
     cur_shanten = 10000
     hands = []
 
@@ -257,18 +242,11 @@ def regular_hand_search(k: int, tiles: List[Tile]) -> List[RegularHandPattern]:
             hands = [hand]
         elif shanten == cur_shanten:
             hands.append(hand)
-        else:
-            return
 
-        if with_got:
-            hand.shanten_info = ShantenWithGot(shanten=shanten)
-        else:
-            hand.shanten_info = ShantenWithoutGot(shanten=shanten)
-
-    searcher = RegularHandSearcher(k, tiles, callback)
+    searcher = RegularHandPatternSearcher(tiles, furo, callback)
     searcher.run()
 
-    return hands
+    return cur_shanten, hands
 
 
-__all__ = ("RegularHandSearcher",)
+__all__ = ("regular_hand_pattern_search",)

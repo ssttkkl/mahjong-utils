@@ -119,7 +119,7 @@ def build_hora(tiles: List[Tile], furo: Optional[List[Furo]], agari: Tile,
 
     k = len(tiles) // 3 + len(furo)
     if k != 4:
-        raise ValueError("invalid length of tiles")
+        raise ValueError("invalid length of _tiles")
 
     shanten_result = shanten(tiles, furo)
     return build_hora_from_shanten_result(shanten_result, agari, tsumo,
@@ -147,7 +147,7 @@ def build_hora_from_shanten_result(shanten_result: ShantenResult, agari: Tile,
     """
     possible_hora = []
 
-    for hand in shanten_result.hands:
+    for hand in shanten_result.hand:
         if not hand.with_got and agari not in hand.advance:
             continue
 

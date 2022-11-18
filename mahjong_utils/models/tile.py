@@ -223,7 +223,7 @@ def tiles_text(tiles: Union[Tile, Iterable[Tile]]) -> str:
         return sio.getvalue()
 
 
-all_yaochu = {*parse_tiles("19m19s19p1234567z")}
+all_yaochu = frozenset(parse_tiles("19m19s19p1234567z"))
 
 
 def is_m(t: Tile) -> bool:

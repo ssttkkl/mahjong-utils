@@ -56,18 +56,18 @@ def parse_mentsu(t: Union[Sequence[Tile], str]) -> Mentsu:
         t = parse_tiles(t)
 
     if len(t) != 3:
-        raise ValueError("tiles must has length of 3")
+        raise ValueError("_tiles must has length of 3")
 
     if t[0] == t[1] == t[2]:
         return Kotsu(t[0])
     else:
         if t[0].tile_type == TileType.Z or t[1].tile_type == TileType.Z or t[2].tile_type == TileType.Z:
-            raise ValueError(f"invalid tiles: {t}")
+            raise ValueError(f"invalid _tiles: {t}")
         t = sorted(t)
         if t[1] - t[0] == 1 and t[2] - t[1] == 1:
             return Shuntsu(t[0])
         else:
-            raise ValueError(f"invalid tiles: {t}")
+            raise ValueError(f"invalid _tiles: {t}")
 
 
 __all__ = ("Mentsu", "Kotsu", "Shuntsu", "parse_mentsu")

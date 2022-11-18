@@ -1,105 +1,98 @@
 from typing import Iterable, Set
 
-from mahjong_utils.internal.mentsu_utils import mentsu_try_exclude_got
+from mahjong_utils.internal.mentsu_utils import mentsu_after_discard
 from mahjong_utils.internal.tile_cling import tile_cling
 from mahjong_utils.models.hand_pattern import RegularHandPattern
 from mahjong_utils.models.tile import Tile
 
 
-def calc_regular_shanten(hand: RegularHandPattern):
+def calc_regular_shanten(pattern: RegularHandPattern):
     """
     计算向听数
 
-    :param hand:
+    :param pattern:
     :return:
     """
-    shanten = 2 * (hand.k - len(hand.menzen_mentsu)) - len(hand.tatsu)
-    if hand.jyantou is not None:
+    shanten = 2 * (pattern.k - len(pattern.menzen_mentsu)) - len(pattern.tatsu)
+    if pattern.jyantou is not None:
         shanten -= 1
     return shanten
 
 
-def calc_regular_advance(hand: RegularHandPattern) -> Set[Tile]:
+def calc_regular_advance(pattern: RegularHandPattern) -> Set[Tile]:
     """
     计算进张
 
-    :param hand:
+    :param pattern:
     :return:
     """
     advance = set()
 
     # 搭子的进张
-    for tt in hand.tatsu:
+    for tt in pattern.tatsu:
         advance |= tt.waiting
 
     # 浮张的靠张
-    if len(hand.furo) + len(hand.menzen_mentsu) + len(hand.tatsu) < hand.k:
-        for t in hand.remaining:
+    if len(pattern.furo) + len(pattern.menzen_mentsu) + len(pattern.tatsu) < pattern.k:
+        for t in pattern.remaining:
             advance |= tile_cling[t]
 
     # 无雀头
-    if hand.jyantou is None:
-        for t in hand.remaining:
+    if pattern.jyantou is None:
+        for t in pattern.remaining:
             advance.add(t)
 
     return advance
 
 
-def hand_exclude_got_regular(hand: RegularHandPattern, got: Tile) -> Iterable[RegularHandPattern]:
+def regular_pattern_after_discard(pattern: RegularHandPattern, discard: Tile) -> Iterable[RegularHandPattern]:
     """
-    hand为已摸牌状态的手牌，获取所有可能的未摸牌状态的手牌
-    :param hand:
-    :param got:
+
+    :param pattern:
+    :param discard:
     :return:
     """
-    assert hand.with_got
-
     # 扣掉雀头
-    if hand.jyantou == got:
-        new_hand = hand.copy(update={
-            "with_got": False,
+    if pattern.jyantou == discard:
+        new_hand = pattern.copy(update={
             "jyantou": None,
-            "remaining": hand.remaining + [got]
+            "remaining": pattern.remaining + (discard,)
         })
         yield new_hand
 
     # 扣掉面子
-    for i, mt in enumerate(hand.menzen_mentsu):
-        tatsu = mentsu_try_exclude_got(mt, got)
+    for i, mt in enumerate(pattern.menzen_mentsu):
+        tatsu = mentsu_after_discard(mt, discard)
         if tatsu is not None:
-            new_hand = hand.copy(update={
-                "with_got": False,
-                "menzen_mentsu": hand.menzen_mentsu[:i] + hand.menzen_mentsu[i + 1:],
-                "tatsu": hand.tatsu + [tatsu]
+            new_hand = pattern.copy(update={
+                "menzen_mentsu": pattern.menzen_mentsu[:i] + pattern.menzen_mentsu[i + 1:],
+                "tatsu": pattern.tatsu + (tatsu,)
             })
             yield new_hand
 
     # 扣掉搭子
-    for i, tt in enumerate(hand.tatsu):
-        if got == tt.first:
-            new_hand = hand.copy(update={
-                "with_got": False,
-                "tatsu": hand.tatsu[:i] + hand.tatsu[i + 1:],
-                "remaining": hand.remaining + [tt.second]
+    for i, tt in enumerate(pattern.tatsu):
+        if discard == tt.first:
+            new_hand = pattern.copy(update={
+                "tatsu": pattern.tatsu[:i] + pattern.tatsu[i + 1:],
+                "remaining": pattern.remaining + (tt.second,)
             })
             yield new_hand
-        elif got == tt.second:
-            new_hand = hand.copy(update={
-                "with_got": False,
-                "tatsu": hand.tatsu[:i] + hand.tatsu[i + 1:],
-                "remaining": hand.remaining + [tt.first]
+        elif discard == tt.second:
+            new_hand = pattern.copy(update={
+                "tatsu": pattern.tatsu[:i] + pattern.tatsu[i + 1:],
+                "remaining": pattern.remaining + (tt.first,)
             })
             yield new_hand
 
     # 扣掉浮张
     try:
-        idx = hand.remaining.index(got)
+        idx = pattern.remaining.index(discard)
     except ValueError:
         idx = -1
 
     if idx != -1:
-        new_hand = hand.copy(update={
-            "with_got": False,
-            "remaining": hand.remaining[:idx] + hand.remaining[idx + 1:]
+        new_hand = pattern.copy(update={
+            "remaining": pattern.remaining[:idx] + pattern.remaining[idx + 1:]
         })
         yield new_hand

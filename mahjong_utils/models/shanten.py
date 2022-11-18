@@ -19,26 +19,20 @@ class ShantenWithGot(Shanten):
 
 
 class ShantenInfoMixin:
+    shanten_info: Shanten
+
     @property
     def shanten(self) -> Optional[int]:
-        if (shanten_info := getattr(self, "shanten_info", None)) is not None:
-            return getattr(shanten_info, "shanten", None)
-        return None
+        return getattr(self.shanten_info, "shanten", None)
 
     @property
     def advance(self) -> Optional[Set[Tile]]:
-        if (shanten_info := getattr(self, "shanten_info", None)) is not None:
-            return getattr(shanten_info, "advance", None)
-        return None
+        return getattr(self.shanten_info, "advance", None)
 
     @property
     def well_shape_rate(self) -> Optional[float]:
-        if (shanten_info := getattr(self, "shanten_info", None)) is not None:
-            return getattr(shanten_info, "well_shape_rate", None)
-        return None
+        return getattr(self.shanten_info, "well_shape_rate", None)
 
     @property
     def discard_to_advance(self) -> Optional[Dict[Tile, ShantenWithoutGot]]:
-        if (shanten_info := getattr(self, "shanten_info", None)) is not None:
-            return getattr(shanten_info, "discard_to_advance", None)
-        return None
+        return getattr(self.shanten_info, "discard_to_advance", None)

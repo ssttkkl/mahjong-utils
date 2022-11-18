@@ -20,9 +20,6 @@ class Tatsu(ABC):
     def second(self) -> Tile:
         raise NotImplementedError()
 
-    def __repr__(self):
-        return tiles_text([self.first, self.second])
-
     @property
     @abstractmethod
     def waiting(self) -> Set[Tile]:
@@ -54,6 +51,9 @@ class Ryanmen(Tatsu):
         else:
             raise ValueError(f"tile {tile} is not waiting")
 
+    def __repr__(self):
+        return tiles_text([self.first, self.second])
+
 
 @dataclass(frozen=True)
 class Penchan(Tatsu):
@@ -78,6 +78,9 @@ class Penchan(Tatsu):
         else:
             raise ValueError(f"tile {tile} is not waiting")
 
+    def __repr__(self):
+        return tiles_text([self.first, self.second])
+
 
 @dataclass(frozen=True)
 class Kanchan(Tatsu):
@@ -98,6 +101,9 @@ class Kanchan(Tatsu):
             return Shuntsu(self.first)
         else:
             raise ValueError(f"tile {tile} is not waiting")
+
+    def __repr__(self):
+        return tiles_text([self.first, self.second])
 
 
 @dataclass(frozen=True)
@@ -120,13 +126,16 @@ class Toitsu(Tatsu):
         else:
             raise ValueError(f"tile {tile} is not waiting")
 
+    def __repr__(self):
+        return tiles_text([self.first, self.second])
+
 
 def parse_tatsu(t: Union[Sequence[Tile], str]) -> Tatsu:
     if isinstance(t, str):
         t = parse_tiles(t)
 
     if len(t) != 2:
-        raise ValueError("tiles must has length of 2")
+        raise ValueError("_tiles must has length of 2")
 
     first, second = t[0], t[1]
 
@@ -137,7 +146,7 @@ def parse_tatsu(t: Union[Sequence[Tile], str]) -> Tatsu:
         return Toitsu(first)
     else:
         if first.tile_type == TileType.Z or second.tile_type == TileType.Z:
-            raise ValueError(f"invalid tiles: {t}")
+            raise ValueError(f"invalid _tiles: {t}")
 
         if second - first == 1:
             if first.num == 1 or first.num == 7:
@@ -147,7 +156,7 @@ def parse_tatsu(t: Union[Sequence[Tile], str]) -> Tatsu:
         elif second - first == 2:
             return Kanchan(first)
         else:
-            raise ValueError(f"invalid tiles: {first}, {second}")
+            raise ValueError(f"invalid _tiles: {first}, {second}")
 
 
 __all__ = ("Tatsu", "Toitsu", "Kanchan", "Ryanmen", "Penchan", "parse_tatsu")
