@@ -88,3 +88,14 @@ def test_build_hora_8():
     assert hora.hu == 60
     assert hora.parent_point == (48000, 16000)
     assert hora.child_point == (32000, 16000, 8000)
+
+
+def test_build_hora_9():
+    hora = build_hora(parse_tiles("55z"),
+                      [parse_furo("0110z"), parse_furo("0220z"), parse_furo("0330z"), parse_furo("0440z")], tile("5z"),
+                      True)
+
+    assert hora.yaku == {suanko_tanki, sukantsu, daisushi, tsuiso}
+    assert hora.han == 13 * 6
+    assert hora.parent_point == (48000 * 6, 16000 * 6)
+    assert hora.child_point == (32000 * 6, 16000 * 6, 8000 * 6)

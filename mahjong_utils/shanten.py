@@ -259,6 +259,8 @@ def kokushi_shanten(tiles: List[Tile]) -> ShantenResult:
             else:
                 yaochu.add(t)
         else:
+            if t.num == 0:
+                t = tile(t.tile_type, 5)
             remaining.append(t)
 
     yaochu = frozenset(yaochu)
