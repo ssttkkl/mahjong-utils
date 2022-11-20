@@ -11,8 +11,9 @@ class Shanten(BaseModel):
 
 class ShantenWithoutGot(Shanten):
     advance: Set[Tile] = Field(default_factory=set)
-    advance_num: int = 0
-    well_shape_rate: Optional[float]
+    advance_num: Optional[int]
+    well_shape_advance: Optional[Set[Tile]]
+    well_shape_advance_num: Optional[int]
 
 
 class ShantenWithGot(Shanten):
@@ -35,8 +36,12 @@ class ShantenInfoMixin:
         return getattr(self.shanten_info, "advance_num", None)
 
     @property
-    def well_shape_rate(self) -> Optional[float]:
-        return getattr(self.shanten_info, "well_shape_rate", None)
+    def well_shape_advance(self) -> Optional[Set[Tile]]:
+        return getattr(self.shanten_info, "well_shape_advance", None)
+
+    @property
+    def well_shape_advance_num(self) -> Optional[int]:
+        return getattr(self.shanten_info, "well_shape_advance_num", None)
 
     @property
     def discard_to_advance(self) -> Optional[Dict[Tile, ShantenWithoutGot]]:

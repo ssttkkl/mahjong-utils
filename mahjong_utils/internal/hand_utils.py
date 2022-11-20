@@ -1,22 +1,11 @@
 from typing import Iterable, Set
 
 from mahjong_utils.internal.tile_cling import tile_cling
-from mahjong_utils.models.hand_pattern import RegularHandPattern
+from mahjong_utils.models.hand_pattern import RegularHandPattern, ChitoiHandPattern, KokushiHandPattern
 from mahjong_utils.models.tatsu import parse_tatsu
-from mahjong_utils.models.tile import Tile
+from mahjong_utils.models.tile import Tile, tile
 
 
-def calc_regular_shanten(pattern: RegularHandPattern):
-    """
-    计算向听数
-
-    :param pattern:
-    :return:
-    """
-    shanten = 2 * (pattern.k - len(pattern.menzen_mentsu) - len(pattern.furo)) - len(pattern.tatsu)
-    if pattern.jyantou is not None:
-        shanten -= 1
-    return shanten
 
 
 def calc_regular_advance(pattern: RegularHandPattern) -> Set[Tile]:
@@ -41,6 +30,10 @@ def calc_regular_advance(pattern: RegularHandPattern) -> Set[Tile]:
     if pattern.jyantou is None:
         for t in pattern.remaining:
             advance.add(t)
+
+    assert tile("0m") not in advance
+    assert tile("0p") not in advance
+    assert tile("0s") not in advance
 
     return advance
 

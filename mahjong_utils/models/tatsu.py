@@ -34,6 +34,9 @@ class Ryanmen(Tatsu):
     """
     两面
     """
+    def __post_init__(self):
+        assert self.first.num != 1
+        assert self.first.num != 8
 
     @property
     def second(self) -> Tile:
@@ -61,6 +64,10 @@ class Penchan(Tatsu):
     边张
     """
 
+    def __post_init__(self):
+        assert self.first.tile_type != TileType.Z
+        assert self.first.num == 1 or self.first.num == 8
+
     @property
     def second(self) -> Tile:
         return self.first + 1
@@ -73,8 +80,10 @@ class Penchan(Tatsu):
             return {self.first - 1}
 
     def with_waiting(self, tile: Tile) -> Mentsu:
-        if (self.first.num == 1 and tile == self.first + 2) or (self.first.num == 7 and tile == self.first - 1):
+        if self.first.num == 1 and tile == self.first + 2:
             return Shuntsu(self.first)
+        elif self.first.num == 8 and tile == self.first - 1:
+            return Shuntsu(tile)
         else:
             raise ValueError(f"tile {tile} is not waiting")
 
@@ -87,6 +96,9 @@ class Kanchan(Tatsu):
     """
     坎张
     """
+    def __post_init__(self):
+        assert self.first.tile_type != TileType.Z
+        assert 1 <= self.first.num <= 7
 
     @property
     def second(self) -> Tile:
@@ -149,7 +161,7 @@ def parse_tatsu(t: Union[Sequence[Tile], str]) -> Tatsu:
             raise ValueError(f"invalid _tiles: {t}")
 
         if second - first == 1:
-            if first.num == 1 or first.num == 7:
+            if first.num == 1 or first.num == 8:
                 return Penchan(first)
             else:
                 return Ryanmen(first)

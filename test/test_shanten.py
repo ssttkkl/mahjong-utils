@@ -2,29 +2,34 @@ from mahjong_utils.models.tile import parse_tiles, tile, all_yaochu
 from mahjong_utils.shanten import shanten, kokushi_shanten, regular_shanten
 
 
-def shanten_tester(tiles, expected_shanten, expected_advance, expected_advance_num, test_func=shanten):
+def shanten_tester(tiles, expected_shanten,
+                   expected_advance,
+                   expected_advance_num,
+                   expected_well_shape_advance_num=None, *,
+                   test_func=shanten):
     tiles = parse_tiles(tiles)
     result = test_func(tiles)
 
     assert result.shanten == expected_shanten
     assert result.advance == expected_advance
     assert result.advance_num == expected_advance_num
+    assert result.well_shape_advance_num == expected_well_shape_advance_num
     assert result.discard_to_advance is None
 
 
 # noinspection PyTypeChecker
 def test_regular_shanten():
-    shanten_tester("34568m235p68s", 2, {*parse_tiles("3678m12345p678s"), }, 40, regular_shanten)
-    shanten_tester("112233p44556s12z", 1, {*parse_tiles("36s12z"), }, 13, regular_shanten)
-    shanten_tester("1112345678999p", 0, {*parse_tiles("123456789p"), }, 23, regular_shanten)
-    shanten_tester("114514p1919810s", 2, {*parse_tiles("234567p3456789s"), }, 45, regular_shanten)
+    shanten_tester("34568m235p68s", 2, {*parse_tiles("3678m12345p678s"), }, 40, test_func=regular_shanten)
+    shanten_tester("112233p44556s12z", 1, {*parse_tiles("36s12z"), }, 13, 6, test_func=regular_shanten)
+    shanten_tester("1112345678999p", 0, {*parse_tiles("123456789p"), }, 23, test_func=regular_shanten)
+    shanten_tester("114514p1919810s", 2, {*parse_tiles("234567p3456789s"), }, 45, test_func=regular_shanten)
 
 
 # noinspection PyTypeChecker
 def test_shanten():
     shanten_tester("34568m235p68s", 2, {*parse_tiles("3678m12345p678s"), }, 40)
-    shanten_tester("3344z6699p11345s", 1, {*parse_tiles("345s"), }, 9)
-    shanten_tester("112233p44556s12z", 1, {*parse_tiles("36s12z"), }, 13)
+    shanten_tester("3344z6699p11345s", 1, {*parse_tiles("345s"), }, 9, 0)
+    shanten_tester("112233p44556s12z", 1, {*parse_tiles("36s12z"), }, 13, 6)
     shanten_tester("1112345678999p", 0, {*parse_tiles("123456789p"), }, 23)
     shanten_tester("114514p1919810s", 2, {*parse_tiles("234567p3456789s"), }, 45)
     shanten_tester("119m19p19266s135z", 3, {*parse_tiles("2467z"), }, 16)
@@ -127,6 +132,8 @@ def test_shanten_with_got_tile():
     })
 
     shanten_with_got_tester("11123456789999p", -1, {})
+
+    shanten_with_got_tester("11223344556677z", -1, {})
 
     shanten_with_got_tester("1112345678999s1z", 0, {
         tile("1z"): {*parse_tiles("123456789s")},

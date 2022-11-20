@@ -52,12 +52,12 @@ class Shuntsu(Mentsu):
     """
     顺子
     """
+    def __post_init__(self):
+        assert self.tile.tile_type != TileType.Z
+        assert 1 <= self.tile.num <= 7
 
     def __repr__(self):
         return f"{self.tile.num}{self.tile.num + 1}{self.tile.num + 2}{self.tile.tile_type}"
-
-    def __post_init__(self):
-        assert self.tile.tile_type != TileType.Z and self.tile.num < 8
 
     @property
     def tiles(self) -> List[Tile]:
@@ -75,7 +75,7 @@ class Shuntsu(Mentsu):
         elif discard == self.tile + 1:
             return Kanchan(self.tile)
         elif discard == self.tile + 2:
-            if discard.num == 1:
+            if self.tile.num == 1:
                 return Penchan(self.tile)
             else:
                 return Ryanmen(self.tile)

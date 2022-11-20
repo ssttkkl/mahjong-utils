@@ -1,6 +1,5 @@
 from typing import List, Callable, Tuple, Generator, Sequence
 
-from mahjong_utils.internal.hand_utils import calc_regular_shanten
 from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping, tile_type_reversed_index_mapping
 from mahjong_utils.internal.utils.bit import generate_k_bit_number
 from mahjong_utils.models.furo import Furo
