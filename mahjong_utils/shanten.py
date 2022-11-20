@@ -123,7 +123,7 @@ def _handle_regular_shanten_without_got(
                                                                     calc_well_shape_advance=False,
                                                                     best_shanten_only=True)
             _fill_advance_num(shanten_after_adv, adv, *best_patterns[0].tiles,
-                              *chain(map(lambda fr: fr.tiles, best_patterns[0].furo)))
+                              *chain(*map(lambda fr: fr.tiles, best_patterns[0].furo)))
 
             max_adv_after_adv = max(map(lambda x: x.advance_num, shanten_after_adv.discard_to_advance.values()))
             if max_adv_after_adv > 4:
@@ -180,7 +180,7 @@ def regular_shanten(
 
     if calc_advance_num:
         _fill_advance_num(shanten_info, *best_patterns[0].tiles,
-                          *chain(map(lambda fr: fr.tiles, best_patterns[0].furo)))
+                          *chain(*map(lambda fr: fr.tiles, best_patterns[0].furo)))
 
     hand = Hand(tiles=tiles, furo=furo, patterns=best_patterns)
     result = ShantenResult(type="regular", hand=hand, shanten_info=shanten_info)
@@ -485,7 +485,7 @@ def shanten(
         )
 
     if calc_advance_num:
-        _fill_advance_num(shanten_info, *tiles, *chain(map(lambda fr: fr.tiles, furo)))
+        _fill_advance_num(shanten_info, *tiles, *chain(*map(lambda fr: fr.tiles, furo)))
 
     hand = Hand(tiles=tiles, furo=furo, patterns=patterns)
     return UnionShantenResult(type="union", hand=hand, shanten_info=shanten_info,
