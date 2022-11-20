@@ -160,9 +160,9 @@ def build_hora_from_shanten_result(
         if shanten_result.regular.shanten == -1:
             patterns += shanten_result.regular.hand.patterns
         if shanten_result.chitoi is not None and shanten_result.chitoi.shanten == -1:
-            patterns += shanten_result.regular.hand.patterns
+            patterns += shanten_result.chitoi.hand.patterns
         if shanten_result.kokushi is not None and shanten_result.kokushi.shanten == -1:
-            patterns += shanten_result.regular.hand.patterns
+            patterns += shanten_result.kokushi.hand.patterns
     else:
         patterns = shanten_result.hand.patterns
 
