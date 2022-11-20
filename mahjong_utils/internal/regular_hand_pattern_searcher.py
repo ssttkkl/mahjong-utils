@@ -229,24 +229,16 @@ class RegularHandPatternSearcher:
                 yield tuple(tatsu_chosen), tuple(tatsu_not_chosen_as_tiles)
 
 
-def regular_hand_pattern_search(tiles: Sequence[Tile], furo: Sequence[Furo]) -> Tuple[int, List[RegularHandPattern]]:
-    cur_shanten = 10000
+def regular_hand_pattern_search(tiles: Sequence[Tile], furo: Sequence[Furo]) -> List[RegularHandPattern]:
     patterns = []
 
     def callback(pattern: RegularHandPattern):
-        nonlocal cur_shanten, patterns
-
-        shanten = calc_regular_shanten(pattern)
-        if shanten < cur_shanten:
-            cur_shanten = shanten
-            patterns = [pattern]
-        elif shanten == cur_shanten:
-            patterns.append(pattern)
+        patterns.append(pattern)
 
     searcher = RegularHandPatternSearcher(tiles, furo, callback)
     searcher.run()
 
-    return cur_shanten, patterns
+    return patterns
 
 
 __all__ = ("regular_hand_pattern_search",)

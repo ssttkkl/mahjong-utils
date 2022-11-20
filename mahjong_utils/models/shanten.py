@@ -1,4 +1,4 @@
-from typing import Set, Dict, Optional, Mapping, AbstractSet
+from typing import Set, Dict, Optional
 
 from pydantic import BaseModel, Field
 
@@ -11,6 +11,7 @@ class Shanten(BaseModel):
 
 class ShantenWithoutGot(Shanten):
     advance: Set[Tile] = Field(default_factory=set)
+    advance_num: int = 0
     well_shape_rate: Optional[float]
 
 
@@ -28,6 +29,10 @@ class ShantenInfoMixin:
     @property
     def advance(self) -> Optional[Set[Tile]]:
         return getattr(self.shanten_info, "advance", None)
+
+    @property
+    def advance_num(self) -> Optional[int]:
+        return getattr(self.shanten_info, "advance_num", None)
 
     @property
     def well_shape_rate(self) -> Optional[float]:

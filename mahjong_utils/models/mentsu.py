@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import List, Sequence, Union
+from typing import List, Sequence, Union, Iterable, TYPE_CHECKING
 
 from pydantic.dataclasses import dataclass
 
 from .tile import Tile, parse_tiles
 from .tile_type import TileType
+
+if TYPE_CHECKING:
+    from .tatsu import Penchan, Kanchan, Ryanmen, Tatsu, Toitsu
 
 
 @dataclass(frozen=True)
@@ -16,7 +19,11 @@ class Mentsu(ABC):
 
     @property
     @abstractmethod
-    def tiles(self) -> List[Tile]:
+    def tiles(self) -> Iterable[Tile]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def after_discard(self, discard: Tile) -> "Tatsu":
         raise NotImplementedError()
 
 
@@ -32,6 +39,12 @@ class Kotsu(Mentsu):
     @property
     def tiles(self) -> List[Tile]:
         return [self.tile] * 3
+
+    def after_discard(self, discard: Tile) -> "Toitsu":
+        from .tatsu import Toitsu
+        if discard == self.tile:
+            return Toitsu(discard)
+        raise ValueError()
 
 
 @dataclass(frozen=True)
@@ -49,6 +62,24 @@ class Shuntsu(Mentsu):
     @property
     def tiles(self) -> List[Tile]:
         return [self.tile, self.tile + 1, self.tile + 2]
+
+    def after_discard(self, discard: Tile) -> "Union[Penchan, Ryanmen, Kanchan]":
+        from .tatsu import Penchan, Kanchan, Ryanmen
+        if discard == self.tile:
+            if discard.num == 7:
+                return Penchan(discard + 1)
+            elif discard.num == 3:
+                return Penchan(discard - 2)
+            else:
+                return Ryanmen(discard + 1)
+        elif discard == self.tile + 1:
+            return Kanchan(self.tile)
+        elif discard == self.tile + 2:
+            if discard.num == 1:
+                return Penchan(self.tile)
+            else:
+                return Ryanmen(self.tile)
+        raise ValueError()
 
 
 def parse_mentsu(t: Union[Sequence[Tile], str]) -> Mentsu:
