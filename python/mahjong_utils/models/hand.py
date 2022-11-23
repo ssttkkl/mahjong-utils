@@ -5,7 +5,7 @@ from pydantic.main import BaseModel
 
 from mahjong_utils.models.furo import Furo, Kan
 from mahjong_utils.models.hand_pattern import HandPattern
-from mahjong_utils.models.tile import Tile
+from mahjong_utils.models.tile import Tile, tile
 
 
 class Hand(BaseModel):
@@ -19,3 +19,11 @@ class Hand(BaseModel):
             if not isinstance(fr, Kan) or not fr.ankan:
                 return False
         return True
+
+    @classmethod
+    def decode(cls, data: dict) -> "Hand":
+        return Hand(
+            tiles=[tile(x) for x in data["tiles"]],
+            furo=[Furo.decode(x) for x in data["furo"]],
+            patterns=[HandPattern.decode(x) for x in data["patterns"]]
+        )

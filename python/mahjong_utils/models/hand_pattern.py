@@ -7,7 +7,7 @@ from pydantic.main import BaseModel
 from mahjong_utils.models.furo import Furo, Kan
 from mahjong_utils.models.mentsu import Mentsu, Shuntsu, Kotsu
 from mahjong_utils.models.tatsu import Tatsu
-from mahjong_utils.models.tile import Tile
+from mahjong_utils.models.tile import Tile, tile
 
 
 class HandPattern(BaseModel, ABC):
@@ -24,6 +24,17 @@ class HandPattern(BaseModel, ABC):
     def __hash__(self):
         return hash(self.__class__) + hash(tuple(self.__dict__.values()))
 
+    @classmethod
+    def decode(cls, data: dict) -> "HandPattern":
+        if data['type'] == 'RegularHandPattern':
+            return RegularHandPattern.decode(data)
+        elif data['type'] == 'ChitoiHandPattern':
+            return ChitoiHandPattern.decode(data)
+        elif data['type'] == 'KokushiHandPattern':
+            return KokushiHandPattern.decode(data)
+        else:
+            raise ValueError("invalid type: " + data['type'])
+
 
 class RegularHandPattern(HandPattern):
     """
@@ -36,6 +47,17 @@ class RegularHandPattern(HandPattern):
     furo: Tuple[Furo, ...] = Field(default_factory=tuple)
     tatsu: Tuple[Tatsu, ...] = Field(default_factory=tuple)
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
+
+    @classmethod
+    def decode(cls, data: dict) -> "RegularHandPattern":
+        return RegularHandPattern(
+            k=data["k"],
+            jyantou=tile(jyantou) if (jyantou := data["jyantou"] is not None) else None,
+            menzen_mentsu=tuple(Mentsu.decode(x) for x in data["menzenMentsu"]),
+            furo=tuple(Furo.decode(x) for x in data["furo"]),
+            tatsu=tuple(Tatsu.decode(x) for x in data["tatsu"]),
+            remaining=tuple(tile(x) for x in data["remaining"])
+        )
 
     @property
     def mentsu(self) -> Iterable[Mentsu]:
@@ -95,6 +117,13 @@ class ChitoiHandPattern(HandPattern):
     pairs: FrozenSet[Tile] = Field(default_factory=frozenset)
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
 
+    @classmethod
+    def decode(cls, data: dict) -> "ChitoiHandPattern":
+        return ChitoiHandPattern(
+            pairs=frozenset(tile(x) for x in data["pairs"]),
+            remaining=tuple(tile(x) for x in data["remaining"])
+        )
+
     @property
     def menzen(self) -> bool:
         return True
@@ -117,6 +146,14 @@ class KokushiHandPattern(HandPattern):
     repeated: Optional[Tile] = None
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
 
+    @classmethod
+    def decode(cls, data: dict) -> "KokushiHandPattern":
+        return KokushiHandPattern(
+            yaochu=frozenset(tile(x) for x in data["yaochu"]),
+            repeated=tile(x) if (x := data["repeated"]) else None,
+            remaining=tuple(tile(x) for x in data["remaining"])
+        )
+
     @property
     def menzen(self) -> bool:
         return True
@@ -130,5 +167,4 @@ class KokushiHandPattern(HandPattern):
         for t in self.remaining:
             yield t
 
-
-__all__ = ("HandPattern", "RegularHandPattern", "ChitoiHandPattern", "KokushiHandPattern")
+    __all__ = ("HandPattern", "RegularHandPattern", "ChitoiHandPattern", "KokushiHandPattern")

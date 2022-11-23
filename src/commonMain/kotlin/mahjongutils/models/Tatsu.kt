@@ -47,6 +47,11 @@ sealed interface Tatsu {
 @Serializable
 @SerialName("Ryanmen")
 data class Ryanmen(override val first: Tile) : Tatsu {
+    init {
+        require(first.num in 2..7)
+        require(first.type != TileType.Z)
+    }
+
     override val second: Tile
         get() = first.advance(1)
 
@@ -70,6 +75,11 @@ data class Ryanmen(override val first: Tile) : Tatsu {
 @Serializable
 @SerialName("Kanchan")
 data class Kanchan(override val first: Tile) : Tatsu {
+    init {
+        require(first.num in 1..7)
+        require(first.type != TileType.Z)
+    }
+
     override val second: Tile
         get() = first.advance(2)
 
@@ -91,6 +101,11 @@ data class Kanchan(override val first: Tile) : Tatsu {
 @Serializable
 @SerialName("Penchan")
 data class Penchan(override val first: Tile) : Tatsu {
+    init {
+        require(first.num == 1 || first.num == 8)
+        require(first.type != TileType.Z)
+    }
+
     override val second: Tile
         get() = first.advance(1)
 
@@ -104,7 +119,7 @@ data class Penchan(override val first: Tile) : Tatsu {
         if (first.num == 1 && tile == first.advance(2))
             return Shuntsu(first)
         if (first.num == 8 && tile == first.advance(-1))
-            return Shuntsu(first)
+            return Shuntsu(tile)
         else
             throw IllegalArgumentException("tile $tile is not waiting")
     }

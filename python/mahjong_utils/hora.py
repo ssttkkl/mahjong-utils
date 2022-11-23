@@ -8,7 +8,7 @@ from mahjong_utils.models.hora_hand_pattern import HoraHandPattern, build_hora_h
 from mahjong_utils.models.tile import Tile
 from mahjong_utils.models.wind import Wind
 from mahjong_utils.point_by_han_hu import get_parent_point_by_han_hu, get_child_point_by_han_hu
-from mahjong_utils.shanten import ShantenResult, shanten, UnionShantenResult
+from mahjong_utils.shanten import ShantenResult, shanten
 from mahjong_utils.yaku import Yaku
 from mahjong_utils.yaku.check import check_yaku
 
@@ -156,15 +156,12 @@ def build_hora_from_shanten_result(
 
     patterns = []
 
-    if isinstance(shanten_result, UnionShantenResult):
-        if shanten_result.regular.shanten == -1:
-            patterns += shanten_result.regular.hand.patterns
-        if shanten_result.chitoi is not None and shanten_result.chitoi.shanten == -1:
-            patterns += shanten_result.chitoi.hand.patterns
-        if shanten_result.kokushi is not None and shanten_result.kokushi.shanten == -1:
-            patterns += shanten_result.kokushi.hand.patterns
-    else:
-        patterns = shanten_result.hand.patterns
+    if shanten_result.regular is not None and shanten_result.regular.shanten == -1:
+        patterns += shanten_result.regular.hand.patterns
+    if shanten_result.chitoi is not None and shanten_result.chitoi.shanten == -1:
+        patterns += shanten_result.chitoi.hand.patterns
+    if shanten_result.kokushi is not None and shanten_result.kokushi.shanten == -1:
+        patterns += shanten_result.kokushi.hand.patterns
 
     for pat in patterns:
         for hora_hand in build_hora_hand(pat, agari, tsumo, self_wind, round_wind):

@@ -11,7 +11,7 @@ import kotlin.reflect.typeOf
 
 @Serializable
 data class Result<T : Any>(
-    @EncodeDefault val data: T? = null,
+    @EncodeDefault val data: T?,
     @EncodeDefault val code: Int = 200,
     @EncodeDefault val msg: String = "",
 )
@@ -22,6 +22,12 @@ class Entry private constructor(private val router: Map<String, Method<*, *>>) {
         private val paramsType: KType,
         private val resultType: KType
     ) {
+        companion object {
+            internal inline operator fun <reified P : Any, reified R : Any> invoke(noinline handle: (P) -> R): Method<P, R> {
+                return Method(handle, typeOf<P>(), typeOf<Result<R>>())
+            }
+        }
+
         @Suppress("UNCHECKED_CAST")
         fun call(rawParams: String): String {
             return try {
@@ -30,16 +36,14 @@ class Entry private constructor(private val router: Map<String, Method<*, *>>) {
                 val result = Result(data)
                 Json.encodeToString(serializer(resultType), result)
             } catch (e: SerializationException) {
-                e.printStackTrace()
-                val result = Result<Unit>(code = 400, msg = e.message ?: "")
+                val result = Result<Unit>(data = null, code = 400, msg = e.message ?: "")
                 Json.encodeToString(result)
             } catch (e: IllegalArgumentException) {
-                e.printStackTrace()
-                val result = Result<Unit>(code = 400, msg = e.message ?: "")
+                val result = Result<Unit>(data = null, code = 400, msg = e.message ?: "")
                 Json.encodeToString(result)
             } catch (e: Exception) {
                 e.printStackTrace()
-                val result = Result<Unit>(code = 500, msg = e.message ?: "")
+                val result = Result<Unit>(data = null, code = 500, msg = e.message ?: "")
                 Json.encodeToString(result)
             }
         }
@@ -49,7 +53,7 @@ class Entry private constructor(private val router: Map<String, Method<*, *>>) {
         private val router = HashMap<String, Method<*, *>>()
 
         inline fun <reified P : Any, reified R : Any> register(name: String, noinline handle: (P) -> R) {
-            router[name] = Method(handle, typeOf<P>(), typeOf<Result<R>>())
+            router[name] = Method(handle)
         }
 
         fun build(): Entry {
@@ -62,7 +66,7 @@ class Entry private constructor(private val router: Map<String, Method<*, *>>) {
         return if (method != null) {
             method.call(rawParams)
         } else {
-            val result = Result<Unit>(code = 404, msg = "method \"$name\" not found")
+            val result = Result<Unit>(data = null, code = 404, msg = "method \"$name\" not found")
             Json.encodeToString(result)
         }
     }
@@ -73,6 +77,12 @@ data class ShantenArgs(
     val tiles: List<Tile>,
     val furo: List<Furo> = listOf(),
     val calcAdvanceNum: Boolean = true
+)
+
+@Serializable
+data class HanHu(
+    val han: Int,
+    val hu: Int
 )
 
 val ENTRY = Entry.Builder().apply {
@@ -87,5 +97,12 @@ val ENTRY = Entry.Builder().apply {
     }
     register<ShantenArgs, ShantenResult>("kokushiShanten") { args ->
         kokushiShanten(args.tiles, args.calcAdvanceNum)
+    }
+
+    register<HanHu, ParentPoint>("getParentPointByHanHu") { args ->
+        getParentPointByHanHu(args.han, args.hu)
+    }
+    register<HanHu, ChildPoint>("getChildPointByHanHu") { args ->
+        getChildPointByHanHu(args.han, args.hu)
     }
 }.build()

@@ -74,7 +74,7 @@ private class RegularHandPatternSearcher(
 
         if (n >= 3) {
             for (i in begin / 9..2) {
-                for (j in 1..7) {
+                for (j in 0..6) {
                     val x = i * 9 + j
                     val y = x + 1
                     val z = x + 2
@@ -85,15 +85,15 @@ private class RegularHandPatternSearcher(
 
                     if (cnt[x] > 0 && cnt[y] > 0 && cnt[z] > 0) {
                         n -= 3
-                        cnt[x] -= 3
-                        cnt[y] -= 3
-                        cnt[z] -= 3
-                        mentsu.add(Shuntsu(decode(i)))
-                        dfsShuntsu(i)
+                        cnt[x] -= 1
+                        cnt[y] -= 1
+                        cnt[z] -= 1
+                        mentsu.add(Shuntsu(decode(x)))
+                        dfsShuntsu(x)
                         n += 3
-                        cnt[x] += 3
-                        cnt[y] += 3
-                        cnt[z] += 3
+                        cnt[x] += 1
+                        cnt[y] += 1
+                        cnt[z] += 1
                         mentsu.removeLast()
                     }
                 }
@@ -165,7 +165,7 @@ private class RegularHandPatternSearcher(
                 }
 
                 // penchan
-                if (tatsuTypeLimitation <= 3 && t.type != TileType.Z && (t.num == 1 && t.num == 8)) {
+                if (tatsuTypeLimitation <= 3 && t.type != TileType.Z && (t.num == 1 || t.num == 8)) {
                     val j = i + 1
                     if (cnt[i] > 0 && cnt[j] > 0) {
                         taken = true

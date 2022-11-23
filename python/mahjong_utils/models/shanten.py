@@ -2,11 +2,20 @@ from typing import Set, Dict, Optional
 
 from pydantic import BaseModel, Field
 
-from mahjong_utils.models.tile import Tile
+from mahjong_utils.models.tile import Tile, tile
 
 
 class Shanten(BaseModel):
     shanten: int
+
+    @classmethod
+    def decode(cls, data: dict) -> "Shanten":
+        if data['type'] == 'ShantenWithoutGot':
+            return ShantenWithoutGot.decode(data)
+        elif data['type'] == 'ShantenWithGot':
+            return ShantenWithGot.decode(data)
+        else:
+            raise ValueError("invalid type: " + data['type'])
 
 
 class ShantenWithoutGot(Shanten):
@@ -15,9 +24,31 @@ class ShantenWithoutGot(Shanten):
     well_shape_advance: Optional[Set[Tile]]
     well_shape_advance_num: Optional[int]
 
+    @classmethod
+    def decode(cls, data: dict) -> "ShantenWithoutGot":
+        return ShantenWithoutGot(
+            shanten=data["shantenNum"],
+            advance=set(tile(x) for x in data["advance"]),
+            advance_num=advance_num
+            if (advance_num := data["advanceNum"]) is not None else None,
+            well_shape_advance=set(tile(x) for x in well_shape_advance)
+            if (well_shape_advance := data["wellShapeAdvance"]) is not None else None,
+            well_shape_advance_num=well_shape_advance_num
+            if (well_shape_advance_num := data["wellShapeAdvanceNum"]) is not None else None,
+        )
+
 
 class ShantenWithGot(Shanten):
     discard_to_advance: Dict[Tile, ShantenWithoutGot] = Field(default_factory=dict)
+
+    @classmethod
+    def decode(cls, data: dict) -> "ShantenWithGot":
+        return ShantenWithGot(
+            shanten=data["shantenNum"],
+            discard_to_advance=dict(
+                (tile(k), ShantenWithoutGot.decode(v))
+                for (k, v) in data["discardToAdvance"].items())
+        )
 
 
 class ShantenInfoMixin:

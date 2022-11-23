@@ -1,5 +1,9 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package mahjongutils.models
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -13,9 +17,9 @@ sealed interface Shanten {
 data class ShantenWithoutGot(
     override val shantenNum: Int,
     val advance: Set<Tile>,
-    val advanceNum: Int = -1,
-    val wellShapeAdvance: Set<Tile>? = null,
-    val wellShapeAdvanceNum: Int = -1
+    @EncodeDefault val advanceNum: Int? = null,
+    @EncodeDefault val wellShapeAdvance: Set<Tile>? = null,
+    @EncodeDefault val wellShapeAdvanceNum: Int? = null
 ) : Shanten
 
 @Serializable

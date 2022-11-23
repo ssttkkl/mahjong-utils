@@ -27,9 +27,9 @@ kotlin {
     }
 
     nativeTarget.binaries {
-        staticLib {
-            baseName = if (isMingwX64) "libmahjongutils" else "mahjongutils"
-        }
+//        staticLib {
+//            baseName = if (isMingwX64) "libmahjongutils" else "mahjongutils"
+//        }
         sharedLib {
             baseName = if (isMingwX64) "libmahjongutils" else "mahjongutils"
         }

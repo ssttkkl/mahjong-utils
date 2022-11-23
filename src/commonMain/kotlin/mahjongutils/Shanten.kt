@@ -1,5 +1,9 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package mahjongutils
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import mahjongutils.common.*
 import mahjongutils.models.*
@@ -11,9 +15,9 @@ data class ShantenResult(
     val type: Type,
     val hand: Hand,
     val shantenInfo: Shanten,
-    val regular: ShantenResult? = null,
-    val chitoi: ShantenResult? = null,
-    val kokushi: ShantenResult? = null,
+    @EncodeDefault val regular: ShantenResult? = null,
+    @EncodeDefault val chitoi: ShantenResult? = null,
+    @EncodeDefault val kokushi: ShantenResult? = null,
 ) {
     enum class Type {
         Union, Regular, Chitoi, Kokushi
@@ -28,7 +32,7 @@ private fun ensureLegalTiles(tiles: List<Tile>, allowAnyK: Boolean = true): List
         throw IllegalArgumentException("invalid length of hand: ${tiles.size}")
     }
 
-    val tiles = tiles.map { if (it.num == 0) Tile.get(it.type, it.num) else it }
+    val tiles = tiles.map { if (it.num == 0) Tile.get(it.type, 5) else it }
 
     val cnt = IntArray(Tile.MAX_TILE_CODE + 1)
     for (t in tiles) {
@@ -64,7 +68,7 @@ private fun <T : HandPattern> selectBestPatterns(
 
 private fun ShantenWithoutGot.fillAdvanceNum(remaining: IntArray): ShantenWithoutGot {
     val advanceNum = advance.sumOf { remaining[it.code] }
-    val wellShapeAdvanceNum = wellShapeAdvance?.sumOf { remaining[it.code] } ?: -1
+    val wellShapeAdvanceNum = wellShapeAdvance?.sumOf { remaining[it.code] }
 
     return copy(advanceNum = advanceNum, wellShapeAdvanceNum = wellShapeAdvanceNum)
 }
@@ -111,8 +115,8 @@ private fun handleRegularShantenWithoutGot(
                     calcWellShapeAdvance = false,
                     bestShantenOnly = true
                 ).first.fillAdvanceNum(adv, *tiles)
-                val maxAdvAfterAdv = shantenAfterAdv.discardToAdvance.values.maxBy { it.advanceNum }
-                if (maxAdvAfterAdv.advanceNum > 4) {
+                val maxAdvAfterAdv = shantenAfterAdv.discardToAdvance.values.maxBy { it.advanceNum!! }
+                if (maxAdvAfterAdv.advanceNum!! > 4) {
                     add(adv)
                 }
             }
@@ -394,14 +398,15 @@ fun shanten(tiles: List<Tile>, furo: List<Furo> = emptyList(), calcAdvanceNum: B
     val withGot = tiles.size % 3 == 2
     val k = tiles.size / 3
 
-    val regular = regularShanten(tiles, furo, calcAdvanceNum)
     if (k != 4) {
+        val regular = regularShanten(tiles, furo, calcAdvanceNum)
         return ShantenResult(
             type = ShantenResult.Type.Union, hand = regular.hand, shantenInfo = regular.shantenInfo,
             regular = regular
         )
     }
 
+    val regular = regularShanten(tiles, furo, calcAdvanceNum = false)
     val chitoi = chitoiShanten(tiles, calcAdvanceNum = false)
     val kokushi = kokushiShanten(tiles, calcAdvanceNum = false)
 
@@ -428,7 +433,7 @@ fun shanten(tiles: List<Tile>, furo: List<Furo> = emptyList(), calcAdvanceNum: B
             mergeIntoWithoutGot(advance, wellShapeAdvance, patterns, kokushi)
         }
 
-        ShantenWithoutGot(shantenNum, advance, wellShapeAdvance = wellShapeAdvance)
+        ShantenWithoutGot(shantenNum, advance, wellShapeAdvance = if (shantenNum == 1) wellShapeAdvance else null)
     } else {
         val discardToAdvance = HashMap<Tile, ShantenWithoutGot>()
 
@@ -447,5 +452,8 @@ fun shanten(tiles: List<Tile>, furo: List<Furo> = emptyList(), calcAdvanceNum: B
     }
 
     val hand = Hand(tiles = tiles, furo = emptyList(), patterns = patterns)
-    return ShantenResult(type = ShantenResult.Type.Union, hand = hand, shantenInfo = shantenInfo)
+    return ShantenResult(
+        type = ShantenResult.Type.Union, hand = hand, shantenInfo = shantenInfo,
+        regular = regular, chitoi = chitoi, kokushi = kokushi
+    )
 }

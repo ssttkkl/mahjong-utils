@@ -11,6 +11,10 @@ typedef unsigned int libmahjongutils_KUInt;
 typedef unsigned long long libmahjongutils_KULong;
 typedef float libmahjongutils_KFloat;
 typedef double libmahjongutils_KDouble;
+
+
+
+
 typedef void* libmahjongutils_KNativePtr;
 struct libmahjongutils_KType;
 typedef struct libmahjongutils_KType libmahjongutils_KType;
@@ -59,6 +63,12 @@ typedef struct {
 } libmahjongutils_kref_mahjongutils_ShantenResult;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_ChildPoint;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_ParentPoint;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_kotlin_Pair;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
@@ -71,16 +81,13 @@ typedef struct {
 } libmahjongutils_kref_kotlin_collections_MutableSet;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
-} libmahjongutils_kref_mahjongutils_ShantenArgs;
-typedef struct {
-  libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_kotlin_Any;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
-} libmahjongutils_kref_mahjongutils_ShantenArgs_$serializer;
+} libmahjongutils_kref_mahjongutils_ChildPoint_$serializer;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_kotlinx_serialization_descriptors_SerialDescriptor;
@@ -95,10 +102,34 @@ typedef struct {
 } libmahjongutils_kref_kotlinx_serialization_encoding_Encoder;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
-} libmahjongutils_kref_mahjongutils_ShantenArgs_Companion;
+} libmahjongutils_kref_mahjongutils_ChildPoint_Companion;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_kotlinx_serialization_KSerializer;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_HanHu;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_HanHu_$serializer;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_HanHu_Companion;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_ParentPoint_$serializer;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_ParentPoint_Companion;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_ShantenArgs;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_ShantenArgs_$serializer;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_mahjongutils_ShantenArgs_Companion;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_mahjongutils_ShantenResult_Type;
@@ -358,6 +389,8 @@ typedef struct {
         libmahjongutils_kref_mahjongutils_models_hand_ChitoiHandPattern (*buildChitoiPattern)(libmahjongutils_kref_kotlin_collections_List tiles);
         libmahjongutils_kref_kotlin_collections_Collection (*buildKokushiPattern)(libmahjongutils_kref_kotlin_collections_List tiles);
         libmahjongutils_kref_mahjongutils_ShantenResult (*chitoiShanten)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_KBoolean calcAdvanceNum);
+        libmahjongutils_kref_mahjongutils_ChildPoint (*getChildPointByHanHu)(libmahjongutils_KInt han, libmahjongutils_KInt hu);
+        libmahjongutils_kref_mahjongutils_ParentPoint (*getParentPointByHanHu)(libmahjongutils_KInt han, libmahjongutils_KInt hu);
         libmahjongutils_kref_kotlin_Pair (*handleChitoiShantenWithGot)(libmahjongutils_kref_kotlin_collections_List tiles);
         libmahjongutils_kref_kotlin_Pair (*handleChitoiShantenWithoutGot)(libmahjongutils_kref_kotlin_collections_List tiles);
         libmahjongutils_kref_kotlin_Pair (*handleKokushiShantenWithGot)(libmahjongutils_kref_kotlin_collections_List tiles);
@@ -369,8 +402,88 @@ typedef struct {
         libmahjongutils_kref_mahjongutils_ShantenResult (*shanten)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean calcAdvanceNum);
         struct {
           libmahjongutils_KType* (*_type)(void);
+          libmahjongutils_kref_mahjongutils_ChildPoint (*ChildPoint)(libmahjongutils_KInt seen1, libmahjongutils_KInt ron, libmahjongutils_KInt tsumoParent, libmahjongutils_KInt tsumoChild, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_ChildPoint (*ChildPoint_)(libmahjongutils_KInt ron, libmahjongutils_KInt tsumoParent, libmahjongutils_KInt tsumoChild);
+          libmahjongutils_KInt (*get_ron)(libmahjongutils_kref_mahjongutils_ChildPoint thiz);
+          libmahjongutils_KInt (*get_tsumoChild)(libmahjongutils_kref_mahjongutils_ChildPoint thiz);
+          libmahjongutils_KInt (*get_tsumoParent)(libmahjongutils_kref_mahjongutils_ChildPoint thiz);
+          libmahjongutils_KInt (*component1)(libmahjongutils_kref_mahjongutils_ChildPoint thiz);
+          libmahjongutils_KInt (*component2)(libmahjongutils_kref_mahjongutils_ChildPoint thiz);
+          libmahjongutils_KInt (*component3)(libmahjongutils_kref_mahjongutils_ChildPoint thiz);
+          libmahjongutils_kref_mahjongutils_ChildPoint (*copy)(libmahjongutils_kref_mahjongutils_ChildPoint thiz, libmahjongutils_KInt ron, libmahjongutils_KInt tsumoParent, libmahjongutils_KInt tsumoChild);
+          libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_ChildPoint thiz, libmahjongutils_kref_kotlin_Any other);
+          libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_ChildPoint thiz);
+          const char* (*toString)(libmahjongutils_kref_mahjongutils_ChildPoint thiz);
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_ChildPoint_$serializer (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_descriptors_SerialDescriptor (*get_descriptor)(libmahjongutils_kref_mahjongutils_ChildPoint_$serializer thiz);
+            libmahjongutils_kref_kotlin_Array (*childSerializers)(libmahjongutils_kref_mahjongutils_ChildPoint_$serializer thiz);
+            libmahjongutils_kref_mahjongutils_ChildPoint (*deserialize)(libmahjongutils_kref_mahjongutils_ChildPoint_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Decoder decoder);
+            void (*serialize)(libmahjongutils_kref_mahjongutils_ChildPoint_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Encoder encoder, libmahjongutils_kref_mahjongutils_ChildPoint value);
+          } $serializer;
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_ChildPoint_Companion (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_ChildPoint_Companion thiz);
+          } Companion;
+        } ChildPoint;
+        struct {
+          libmahjongutils_KType* (*_type)(void);
           const char* (*call)(libmahjongutils_kref_mahjongutils_Entry thiz, const char* name, const char* rawParams);
         } Entry;
+        struct {
+          libmahjongutils_KType* (*_type)(void);
+          libmahjongutils_kref_mahjongutils_HanHu (*HanHu)(libmahjongutils_KInt seen1, libmahjongutils_KInt han, libmahjongutils_KInt hu, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_HanHu (*HanHu_)(libmahjongutils_KInt han, libmahjongutils_KInt hu);
+          libmahjongutils_KInt (*get_han)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          libmahjongutils_KInt (*get_hu)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          libmahjongutils_KInt (*component1)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          libmahjongutils_KInt (*component2)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          libmahjongutils_kref_mahjongutils_HanHu (*copy)(libmahjongutils_kref_mahjongutils_HanHu thiz, libmahjongutils_KInt han, libmahjongutils_KInt hu);
+          libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_HanHu thiz, libmahjongutils_kref_kotlin_Any other);
+          libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          const char* (*toString)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_HanHu_$serializer (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_descriptors_SerialDescriptor (*get_descriptor)(libmahjongutils_kref_mahjongutils_HanHu_$serializer thiz);
+            libmahjongutils_kref_kotlin_Array (*childSerializers)(libmahjongutils_kref_mahjongutils_HanHu_$serializer thiz);
+            libmahjongutils_kref_mahjongutils_HanHu (*deserialize)(libmahjongutils_kref_mahjongutils_HanHu_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Decoder decoder);
+            void (*serialize)(libmahjongutils_kref_mahjongutils_HanHu_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Encoder encoder, libmahjongutils_kref_mahjongutils_HanHu value);
+          } $serializer;
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_HanHu_Companion (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_HanHu_Companion thiz);
+          } Companion;
+        } HanHu;
+        struct {
+          libmahjongutils_KType* (*_type)(void);
+          libmahjongutils_kref_mahjongutils_ParentPoint (*ParentPoint)(libmahjongutils_KInt seen1, libmahjongutils_KInt ron, libmahjongutils_KInt tsumo, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_ParentPoint (*ParentPoint_)(libmahjongutils_KInt ron, libmahjongutils_KInt tsumo);
+          libmahjongutils_KInt (*get_ron)(libmahjongutils_kref_mahjongutils_ParentPoint thiz);
+          libmahjongutils_KInt (*get_tsumo)(libmahjongutils_kref_mahjongutils_ParentPoint thiz);
+          libmahjongutils_KInt (*component1)(libmahjongutils_kref_mahjongutils_ParentPoint thiz);
+          libmahjongutils_KInt (*component2)(libmahjongutils_kref_mahjongutils_ParentPoint thiz);
+          libmahjongutils_kref_mahjongutils_ParentPoint (*copy)(libmahjongutils_kref_mahjongutils_ParentPoint thiz, libmahjongutils_KInt ron, libmahjongutils_KInt tsumo);
+          libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_ParentPoint thiz, libmahjongutils_kref_kotlin_Any other);
+          libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_ParentPoint thiz);
+          const char* (*toString)(libmahjongutils_kref_mahjongutils_ParentPoint thiz);
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_ParentPoint_$serializer (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_descriptors_SerialDescriptor (*get_descriptor)(libmahjongutils_kref_mahjongutils_ParentPoint_$serializer thiz);
+            libmahjongutils_kref_kotlin_Array (*childSerializers)(libmahjongutils_kref_mahjongutils_ParentPoint_$serializer thiz);
+            libmahjongutils_kref_mahjongutils_ParentPoint (*deserialize)(libmahjongutils_kref_mahjongutils_ParentPoint_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Decoder decoder);
+            void (*serialize)(libmahjongutils_kref_mahjongutils_ParentPoint_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Encoder encoder, libmahjongutils_kref_mahjongutils_ParentPoint value);
+          } $serializer;
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_ParentPoint_Companion (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_ParentPoint_Companion thiz);
+          } Companion;
+        } ParentPoint;
         struct {
           libmahjongutils_KType* (*_type)(void);
           libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
@@ -698,19 +811,19 @@ typedef struct {
           } ShantenWithGot;
           struct {
             libmahjongutils_KType* (*_type)(void);
-            libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot (*ShantenWithoutGot)(libmahjongutils_KInt seen1, libmahjongutils_KInt shantenNum, libmahjongutils_kref_kotlin_collections_Set advance, libmahjongutils_KInt advanceNum, libmahjongutils_kref_kotlin_collections_Set wellShapeAdvance, libmahjongutils_KInt wellShapeAdvanceNum, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
-            libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot (*ShantenWithoutGot_)(libmahjongutils_KInt shantenNum, libmahjongutils_kref_kotlin_collections_Set advance, libmahjongutils_KInt advanceNum, libmahjongutils_kref_kotlin_collections_Set wellShapeAdvance, libmahjongutils_KInt wellShapeAdvanceNum);
+            libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot (*ShantenWithoutGot)(libmahjongutils_KInt seen1, libmahjongutils_KInt shantenNum, libmahjongutils_kref_kotlin_collections_Set advance, libmahjongutils_kref_kotlin_Int advanceNum, libmahjongutils_kref_kotlin_collections_Set wellShapeAdvance, libmahjongutils_kref_kotlin_Int wellShapeAdvanceNum, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+            libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot (*ShantenWithoutGot_)(libmahjongutils_KInt shantenNum, libmahjongutils_kref_kotlin_collections_Set advance, libmahjongutils_kref_kotlin_Int advanceNum, libmahjongutils_kref_kotlin_collections_Set wellShapeAdvance, libmahjongutils_kref_kotlin_Int wellShapeAdvanceNum);
             libmahjongutils_kref_kotlin_collections_Set (*get_advance)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
-            libmahjongutils_KInt (*get_advanceNum)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
+            libmahjongutils_kref_kotlin_Int (*get_advanceNum)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
             libmahjongutils_KInt (*get_shantenNum)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
             libmahjongutils_kref_kotlin_collections_Set (*get_wellShapeAdvance)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
-            libmahjongutils_KInt (*get_wellShapeAdvanceNum)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
+            libmahjongutils_kref_kotlin_Int (*get_wellShapeAdvanceNum)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
             libmahjongutils_KInt (*component1)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
             libmahjongutils_kref_kotlin_collections_Set (*component2)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
-            libmahjongutils_KInt (*component3)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
+            libmahjongutils_kref_kotlin_Int (*component3)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
             libmahjongutils_kref_kotlin_collections_Set (*component4)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
-            libmahjongutils_KInt (*component5)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
-            libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot (*copy)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz, libmahjongutils_KInt shantenNum, libmahjongutils_kref_kotlin_collections_Set advance, libmahjongutils_KInt advanceNum, libmahjongutils_kref_kotlin_collections_Set wellShapeAdvance, libmahjongutils_KInt wellShapeAdvanceNum);
+            libmahjongutils_kref_kotlin_Int (*component5)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
+            libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot (*copy)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz, libmahjongutils_KInt shantenNum, libmahjongutils_kref_kotlin_collections_Set advance, libmahjongutils_kref_kotlin_Int advanceNum, libmahjongutils_kref_kotlin_collections_Set wellShapeAdvance, libmahjongutils_kref_kotlin_Int wellShapeAdvanceNum);
             libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz, libmahjongutils_kref_kotlin_Any other);
             libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);
             const char* (*toString)(libmahjongutils_kref_mahjongutils_models_ShantenWithoutGot thiz);

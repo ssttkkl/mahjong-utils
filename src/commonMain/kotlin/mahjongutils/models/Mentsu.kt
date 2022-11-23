@@ -30,6 +30,11 @@ data class Kotsu(val tile: Tile) : Mentsu {
 @Serializable
 @SerialName("Shuntsu")
 data class Shuntsu(val tile: Tile) : Mentsu {
+    init {
+        require(tile.num in 1..7)
+        require(tile.type != TileType.Z)
+    }
+
     override val tiles: Iterable<Tile>
         get() = listOf(tile, tile.advance(1), tile.advance(2))
 

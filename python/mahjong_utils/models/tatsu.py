@@ -4,7 +4,7 @@ from typing import Set, Sequence, Union
 from pydantic.dataclasses import dataclass
 
 from .mentsu import Mentsu, Shuntsu, Kotsu
-from .tile import Tile, parse_tiles, tiles_text
+from .tile import Tile, parse_tiles, tiles_text, tile
 from .tile_type import TileType
 
 
@@ -28,12 +28,27 @@ class Tatsu(ABC):
     def with_waiting(self, tile: Tile) -> Mentsu:
         raise NotImplementedError()
 
+    @classmethod
+    def decode(cls, data: dict) -> "Tatsu":
+        t = tile(data["first"])
+        if data['type'] == 'Ryanmen':
+            return Ryanmen(t)
+        elif data['type'] == 'Kanchan':
+            return Kanchan(t)
+        elif data['type'] == 'Penchan':
+            return Penchan(t)
+        elif data['type'] == 'Toitsu':
+            return Toitsu(t)
+        else:
+            raise ValueError("invalid type: " + data['type'])
+
 
 @dataclass(frozen=True)
 class Ryanmen(Tatsu):
     """
     两面
     """
+
     def __post_init__(self):
         assert self.first.num != 1
         assert self.first.num != 8
@@ -96,6 +111,7 @@ class Kanchan(Tatsu):
     """
     坎张
     """
+
     def __post_init__(self):
         assert self.first.tile_type != TileType.Z
         assert 1 <= self.first.num <= 7

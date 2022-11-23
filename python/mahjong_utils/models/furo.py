@@ -2,9 +2,10 @@ from abc import ABC
 from typing import List, Sequence, Union
 
 from pydantic.dataclasses import dataclass
+from stringcase import capitalcase
 
 from .mentsu import Shuntsu, Kotsu, Mentsu
-from .tile import Tile, parse_tiles
+from .tile import Tile, parse_tiles, tile
 from .tile_type import TileType
 
 
@@ -12,6 +13,20 @@ class Furo(Mentsu, ABC):
     """
     副露
     """
+
+    def encode(self) -> dict:
+        return dict(type=capitalcase(str(type(self))), tile=str(self.tile))
+
+    @classmethod
+    def decode(cls, data: dict) -> "Furo":
+        if data['type'] == 'Chi':
+            return Chi(tile(data['tile']))
+        elif data['type'] == 'Pon':
+            return Pon(tile(data['tile']))
+        elif data['type'] == 'Kan':
+            return Kan(tile(data['tile']), data['ankan'])
+        else:
+            raise ValueError("invalid type: " + data['type'])
 
 
 @dataclass(frozen=True)

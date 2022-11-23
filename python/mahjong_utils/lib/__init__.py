@@ -1,6 +1,7 @@
 import json
 import sys
 from importlib import resources
+from typing import Optional, Mapping, Any
 
 import cffi
 
@@ -24,8 +25,15 @@ class LibMahjongUtils:
             self.lib = self.ffi.dlopen(str(libpath))
         self.lib_sy = self.lib.libmahjongutils_symbols()
 
-    def call(self, name: str, params: dict) -> dict:
-        params = json.dumps(params)
+    def call(self, name: str, params: dict,
+             params_dumps_kwargs: Optional[Mapping[str, Any]] = None,
+             result_loads_kwargs: Optional[Mapping[str, Any]] = None) -> dict:
+        if params_dumps_kwargs is None:
+            params_dumps_kwargs = {}
+        if result_loads_kwargs is None:
+            result_loads_kwargs = {}
+
+        params = json.dumps(params, **params_dumps_kwargs)
 
         entry = self.lib_sy.kotlin.root.mahjongutils.get_ENTRY()
         result = self.lib_sy.kotlin.root.mahjongutils.Entry.call(
@@ -34,13 +42,13 @@ class LibMahjongUtils:
             self.ffi.new("char[]", params.encode()))
         result = self.ffi.string(result)
 
-        result = json.loads(result)
+        result = json.loads(result, **result_loads_kwargs)
 
         if result['code'] == 200:
             return result['data']
-        elif result.code == 404:
+        elif result['code'] == 404:
             raise ValueError(result['msg'])
-        elif result.code == 400:
+        elif result['code'] == 400:
             raise ValueError(result['msg'])
         else:
             raise RuntimeError(result['msg'])

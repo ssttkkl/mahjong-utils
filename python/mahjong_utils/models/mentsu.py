@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 from typing import List, Sequence, Union, Iterable, TYPE_CHECKING
 
 from pydantic.dataclasses import dataclass
+from stringcase import capitalcase
 
-from .tile import Tile, parse_tiles
+from .tile import Tile, parse_tiles, tile
 from .tile_type import TileType
 
 if TYPE_CHECKING:
@@ -25,6 +26,18 @@ class Mentsu(ABC):
     @abstractmethod
     def after_discard(self, discard: Tile) -> "Tatsu":
         raise NotImplementedError()
+
+    def encode(self) -> dict:
+        return dict(type=capitalcase(str(type(self))), tile=str(self.tile))
+
+    @classmethod
+    def decode(cls, data: dict) -> "Mentsu":
+        if data['type'] == 'Kotsu':
+            return Kotsu(tile(data['tile']))
+        elif data['type'] == 'Shuntsu':
+            return Shuntsu(tile(data['tile']))
+        else:
+            raise ValueError("invalid type: " + data['type'])
 
 
 @dataclass(frozen=True)
@@ -52,6 +65,7 @@ class Shuntsu(Mentsu):
     """
     顺子
     """
+
     def __post_init__(self):
         assert self.tile.tile_type != TileType.Z
         assert 1 <= self.tile.num <= 7
