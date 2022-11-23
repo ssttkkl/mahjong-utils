@@ -1,5 +1,5 @@
 from mahjong_utils.hora import build_hora
-from mahjong_utils.models.furo import parse_furo
+from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.tile import tile, parse_tiles
 from mahjong_utils.models.wind import Wind
 from mahjong_utils.yaku.common import ittsu, chinitsu, ipe, tsumo, pinhu, honitsu, sananko, toitoi, self_wind, \
@@ -28,7 +28,7 @@ def test_build_hora_2():
 
 
 def test_build_hora_3():
-    hora = build_hora(parse_tiles("1345556m111z2m"), [parse_furo("789m")], tile("2m"), True)
+    hora = build_hora(parse_tiles("1345556m111z2m"), [Furo.parse("789m")], tile("2m"), True)
 
     assert hora.yaku == {ittsu, honitsu}
     assert hora.han == 3
@@ -38,7 +38,7 @@ def test_build_hora_3():
 
 
 def test_build_hora_4():
-    hora = build_hora(parse_tiles("12323467m11z5m"), [parse_furo("789p")], tile("5m"), True, dora=13)
+    hora = build_hora(parse_tiles("12323467m11z5m"), [Furo.parse("789p")], tile("5m"), True, dora=13)
 
     assert len(hora.yaku) == 0
     assert hora.han == 0
@@ -58,7 +58,7 @@ def test_build_hora_5():
 
 def test_build_hora_6():
     hora = build_hora(parse_tiles("66z"),
-                      [parse_furo("3333s"), parse_furo("2222s"), parse_furo("0440s"), parse_furo("8888s")], tile("6z"),
+                      [Furo.parse("3333s"), Furo.parse("2222s"), Furo.parse("0440s"), Furo.parse("8888s")], tile("6z"),
                       True)
 
     assert hora.yaku == {lyuiso, sukantsu}
@@ -69,7 +69,7 @@ def test_build_hora_6():
 
 def test_build_hora_7():
     hora = build_hora(parse_tiles("66z"),
-                      [parse_furo("0330s"), parse_furo("0220s"), parse_furo("0440s"), parse_furo("0880s")], tile("6z"),
+                      [Furo.parse("0330s"), Furo.parse("0220s"), Furo.parse("0440s"), Furo.parse("0880s")], tile("6z"),
                       True)
 
     assert hora.yaku == {lyuiso, sukantsu, suanko_tanki}
@@ -92,7 +92,7 @@ def test_build_hora_8():
 
 def test_build_hora_9():
     hora = build_hora(parse_tiles("55z"),
-                      [parse_furo("0110z"), parse_furo("0220z"), parse_furo("0330z"), parse_furo("0440z")], tile("5z"),
+                      [Furo.parse("0110z"), Furo.parse("0220z"), Furo.parse("0330z"), Furo.parse("0440z")], tile("5z"),
                       True)
 
     assert hora.yaku == {suanko_tanki, sukantsu, daisushi, tsuiso}

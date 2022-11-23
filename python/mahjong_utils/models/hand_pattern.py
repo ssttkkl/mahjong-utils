@@ -24,6 +24,10 @@ class HandPattern(BaseModel, ABC):
     def __hash__(self):
         return hash(self.__class__) + hash(tuple(self.__dict__.values()))
 
+    @abstractmethod
+    def encode(self) -> dict:
+        raise NotImplementedError()
+
     @classmethod
     def decode(cls, data: dict) -> "HandPattern":
         if data['type'] == 'RegularHandPattern':
@@ -47,6 +51,17 @@ class RegularHandPattern(HandPattern):
     furo: Tuple[Furo, ...] = Field(default_factory=tuple)
     tatsu: Tuple[Tatsu, ...] = Field(default_factory=tuple)
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
+
+    def encode(self) -> dict:
+        return dict(
+            type="RegularHandPattern",
+            k=self.k,
+            jyantou=str(jyantou) if (jyantou := self.jyantou is not None) else None,
+            menzenMentsu=[mt.encode() for mt in self.menzen_mentsu],
+            furo=[fr.encode() for fr in self.furo],
+            tatsu=[tt.encode() for tt in self.tatsu],
+            remaining=[str(t) for t in self.remaining],
+        )
 
     @classmethod
     def decode(cls, data: dict) -> "RegularHandPattern":
@@ -117,6 +132,13 @@ class ChitoiHandPattern(HandPattern):
     pairs: FrozenSet[Tile] = Field(default_factory=frozenset)
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
 
+    def encode(self) -> dict:
+        return dict(
+            type="ChitoiHandPattern",
+            pairs=[str(t) for t in self.pairs],
+            remaining=[str(t) for t in self.remaining],
+        )
+
     @classmethod
     def decode(cls, data: dict) -> "ChitoiHandPattern":
         return ChitoiHandPattern(
@@ -145,6 +167,14 @@ class KokushiHandPattern(HandPattern):
     yaochu: FrozenSet[Tile] = Field(default_factory=frozenset)
     repeated: Optional[Tile] = None
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
+
+    def encode(self) -> dict:
+        return dict(
+            type="KokushiHandPattern",
+            yaochu=[str(t) for t in self.yaochu],
+            repeated=str(repeated) if (repeated := self.repeated) is not None else None,
+            remaining=[str(t) for t in self.remaining],
+        )
 
     @classmethod
     def decode(cls, data: dict) -> "KokushiHandPattern":

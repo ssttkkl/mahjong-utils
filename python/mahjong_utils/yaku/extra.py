@@ -1,6 +1,6 @@
-from typing import Set
+from typing import FrozenSet
 
-from mahjong_utils.yaku import Yaku
+from .yaku import Yaku
 
 richi = Yaku("richi", 1, 1)
 ippatsu = Yaku("ippatsu", 1, 1)
@@ -12,17 +12,11 @@ w_richi = Yaku("w_richi", 2, 2)
 tenhou = Yaku("tenhou", 13, 13, True)
 chihou = Yaku("chihou", 13, 13, True)
 
-all_extra_yaku: Set[Yaku] = {
-    richi,
-    ippatsu,
-    rinshan,
-    chankan,
-    haitei,
-    houtei,
+all_extra_yaku: FrozenSet[Yaku] = frozenset({
+    richi, ippatsu, rinshan, chankan, haitei, houtei,
     w_richi,
-    tenhou,
-    chihou
-}
+    tenhou, chihou
+})
 
 __all__ = (
     "all_extra_yaku",

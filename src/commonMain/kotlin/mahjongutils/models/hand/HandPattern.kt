@@ -2,31 +2,25 @@ package mahjongutils.models.hand
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import mahjongutils.models.Furo
-import mahjongutils.models.Mentsu
-import mahjongutils.models.Tatsu
-import mahjongutils.models.Tile
+import mahjongutils.models.*
 
 @Serializable
 sealed interface HandPattern : IHasFuro {
-    val tiles: Iterable<Tile>
+    val tiles: Collection<Tile>
 }
 
-@Serializable
-@SerialName("RegularHandPattern")
-data class RegularHandPattern(
-    val k: Int,
-    val jyantou: Tile?,
-    val menzenMentsu: List<Mentsu>,
-    override val furo: List<Furo>,
-    val tatsu: List<Tatsu>,
-    val remaining: List<Tile>,
-) : HandPattern {
-    override val tiles: Iterable<Tile>
+sealed interface IRegularHandPattern : HandPattern {
+    val k: Int
+    val jyantou: Tile?
+    val menzenMentsu: List<Mentsu>
+    val tatsu: List<Tatsu>
+    val remaining: List<Tile>
+
+    override val tiles: Collection<Tile>
         get() = buildList {
-            if (jyantou != null) {
-                add(jyantou)
-                add(jyantou)
+            jyantou?.let {
+                add(it)
+                add(it)
             }
             for (mt in menzenMentsu) {
                 addAll(mt.tiles)
@@ -40,21 +34,60 @@ data class RegularHandPattern(
             }
             addAll(remaining)
         }
+
+    val mentsu: Collection<Mentsu>
+        get() = menzenMentsu + furo.map { it.asMentsu() }
+
+    val anko: Collection<Kotsu>
+        get() = menzenMentsu.filterIsInstance<Kotsu>() +
+                furo.filterIsInstance<Kan>().filter { it.ankan }.map { it.asMentsu() }
+}
+
+@Serializable
+@SerialName("RegularHandPattern")
+data class RegularHandPattern(
+    override val k: Int,
+    override val jyantou: Tile?,
+    override val menzenMentsu: List<Mentsu>,
+    override val furo: List<Furo>,
+    override val tatsu: List<Tatsu>,
+    override val remaining: List<Tile>,
+) : IRegularHandPattern
+
+sealed interface IChitoiHandPattern : HandPattern {
+    val pairs: Set<Tile>
+    val remaining: List<Tile>
+
+    override val furo: List<Furo>
+        get() = emptyList()
+
+    override val tiles: Collection<Tile>
+        get() = buildList {
+            addAll(pairs)
+            addAll(pairs)
+            addAll(remaining)
+        }
 }
 
 @Serializable
 @SerialName("ChitoiHandPattern")
 data class ChitoiHandPattern(
-    val pairs: Set<Tile>,
+    override val pairs: Set<Tile>,
+    override val remaining: List<Tile>
+) : IChitoiHandPattern
+
+sealed interface IKokushiHandPattern : HandPattern {
+    val yaochu: Set<Tile>
+    val repeated: Tile?
     val remaining: List<Tile>
-) : HandPattern {
+
     override val furo: List<Furo>
         get() = emptyList()
 
-    override val tiles: Iterable<Tile>
+    override val tiles: Collection<Tile>
         get() = buildList {
-            addAll(pairs)
-            addAll(pairs)
+            addAll(yaochu)
+            repeated?.let { add(it) }
             addAll(remaining)
         }
 }
@@ -62,18 +95,7 @@ data class ChitoiHandPattern(
 @Serializable
 @SerialName("KokushiHandPattern")
 data class KokushiHandPattern(
-    val yaochu: Set<Tile>,
-    val repeated: Tile?,
-    val remaining: List<Tile>
-) : HandPattern {
-    override val furo: List<Furo>
-        get() = emptyList()
-
-    override val tiles: Iterable<Tile>
-        get() = buildList {
-            addAll(yaochu)
-            if (repeated != null)
-                add(repeated)
-            addAll(remaining)
-        }
-}
+    override val yaochu: Set<Tile>,
+    override val repeated: Tile?,
+    override val remaining: List<Tile>
+) : IKokushiHandPattern

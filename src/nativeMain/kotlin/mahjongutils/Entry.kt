@@ -4,8 +4,17 @@ package mahjongutils
 
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
+import mahjongutils.hanhu.ChildPoint
+import mahjongutils.hanhu.ParentPoint
+import mahjongutils.hanhu.getChildPointByHanHu
+import mahjongutils.hanhu.getParentPointByHanHu
+import mahjongutils.hora.Hora
+import mahjongutils.hora.hora
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
+import mahjongutils.models.Wind
+import mahjongutils.shanten.*
+import mahjongutils.yaku.Yaku
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -85,6 +94,20 @@ data class HanHu(
     val hu: Int
 )
 
+
+@Serializable
+data class HoraArgs(
+    val tiles: List<Tile>? = null,
+    val furo: List<Furo>? = null,
+    val shantenResult: ShantenResult? = null,
+    val agari: Tile,
+    val tsumo: Boolean,
+    val dora: Int = 0,
+    val selfWind: Wind? = null,
+    val roundWind: Wind? = null,
+    val extraYaku: Set<Yaku> = emptySet()
+)
+
 val ENTRY = Entry.Builder().apply {
     register<ShantenArgs, ShantenResult>("shanten") { args ->
         shanten(args.tiles, args.furo, args.calcAdvanceNum)
@@ -104,5 +127,21 @@ val ENTRY = Entry.Builder().apply {
     }
     register<HanHu, ChildPoint>("getChildPointByHanHu") { args ->
         getChildPointByHanHu(args.han, args.hu)
+    }
+
+    register<HoraArgs, Hora>("hora") { args ->
+        if (args.shantenResult != null) {
+            hora(
+                args.shantenResult, args.agari, args.tsumo,
+                args.dora, args.selfWind, args.roundWind, args.extraYaku
+            )
+        } else if (args.tiles != null) {
+            hora(
+                args.tiles, args.furo ?: emptyList(), args.agari, args.tsumo,
+                args.dora, args.selfWind, args.roundWind, args.extraYaku
+            )
+        } else {
+            throw IllegalArgumentException("either shantenResult or tiles/furo muse be set")
+        }
     }
 }.build()

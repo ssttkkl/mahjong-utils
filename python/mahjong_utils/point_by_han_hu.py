@@ -25,7 +25,7 @@ def get_child_point_by_han_hu(han: int, hu: int):
     :param hu: 符
     :return: (荣和点数, 自摸庄家点数, 自摸闲家点数)
     """
-    result = libmahjongutils.call("getParentPointByHanHu", {
+    result = libmahjongutils.call("getChildPointByHanHu", {
         "han": han,
         "hu": hu
     })

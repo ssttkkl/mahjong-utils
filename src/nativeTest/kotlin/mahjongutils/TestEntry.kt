@@ -3,7 +3,10 @@ package mahjongutils
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import mahjongutils.hanhu.ParentPoint
+import mahjongutils.hora.Hora
 import mahjongutils.models.Tile
+import mahjongutils.shanten.ShantenResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -33,5 +36,14 @@ class TestEntry {
         print(rawResult)
         val result = Json.decodeFromString<Result<ParentPoint>>(rawResult)
         assertEquals(400, result.code)
+    }
+
+    @Test
+    fun testHora() {
+        val args = HoraArgs(Tile.parseTiles("11123456778999s"), agari = Tile.get("7s"), tsumo = true)
+        val rawResult = ENTRY.call("hora", Json.encodeToString(args))
+        print(rawResult)
+        val result = Json.decodeFromString<Result<Hora>>(rawResult)
+        assertEquals(200, result.code)
     }
 }

@@ -1,12 +1,17 @@
+from abc import ABC, abstractmethod
 from typing import Set, Dict, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from mahjong_utils.models.tile import Tile, tile
 
 
-class Shanten(BaseModel):
+class Shanten(BaseModel, ABC):
     shanten: int
+
+    @abstractmethod
+    def encode(self) -> dict:
+        raise NotImplementedError()
 
     @classmethod
     def decode(cls, data: dict) -> "Shanten":
@@ -19,10 +24,21 @@ class Shanten(BaseModel):
 
 
 class ShantenWithoutGot(Shanten):
-    advance: Set[Tile] = Field(default_factory=set)
+    advance: Set[Tile]
     advance_num: Optional[int]
     well_shape_advance: Optional[Set[Tile]]
     well_shape_advance_num: Optional[int]
+
+    def encode(self) -> dict:
+        return dict(
+            type="ShantenWithoutGot",
+            shantenNum=self.shanten,
+            advance=[str(t) for t in self.advance],
+            advanceNum=self.advance_num,
+            wellShapeAdvance=[str(t) for t in well_shape_advance]
+            if (well_shape_advance := self.well_shape_advance) is not None else None,
+            wellShapeAdvanceNum=self.well_shape_advance_num
+        )
 
     @classmethod
     def decode(cls, data: dict) -> "ShantenWithoutGot":
@@ -39,7 +55,14 @@ class ShantenWithoutGot(Shanten):
 
 
 class ShantenWithGot(Shanten):
-    discard_to_advance: Dict[Tile, ShantenWithoutGot] = Field(default_factory=dict)
+    discard_to_advance: Dict[Tile, ShantenWithoutGot]
+
+    def encode(self) -> dict:
+        return dict(
+            type="ShantenWithGot",
+            shantenNum=self.shanten,
+            discardToAdvance=dict((str(k), v.encode()) for (k, v) in self.discard_to_advance.items())
+        )
 
     @classmethod
     def decode(cls, data: dict) -> "ShantenWithGot":
@@ -49,35 +72,3 @@ class ShantenWithGot(Shanten):
                 (tile(k), ShantenWithoutGot.decode(v))
                 for (k, v) in data["discardToAdvance"].items())
         )
-
-
-class ShantenInfoMixin:
-    shanten_info: Shanten
-
-    @property
-    def shanten(self) -> Optional[int]:
-        return getattr(self.shanten_info, "shanten", None)
-
-    @property
-    def advance(self) -> Optional[Set[Tile]]:
-        return getattr(self.shanten_info, "advance", None)
-
-    @property
-    def advance_num(self) -> Optional[int]:
-        return getattr(self.shanten_info, "advance_num", None)
-
-    @property
-    def well_shape_advance(self) -> Optional[Set[Tile]]:
-        return getattr(self.shanten_info, "well_shape_advance", None)
-
-    @property
-    def well_shape_advance_num(self) -> Optional[int]:
-        return getattr(self.shanten_info, "well_shape_advance_num", None)
-
-    @property
-    def discard_to_advance(self) -> Optional[Dict[Tile, ShantenWithoutGot]]:
-        return getattr(self.shanten_info, "discard_to_advance", None)
-
-    @property
-    def with_got(self) -> bool:
-        return self.discard_to_advance is not None

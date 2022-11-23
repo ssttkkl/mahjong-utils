@@ -28,6 +28,12 @@ class Tatsu(ABC):
     def with_waiting(self, tile: Tile) -> Mentsu:
         raise NotImplementedError()
 
+    def encode(self) -> dict:
+        return dict(
+            type=type(self).__name__,
+            first=str(self.first)
+        )
+
     @classmethod
     def decode(cls, data: dict) -> "Tatsu":
         t = tile(data["first"])
@@ -41,6 +47,35 @@ class Tatsu(ABC):
             return Toitsu(t)
         else:
             raise ValueError("invalid type: " + data['type'])
+
+    @staticmethod
+    def parse(t: Union[Sequence[Tile], str]) -> "Tatsu":
+        if isinstance(t, str):
+            t = parse_tiles(t)
+
+        if len(t) != 2:
+            raise ValueError("_tiles must has length of 2")
+
+        first, second = t[0], t[1]
+
+        if first > second:
+            first, second = second, first
+
+        if first == second:
+            return Toitsu(first)
+        else:
+            if first.tile_type == TileType.Z or second.tile_type == TileType.Z:
+                raise ValueError(f"invalid tiles: {t}")
+
+            if second - first == 1:
+                if first.num == 1 or first.num == 8:
+                    return Penchan(first)
+                else:
+                    return Ryanmen(first)
+            elif second - first == 2:
+                return Kanchan(first)
+            else:
+                raise ValueError(f"invalid tiles: {first}, {second}")
 
 
 @dataclass(frozen=True)
@@ -158,33 +193,4 @@ class Toitsu(Tatsu):
         return tiles_text([self.first, self.second])
 
 
-def parse_tatsu(t: Union[Sequence[Tile], str]) -> Tatsu:
-    if isinstance(t, str):
-        t = parse_tiles(t)
-
-    if len(t) != 2:
-        raise ValueError("_tiles must has length of 2")
-
-    first, second = t[0], t[1]
-
-    if first > second:
-        first, second = second, first
-
-    if first == second:
-        return Toitsu(first)
-    else:
-        if first.tile_type == TileType.Z or second.tile_type == TileType.Z:
-            raise ValueError(f"invalid _tiles: {t}")
-
-        if second - first == 1:
-            if first.num == 1 or first.num == 8:
-                return Penchan(first)
-            else:
-                return Ryanmen(first)
-        elif second - first == 2:
-            return Kanchan(first)
-        else:
-            raise ValueError(f"invalid _tiles: {first}, {second}")
-
-
-__all__ = ("Tatsu", "Toitsu", "Kanchan", "Ryanmen", "Penchan", "parse_tatsu")
+__all__ = ("Tatsu", "Toitsu", "Kanchan", "Ryanmen", "Penchan",)

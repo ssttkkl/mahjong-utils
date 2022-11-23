@@ -1,30 +1,18 @@
-from typing import Callable, NamedTuple, Optional
+from .common import all_common_yaku
+from .extra import all_extra_yaku
+from .yaku import Yaku
+from .yakuman import all_yakuman
 
-from mahjong_utils.models.hora_hand_pattern import HoraHandPattern
+all_yaku = all_common_yaku | all_extra_yaku | all_yakuman
 
-
-class Yaku(NamedTuple):
-    name: str
-    han: int
-    furo_loss: int
-    is_yakuman: bool = False
-    checker: Optional[Callable[[HoraHandPattern], bool]] = None
-
-    def __call__(self, hora_hand: "HoraHandPattern") -> bool:
-        if self.checker:
-            return self.checker(hora_hand)
-        else:
-            return False
-
-    def __hash__(self):
-        return hash(self.name)
+_all_yaku_mapping = dict(map(lambda x: (x.name, x), all_yaku))
 
 
-def _yaku(han: int, furo_loss: int, is_yakuman: bool = False):
-    def decorator(func):
-        return Yaku(func.__name__, han, furo_loss, is_yakuman, func)
+def get_yaku(name: str) -> Yaku:
+    yaku = _all_yaku_mapping.get(name, None)
+    if yaku is None:
+        raise ValueError(f"{name} is not a yaku")
+    return yaku
 
-    return decorator
 
-
-__all__ = ("Yaku", "_yaku")
+__all__ = ("Yaku", "all_yaku", "get_yaku")

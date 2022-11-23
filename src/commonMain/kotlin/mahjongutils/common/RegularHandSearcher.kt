@@ -113,9 +113,6 @@ private class RegularHandPatternSearcher(
         var taken = false
         if (n >= 2) {
             for (i in begin until 3 * 9 + 7) {
-                if (i == 3 * 9) // 0z
-                    continue
-
                 val t = decode(i)
 
                 // toitsu
@@ -276,7 +273,7 @@ private class RegularHandPatternSearcher(
     }
 }
 
-fun regularHandPatternSearch(tiles: List<Tile>, furo: List<Furo>): List<RegularHandPattern> {
+internal fun regularHandPatternSearch(tiles: List<Tile>, furo: List<Furo>): List<RegularHandPattern> {
     val patterns = ArrayList<RegularHandPattern>()
     val searcher = RegularHandPatternSearcher(tiles, furo) {
         patterns.add(it)

@@ -1,13 +1,13 @@
 from enum import Enum
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Set, Dict
 
 from pydantic import BaseModel
-from stringcase import lowercase
+from stringcase import snakecase
 
 from mahjong_utils.lib import libmahjongutils
 from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.hand import Hand
-from mahjong_utils.models.shanten import ShantenInfoMixin, Shanten
+from mahjong_utils.models.shanten import Shanten, ShantenWithoutGot
 from mahjong_utils.models.tile import Tile
 
 
@@ -18,7 +18,7 @@ class ShantenResultType(str, Enum):
     union = "Union"
 
 
-class ShantenResult(BaseModel, ShantenInfoMixin):
+class ShantenResult(BaseModel):
     type: ShantenResultType
     hand: Hand
     shanten_info: Shanten
@@ -26,16 +26,54 @@ class ShantenResult(BaseModel, ShantenInfoMixin):
     chitoi: Optional["ShantenResult"]
     kokushi: Optional["ShantenResult"]
 
+    def encode(self) -> dict:
+        return dict(
+            type=self.type.name,
+            hand=self.hand.encode(),
+            shantenInfo=self.shanten_info.encode(),
+            regular=regular.encode() if (regular := self.regular) is not None else None,
+            chitoi=chitoi.encode() if (chitoi := self.chitoi) is not None else None,
+            kokushi=kokushi.encode() if (kokushi := self.kokushi) is not None else None,
+        )
+
     @classmethod
     def decode(cls, data: dict) -> "ShantenResult":
         return ShantenResult(
-            type=ShantenResultType[lowercase(data["type"])],
+            type=ShantenResultType[snakecase(data["type"])],
             hand=Hand.decode(data["hand"]),
             shanten_info=Shanten.decode(data["shantenInfo"]),
             regular=ShantenResult.decode(regular) if (regular := data["regular"]) is not None else None,
             chitoi=ShantenResult.decode(chitoi) if (chitoi := data["chitoi"]) is not None else None,
             kokushi=ShantenResult.decode(kokushi) if (kokushi := data["kokushi"]) is not None else None,
         )
+
+    @property
+    def shanten(self) -> Optional[int]:
+        return getattr(self.shanten_info, "shanten", None)
+
+    @property
+    def advance(self) -> Optional[Set[Tile]]:
+        return getattr(self.shanten_info, "advance", None)
+
+    @property
+    def advance_num(self) -> Optional[int]:
+        return getattr(self.shanten_info, "advance_num", None)
+
+    @property
+    def well_shape_advance(self) -> Optional[Set[Tile]]:
+        return getattr(self.shanten_info, "well_shape_advance", None)
+
+    @property
+    def well_shape_advance_num(self) -> Optional[int]:
+        return getattr(self.shanten_info, "well_shape_advance_num", None)
+
+    @property
+    def discard_to_advance(self) -> Optional[Dict[Tile, ShantenWithoutGot]]:
+        return getattr(self.shanten_info, "discard_to_advance", None)
+
+    @property
+    def with_got(self) -> bool:
+        return self.discard_to_advance is not None
 
 
 def regular_shanten(

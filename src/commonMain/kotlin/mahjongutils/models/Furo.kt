@@ -1,5 +1,9 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package mahjongutils.models
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -8,7 +12,7 @@ sealed interface Furo {
     fun asMentsu(): Mentsu
 
     companion object {
-        fun parse(tiles: List<Tile>, ankan: Boolean): Furo {
+        operator fun invoke(tiles: List<Tile>, ankan: Boolean = false): Furo {
             if (tiles.size == 3) {
                 if (tiles[0] == tiles[1] && tiles[1] == tiles[2]) {
                     return Pon(tiles[0])
@@ -32,6 +36,19 @@ sealed interface Furo {
 
             throw IllegalArgumentException("invalid tiles: ${tiles.toTilesString()}")
         }
+
+        operator fun invoke(text: String, ankan: Boolean = false): Furo {
+            var ankan_ = ankan
+
+            val tiles = if (text.length == 5 && text[0] == text[3] && text[0] == '0' && text[1] == text[2]) {
+                ankan_ = true
+                Tile.parseTiles("${text[1]}${text[1]}${text[1]}${text[1]}${text[4]}")
+            } else {
+                Tile.parseTiles(text)
+            }
+
+            return invoke(tiles, ankan_)
+        }
     }
 }
 
@@ -54,7 +71,10 @@ data class Pon(val tile: Tile) : Furo {
 
 @Serializable
 @SerialName("Kan")
-data class Kan(val tile: Tile, val ankan: Boolean = false) : Furo {
+data class Kan(
+    val tile: Tile,
+    @EncodeDefault val ankan: Boolean = false
+) : Furo {
     override fun asMentsu(): Kotsu {
         return Kotsu(tile)
     }

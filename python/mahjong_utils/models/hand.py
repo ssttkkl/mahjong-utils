@@ -20,6 +20,13 @@ class Hand(BaseModel):
                 return False
         return True
 
+    def encode(self) -> dict:
+        return dict(
+            tiles=[str(t) for t in self.tiles],
+            furo=[fr.encode() for fr in self.furo],
+            patterns=[p.encode() for p in self.patterns]
+        )
+
     @classmethod
     def decode(cls, data: dict) -> "Hand":
         return Hand(

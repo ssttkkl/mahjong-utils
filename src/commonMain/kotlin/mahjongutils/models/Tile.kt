@@ -2,7 +2,6 @@ package mahjongutils.models
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -186,19 +185,21 @@ fun Iterable<Tile>.toTilesString(lowercase: Boolean = true): String {
 }
 
 class TileSerializer : KSerializer<Tile> {
-    private val delegation = String.serializer()
-
     override val descriptor = PrimitiveSerialDescriptor("Tile", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Tile) {
-        encoder.encodeSerializableValue(delegation, value.toString())
+        encoder.encodeString(value.toString())
     }
 
     override fun deserialize(decoder: Decoder): Tile {
-        val text = decoder.decodeSerializableValue(delegation)
+        val text = decoder.decodeString()
         return Tile.get(text)
     }
 }
 
 
 val Tile.isYaochu: Boolean get() = this in Tile.allYaochu
+
+val Tile.isSangen: Boolean get() = type == TileType.Z && num in 5..7
+
+val Tile.isWind: Boolean get() = type == TileType.Z && num in 1..4

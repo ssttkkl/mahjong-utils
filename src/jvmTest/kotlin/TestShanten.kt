@@ -2,8 +2,8 @@ import mahjongutils.models.Shanten
 import mahjongutils.models.ShantenWithGot
 import mahjongutils.models.ShantenWithoutGot
 import mahjongutils.models.Tile
-import mahjongutils.regularShanten
-import mahjongutils.shanten
+import mahjongutils.shanten.regularShanten
+import mahjongutils.shanten.shanten
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
