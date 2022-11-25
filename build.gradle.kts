@@ -4,8 +4,8 @@ plugins {
     id("maven-publish")
 }
 
-group = "me.ssttkkl"
-version = "0.2.0.alpha1"
+group = "io.github.ssttkkl"
+version = "0.2.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -17,6 +17,7 @@ kotlin {
             useJUnitPlatform()
         }
     }
+    js()
 
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
@@ -50,6 +51,18 @@ kotlin {
         val nativeMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+            }
+        }
+    }
+
+    val publicationsFromMainHost = listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+    publishing {
+        publications {
+            matching { it.name in publicationsFromMainHost }.all {
+                val targetPublication = this@all
+                tasks.withType<AbstractPublishToMaven>()
+                    .matching { it.publication == targetPublication }
+                    .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
             }
         }
     }
