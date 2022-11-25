@@ -140,3 +140,6 @@ dmypy.json
 
 /.idea/
 /.gradle/
+
+local.properties
+secret_ring.gpg

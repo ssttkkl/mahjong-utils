@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform") version "1.7.21"
     kotlin("plugin.serialization") version "1.7.21"
-    id("maven-publish")
 }
 
 group = "io.github.ssttkkl"
@@ -38,14 +37,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test")) // This brings all the platform dependencies automatically
             }
-        }
-    }
-}
-
-publishing {
-    repositories {
-        maven {
-            //...
         }
     }
 }
