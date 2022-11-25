@@ -4,7 +4,7 @@ from typing import List, Sequence, Union
 from pydantic.dataclasses import dataclass
 
 from .mentsu import Shuntsu, Kotsu, Mentsu
-from .tile import Tile, parse_tiles, tile
+from .tile import Tile, parse_tiles
 from .tile_type import TileType
 
 
@@ -13,17 +13,18 @@ class Furo(Mentsu, ABC):
     副露
     """
 
-    def encode(self) -> dict:
-        return dict(type=type(self).__name__, tile=str(self.tile))
+    def __encode__(self) -> dict:
+        return dict(type=type(self).__name__, tile=self.tile.__encode__())
 
     @classmethod
-    def decode(cls, data: dict) -> "Furo":
+    def __decode__(cls, data: dict) -> "Furo":
+        t = Tile.__decode__(data['tile'])
         if data['type'] == 'Chi':
-            return Chi(tile(data['tile']))
+            return Chi(t)
         elif data['type'] == 'Pon':
-            return Pon(tile(data['tile']))
+            return Pon(t)
         elif data['type'] == 'Kan':
-            return Kan(tile(data['tile']), data['ankan'])
+            return Kan(t, data['ankan'])
         else:
             raise ValueError("invalid type: " + data['type'])
 
@@ -81,8 +82,8 @@ class Kan(Kotsu, Furo):
 
     ankan: bool
 
-    def encode(self) -> dict:
-        return Furo.encode(self) | dict(ankan=self.ankan)
+    def __encode__(self) -> dict:
+        return Furo.__encode__(self) | dict(ankan=self.ankan)
 
     def __repr__(self):
         if self.ankan:

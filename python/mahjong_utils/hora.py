@@ -25,7 +25,7 @@ class Hora(BaseModel):
     @classmethod
     def decode(cls, data: dict) -> "Hora":
         return Hora(
-            pattern=HoraHandPattern.decode(data["pattern"]),
+            pattern=HoraHandPattern.__decode__(data["pattern"]),
             han=data["han"],
             dora=data["dora"],
             yaku=set(get_yaku(snakecase(yk)) for yk in data["yaku"]),
@@ -114,7 +114,7 @@ def build_hora(
     """
     result = libmahjongutils.call("hora", {
         "tiles": [str(t) for t in tiles],
-        "furo": [fr.encode() for fr in furo] if furo is not None else [],
+        "furo": [fr.__encode__() for fr in furo] if furo is not None else [],
         "agari": str(agari),
         "tsumo": tsumo,
         "dora": dora,

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from mahjong_utils.models.tile import tile, Tile
+from mahjong_utils.models.tile import Tile
 from mahjong_utils.models.tile_type import TileType
 
 
@@ -16,7 +16,7 @@ class Wind(int, Enum):
 
     @property
     def tile(self) -> Tile:
-        return tile(TileType.Z, self + 1)
+        return Tile.by_type_and_num(TileType.Z, self + 1)
 
 
 __all__ = ("Wind",)

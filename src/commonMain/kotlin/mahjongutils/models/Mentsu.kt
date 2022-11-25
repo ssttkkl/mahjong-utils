@@ -7,6 +7,33 @@ import kotlinx.serialization.Serializable
 sealed interface Mentsu {
     val tiles: Iterable<Tile>
     fun afterDiscard(discard: Tile): Tatsu
+
+    companion object {
+        operator fun invoke(tiles: List<Tile>): Mentsu {
+            if (tiles.size == 3) {
+                if (tiles[0] == tiles[1] && tiles[1] == tiles[2]) {
+                    return Kotsu(tiles[0])
+                } else {
+                    if (tiles.any { it.type == TileType.Z }) {
+                        throw IllegalArgumentException("invalid tiles: ${tiles.toTilesString()}")
+                    }
+
+                    val tiles = tiles.sorted()
+                    if (tiles[1].distance(tiles[0]) == 1 && tiles[2].distance(tiles[1]) == 1) {
+                        return Shuntsu(tiles[0])
+                    } else {
+                        throw IllegalArgumentException("invalid tiles: ${tiles.toTilesString()}")
+                    }
+                }
+            }
+
+            throw IllegalArgumentException("invalid tiles: ${tiles.toTilesString()}")
+        }
+
+        operator fun invoke(text: String): Mentsu {
+            return invoke(Tile.parseTiles(text))
+        }
+    }
 }
 
 @Serializable

@@ -10,11 +10,11 @@ import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hanhu.getChildPointByHanHu
 import mahjongutils.hanhu.getParentPointByHanHu
 import mahjongutils.models.Furo
-import mahjongutils.models.ShantenWithGot
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
 import mahjongutils.models.hand.HoraHandPattern
 import mahjongutils.shanten.ShantenResult
+import mahjongutils.shanten.ShantenWithGot
 import mahjongutils.shanten.shanten
 import mahjongutils.yaku.Yaku
 import mahjongutils.yaku.allCommonYaku

@@ -13,6 +13,7 @@ lazy = "^1.5"
 pydantic = "^1.9.0"
 cffi = "^1.15.1"
 stringcase = "^1.2.0"
+typing-extensions = "^4.4.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1.3"

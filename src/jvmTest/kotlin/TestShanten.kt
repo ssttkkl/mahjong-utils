@@ -1,9 +1,5 @@
-import mahjongutils.models.Shanten
-import mahjongutils.models.ShantenWithGot
-import mahjongutils.models.ShantenWithoutGot
 import mahjongutils.models.Tile
-import mahjongutils.shanten.regularShanten
-import mahjongutils.shanten.shanten
+import mahjongutils.shanten.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -127,77 +123,9 @@ class TestShanten {
 
     @Test
     fun testWithGot() {
-//        tester(
-//            "1112345678999s1z", ShantenWithGot(
-//                shantenNum = 0, discardToAdvance = mapOf(
-//                    Tile.get("1s") to ShantenWithoutGot(
-//                        shantenNum = 1,
-//                        advance = Tile.parseTiles("123456789s1z").toSet(),
-//                        advanceNum = 26,
-//                        wellShapeAdvance = Tile.parseTiles("123469s1z").toSet(),
-//                        wellShapeAdvanceNum = 17
-//                    ),
-//                    Tile.get("2s") to ShantenWithoutGot(
-//                        shantenNum = 0,
-//                        advance = Tile.parseTiles("1z").toSet(),
-//                        advanceNum = 3,
-//                    ),
-//                    Tile.get("3s") to ShantenWithoutGot(
-//                        shantenNum = 1,
-//                        advance = Tile.parseTiles("123456789s1z").toSet(),
-//                        advanceNum = 26,
-//                        wellShapeAdvance = Tile.parseTiles("23s1z").toSet(),
-//                        wellShapeAdvanceNum = 9
-//                    ),
-//                    Tile.get("4s") to ShantenWithoutGot(
-//                        shantenNum = 1,
-//                        advance = Tile.parseTiles("123456789s1z").toSet(),
-//                        advanceNum = 26,
-//                        wellShapeAdvance = Tile.parseTiles("1456789s1z").toSet(),
-//                        wellShapeAdvanceNum = 20
-//                    ),
-//                    Tile.get("5s") to ShantenWithoutGot(
-//                        shantenNum = 0,
-//                        advance = Tile.parseTiles("1z").toSet(),
-//                        advanceNum = 3,
-//                    ),
-//                    Tile.get("6s") to ShantenWithoutGot(
-//                        shantenNum = 1,
-//                        advance = Tile.parseTiles("123456789s1z").toSet(),
-//                        advanceNum = 26,
-//                        wellShapeAdvance = Tile.parseTiles("1234569s1z").toSet(),
-//                        wellShapeAdvanceNum = 20
-//                    ),
-//                    Tile.get("7s") to ShantenWithoutGot(
-//                        shantenNum = 1,
-//                        advance = Tile.parseTiles("123456789s1z").toSet(),
-//                        advanceNum = 26,
-//                        wellShapeAdvance = Tile.parseTiles("478s1z").toSet(),
-//                        wellShapeAdvanceNum = 12
-//                    ),
-//                    Tile.get("8s") to ShantenWithoutGot(
-//                        shantenNum = 0,
-//                        advance = Tile.parseTiles("1z").toSet(),
-//                        advanceNum = 3,
-//                    ),
-//                    Tile.get("9s") to ShantenWithoutGot(
-//                        shantenNum = 1,
-//                        advance = Tile.parseTiles("123456789s1z").toSet(),
-//                        advanceNum = 26,
-//                        wellShapeAdvance = Tile.parseTiles("146789s1z").toSet(),
-//                        wellShapeAdvanceNum = 17
-//                    ),
-//                    Tile.get("1z") to ShantenWithoutGot(
-//                        shantenNum = 0,
-//                        advance = Tile.parseTiles("123456789s").toSet(),
-//                        advanceNum = 23,
-//                    ),
-//                )
-//            )
-//        )
         tester(
-            "114514p1919810s8p", ShantenWithGot(
-                shantenNum = 2, discardToAdvance = mapOf(
+            "1112345678999s1z", ShantenWithGot(
+                shantenNum = 0, discardToAdvance = mapOf(
                     Tile.get("1s") to ShantenWithoutGot(
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),

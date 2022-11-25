@@ -1,6 +1,6 @@
 from mahjong_utils.hora import build_hora
 from mahjong_utils.models.furo import Furo
-from mahjong_utils.models.tile import tile, parse_tiles
+from mahjong_utils.models.tile import Tile, parse_tiles
 from mahjong_utils.models.wind import Wind
 from mahjong_utils.yaku.common import ittsu, chinitsu, ipe, tsumo, pinhu, honitsu, sananko, toitoi, self_wind, \
     round_wind, haku
@@ -9,7 +9,7 @@ from mahjong_utils.yaku.yakuman import churen, tsuiso, daisushi, suanko_tanki, s
 
 
 def test_build_hora():
-    hora = build_hora(parse_tiles("11123456778899p"), None, tile("4p"), True, dora=4, extra_yaku={richi})
+    hora = build_hora(parse_tiles("11123456778899p"), None, Tile.by_text("4p"), True, dora=4, extra_yaku={richi})
 
     assert hora.yaku == {richi, ittsu, chinitsu, ipe, tsumo, pinhu}
     assert hora.han == 16
@@ -19,7 +19,7 @@ def test_build_hora():
 
 
 def test_build_hora_2():
-    hora = build_hora(parse_tiles("11123456789999p"), None, tile("4p"), True, extra_yaku={richi})
+    hora = build_hora(parse_tiles("11123456789999p"), None, Tile.by_text("4p"), True, extra_yaku={richi})
 
     assert hora.yaku == {churen}
     assert hora.han == 13
@@ -28,7 +28,7 @@ def test_build_hora_2():
 
 
 def test_build_hora_3():
-    hora = build_hora(parse_tiles("1345556m111z2m"), [Furo.parse("789m")], tile("2m"), True)
+    hora = build_hora(parse_tiles("1345556m111z2m"), [Furo.parse("789m")], Tile.by_text("2m"), True)
 
     assert hora.yaku == {ittsu, honitsu}
     assert hora.han == 3
@@ -38,7 +38,7 @@ def test_build_hora_3():
 
 
 def test_build_hora_4():
-    hora = build_hora(parse_tiles("12323467m11z5m"), [Furo.parse("789p")], tile("5m"), True, dora=13)
+    hora = build_hora(parse_tiles("12323467m11z5m"), [Furo.parse("789p")], Tile.by_text("5m"), True, dora=13)
 
     assert len(hora.yaku) == 0
     assert hora.han == 0
@@ -48,7 +48,7 @@ def test_build_hora_4():
 
 
 def test_build_hora_5():
-    hora = build_hora(parse_tiles("11122233344455z"), None, tile("5z"), True, extra_yaku={tenhou})
+    hora = build_hora(parse_tiles("11122233344455z"), None, Tile.by_text("5z"), True, extra_yaku={tenhou})
 
     assert hora.yaku == {tsuiso, daisushi, suanko_tanki, tenhou}
     assert hora.han == 13 * 6
@@ -58,7 +58,8 @@ def test_build_hora_5():
 
 def test_build_hora_6():
     hora = build_hora(parse_tiles("66z"),
-                      [Furo.parse("3333s"), Furo.parse("2222s"), Furo.parse("0440s"), Furo.parse("8888s")], tile("6z"),
+                      [Furo.parse("3333s"), Furo.parse("2222s"), Furo.parse("0440s"), Furo.parse("8888s")],
+                      Tile.by_text("6z"),
                       True)
 
     assert hora.yaku == {lyuiso, sukantsu}
@@ -69,7 +70,8 @@ def test_build_hora_6():
 
 def test_build_hora_7():
     hora = build_hora(parse_tiles("66z"),
-                      [Furo.parse("0330s"), Furo.parse("0220s"), Furo.parse("0440s"), Furo.parse("0880s")], tile("6z"),
+                      [Furo.parse("0330s"), Furo.parse("0220s"), Furo.parse("0440s"), Furo.parse("0880s")],
+                      Tile.by_text("6z"),
                       True)
 
     assert hora.yaku == {lyuiso, sukantsu, suanko_tanki}
@@ -79,7 +81,7 @@ def test_build_hora_7():
 
 
 def test_build_hora_8():
-    hora = build_hora(parse_tiles("111333555z222s44p"), None, tile("2s"), False, dora=4,
+    hora = build_hora(parse_tiles("111333555z222s44p"), None, Tile.by_text("2s"), False, dora=4,
                       self_wind=Wind.west, round_wind=Wind.east,
                       extra_yaku={richi, ippatsu})
 
@@ -92,7 +94,8 @@ def test_build_hora_8():
 
 def test_build_hora_9():
     hora = build_hora(parse_tiles("55z"),
-                      [Furo.parse("0110z"), Furo.parse("0220z"), Furo.parse("0330z"), Furo.parse("0440z")], tile("5z"),
+                      [Furo.parse("0110z"), Furo.parse("0220z"), Furo.parse("0330z"), Furo.parse("0440z")],
+                      Tile.by_text("5z"),
                       True)
 
     assert hora.yaku == {suanko_tanki, sukantsu, daisushi, tsuiso}

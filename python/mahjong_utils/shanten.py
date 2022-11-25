@@ -29,8 +29,8 @@ class ShantenResult(BaseModel):
     def encode(self) -> dict:
         return dict(
             type=self.type.name,
-            hand=self.hand.encode(),
-            shantenInfo=self.shanten_info.encode(),
+            hand=self.hand.__encode__(),
+            shantenInfo=self.shanten_info.__encode__(),
             regular=regular.encode() if (regular := self.regular) is not None else None,
             chitoi=chitoi.encode() if (chitoi := self.chitoi) is not None else None,
             kokushi=kokushi.encode() if (kokushi := self.kokushi) is not None else None,
@@ -40,8 +40,8 @@ class ShantenResult(BaseModel):
     def decode(cls, data: dict) -> "ShantenResult":
         return ShantenResult(
             type=ShantenResultType[snakecase(data["type"])],
-            hand=Hand.decode(data["hand"]),
-            shanten_info=Shanten.decode(data["shantenInfo"]),
+            hand=Hand.__decode__(data["hand"]),
+            shanten_info=Shanten.__decode__(data["shantenInfo"]),
             regular=ShantenResult.decode(regular) if (regular := data["regular"]) is not None else None,
             chitoi=ShantenResult.decode(chitoi) if (chitoi := data["chitoi"]) is not None else None,
             kokushi=ShantenResult.decode(kokushi) if (kokushi := data["kokushi"]) is not None else None,
@@ -83,7 +83,7 @@ def regular_shanten(
 ) -> ShantenResult:
     result = libmahjongutils.call("regularShanten", {
         "tiles": [str(t) for t in tiles],
-        "furo": [Furo.encode(fr) for fr in furo] if furo is not None else [],
+        "furo": [Furo.__encode__(fr) for fr in furo] if furo is not None else [],
         "calcAdvanceNum": calc_advance_num
     })
 
@@ -121,7 +121,7 @@ def shanten(
 ) -> ShantenResult:
     result = libmahjongutils.call("shanten", {
         "tiles": [str(t) for t in tiles],
-        "furo": [Furo.encode(fr) for fr in furo] if furo is not None else [],
+        "furo": [Furo.__encode__(fr) for fr in furo] if furo is not None else [],
         "calcAdvanceNum": calc_advance_num
     })
 

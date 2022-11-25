@@ -5,7 +5,7 @@ from pydantic.main import BaseModel
 
 from mahjong_utils.models.furo import Furo, Kan
 from mahjong_utils.models.hand_pattern import HandPattern
-from mahjong_utils.models.tile import Tile, tile
+from mahjong_utils.models.tile import Tile
 
 
 class Hand(BaseModel):
@@ -20,17 +20,17 @@ class Hand(BaseModel):
                 return False
         return True
 
-    def encode(self) -> dict:
+    def __encode__(self) -> dict:
         return dict(
-            tiles=[str(t) for t in self.tiles],
-            furo=[fr.encode() for fr in self.furo],
-            patterns=[p.encode() for p in self.patterns]
+            tiles=[t.__encode__() for t in self.tiles],
+            furo=[fr.__encode__() for fr in self.furo],
+            patterns=[p.__encode__() for p in self.patterns]
         )
 
     @classmethod
-    def decode(cls, data: dict) -> "Hand":
+    def __decode__(cls, data: dict) -> "Hand":
         return Hand(
-            tiles=[tile(x) for x in data["tiles"]],
-            furo=[Furo.decode(x) for x in data["furo"]],
-            patterns=[HandPattern.decode(x) for x in data["patterns"]]
+            tiles=[Tile.__decode__(x) for x in data["tiles"]],
+            furo=[Furo.__decode__(x) for x in data["furo"]],
+            patterns=[HandPattern.__decode__(x) for x in data["patterns"]]
         )

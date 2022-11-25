@@ -1,5 +1,5 @@
 from io import StringIO
-from typing import Union, overload, List, Iterable, Optional, NamedTuple
+from typing import Union, List, Iterable, Optional, NamedTuple
 
 from mahjong_utils.internal.tile_type_mapping import tile_type_index_mapping, tile_type_reversed_index_mapping
 from mahjong_utils.models.tile_type import TileType
@@ -76,7 +76,7 @@ class Tile(NamedTuple):
     def __add__(self, other):
         pending_num = self.num + other
         if pending_num in self.tile_type.num_range:
-            return tile(self.tile_type, pending_num)
+            return self.by_type_and_num(self.tile_type, pending_num)
         else:
             raise ValueError("num out of range")
 
@@ -87,6 +87,53 @@ class Tile(NamedTuple):
             if self.tile_type != other.tile_type:
                 raise ValueError(f"tile_type of {self} and {other} are not the same")
             return self.num - other.num
+
+    @classmethod
+    def by_type_and_num(cls, tile_type: TileType, num: int) -> "Tile":
+        tile_type_index = tile_type_index_mapping[tile_type]
+
+        if 0 <= tile_type_index * 10 + num < len(tile_pool):
+            t = tile_pool[tile_type_index * 10 + num]
+            if t is not None:
+                return t
+
+        raise ValueError(f"invalid arguments: tile_type={tile_type}, num={num}")
+
+    @classmethod
+    def by_text(cls, text: str) -> "Tile":
+        if len(text) != 2:
+            raise ValueError(f"invalid arguments: text={text}")
+
+        if text[1].lower() == 'm':
+            tile_type = TileType.M
+        elif text[1].lower() == 's':
+            tile_type = TileType.S
+        elif text[1].lower() == 'p':
+            tile_type = TileType.P
+        elif text[1].lower() == 'z':
+            tile_type = TileType.Z
+        else:
+            raise ValueError(f"invalid arguments: text={text}")
+
+        try:
+            num = int(text[0])
+        except ValueError as e:
+            raise ValueError(f"invalid arguments: text={text}") from e
+
+        return cls.by_type_and_num(tile_type, num)
+
+    @classmethod
+    def by_code(cls, code: int) -> "Tile":
+        tile_type = tile_type_reversed_index_mapping[code // 10]
+        num = code % 10
+        return cls.by_type_and_num(tile_type, num)
+
+    def __encode__(self) -> str:
+        return str(self)
+
+    @classmethod
+    def __decode__(cls, data: str) -> "Tile":
+        return cls.by_text(data)
 
 
 tile_pool: List[Optional[Tile]] = []
@@ -101,88 +148,7 @@ tile_pool.append(None)
 for i in range(1, 8):
     tile_pool.append(Tile(TileType.Z, i))
 
-
-def _get_tile_by_text(text: str) -> Tile:
-    if len(text) != 2:
-        raise ValueError(f"invalid arguments: text={text}")
-
-    if text[1].lower() == 'm':
-        tile_type = TileType.M
-    elif text[1].lower() == 's':
-        tile_type = TileType.S
-    elif text[1].lower() == 'p':
-        tile_type = TileType.P
-    elif text[1].lower() == 'z':
-        tile_type = TileType.Z
-    else:
-        raise ValueError(f"invalid arguments: text={text}")
-
-    try:
-        num = int(text[0])
-    except ValueError as e:
-        raise ValueError(f"invalid arguments: text={text}") from e
-
-    return _get_tile_by_type_and_num(tile_type, num)
-
-
-def _get_tile_by_type_and_num(tile_type: TileType, num: int) -> Tile:
-    tile_type_index = tile_type_index_mapping[tile_type]
-
-    if 0 <= tile_type_index * 10 + num < len(tile_pool):
-        t = tile_pool[tile_type_index * 10 + num]
-        if t is not None:
-            return t
-
-    raise ValueError(f"invalid arguments: tile_type={tile_type}, num={num}")
-
-
-def _get_tile_by_code(code: int) -> Tile:
-    tile_type = tile_type_reversed_index_mapping[code // 10]
-    num = code % 10
-    return _get_tile_by_type_and_num(tile_type, num)
-
-
-@overload
-def tile(tile_type: TileType, num: int) -> Tile:
-    ...
-
-
-@overload
-def tile(text: str) -> Tile:
-    ...
-
-
-@overload
-def tile(code: int) -> Tile:
-    ...
-
-
-def tile(*args, **kwargs) -> Tile:
-    text: Optional[str] = kwargs.get("text", None)
-    code: Optional[int] = kwargs.get("code", None)
-    tile_type: Optional[TileType] = kwargs.get("tile_type", None)
-    num: Optional[int] = kwargs.get("num", None)
-
-    if len(args) == 1:
-        a = args[0]
-        if isinstance(a, str):
-            text = a
-        elif isinstance(a, int):
-            code = a
-    elif len(args) == 2:
-        a, b = args[0], args[1]
-        if isinstance(a, TileType) and isinstance(b, int):
-            tile_type = a
-            num = b
-
-    if text is not None:
-        return _get_tile_by_text(text)
-    elif code is not None:
-        return _get_tile_by_code(code)
-    elif tile_type is not None and num is not None:
-        return _get_tile_by_type_and_num(tile_type, num)
-
-    raise ValueError("invalid arguments")
+Tile._tile_pool = tile_pool
 
 
 def parse_tiles(text: str) -> List[Tile]:
@@ -192,7 +158,7 @@ def parse_tiles(text: str) -> List[Tile]:
         if c.upper() in ("M", "P", "S", "Z"):
             tile_type = TileType[c.upper()]
             for num in pending:
-                ans.append(tile(tile_type, num))
+                ans.append(Tile.by_type_and_num(tile_type, num))
             pending.clear()
         elif c.isdigit():
             pending.append(ord(c) - ord('0'))
@@ -275,5 +241,5 @@ def is_sangen(t: Tile) -> bool:
     return t.tile_type == TileType.Z and 5 <= t.num <= 7
 
 
-__all__ = ("Tile", "tile", "parse_tiles", "tiles_text", "all_yaochu",
+__all__ = ("Tile", "parse_tiles", "tiles_text", "all_yaochu",
            "is_m", "is_p", "is_s", "is_z", "is_wind", "is_sangen", "is_yaochu")

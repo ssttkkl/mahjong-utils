@@ -3,7 +3,7 @@ from typing import List, Sequence, Union, Iterable, TYPE_CHECKING
 
 from pydantic.dataclasses import dataclass
 
-from .tile import Tile, parse_tiles, tile
+from .tile import Tile, parse_tiles
 from .tile_type import TileType
 
 if TYPE_CHECKING:
@@ -26,15 +26,16 @@ class Mentsu(ABC):
     def after_discard(self, discard: Tile) -> "Tatsu":
         raise NotImplementedError()
 
-    def encode(self) -> dict:
-        return dict(type=str(type(self)), tile=str(self.tile))
+    def __encode__(self) -> dict:
+        return dict(type=str(type(self)), tile=self.tile.__encode__())
 
     @classmethod
-    def decode(cls, data: dict) -> "Mentsu":
+    def __decode__(cls, data: dict) -> "Mentsu":
+        t = Tile.__decode__(data["tile"])
         if data['type'] == 'Kotsu':
-            return Kotsu(tile(data['tile']))
+            return Kotsu(t)
         elif data['type'] == 'Shuntsu':
-            return Shuntsu(tile(data['tile']))
+            return Shuntsu(t)
         else:
             raise ValueError("invalid type: " + data['type'])
 
@@ -114,5 +115,4 @@ class Shuntsu(Mentsu):
         raise ValueError()
 
 
-
-__all__ = ("Mentsu", "Kotsu", "Shuntsu", )
+__all__ = ("Mentsu", "Kotsu", "Shuntsu",)

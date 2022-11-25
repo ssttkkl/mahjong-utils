@@ -1,10 +1,11 @@
 plugins {
     kotlin("multiplatform") version "1.7.21"
     kotlin("plugin.serialization") version "1.7.21"
+    id("maven-publish")
 }
 
 group = "me.ssttkkl"
-version = "0.2.0"
+version = "0.2.0.alpha1"
 
 repositories {
     mavenCentral()
@@ -57,4 +58,12 @@ kotlin {
 tasks.wrapper {
     gradleVersion = "7.4.2"
     distributionType = Wrapper.DistributionType.ALL
+}
+
+publishing {
+    repositories {
+        maven {
+            //...
+        }
+    }
 }
