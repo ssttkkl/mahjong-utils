@@ -32,15 +32,6 @@ kotlin {
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
-    nativeTarget.binaries {
-//        staticLib {
-//            baseName = if (isMingwX64) "libmahjongutils" else "mahjongutils"
-//        }
-        sharedLib {
-            baseName = if (isMingwX64) "libmahjongutils" else "mahjongutils"
-        }
-    }
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -50,11 +41,6 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test")) // This brings all the platform dependencies automatically
-            }
-        }
-        val nativeMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }
         }
     }
