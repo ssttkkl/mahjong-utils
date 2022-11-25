@@ -7,29 +7,76 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * 麻将牌的种类（万、筒、索、字）
+ */
 enum class TileType {
-    M, P, S, Z
+    /**
+     * 万
+     */
+    M,
+
+    /**
+     * 筒
+     */
+    P,
+
+    /**
+     * 索
+     */
+    S,
+
+    /**
+     * 字
+     */
+    Z
 }
 
+/**
+ * 麻将牌
+ */
 @Serializable(with = TileSerializer::class)
-data class Tile private constructor(val type: TileType, val num: Int) : Comparable<Tile> {
+data class Tile private constructor(
+    /**
+     * 种类
+     */
+    val type: TileType,
+    /**
+     * 数字
+     */
+    val num: Int
+) : Comparable<Tile> {
+    /**
+     * 编号
+     */
     val code: Int
         get() = type.ordinal * 10 + num
 
+    /**
+     * 真正数字。当num为0时（该牌为红宝牌），realName为5。其余情况下与num相等。
+     */
     val realNum: Int
         get() = if (type != TileType.Z && num == 0)
             5
         else
             num
 
+    /**
+     * 该牌数字加上指定数字后得到的牌
+     * @param step 加减数字
+     */
     fun advance(step: Int): Tile {
         return if (num == 0) {
-            decode(code + 5 + step)
+            get(code + 5 + step)
         } else {
-            decode(code + step)
+            get(code + step)
         }
     }
 
+    /**
+     * 计算这张牌与另一张牌的数字之差
+     * @param that 另一张牌
+     */
     fun distance(that: Tile): Int {
         val this_ = if (this.num == 0) Tile(type, 5) else this
         val that_ = if (that.num == 0) Tile(that.type, 5) else that
@@ -64,6 +111,9 @@ data class Tile private constructor(val type: TileType, val num: Int) : Comparab
     }
 
     companion object {
+        /**
+         * 牌编号最大值
+         */
         const val MAX_TILE_CODE = 3 * 10 + 7
 
         private val pool = buildList<Tile?> {
@@ -82,6 +132,9 @@ data class Tile private constructor(val type: TileType, val num: Int) : Comparab
             }
         }.toTypedArray()
 
+        /**
+         * 根据编号获取牌
+         */
         fun get(code: Int): Tile {
             if (code !in pool.indices || code == 30) {
                 throw IllegalArgumentException("invalid code: $code")
@@ -89,10 +142,16 @@ data class Tile private constructor(val type: TileType, val num: Int) : Comparab
             return pool[code]!!
         }
 
+        /**
+         * 根据种类和数字获取牌
+         */
         fun get(type: TileType, num: Int): Tile {
             return get(type.ordinal * 10 + num)
         }
 
+        /**
+         * 根据文本获取牌
+         */
         fun get(text: String): Tile {
             if (text.length != 2) {
                 throw IllegalArgumentException("invalid text: $text")
@@ -111,6 +170,11 @@ data class Tile private constructor(val type: TileType, val num: Int) : Comparab
             return get(type, num)
         }
 
+        /**
+         * 将给定的牌文本转换为牌序列
+         * @param text 牌的文本
+         * @return 牌的序列
+         */
         fun parseTiles(text: String): List<Tile> {
             val typeNames = TileType.values().map { it.name }
             return buildList {
@@ -133,18 +197,14 @@ data class Tile private constructor(val type: TileType, val num: Int) : Comparab
             }
         }
 
-        fun decode(code: Int): Tile {
-            if (code < 0 || code > MAX_TILE_CODE) {
-                error("invalid code")
-            }
-
-            val type = TileType.values()[code / 10];
-            val num = code % 10;
-            return get(type, num)
-        }
-
+        /**
+         * 所有牌
+         */
         val all = pool.filterNotNull().toSet()
 
+        /**
+         * 所有幺九牌
+         */
         val allYaochu = buildSet<Tile> {
             for (type in listOf(TileType.M, TileType.P, TileType.S)) {
                 add(get(type, 1))
@@ -158,6 +218,11 @@ data class Tile private constructor(val type: TileType, val num: Int) : Comparab
     }
 }
 
+/**
+ * 将牌序列转换为牌文本
+ * @param lowercase 牌种类字母是否使用小写字母
+ * @return 牌的文本
+ */
 fun Iterable<Tile>.toTilesString(lowercase: Boolean = true): String {
     return buildString {
         var prev: Tile? = null
@@ -184,7 +249,7 @@ fun Iterable<Tile>.toTilesString(lowercase: Boolean = true): String {
     }
 }
 
-class TileSerializer : KSerializer<Tile> {
+private class TileSerializer : KSerializer<Tile> {
     override val descriptor = PrimitiveSerialDescriptor("Tile", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Tile) {
@@ -197,9 +262,17 @@ class TileSerializer : KSerializer<Tile> {
     }
 }
 
-
+/**
+ * 是否为幺九牌
+ */
 val Tile.isYaochu: Boolean get() = this in Tile.allYaochu
 
+/**
+ * 是否为三元牌
+ */
 val Tile.isSangen: Boolean get() = type == TileType.Z && num in 5..7
 
+/**
+ * 是否为风牌
+ */
 val Tile.isWind: Boolean get() = type == TileType.Z && num in 1..4

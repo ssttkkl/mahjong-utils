@@ -11,38 +11,88 @@ import mahjongutils.models.*
 import mahjongutils.models.hand.*
 import kotlin.math.min
 
-
+/**
+ * 向听信息
+ */
 @Serializable
 sealed interface Shanten {
+    /**
+     * 向听数
+     */
     val shantenNum: Int
 }
 
+/**
+ * 未摸牌的手牌的向听信息
+ */
 @Serializable
 @SerialName("ShantenWithoutGot")
 data class ShantenWithoutGot(
     override val shantenNum: Int,
+    /**
+     * 进张
+     */
     val advance: Set<Tile>,
+    /**
+     * 进张数
+     */
     @EncodeDefault val advanceNum: Int? = null,
+    /**
+     * 好型进张
+     */
     @EncodeDefault val wellShapeAdvance: Set<Tile>? = null,
+    /**
+     * 好型进张数
+     */
     @EncodeDefault val wellShapeAdvanceNum: Int? = null
 ) : Shanten
 
+/**
+ * 摸牌的手牌的向听信息
+ */
 @Serializable
 @SerialName("ShantenWithGot")
 data class ShantenWithGot(
     override val shantenNum: Int,
+    /**
+     * 每种弃牌后的向听信息
+     */
     val discardToAdvance: Map<Tile, ShantenWithoutGot>
 ) : Shanten
 
+/**
+ * 向听分析结果
+ */
 @Serializable
 data class ShantenResult internal constructor(
+    /**
+     * 向听分析种类
+     */
     val type: Type,
+    /**
+     * 手牌
+     */
     val hand: Hand,
+    /**
+     * 向听信息
+     */
     val shantenInfo: Shanten,
+    /**
+     * 标准形向听分析结果（仅在type为Union时有值）
+     */
     @EncodeDefault val regular: ShantenResult? = null,
+    /**
+     * 标准形向听分析结果（仅在type为Union且手牌无副露时时有值）
+     */
     @EncodeDefault val chitoi: ShantenResult? = null,
+    /**
+     * 标准形向听分析结果（仅在type为Union且手牌无副露时有值）
+     */
     @EncodeDefault val kokushi: ShantenResult? = null,
 ) {
+    /**
+     * 向听分析种类
+     */
     enum class Type {
         Union, Regular, Chitoi, Kokushi
     }
@@ -182,6 +232,13 @@ private fun handleRegularShantenWithGot(
 }
 
 
+/**
+ * 标准形向听分析
+ * @param tiles 门前的牌
+ * @param furo 副露
+ * @param calcAdvanceNum 是否计算进张数
+ * @return 向听分析结果
+ */
 fun regularShanten(tiles: List<Tile>, furo: List<Furo> = listOf(), calcAdvanceNum: Boolean = true): ShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
@@ -205,7 +262,7 @@ fun regularShanten(tiles: List<Tile>, furo: List<Furo> = listOf(), calcAdvanceNu
 }
 
 // ========== 七对子 ==========
-fun buildChitoiPattern(tiles: List<Tile>): ChitoiHandPattern {
+private fun buildChitoiPattern(tiles: List<Tile>): ChitoiHandPattern {
     val cnt = buildMap<Tile, Int> {
         tiles.forEach {
             if (it !in this) {
@@ -232,7 +289,7 @@ fun buildChitoiPattern(tiles: List<Tile>): ChitoiHandPattern {
     return ChitoiHandPattern(pairs.toSet(), remaining)
 }
 
-fun handleChitoiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithoutGot, ChitoiHandPattern> {
+private fun handleChitoiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithoutGot, ChitoiHandPattern> {
     val pattern = buildChitoiPattern(tiles)
     val shantenNum = pattern.calcShanten()
     val advance = pattern.remaining - pattern.pairs
@@ -245,7 +302,7 @@ fun handleChitoiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithoutGot, Ch
     return Pair(shantenInfo, pattern)
 }
 
-fun handleChitoiShantenWithGot(tiles: List<Tile>): Pair<ShantenWithGot, ChitoiHandPattern> {
+private fun handleChitoiShantenWithGot(tiles: List<Tile>): Pair<ShantenWithGot, ChitoiHandPattern> {
     val pattern = buildChitoiPattern(tiles)
     val shantenNum = pattern.calcShanten()
     val discardToAdvance = buildMap {
@@ -267,6 +324,12 @@ fun handleChitoiShantenWithGot(tiles: List<Tile>): Pair<ShantenWithGot, ChitoiHa
 }
 
 
+/**
+ * 七对子向听分析
+ * @param tiles 门前的牌
+ * @param calcAdvanceNum 是否计算进张数
+ * @return 向听分析结果
+ */
 fun chitoiShanten(tiles: List<Tile>, calcAdvanceNum: Boolean = true): ShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
@@ -285,7 +348,7 @@ fun chitoiShanten(tiles: List<Tile>, calcAdvanceNum: Boolean = true): ShantenRes
 }
 
 // ========== 国士无双 ==========
-fun buildKokushiPattern(tiles: List<Tile>): Collection<KokushiHandPattern> {
+private fun buildKokushiPattern(tiles: List<Tile>): Collection<KokushiHandPattern> {
     val yaochu = HashSet<Tile>()
     val repeated = HashSet<Tile>()
     val remaining = ArrayList<Tile>()
@@ -321,7 +384,7 @@ fun buildKokushiPattern(tiles: List<Tile>): Collection<KokushiHandPattern> {
     }
 }
 
-fun handleKokushiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithoutGot, Collection<KokushiHandPattern>> {
+private fun handleKokushiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithoutGot, Collection<KokushiHandPattern>> {
     val patterns = buildKokushiPattern(tiles)
     val (shantenNum, bestPatterns) = selectBestPatterns(patterns, KokushiHandPattern::calcShanten)
 
@@ -341,7 +404,7 @@ fun handleKokushiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithoutGot, C
     }
 }
 
-fun handleKokushiShantenWithGot(tiles: List<Tile>): Pair<ShantenWithGot, Collection<KokushiHandPattern>> {
+private fun handleKokushiShantenWithGot(tiles: List<Tile>): Pair<ShantenWithGot, Collection<KokushiHandPattern>> {
     val patterns = buildKokushiPattern(tiles)
     val (shantenNum, bestPatterns) = selectBestPatterns(patterns, KokushiHandPattern::calcShanten)
     val discardToAdvance = buildMap {
@@ -362,6 +425,13 @@ fun handleKokushiShantenWithGot(tiles: List<Tile>): Pair<ShantenWithGot, Collect
     return Pair(shantenInfo, bestPatterns)
 }
 
+
+/**
+ * 国士无双向听分析
+ * @param tiles 门前的牌
+ * @param calcAdvanceNum 是否计算进张数
+ * @return 向听分析结果
+ */
 fun kokushiShanten(tiles: List<Tile>, calcAdvanceNum: Boolean = true): ShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
@@ -380,7 +450,7 @@ fun kokushiShanten(tiles: List<Tile>, calcAdvanceNum: Boolean = true): ShantenRe
 }
 
 // ========== Union ==========
-fun mergeIntoWithoutGot(
+private fun mergeIntoWithoutGot(
     targetShantenNum: Int,
     advance: MutableSet<Tile>,
     wellShapeAdvance: MutableSet<Tile>,
@@ -397,7 +467,7 @@ fun mergeIntoWithoutGot(
     }
 }
 
-fun mergeIntoWithGot(
+private fun mergeIntoWithGot(
     targetShantenNum: Int,
     discardToAdvance: MutableMap<Tile, ShantenWithoutGot>,
     patterns: MutableCollection<HandPattern>,
@@ -423,6 +493,13 @@ fun mergeIntoWithGot(
     }
 }
 
+/**
+ * 向听分析
+ * @param tiles 门前的牌
+ * @param furo 副露
+ * @param calcAdvanceNum 是否计算进张数
+ * @return 向听分析结果
+ */
 fun shanten(tiles: List<Tile>, furo: List<Furo> = emptyList(), calcAdvanceNum: Boolean = true): ShantenResult {
     val tiles = ensureLegalTiles(tiles)
 

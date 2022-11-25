@@ -10,9 +10,22 @@ import mahjongutils.common.afterDiscard
 import mahjongutils.hora.HoraInfo
 import mahjongutils.models.*
 
+/**
+ * 和牌手牌
+ */
 @Serializable
 sealed interface HoraHandPattern : HoraInfo, HandPattern {
     companion object {
+        /**
+         * 构建和牌手牌
+         *
+         * @param pattern 手牌形
+         * @param agari 和牌张
+         * @param tsumo 是否自摸
+         * @param selfWind 自风
+         * @param roundWind 场风
+         * @return 所有可能的和牌手牌
+         */
         fun build(
             pattern: HandPattern,
             agari: Tile,
@@ -21,22 +34,31 @@ sealed interface HoraHandPattern : HoraInfo, HandPattern {
             roundWind: Wind? = null
         ): Collection<HoraHandPattern> = when (pattern) {
             is RegularHandPattern -> RegularHoraHandPattern.build(pattern, agari, tsumo, selfWind, roundWind)
-            is ChitoiHandPattern -> listOf(ChitoiHoraHandPattern.build(pattern, agari, tsumo, selfWind, roundWind))
-            is KokushiHandPattern -> listOf(KokushiHoraHandPattern.build(pattern, agari, tsumo, selfWind, roundWind))
+            is ChitoiHandPattern -> listOf(ChitoiHoraHandPattern(pattern, agari, tsumo, selfWind, roundWind))
+            is KokushiHandPattern -> listOf(KokushiHoraHandPattern(pattern, agari, tsumo, selfWind, roundWind))
             is HoraHandPattern -> listOf(pattern)
         }
     }
 }
 
+/**
+ * 标准形的和牌手牌
+ */
 @Serializable
 @SerialName("RegularHoraHandPattern")
 data class RegularHoraHandPattern(
+    /**
+     * 标准形手牌
+     */
+    val pattern: RegularHandPattern,
     override val agari: Tile,
     override val tsumo: Boolean,
     @EncodeDefault override val selfWind: Wind? = null,
     @EncodeDefault override val roundWind: Wind? = null,
+    /**
+     * 和牌搭子（为空表示单骑和牌）
+     */
     val agariTatsu: Tatsu?,
-    val pattern: RegularHandPattern,
 ) : HoraHandPattern, IRegularHandPattern by pattern {
     init {
         require(k == 4)
@@ -130,11 +152,11 @@ data class RegularHoraHandPattern(
 
     companion object {
         private fun buildWithoutGot(
-            pattern: RegularHandPattern,
             agari: Tile,
             tsumo: Boolean,
             selfWind: Wind? = null,
-            roundWind: Wind? = null
+            roundWind: Wind? = null,
+            pattern: RegularHandPattern,
         ): RegularHoraHandPattern {
             if (pattern.jyantou != null) {
                 return RegularHoraHandPattern(
@@ -162,6 +184,16 @@ data class RegularHoraHandPattern(
             }
         }
 
+        /**
+         * 构建标准形和牌手牌
+         *
+         * @param pattern 手牌形
+         * @param agari 和牌张
+         * @param tsumo 是否自摸
+         * @param selfWind 自风
+         * @param roundWind 场风
+         * @return 所有可能的和牌手牌
+         */
         fun build(
             pattern: RegularHandPattern,
             agari: Tile,
@@ -170,20 +202,26 @@ data class RegularHoraHandPattern(
             roundWind: Wind? = null
         ): Collection<RegularHoraHandPattern> {
             return pattern.afterDiscard(agari).map {
-                buildWithoutGot(it, agari, tsumo, selfWind, roundWind)
+                buildWithoutGot(agari, tsumo, selfWind, roundWind, it)
             }
         }
     }
 }
 
+/**
+ * 七对子的和牌手牌
+ */
 @Serializable
 @SerialName("ChitoiHoraHandPattern")
 data class ChitoiHoraHandPattern(
+    /**
+     * 手牌形
+     */
+    val pattern: ChitoiHandPattern,
     override val agari: Tile,
     override val tsumo: Boolean,
     @EncodeDefault override val selfWind: Wind?,
     @EncodeDefault override val roundWind: Wind?,
-    val pattern: ChitoiHandPattern,
 ) : HoraHandPattern, IChitoiHandPattern by pattern {
     init {
         require(pattern.remaining.isEmpty())
@@ -191,32 +229,22 @@ data class ChitoiHoraHandPattern(
 
     override val hu: Int
         get() = 25
-
-    companion object {
-        fun build(
-            pattern: ChitoiHandPattern,
-            agari: Tile,
-            tsumo: Boolean,
-            selfWind: Wind? = null,
-            roundWind: Wind? = null
-        ) = ChitoiHoraHandPattern(
-            agari = agari,
-            tsumo = tsumo,
-            selfWind = selfWind,
-            roundWind = roundWind,
-            pattern = pattern
-        )
-    }
 }
 
+/**
+ * 国士无双的和牌手牌
+ */
 @Serializable
 @SerialName("KokushiHoraHandPattern")
 data class KokushiHoraHandPattern(
+    /**
+     * 手牌形
+     */
+    val pattern: KokushiHandPattern,
     override val agari: Tile,
     override val tsumo: Boolean,
     @EncodeDefault override val selfWind: Wind?,
     @EncodeDefault override val roundWind: Wind?,
-    val pattern: KokushiHandPattern,
 ) : HoraHandPattern, IKokushiHandPattern by pattern {
     init {
         require(pattern.repeated != null)
@@ -229,22 +257,9 @@ data class KokushiHoraHandPattern(
     override val repeated: Tile
         get() = pattern.repeated!!
 
+    /**
+     * 是否十三面和牌
+     */
     val thirteenWaiting: Boolean
         get() = pattern.repeated == agari
-
-    companion object {
-        fun build(
-            pattern: KokushiHandPattern,
-            agari: Tile,
-            tsumo: Boolean,
-            selfWind: Wind? = null,
-            roundWind: Wind? = null
-        ) = KokushiHoraHandPattern(
-            agari = agari,
-            tsumo = tsumo,
-            selfWind = selfWind,
-            roundWind = roundWind,
-            pattern = pattern
-        )
-    }
 }

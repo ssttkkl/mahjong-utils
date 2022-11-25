@@ -17,39 +17,58 @@ import mahjongutils.shanten.ShantenResult
 import mahjongutils.shanten.ShantenWithGot
 import mahjongutils.shanten.shanten
 import mahjongutils.yaku.Yaku
-import mahjongutils.yaku.allCommonYaku
-import mahjongutils.yaku.allYakuman
+import mahjongutils.yaku.Yakus
 
-
+/**
+ * 和牌分析结果
+ */
 @Serializable
 data class Hora internal constructor(
+    /**
+     * 和牌形
+     */
     val pattern: HoraHandPattern,
+    /**
+     * 宝牌数目
+     */
     val dora: Int,
+    /**
+     * 额外役种
+     */
     val extraYaku: Set<Yaku>,
 ) : HoraInfo by pattern {
+    /**
+     * 役种
+     */
     @EncodeDefault
     val yaku: Set<Yaku> = buildSet {
         if (pattern.menzen) {
-            addAll(allYakuman.values.filter { it.check(pattern) })
+            addAll(Yakus.allYakuman.filter { it.check(pattern) })
         } else {
-            addAll(allYakuman.values.filter { !it.menzenOnly && it.check(pattern) })
+            addAll(Yakus.allYakuman.filter { !it.menzenOnly && it.check(pattern) })
         }
         addAll(extraYaku.filter { it.isYakuman })
 
         if (isEmpty()) {
             // 非役满情况才判断其他役种
             if (pattern.menzen) {
-                addAll(allCommonYaku.values.filter { it.check(pattern) })
+                addAll(Yakus.allCommonYaku.filter { it.check(pattern) })
             } else {
-                addAll(allCommonYaku.values.filter { !it.menzenOnly && it.check(pattern) })
+                addAll(Yakus.allCommonYaku.filter { !it.menzenOnly && it.check(pattern) })
             }
             addAll(extraYaku.filter { !it.isYakuman })
         }
     }
 
+    /**
+     * 是否含役满役种
+     */
     @EncodeDefault
     val hasYakuman: Boolean = yaku.any { it.isYakuman }
 
+    /**
+     * 番
+     */
     @EncodeDefault
     val han: Int = run {
         var ans = if (pattern.menzen) {
@@ -65,6 +84,9 @@ data class Hora internal constructor(
         ans
     }
 
+    /**
+     * 亲家（庄家）和牌点数
+     */
     val parentPoint: ParentPoint
         get() = if (han == 0) {
             ParentPoint(0, 0)
@@ -76,6 +98,9 @@ data class Hora internal constructor(
             getParentPointByHanHu(han, hu)
         }
 
+    /**
+     * 子家（闲家）和牌点数
+     */
     val childPoint: ChildPoint
         get() = if (han == 0) {
             ChildPoint(0, 0, 0)
@@ -88,6 +113,19 @@ data class Hora internal constructor(
         }
 }
 
+/**
+ * 和牌分析
+ *
+ * @param tiles 门前的牌
+ * @param furo 副露
+ * @param agari 和牌张
+ * @param tsumo 是否自摸
+ * @param dora 宝牌数目
+ * @param selfWind 自风
+ * @param roundWind 场风
+ * @param extraYaku 额外役种
+ * @return 和牌分析结果
+ */
 fun hora(
     tiles: List<Tile>, furo: List<Furo> = emptyList(), agari: Tile, tsumo: Boolean,
     dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
@@ -102,6 +140,18 @@ fun hora(
 
 }
 
+/**
+ * 和牌分析
+ *
+ * @param shantenResult 向听分析结果
+ * @param agari 和牌张
+ * @param tsumo 是否自摸
+ * @param dora 宝牌数目
+ * @param selfWind 自风
+ * @param roundWind 场风
+ * @param extraYaku 额外役种
+ * @return 和牌分析结果
+ */
 fun hora(
     shantenResult: ShantenResult, agari: Tile, tsumo: Boolean,
     dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()

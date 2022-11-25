@@ -22,16 +22,37 @@ private val noTsumo = setOf(
     Pair(2, 25)
 )
 
+/**
+ * 亲家（庄家）和牌点数
+ */
 @Serializable
 data class ParentPoint(
+    /**
+     * 荣和点数
+     */
     val ron: Int,
+    /**
+     * 自摸各家点数
+     */
     val tsumo: Int
 )
 
+/**
+ * 子家（闲家）和牌点数
+ */
 @Serializable
 data class ChildPoint(
+    /**
+     * 荣和点数
+     */
     val ron: Int,
+    /**
+     * 自摸亲家（庄家）点数
+     */
     val tsumoParent: Int,
+    /**
+     * 自摸子家（闲家）点数
+     */
     val tsumoChild: Int
 )
 
@@ -123,12 +144,26 @@ private val childPointMapping = buildMap {
     this[13 to 20] = ChildPoint(32000, 16000, 8000)
 }
 
+/**
+ * 获取亲家（庄家）和牌点数
+ *
+ * @param han 番数
+ * @param hu 符数
+ * @return 亲家（庄家）和牌点数
+ */
 fun getParentPointByHanHu(han: Int, hu: Int): ParentPoint {
     val han_ = if (han > 13) 13 else han
     val hu_ = if (han >= 5) 20 else hu
     return parentPointMapping[han_ to hu_] ?: throw IllegalArgumentException("invalid arguments: han=${han}, hu=${hu}")
 }
 
+/**
+ * 获取子家（闲家）和牌点数
+ *
+ * @param han 番数
+ * @param hu 符数
+ * @return 子家（闲家）和牌点数
+ */
 fun getChildPointByHanHu(han: Int, hu: Int): ChildPoint {
     val han_ = if (han > 13) 13 else han
     val hu_ = if (han >= 5) 20 else hu

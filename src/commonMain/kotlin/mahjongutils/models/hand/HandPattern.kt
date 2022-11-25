@@ -4,17 +4,41 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import mahjongutils.models.*
 
+/**
+ * 手牌形
+ */
 @Serializable
 sealed interface HandPattern : IHasFuro {
+    /**
+     * 手牌（包括门前与副露）
+     */
     val tiles: Collection<Tile>
+    /**
+     * 浮牌
+     */
+    val remaining: Collection<Tile>
 }
 
+/**
+ * 以标准形为目标的手牌
+ */
 sealed interface IRegularHandPattern : HandPattern {
+    /**
+     * 目标面子组数（=手牌数/4）
+     */
     val k: Int
+    /**
+     * 雀头
+     */
     val jyantou: Tile?
+    /**
+     * 门前面子
+     */
     val menzenMentsu: List<Mentsu>
+    /**
+     * 搭子
+     */
     val tatsu: List<Tatsu>
-    val remaining: List<Tile>
 
     override val tiles: Collection<Tile>
         get() = buildList {
@@ -35,14 +59,23 @@ sealed interface IRegularHandPattern : HandPattern {
             addAll(remaining)
         }
 
+    /**
+     * 面子（包括门前与副露）
+     */
     val mentsu: Collection<Mentsu>
         get() = menzenMentsu + furo.map { it.asMentsu() }
 
+    /**
+     * 暗刻
+     */
     val anko: Collection<Kotsu>
         get() = menzenMentsu.filterIsInstance<Kotsu>() +
                 furo.filterIsInstance<Kan>().filter { it.ankan }.map { it.asMentsu() }
 }
 
+/**
+ * 以标准形为目标的手牌
+ */
 @Serializable
 @SerialName("RegularHandPattern")
 data class RegularHandPattern(
@@ -54,9 +87,14 @@ data class RegularHandPattern(
     override val remaining: List<Tile>,
 ) : IRegularHandPattern
 
+/**
+ * 以七对子为目标的手牌
+ */
 sealed interface IChitoiHandPattern : HandPattern {
+    /**
+     * 已有对子
+     */
     val pairs: Set<Tile>
-    val remaining: List<Tile>
 
     override val furo: List<Furo>
         get() = emptyList()
@@ -69,6 +107,9 @@ sealed interface IChitoiHandPattern : HandPattern {
         }
 }
 
+/**
+ * 以七对子为目标的手牌
+ */
 @Serializable
 @SerialName("ChitoiHandPattern")
 data class ChitoiHandPattern(
@@ -76,10 +117,19 @@ data class ChitoiHandPattern(
     override val remaining: List<Tile>
 ) : IChitoiHandPattern
 
+/**
+ * 以国士无双为目标的手牌
+ */
 sealed interface IKokushiHandPattern : HandPattern {
+    /**
+     * 幺九牌
+     */
     val yaochu: Set<Tile>
+
+    /**
+     * 重复的幺九牌
+     */
     val repeated: Tile?
-    val remaining: List<Tile>
 
     override val furo: List<Furo>
         get() = emptyList()
@@ -92,6 +142,9 @@ sealed interface IKokushiHandPattern : HandPattern {
         }
 }
 
+/**
+ * 以国士无双为目标的手牌
+ */
 @Serializable
 @SerialName("KokushiHandPattern")
 data class KokushiHandPattern(

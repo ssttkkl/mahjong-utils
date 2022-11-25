@@ -3,14 +3,38 @@ package mahjongutils.models
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * 搭子
+ */
 @Serializable
 sealed interface Tatsu {
+    /**
+     * 第一张牌
+     */
     val first: Tile
+
+    /**
+     * 第二张牌
+     */
     val second: Tile
+
+    /**
+     * 进张
+     */
     val waiting: Set<Tile>
+
+    /**
+     * 进张后形成的面子
+     */
     fun withWaiting(tile: Tile): Mentsu
 
     companion object {
+        /**
+         * 根据给定牌构造搭子
+         * @param first 第一张牌
+         * @param second 第二张牌
+         * @return 搭子
+         */
         operator fun invoke(first: Tile, second: Tile): Tatsu {
             if (first > second)
                 return invoke(second, first)
@@ -44,6 +68,9 @@ sealed interface Tatsu {
     }
 }
 
+/**
+ * 两面
+ */
 @Serializable
 @SerialName("Ryanmen")
 data class Ryanmen(override val first: Tile) : Tatsu {
@@ -72,6 +99,9 @@ data class Ryanmen(override val first: Tile) : Tatsu {
     }
 }
 
+/**
+ * 坎张
+ */
 @Serializable
 @SerialName("Kanchan")
 data class Kanchan(override val first: Tile) : Tatsu {
@@ -98,6 +128,9 @@ data class Kanchan(override val first: Tile) : Tatsu {
     }
 }
 
+/**
+ * 边张
+ */
 @Serializable
 @SerialName("Penchan")
 data class Penchan(override val first: Tile) : Tatsu {
@@ -129,6 +162,9 @@ data class Penchan(override val first: Tile) : Tatsu {
     }
 }
 
+/**
+ * 对子
+ */
 @Serializable
 @SerialName("Toitsu")
 data class Toitsu(override val first: Tile) : Tatsu {

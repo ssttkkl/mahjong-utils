@@ -3,12 +3,27 @@ package mahjongutils.models
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * 面子
+ */
 @Serializable
 sealed interface Mentsu {
+    /**
+     * 所含的牌
+     */
     val tiles: Iterable<Tile>
+
+    /**
+     * 舍牌后形成的搭子
+     */
     fun afterDiscard(discard: Tile): Tatsu
 
     companion object {
+        /**
+         * 根据给定牌构造面子
+         * @param tiles 牌
+         * @return 面子
+         */
         operator fun invoke(tiles: List<Tile>): Mentsu {
             if (tiles.size == 3) {
                 if (tiles[0] == tiles[1] && tiles[1] == tiles[2]) {
@@ -30,15 +45,28 @@ sealed interface Mentsu {
             throw IllegalArgumentException("invalid tiles: ${tiles.toTilesString()}")
         }
 
+        /**
+         * 根据给定牌构造面子
+         * @param text 牌的文本
+         * @return 面子
+         */
         operator fun invoke(text: String): Mentsu {
             return invoke(Tile.parseTiles(text))
         }
     }
 }
 
+/**
+ * 刻子
+ */
 @Serializable
 @SerialName("Kotsu")
-data class Kotsu(val tile: Tile) : Mentsu {
+data class Kotsu(
+    /**
+     * 顺子的第一张牌（如789m，tile应为7m）
+     */
+    val tile: Tile
+) : Mentsu {
     override val tiles: Iterable<Tile>
         get() = listOf(tile, tile, tile)
 
@@ -54,9 +82,17 @@ data class Kotsu(val tile: Tile) : Mentsu {
     }
 }
 
+/**
+ * 顺子
+ */
 @Serializable
 @SerialName("Shuntsu")
-data class Shuntsu(val tile: Tile) : Mentsu {
+data class Shuntsu(
+    /**
+     * 刻子的牌（如777s，tile应为7s）
+     */
+    val tile: Tile
+) : Mentsu {
     init {
         require(tile.num in 1..7)
         require(tile.type != TileType.Z)
