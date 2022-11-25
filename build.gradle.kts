@@ -17,7 +17,11 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js()
+    js {
+        // To build distributions for and run tests on browser or Node.js use one or both of:
+        browser()
+        nodejs()
+    }
 
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
