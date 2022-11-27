@@ -138,8 +138,8 @@ dmypy.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
-/.idea/
-/.gradle/
+.idea/
+.gradle/
 
 local.properties
 secret_ring.gpg
