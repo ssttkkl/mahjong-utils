@@ -154,7 +154,7 @@ data class Tile private constructor(
          */
         fun get(text: String): Tile {
             if (text.length != 2) {
-                throw IllegalArgumentException("invalid text: $text")
+                throw IllegalArgumentException("invalid tile text: $text")
             }
 
             val type = when (text[1].lowercaseChar()) {
@@ -162,10 +162,10 @@ data class Tile private constructor(
                 'p' -> TileType.P
                 's' -> TileType.S
                 'z' -> TileType.Z
-                else -> throw IllegalArgumentException("invalid text: $text")
+                else -> throw IllegalArgumentException("invalid tile text: $text")
             }
 
-            val num = text[0].digitToIntOrNull() ?: throw IllegalArgumentException("invalid text: $text")
+            val num = text[0].digitToIntOrNull() ?: throw IllegalArgumentException("invalid tile text: $text")
 
             return get(type, num)
         }

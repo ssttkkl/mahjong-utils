@@ -18,6 +18,8 @@ import mahjongutils.yaku.Yaku
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+private val json = Json { ignoreUnknownKeys = true }
+
 @Serializable
 data class Result<T : Any>(
     @EncodeDefault val data: T?,
@@ -40,20 +42,20 @@ class Entry private constructor(private val router: Map<String, Method<*, *>>) {
         @Suppress("UNCHECKED_CAST")
         fun call(rawParams: String): String {
             return try {
-                val params = Json.decodeFromString(serializer(paramsType), rawParams) as P
+                val params = json.decodeFromString(serializer(paramsType), rawParams) as P
                 val data = handle(params)
                 val result = Result(data)
-                Json.encodeToString(serializer(resultType), result)
+                json.encodeToString(serializer(resultType), result)
             } catch (e: SerializationException) {
                 val result = Result<Unit>(data = null, code = 400, msg = e.message ?: "")
-                Json.encodeToString(result)
+                json.encodeToString(result)
             } catch (e: IllegalArgumentException) {
                 val result = Result<Unit>(data = null, code = 400, msg = e.message ?: "")
-                Json.encodeToString(result)
+                json.encodeToString(result)
             } catch (e: Exception) {
                 e.printStackTrace()
                 val result = Result<Unit>(data = null, code = 500, msg = e.message ?: "")
-                Json.encodeToString(result)
+                json.encodeToString(result)
             }
         }
     }
@@ -76,7 +78,7 @@ class Entry private constructor(private val router: Map<String, Method<*, *>>) {
             method.call(rawParams)
         } else {
             val result = Result<Unit>(data = null, code = 404, msg = "method \"$name\" not found")
-            Json.encodeToString(result)
+            json.encodeToString(result)
         }
     }
 }
