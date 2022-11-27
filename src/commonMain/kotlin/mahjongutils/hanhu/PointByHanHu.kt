@@ -153,7 +153,14 @@ private val childPointMapping = buildMap {
  */
 fun getParentPointByHanHu(han: Int, hu: Int): ParentPoint {
     val han_ = if (han > 13) 13 else han
-    val hu_ = if (han >= 5) 20 else hu
+    val hu_ = if (han >= 5) {
+        if (hu !in 20..110 step 10 && hu != 25) {
+            throw IllegalArgumentException("invalid arguments: han=${han}, hu=${hu}")
+        }
+        20
+    } else {
+        hu
+    }
     return parentPointMapping[han_ to hu_] ?: throw IllegalArgumentException("invalid arguments: han=${han}, hu=${hu}")
 }
 
@@ -166,6 +173,13 @@ fun getParentPointByHanHu(han: Int, hu: Int): ParentPoint {
  */
 fun getChildPointByHanHu(han: Int, hu: Int): ChildPoint {
     val han_ = if (han > 13) 13 else han
-    val hu_ = if (han >= 5) 20 else hu
+    val hu_ = if (han >= 5) {
+        if (hu !in 20..110 step 10 && hu != 25) {
+            throw IllegalArgumentException("invalid arguments: han=${han}, hu=${hu}")
+        }
+        20
+    } else {
+        hu
+    }
     return childPointMapping[han_ to hu_] ?: throw IllegalArgumentException("invalid arguments: han=${han}, hu=${hu}")
 }
