@@ -19,8 +19,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
@@ -141,3 +139,7 @@ dmypy.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 /.idea/
+/.gradle/
+
+local.properties
+secret_ring.gpg
