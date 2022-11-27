@@ -132,7 +132,7 @@ class TestShanten {
         chitoiTester(
             "1111223344556z", ShantenWithoutGot(
                 shantenNum = 2,
-                advance = (Tile.allExcludeAkaDora - Tile.parseTiles("12345z").toSet()).toSet(),
+                advance = (Tile.all.filter { it.num != 0 } - Tile.parseTiles("12345z").toSet()).toSet(),
                 advanceNum = 115
             )
         )
@@ -228,15 +228,15 @@ class TestShanten {
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("123469s1z").toSet(),
-                        goodShapeAdvanceNum = 17
+                        goodShapeAdvance = Tile.parseTiles("1234679s1z").toSet(),
+                        goodShapeAdvanceNum = 20
                     ),
                     Tile.get("3s") to ShantenWithoutGot(
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("23s1z").toSet(),
-                        goodShapeAdvanceNum = 9
+                        goodShapeAdvance = Tile.parseTiles("2369s1z").toSet(),
+                        goodShapeAdvanceNum = 13
                     ),
                     Tile.get("4s") to ShantenWithoutGot(
                         shantenNum = 1,
@@ -256,15 +256,15 @@ class TestShanten {
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("478s1z").toSet(),
-                        goodShapeAdvanceNum = 12
+                        goodShapeAdvance = Tile.parseTiles("1478s1z").toSet(),
+                        goodShapeAdvanceNum = 13
                     ),
                     Tile.get("9s") to ShantenWithoutGot(
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("146789s1z").toSet(),
-                        goodShapeAdvanceNum = 17
+                        goodShapeAdvance = Tile.parseTiles("1346789s1z").toSet(),
+                        goodShapeAdvanceNum = 20
                     ),
                 )
             )

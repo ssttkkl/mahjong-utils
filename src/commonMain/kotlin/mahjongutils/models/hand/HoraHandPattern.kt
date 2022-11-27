@@ -6,7 +6,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import mahjongutils.common.afterDiscard
+import mahjongutils.common.afterDiscardForHoraHand
 import mahjongutils.hora.HoraInfo
 import mahjongutils.models.*
 
@@ -201,7 +201,7 @@ data class RegularHoraHandPattern(
             selfWind: Wind? = null,
             roundWind: Wind? = null
         ): Collection<RegularHoraHandPattern> {
-            return pattern.afterDiscard(agari).map {
+            return pattern.afterDiscardForHoraHand(agari).map {
                 buildWithoutGot(agari, tsumo, selfWind, roundWind, it)
             }
         }

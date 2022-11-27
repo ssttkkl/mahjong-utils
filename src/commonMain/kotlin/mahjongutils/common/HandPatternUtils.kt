@@ -17,7 +17,15 @@ internal fun RegularHandPattern.calcShanten(): Int {
 }
 
 internal fun ChitoiHandPattern.calcShanten(): Int {
-    return 6 - pairs.size
+    val tileSet = buildSet {
+        addAll(pairs)
+        addAll(remaining)
+    }
+    if (tileSet.size >= 7) {
+        return 6 - pairs.size
+    } else {
+        return 6 - pairs.size + (7 - tileSet.size)
+    }
 }
 
 internal fun KokushiHandPattern.calcShanten(): Int {
@@ -71,7 +79,12 @@ internal fun RegularHandPattern.calcAdvance(): Set<Tile> {
     }
 }
 
-internal fun RegularHandPattern.afterDiscard(discard: Tile): List<RegularHandPattern> {
+/**
+ * 计算已摸牌的和牌手牌舍张后的所有可能的听牌形
+ * @param discard 舍张
+ * @return 所有可能手牌形
+ */
+internal fun RegularHandPattern.afterDiscardForHoraHand(discard: Tile): List<RegularHandPattern> {
     return buildList {
         // 扣掉雀头
         if (jyantou == discard) {
@@ -88,6 +101,7 @@ internal fun RegularHandPattern.afterDiscard(discard: Tile): List<RegularHandPat
                     tatsu = tatsu + tt
                 )
                 add(newPattern)
+
             }
         }
 
@@ -119,7 +133,12 @@ internal fun RegularHandPattern.afterDiscard(discard: Tile): List<RegularHandPat
     }
 }
 
-internal fun RegularHandPattern.afterAdvance(advance: Tile): List<RegularHandPattern> {
+/**
+ * 计算未摸牌的一向听手牌形进张后的所有可能手牌形
+ * @param advance 进张
+ * @return 所有可能手牌形
+ */
+internal fun RegularHandPattern.afterAdvanceForOneShantenHand(advance: Tile): List<RegularHandPattern> {
     return buildList {
         // 搭子的进张
         tatsu.forEachIndexed { i, tt ->

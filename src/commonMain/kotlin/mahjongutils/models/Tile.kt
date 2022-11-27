@@ -203,6 +203,11 @@ data class Tile private constructor(
         val all = pool.filterNotNull().toSet()
 
         /**
+         * 所有牌
+         */
+        val allExcludeAkaDora = all.filter { it.num != 0 }
+
+        /**
          * 所有幺九牌
          */
         val allYaochu = buildSet<Tile> {
