@@ -40,11 +40,11 @@ data class ShantenWithoutGot(
     /**
      * 好型进张
      */
-    @EncodeDefault val wellShapeAdvance: Set<Tile>? = null,
+    @EncodeDefault val goodShapeAdvance: Set<Tile>? = null,
     /**
      * 好型进张数
      */
-    @EncodeDefault val wellShapeAdvanceNum: Int? = null
+    @EncodeDefault val goodShapeAdvanceNum: Int? = null
 ) : Shanten
 
 /**
@@ -142,9 +142,9 @@ private fun <T : HandPattern> selectBestPatterns(
 
 private fun ShantenWithoutGot.fillAdvanceNum(remaining: IntArray): ShantenWithoutGot {
     val advanceNum = advance.sumOf { remaining[it.code] }
-    val wellShapeAdvanceNum = wellShapeAdvance?.sumOf { remaining[it.code] }
+    val goodShapeAdvanceNum = goodShapeAdvance?.sumOf { remaining[it.code] }
 
-    return copy(advanceNum = advanceNum, wellShapeAdvanceNum = wellShapeAdvanceNum)
+    return copy(advanceNum = advanceNum, goodShapeAdvanceNum = goodShapeAdvanceNum)
 }
 
 private inline fun <reified T : Shanten> T.fillAdvanceNum(vararg tiles: Tile): T {
@@ -171,13 +171,13 @@ private inline fun <reified T : Shanten> T.fillAdvanceNum(vararg tiles: Tile): T
 // ======== 标准形 ========
 private fun handleRegularShantenWithoutGot(
     patterns: Collection<RegularHandPattern>,
-    calcWellShapeAdvance: Boolean = true,
+    calcGoodShapeAdvance: Boolean = true,
 ): Pair<ShantenWithoutGot, Collection<RegularHandPattern>> {
     val (bestShanten, bestPatterns) = selectBestPatterns(patterns, RegularHandPattern::calcShanten)
 
     val advance = bestPatterns.map { it.calcAdvance() }.flatten().toSet()
 
-    val wellShape: Set<Tile>? = if (calcWellShapeAdvance && bestShanten == 1) {
+    val goodShape: Set<Tile>? = if (calcGoodShapeAdvance && bestShanten == 1) {
         buildSet {
             val pat = bestPatterns.first()
             val tiles = (pat.tiles + pat.furo.flatMap { it.asMentsu().tiles }).toTypedArray()
@@ -186,7 +186,7 @@ private fun handleRegularShantenWithoutGot(
                 val patternsAfterAdv = bestPatterns.map { it.afterAdvance(adv) }.flatten().toSet()
                 val shantenAfterAdv = handleRegularShantenWithGot(
                     patternsAfterAdv,
-                    calcWellShapeAdvance = false,
+                    calcGoodShapeAdvance = false,
                     bestShantenOnly = true
                 ).first.fillAdvanceNum(adv, *tiles)
                 val maxAdvAfterAdv = shantenAfterAdv.discardToAdvance.values.maxBy { it.advanceNum!! }
@@ -199,13 +199,13 @@ private fun handleRegularShantenWithoutGot(
         null
     }
 
-    val shanten = ShantenWithoutGot(shantenNum = bestShanten, advance = advance, wellShapeAdvance = wellShape)
+    val shanten = ShantenWithoutGot(shantenNum = bestShanten, advance = advance, goodShapeAdvance = goodShape)
     return Pair(shanten, bestPatterns)
 }
 
 private fun handleRegularShantenWithGot(
     patterns: Collection<RegularHandPattern>,
-    calcWellShapeAdvance: Boolean = true,
+    calcGoodShapeAdvance: Boolean = true,
     bestShantenOnly: Boolean = false,
 ): Pair<ShantenWithGot, Collection<RegularHandPattern>> {
     val (bestShanten, bestPatterns) = selectBestPatterns(patterns, RegularHandPattern::calcShanten)
@@ -213,7 +213,7 @@ private fun handleRegularShantenWithGot(
     val discardToAdvance = HashMap<Tile, ShantenWithoutGot>()
     for (discard in bestPatterns.first().tiles.toSet()) {
         val patternsAfterDiscard = bestPatterns.map { it.afterDiscard(discard) }.flatten().toSet()
-        val shantenAfterDiscard = handleRegularShantenWithoutGot(patternsAfterDiscard, calcWellShapeAdvance).first
+        val shantenAfterDiscard = handleRegularShantenWithoutGot(patternsAfterDiscard, calcGoodShapeAdvance).first
         discardToAdvance[discard] = shantenAfterDiscard
     }
 
@@ -293,11 +293,11 @@ private fun handleChitoiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithou
     val pattern = buildChitoiPattern(tiles)
     val shantenNum = pattern.calcShanten()
     val advance = pattern.remaining - pattern.pairs
-    val wellShapeAdvance = if (shantenNum == 1) emptySet<Tile>() else null
+    val goodShapeAdvance = if (shantenNum == 1) emptySet<Tile>() else null
     val shantenInfo = ShantenWithoutGot(
         shantenNum = shantenNum,
         advance = advance.toSet(),
-        wellShapeAdvance = wellShapeAdvance
+        goodShapeAdvance = goodShapeAdvance
     )
     return Pair(shantenInfo, pattern)
 }
@@ -392,14 +392,14 @@ private fun handleKokushiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWitho
     if (pat.repeated != null) {
         // 非十三面
         val advance = Tile.allYaochu - pat.yaochu
-        val wellShapeAdvance = if (shantenNum == 1) emptySet<Tile>() else null
-        val shantenInfo = ShantenWithoutGot(shantenNum, advance, wellShapeAdvance = wellShapeAdvance)
+        val goodShapeAdvance = if (shantenNum == 1) emptySet<Tile>() else null
+        val shantenInfo = ShantenWithoutGot(shantenNum, advance, goodShapeAdvance = goodShapeAdvance)
         return Pair(shantenInfo, bestPatterns)
     } else {
         // 十三面
         val advance = Tile.allYaochu
-        val wellShapeAdvance = if (shantenNum == 1) advance else null
-        val shantenInfo = ShantenWithoutGot(shantenNum, advance, wellShapeAdvance = wellShapeAdvance)
+        val goodShapeAdvance = if (shantenNum == 1) advance else null
+        val shantenInfo = ShantenWithoutGot(shantenNum, advance, goodShapeAdvance = goodShapeAdvance)
         return Pair(shantenInfo, bestPatterns)
     }
 }
@@ -453,7 +453,7 @@ fun kokushiShanten(tiles: List<Tile>, calcAdvanceNum: Boolean = true): ShantenRe
 private fun mergeIntoWithoutGot(
     targetShantenNum: Int,
     advance: MutableSet<Tile>,
-    wellShapeAdvance: MutableSet<Tile>,
+    goodShapeAdvance: MutableSet<Tile>,
     patterns: MutableCollection<HandPattern>,
     result: ShantenResult
 ) {
@@ -461,8 +461,8 @@ private fun mergeIntoWithoutGot(
         val shantenInfo = result.shantenInfo as ShantenWithoutGot
         advance += shantenInfo.advance
         patterns += result.hand.patterns
-        if (shantenInfo.wellShapeAdvance != null) {
-            wellShapeAdvance += shantenInfo.wellShapeAdvance
+        if (shantenInfo.goodShapeAdvance != null) {
+            goodShapeAdvance += shantenInfo.goodShapeAdvance
         }
     }
 }
@@ -481,8 +481,8 @@ private fun mergeIntoWithGot(
         } else if (oldShantenAfterDiscard.shantenNum == shantenAfterDiscard.shantenNum) {
             discardToAdvance[discard] = oldShantenAfterDiscard.copy(
                 advance = oldShantenAfterDiscard.advance + shantenAfterDiscard.advance,
-                wellShapeAdvance = shantenAfterDiscard.wellShapeAdvance?.let {
-                    oldShantenAfterDiscard.wellShapeAdvance?.plus(it)
+                goodShapeAdvance = shantenAfterDiscard.goodShapeAdvance?.let {
+                    oldShantenAfterDiscard.goodShapeAdvance?.plus(it)
                 }
             )
         }
@@ -529,13 +529,13 @@ fun shanten(tiles: List<Tile>, furo: List<Furo> = emptyList(), calcAdvanceNum: B
 
     var shantenInfo = if (!withGot) {
         val advance = HashSet<Tile>()
-        val wellShapeAdvance = HashSet<Tile>()
+        val goodShapeAdvance = HashSet<Tile>()
 
-        mergeIntoWithoutGot(shantenNum, advance, wellShapeAdvance, patterns, regular)
-        mergeIntoWithoutGot(shantenNum, advance, wellShapeAdvance, patterns, chitoi)
-        mergeIntoWithoutGot(shantenNum, advance, wellShapeAdvance, patterns, kokushi)
+        mergeIntoWithoutGot(shantenNum, advance, goodShapeAdvance, patterns, regular)
+        mergeIntoWithoutGot(shantenNum, advance, goodShapeAdvance, patterns, chitoi)
+        mergeIntoWithoutGot(shantenNum, advance, goodShapeAdvance, patterns, kokushi)
 
-        ShantenWithoutGot(shantenNum, advance, wellShapeAdvance = if (shantenNum == 1) wellShapeAdvance else null)
+        ShantenWithoutGot(shantenNum, advance, goodShapeAdvance = if (shantenNum == 1) goodShapeAdvance else null)
     } else {
         val discardToAdvance = HashMap<Tile, ShantenWithoutGot>()
 

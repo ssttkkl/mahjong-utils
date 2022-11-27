@@ -28,8 +28,8 @@ class TestShanten {
                 shantenNum = 1,
                 advance = Tile.parseTiles("36s12z").toSet(),
                 advanceNum = 13,
-                wellShapeAdvance = Tile.parseTiles("12z").toSet(),
-                wellShapeAdvanceNum = 6
+                goodShapeAdvance = Tile.parseTiles("12z").toSet(),
+                goodShapeAdvanceNum = 6
             )
         )
         regularTester(
@@ -37,8 +37,8 @@ class TestShanten {
                 shantenNum = 1,
                 advance = Tile.parseTiles("36s12z").toSet(),
                 advanceNum = 13,
-                wellShapeAdvance = Tile.parseTiles("12z").toSet(),
-                wellShapeAdvanceNum = 6
+                goodShapeAdvance = Tile.parseTiles("12z").toSet(),
+                goodShapeAdvanceNum = 6
             )
         )
         regularTester(
@@ -64,8 +64,8 @@ class TestShanten {
                 shantenNum = 1,
                 advance = Tile.parseTiles("345s").toSet(),
                 advanceNum = 9,
-                wellShapeAdvance = emptySet(),
-                wellShapeAdvanceNum = 0
+                goodShapeAdvance = emptySet(),
+                goodShapeAdvanceNum = 0
             )
         )
         tester(
@@ -73,8 +73,8 @@ class TestShanten {
                 shantenNum = 1,
                 advance = Tile.parseTiles("36s12z").toSet(),
                 advanceNum = 13,
-                wellShapeAdvance = Tile.parseTiles("12z").toSet(),
-                wellShapeAdvanceNum = 6
+                goodShapeAdvance = Tile.parseTiles("12z").toSet(),
+                goodShapeAdvanceNum = 6
             )
         )
         tester(
@@ -130,8 +130,8 @@ class TestShanten {
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        wellShapeAdvance = Tile.parseTiles("123469s1z").toSet(),
-                        wellShapeAdvanceNum = 17
+                        goodShapeAdvance = Tile.parseTiles("123469s1z").toSet(),
+                        goodShapeAdvanceNum = 17
                     ),
                     Tile.get("2s") to ShantenWithoutGot(
                         shantenNum = 0,
@@ -142,15 +142,15 @@ class TestShanten {
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        wellShapeAdvance = Tile.parseTiles("23s1z").toSet(),
-                        wellShapeAdvanceNum = 9
+                        goodShapeAdvance = Tile.parseTiles("23s1z").toSet(),
+                        goodShapeAdvanceNum = 9
                     ),
                     Tile.get("4s") to ShantenWithoutGot(
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        wellShapeAdvance = Tile.parseTiles("1456789s1z").toSet(),
-                        wellShapeAdvanceNum = 20
+                        goodShapeAdvance = Tile.parseTiles("1456789s1z").toSet(),
+                        goodShapeAdvanceNum = 20
                     ),
                     Tile.get("5s") to ShantenWithoutGot(
                         shantenNum = 0,
@@ -161,15 +161,15 @@ class TestShanten {
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        wellShapeAdvance = Tile.parseTiles("1234569s1z").toSet(),
-                        wellShapeAdvanceNum = 20
+                        goodShapeAdvance = Tile.parseTiles("1234569s1z").toSet(),
+                        goodShapeAdvanceNum = 20
                     ),
                     Tile.get("7s") to ShantenWithoutGot(
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        wellShapeAdvance = Tile.parseTiles("478s1z").toSet(),
-                        wellShapeAdvanceNum = 12
+                        goodShapeAdvance = Tile.parseTiles("478s1z").toSet(),
+                        goodShapeAdvanceNum = 12
                     ),
                     Tile.get("8s") to ShantenWithoutGot(
                         shantenNum = 0,
@@ -180,8 +180,8 @@ class TestShanten {
                         shantenNum = 1,
                         advance = Tile.parseTiles("123456789s1z").toSet(),
                         advanceNum = 26,
-                        wellShapeAdvance = Tile.parseTiles("146789s1z").toSet(),
-                        wellShapeAdvanceNum = 17
+                        goodShapeAdvance = Tile.parseTiles("146789s1z").toSet(),
+                        goodShapeAdvanceNum = 17
                     ),
                     Tile.get("1z") to ShantenWithoutGot(
                         shantenNum = 0,
