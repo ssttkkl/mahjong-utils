@@ -1,4 +1,0 @@
-[submodule "python/libmahjongutils/extern/pybind11"]
-	path = python/libmahjongutils/extern/pybind11
-	url = https://github.com/pybind/pybind11
-	branch = stable
