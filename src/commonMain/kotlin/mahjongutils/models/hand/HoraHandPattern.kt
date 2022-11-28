@@ -76,6 +76,7 @@ data class RegularHoraHandPattern internal constructor(
         require(k == 4)
         require(pattern.menzenMentsu.size + pattern.furo.size == 4)
         require(pattern.jyantou != null)
+        require(pattern.remaining.isEmpty())
     }
 
     override val jyantou: Tile
@@ -190,7 +191,8 @@ data class RegularHoraHandPattern internal constructor(
                     roundWind = roundWind,
                     agariTatsu = null,
                     pattern = pattern.copy(
-                        jyantou = agari
+                        jyantou = agari,
+                        remaining = emptyList()
                     ),
                 )
             }

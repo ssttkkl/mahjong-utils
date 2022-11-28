@@ -138,4 +138,13 @@ class TestHora {
         assertEquals(ParentPoint(48000, 16000), hora.parentPoint)
         assertEquals(ChildPoint(32000, 16000, 8000), hora.childPoint)
     }
+
+    @Test
+    fun test9() {
+        val hora = hora(
+            tiles = Tile.parseTiles("111122223333m99s"),
+            agari = Tile.get("9s"),
+            tsumo = false
+        )
+    }
 }

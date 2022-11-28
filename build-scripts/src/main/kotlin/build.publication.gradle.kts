@@ -11,6 +11,8 @@ ext["signing.password"] = null
 ext["signing.secretKeyRingFile"] = null
 ext["ossrhUsername"] = null
 ext["ossrhPassword"] = null
+ext["gprUsername"] = null
+ext["gprToken"] = null
 
 // Grabbing secrets from local.properties file or from environment variables, which could be used on CI
 val secretPropsFile = project.rootProject.file("local.properties")
