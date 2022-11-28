@@ -5,6 +5,8 @@ mahjong-utils
 
 日麻小工具
 
+（Python版：[ssttkkl/mahjong-utils-py](https://github.com/ssttkkl/mahjong-utils-py)）
+
 已实现功能：
 
 - [x] 获取番符对应和牌点数
