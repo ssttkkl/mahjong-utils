@@ -22,7 +22,7 @@ object Yakus {
      * 平和
      */
     val Pinhu = Yaku("Pinhu", 1, 1) { pattern ->
-        if (pattern !is RegularHoraHandPattern)
+        if (pattern !is RegularHoraHandPattern || !pattern.menzen)
             return@Yaku false
 
         if (pattern.tsumo)

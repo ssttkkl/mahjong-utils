@@ -34,8 +34,20 @@ sealed interface HoraHandPattern : HoraInfo, HandPattern {
             roundWind: Wind? = null
         ): Collection<HoraHandPattern> = when (pattern) {
             is RegularHandPattern -> RegularHoraHandPattern.build(pattern, agari, tsumo, selfWind, roundWind)
-            is ChitoiHandPattern -> listOf(ChitoiHoraHandPattern(pattern, agari, tsumo, selfWind, roundWind))
-            is KokushiHandPattern -> listOf(KokushiHoraHandPattern(pattern, agari, tsumo, selfWind, roundWind))
+            is ChitoiHandPattern -> {
+                require(pattern.pairs.size == 7 && pattern.remaining.isEmpty()) {
+                    "invalid ChitoiHandPattern"
+                }
+                listOf(ChitoiHoraHandPattern(pattern.pairs, agari, tsumo, selfWind, roundWind))
+            }
+
+            is KokushiHandPattern -> {
+                require(pattern.yaochu == Tile.allYaochu && pattern.remaining.isEmpty() && pattern.repeated != null) {
+                    "invalid KokushiHandPattern"
+                }
+                listOf(KokushiHoraHandPattern(pattern.repeated, agari, tsumo, selfWind, roundWind))
+            }
+
             is HoraHandPattern -> listOf(pattern)
         }
     }
@@ -46,7 +58,7 @@ sealed interface HoraHandPattern : HoraInfo, HandPattern {
  */
 @Serializable
 @SerialName("RegularHoraHandPattern")
-data class RegularHoraHandPattern(
+data class RegularHoraHandPattern internal constructor(
     /**
      * 标准形手牌
      */
@@ -217,18 +229,16 @@ data class ChitoiHoraHandPattern(
     /**
      * 手牌形
      */
-    val pattern: ChitoiHandPattern,
+    override val pairs: Set<Tile>,
     override val agari: Tile,
     override val tsumo: Boolean,
-    @EncodeDefault override val selfWind: Wind?,
-    @EncodeDefault override val roundWind: Wind?,
-) : HoraHandPattern, IChitoiHandPattern by pattern {
-    init {
-        require(pattern.remaining.isEmpty())
-    }
-
+    @EncodeDefault override val selfWind: Wind? = null,
+    @EncodeDefault override val roundWind: Wind? = null,
+) : HoraHandPattern, IChitoiHandPattern {
     override val hu: Int
         get() = 25
+    override val remaining: Collection<Tile>
+        get() = emptyList()
 }
 
 /**
@@ -240,26 +250,22 @@ data class KokushiHoraHandPattern(
     /**
      * 手牌形
      */
-    val pattern: KokushiHandPattern,
+    override val repeated: Tile,
     override val agari: Tile,
     override val tsumo: Boolean,
-    @EncodeDefault override val selfWind: Wind?,
-    @EncodeDefault override val roundWind: Wind?,
-) : HoraHandPattern, IKokushiHandPattern by pattern {
-    init {
-        require(pattern.repeated != null)
-        require(pattern.remaining.isEmpty())
-    }
-
+    @EncodeDefault override val selfWind: Wind? = null,
+    @EncodeDefault override val roundWind: Wind? = null,
+) : HoraHandPattern, IKokushiHandPattern {
     override val hu: Int
         get() = 20
-
-    override val repeated: Tile
-        get() = pattern.repeated!!
+    override val yaochu: Set<Tile>
+        get() = Tile.allYaochu
+    override val remaining: Collection<Tile>
+        get() = emptyList()
 
     /**
      * 是否十三面和牌
      */
     val thirteenWaiting: Boolean
-        get() = pattern.repeated == agari
+        get() = repeated == agari
 }

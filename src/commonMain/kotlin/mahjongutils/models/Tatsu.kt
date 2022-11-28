@@ -65,6 +65,19 @@ sealed interface Tatsu {
                 }
             }
         }
+
+        /**
+         * 根据给定牌的文本构造搭子
+         * @param text 牌的文本
+         * @return 搭子
+         */
+        operator fun invoke(text: String): Tatsu {
+            val tiles = Tile.parseTiles(text)
+            if (tiles.size != 2) {
+                throw IllegalArgumentException("invalid tiles: $text")
+            }
+            return invoke(tiles[0], tiles[1])
+        }
     }
 }
 

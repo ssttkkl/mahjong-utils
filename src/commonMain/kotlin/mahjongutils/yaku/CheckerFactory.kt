@@ -1,6 +1,7 @@
 package mahjongutils.yaku
 
 import mahjongutils.models.*
+import mahjongutils.models.hand.ChitoiHoraHandPattern
 import mahjongutils.models.hand.RegularHoraHandPattern
 
 /**
@@ -32,40 +33,57 @@ internal fun yakuhaiCheckerFactory(
  */
 internal fun yaochuSeriesCheckerFactory(shuntsu: Boolean, z: Boolean): YakuChecker {
     return YakuChecker { pattern ->
-        if (pattern !is RegularHoraHandPattern) {
-            return@YakuChecker false
-        }
-
-        if (!pattern.jyantou.isYaochu) {
-            return@YakuChecker false
-        }
-
-        var shuntsuCnt = 0
-        var kotsuCnt = 0
-        var hasZ = pattern.jyantou.type == TileType.Z
-
-        for (mt in pattern.mentsu) {
-            when (mt) {
-                is Shuntsu -> {
-                    if (mt.tile.num != 1 && mt.tile.num != 7) {
-                        return@YakuChecker false
-                    }
-                    shuntsuCnt += 1
+        when (pattern) {
+            is RegularHoraHandPattern -> {
+                if (!pattern.jyantou.isYaochu) {
+                    return@YakuChecker false
                 }
 
-                is Kotsu -> {
-                    if (!mt.tile.isYaochu) {
-                        return@YakuChecker false
-                    }
-                    kotsuCnt += 1
-                    if (mt.tile.type == TileType.Z) {
-                        hasZ = true
+                var shuntsuCnt = 0
+                var kotsuCnt = 0
+                var hasZ = pattern.jyantou.type == TileType.Z
+
+                for (mt in pattern.mentsu) {
+                    when (mt) {
+                        is Shuntsu -> {
+                            if (mt.tile.num != 1 && mt.tile.num != 7) {
+                                return@YakuChecker false
+                            }
+                            shuntsuCnt += 1
+                        }
+
+                        is Kotsu -> {
+                            if (!mt.tile.isYaochu) {
+                                return@YakuChecker false
+                            }
+                            kotsuCnt += 1
+                            if (mt.tile.type == TileType.Z) {
+                                hasZ = true
+                            }
+                        }
                     }
                 }
+
+                (shuntsu && shuntsuCnt != 0 || !shuntsu && shuntsuCnt == 0) && (z && hasZ || !z && !hasZ)
+            }
+
+            is ChitoiHoraHandPattern -> {
+                if (shuntsu) {
+                    return@YakuChecker false
+                }
+
+                if (pattern.tiles.any { !it.isYaochu }) {
+                    return@YakuChecker false
+                }
+
+                val hasZ = pattern.tiles.any { it.type == TileType.Z }
+                (z && hasZ || !z && !hasZ)
+            }
+
+            else -> {
+                false
             }
         }
-
-        (shuntsu && shuntsuCnt != 0 || !shuntsu && shuntsuCnt == 0) && (z && hasZ || !z && !hasZ)
     }
 }
 

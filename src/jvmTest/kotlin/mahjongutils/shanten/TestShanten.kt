@@ -1,5 +1,6 @@
+package mahjongutils.shanten
+
 import mahjongutils.models.Tile
-import mahjongutils.shanten.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

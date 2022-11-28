@@ -1,6 +1,7 @@
+package mahjongutils.hora
+
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint
-import mahjongutils.hora.hora
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
