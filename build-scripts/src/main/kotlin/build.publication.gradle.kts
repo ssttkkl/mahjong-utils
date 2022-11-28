@@ -28,6 +28,8 @@ if (secretPropsFile.exists()) {
     ext["signing.secretKeyRingFile"] = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
     ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
     ext["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
+    ext["gprUsername"] = System.getenv("GPR_USERNAME")
+    ext["gprToken"] = System.getenv("GPR_TOKEN")
 }
 
 val javadocJar by tasks.registering(Jar::class) {
@@ -51,6 +53,14 @@ publishing {
                 password = getExtraString("ossrhPassword")
             }
         }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ssttkkl/mahjong-utils")
+            credentials {
+                username = getExtraString("gprUsername")
+                password = getExtraString("gprToken")
+            }
+        }
     }
 
     // Configure all publications
@@ -61,7 +71,7 @@ publishing {
 
         // Provide artifacts information requited by Maven Central
         pom {
-            name.set("Mahjong Utils (for Japanese Richi Mahjong)")
+            name.set("Mahjong Utils (for Japanese Riichi Mahjong)")
             url.set("https://github.com/ssttkkl/mahjong-utils")
 
             licenses {
