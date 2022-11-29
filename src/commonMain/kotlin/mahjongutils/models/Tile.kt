@@ -270,7 +270,7 @@ fun Iterable<Tile>.countAsCodeArray(): IntArray {
     return groups
 }
 
-private class TileSerializer : KSerializer<Tile> {
+internal class TileSerializer : KSerializer<Tile> {
     override val descriptor = PrimitiveSerialDescriptor("Tile", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Tile) {

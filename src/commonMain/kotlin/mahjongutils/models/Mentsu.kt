@@ -1,12 +1,17 @@
 package mahjongutils.models
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 /**
  * 面子
  */
-@Serializable
+@Serializable(with = MentsuSerializer::class)
 sealed interface Mentsu {
     /**
      * 所含的牌
@@ -122,5 +127,18 @@ data class Shuntsu(
 
     override fun toString(): String {
         return "${tile.num}${tile.num + 1}${tile.num + 2}${tile.type.name.lowercase()}"
+    }
+}
+
+internal class MentsuSerializer : KSerializer<Mentsu> {
+    override val descriptor = PrimitiveSerialDescriptor("Mentsu", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: Mentsu) {
+        encoder.encodeString(value.toString())
+    }
+
+    override fun deserialize(decoder: Decoder): Mentsu {
+        val text = decoder.decodeString()
+        return Mentsu(text)
     }
 }

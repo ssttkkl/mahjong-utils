@@ -1,12 +1,17 @@
 package mahjongutils.models
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 /**
  * 搭子
  */
-@Serializable
+@Serializable(with = TatsuSerializer::class)
 sealed interface Tatsu {
     /**
      * 第一张牌
@@ -196,5 +201,18 @@ data class Toitsu(override val first: Tile) : Tatsu {
 
     override fun toString(): String {
         return "${first.num}${second.num}${first.type.name.lowercase()}"
+    }
+}
+
+internal class TatsuSerializer : KSerializer<Tatsu> {
+    override val descriptor = PrimitiveSerialDescriptor("Tatsu", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: Tatsu) {
+        encoder.encodeString(value.toString())
+    }
+
+    override fun deserialize(decoder: Decoder): Tatsu {
+        val text = decoder.decodeString()
+        return Tatsu(text)
     }
 }
