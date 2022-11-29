@@ -72,7 +72,10 @@ internal inline fun <reified T : Shanten> T.fillAdvanceNum(vararg tiles: Tile): 
         }
 
         is ShantenWithGot -> {
-            copy(discardToAdvance = discardToAdvance.mapValues { (k, v) -> v.fillAdvanceNum(remaining) }) as T
+            copy(
+                discardToAdvance = discardToAdvance.mapValues { (k, v) -> v.fillAdvanceNum(remaining) },
+                ankanToAdvance = ankanToAdvance.mapValues { (k, v) -> v.fillAdvanceNum(remaining) },
+            ) as T
         }
 
         else -> {
