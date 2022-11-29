@@ -254,6 +254,14 @@ fun Iterable<Tile>.toTilesString(lowercase: Boolean = true): String {
     }
 }
 
+fun Iterable<Tile>.groupByCode(): IntArray {
+    val groups = IntArray(Tile.MAX_TILE_CODE + 1)
+    this.forEach {
+        groups[it.code] += 1
+    }
+    return groups
+}
+
 private class TileSerializer : KSerializer<Tile> {
     override val descriptor = PrimitiveSerialDescriptor("Tile", PrimitiveKind.STRING)
 
