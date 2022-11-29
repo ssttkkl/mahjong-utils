@@ -239,7 +239,7 @@ data class ChitoiHoraHandPattern(
 ) : HoraHandPattern, IChitoiHandPattern {
     override val hu: Int
         get() = 25
-    override val remaining: Collection<Tile>
+    override val remaining: List<Tile>
         get() = emptyList()
 }
 
@@ -262,7 +262,7 @@ data class KokushiHoraHandPattern(
         get() = 20
     override val yaochu: Set<Tile>
         get() = Tile.allYaochu
-    override val remaining: Collection<Tile>
+    override val remaining: List<Tile>
         get() = emptyList()
 
     /**

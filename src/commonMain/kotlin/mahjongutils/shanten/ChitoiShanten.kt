@@ -1,18 +1,12 @@
 package mahjongutils.shanten
 
 import mahjongutils.models.Tile
+import mahjongutils.models.countAsMap
 import mahjongutils.models.hand.ChitoiHandPattern
 import mahjongutils.models.hand.Hand
 
 private fun buildChitoiPattern(tiles: List<Tile>): ChitoiHandPattern {
-    val cnt = buildMap<Tile, Int> {
-        tiles.forEach {
-            if (it !in this) {
-                this[it] = 0
-            }
-            this[it] = this[it]!! + 1
-        }
-    }
+    val cnt = tiles.countAsMap()
 
     val pairs = ArrayList<Tile>()
     val remaining = ArrayList<Tile>()

@@ -5,7 +5,9 @@ import mahjongutils.common.calcAdvance
 import mahjongutils.common.calcShanten
 import mahjongutils.common.regularHandPatternSearch
 import mahjongutils.models.Furo
+import mahjongutils.models.Kan
 import mahjongutils.models.Tile
+import mahjongutils.models.countAsMap
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.RegularHandPattern
 
@@ -107,7 +109,27 @@ private fun handleRegularShantenWithGot(
         }
     }
 
-    val shantenInfo = ShantenWithGot(shantenNum = bestShanten, discardToAdvance = discardToShanten)
+    // 最后计算暗杠
+    val tilesCount = tiles.countAsMap()
+    var ankanToAdvance = buildMap {
+        for ((t, count) in tilesCount) {
+            if (count == 4) {
+                val tilesAfterAnkan = tiles - t - t - t - t
+                val patternsAfterAnkan = regularHandPatternSearch(tilesAfterAnkan, furo + Kan(t, true))
+                this[t] = handleRegularShantenWithoutGot(patternsAfterAnkan).first
+            }
+        }
+    }
+
+    if (bestShantenOnly) {
+        ankanToAdvance = ankanToAdvance.filterValues { it.shantenNum == bestShanten }
+    }
+
+    val shantenInfo = ShantenWithGot(
+        shantenNum = bestShanten,
+        discardToAdvance = discardToShanten,
+        ankanToAdvance = ankanToAdvance
+    )
     return Pair(shantenInfo, bestPatterns)
 }
 

@@ -3,6 +3,7 @@ package mahjongutils.common
 import mahjongutils.models.*
 import mahjongutils.models.hand.RegularHandPattern
 
+// 这里用的编码和Tile.code不一样
 private fun encode(t: Tile): Int {
     return t.type.ordinal * 9 + t.realNum - 1
 }
@@ -34,7 +35,7 @@ private class RegularHandPatternSearcher(
 ) {
     var n = tiles.size
     var k = n / 3
-    private val cnt = IntArray(Tile.MAX_TILE_CODE + 1)
+    private val cnt = IntArray(3 * 9 + 7 + 1)
     private val mentsu = ArrayList<Mentsu>()
     private val tatsu = ArrayList<Tatsu>()
 

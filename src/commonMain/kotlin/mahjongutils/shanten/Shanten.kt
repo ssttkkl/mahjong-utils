@@ -108,7 +108,7 @@ fun shanten(
         mergeIntoWithGot(shantenNum, discardToAdvance, patterns, chitoi, bestShantenOnly)
         mergeIntoWithGot(shantenNum, discardToAdvance, patterns, kokushi, bestShantenOnly)
 
-        ShantenWithGot(shantenNum, discardToAdvance)
+        ShantenWithGot(shantenNum, discardToAdvance, (regular.shantenInfo as ShantenWithGot).ankanToAdvance)
     }
 
     if (calcAdvanceNum) {

@@ -20,13 +20,13 @@ fun furoChanceShanten(
     bestShantenOnly: Boolean = false,
 ): ShantenResult {
     val tiles = ensureLegalTiles(tiles, allowWithGot = false)
-    val tilesGroup = tiles.groupByCode()
+    val tilesCount = tiles.countAsCodeArray()
 
     val passShanten = regularShanten(tiles)
     val pass = passShanten.shantenInfo as ShantenWithoutGot
 
     // 碰
-    val pon = if (tilesGroup[chanceTile.code] >= 2) {
+    val pon = if (tilesCount[chanceTile.code] >= 2) {
         val tilesAfterPon = tiles - chanceTile - chanceTile
         val shantenAfterPon = regularShanten(
             tilesAfterPon,
@@ -42,23 +42,23 @@ fun furoChanceShanten(
     val chi = if (allowChi && chanceTile.type != TileType.Z) {
         val materials = buildList {
             // 边张
-            if (chanceTile.num == 3 && tilesGroup[chanceTile.code - 1] >= 1 && tilesGroup[chanceTile.code - 2] >= 1) {
+            if (chanceTile.num == 3 && tilesCount[chanceTile.code - 1] >= 1 && tilesCount[chanceTile.code - 2] >= 1) {
                 add(Penchan(chanceTile.advance(-2)))
             }
-            if (chanceTile.num == 7 && tilesGroup[chanceTile.code + 1] >= 1 && tilesGroup[chanceTile.code + 2] >= 1) {
+            if (chanceTile.num == 7 && tilesCount[chanceTile.code + 1] >= 1 && tilesCount[chanceTile.code + 2] >= 1) {
                 add(Penchan(chanceTile.advance(1)))
             }
 
             // 两面
-            if (chanceTile.num in 4..9 && tilesGroup[chanceTile.code - 1] >= 1 && tilesGroup[chanceTile.code - 2] >= 1) {
+            if (chanceTile.num in 4..9 && tilesCount[chanceTile.code - 1] >= 1 && tilesCount[chanceTile.code - 2] >= 1) {
                 add(Ryanmen(chanceTile.advance(-2)))
             }
-            if (chanceTile.num in 1..6 && tilesGroup[chanceTile.code + 1] >= 1 && tilesGroup[chanceTile.code + 2] >= 1) {
+            if (chanceTile.num in 1..6 && tilesCount[chanceTile.code + 1] >= 1 && tilesCount[chanceTile.code + 2] >= 1) {
                 add(Ryanmen(chanceTile.advance(1)))
             }
 
             // 坎张
-            if (chanceTile.num in 2..8 && tilesGroup[chanceTile.code - 1] >= 1 && tilesGroup[chanceTile.code + 1] >= 1) {
+            if (chanceTile.num in 2..8 && tilesCount[chanceTile.code - 1] >= 1 && tilesCount[chanceTile.code + 1] >= 1) {
                 add(Kanchan(chanceTile.advance(-1)))
             }
         }
@@ -77,7 +77,7 @@ fun furoChanceShanten(
     }
 
     // minkan
-    val minkan = if (tilesGroup[chanceTile.code] >= 3) {
+    val minkan = if (tilesCount[chanceTile.code] >= 3) {
         val tilesAfterMinkan = tiles - chanceTile - chanceTile - chanceTile
         val shantenAfterMinkan = regularShanten(
             tilesAfterMinkan,

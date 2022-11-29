@@ -12,11 +12,11 @@ sealed interface HandPattern : IHasFuro {
     /**
      * 手牌（包括门前与副露）
      */
-    val tiles: Collection<Tile>
+    val tiles: List<Tile>
     /**
      * 浮牌
      */
-    val remaining: Collection<Tile>
+    val remaining: List<Tile>
 }
 
 /**
@@ -40,7 +40,7 @@ sealed interface IRegularHandPattern : HandPattern {
      */
     val tatsu: List<Tatsu>
 
-    override val tiles: Collection<Tile>
+    override val tiles: List<Tile>
         get() = buildList {
             jyantou?.let {
                 add(it)
@@ -62,13 +62,13 @@ sealed interface IRegularHandPattern : HandPattern {
     /**
      * 面子（包括门前与副露）
      */
-    val mentsu: Collection<Mentsu>
+    val mentsu: List<Mentsu>
         get() = menzenMentsu + furo.map { it.asMentsu() }
 
     /**
      * 暗刻
      */
-    val anko: Collection<Kotsu>
+    val anko: List<Kotsu>
         get() = menzenMentsu.filterIsInstance<Kotsu>() +
                 furo.filterIsInstance<Kan>().filter { it.ankan }.map { it.asMentsu() }
 }
@@ -99,7 +99,7 @@ sealed interface IChitoiHandPattern : HandPattern {
     override val furo: List<Furo>
         get() = emptyList()
 
-    override val tiles: Collection<Tile>
+    override val tiles: List<Tile>
         get() = buildList {
             addAll(pairs)
             addAll(pairs)
@@ -134,7 +134,7 @@ sealed interface IKokushiHandPattern : HandPattern {
     override val furo: List<Furo>
         get() = emptyList()
 
-    override val tiles: Collection<Tile>
+    override val tiles: List<Tile>
         get() = buildList {
             addAll(yaochu)
             repeated?.let { add(it) }

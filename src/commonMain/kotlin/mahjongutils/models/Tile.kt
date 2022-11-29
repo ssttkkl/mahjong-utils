@@ -254,7 +254,15 @@ fun Iterable<Tile>.toTilesString(lowercase: Boolean = true): String {
     }
 }
 
-fun Iterable<Tile>.groupByCode(): IntArray {
+fun Iterable<Tile>.countAsMap(): Map<Tile, Int> {
+    return buildMap {
+        this@countAsMap.forEach {
+            this[it] = (this[it] ?: 0) + 1
+        }
+    }
+}
+
+fun Iterable<Tile>.countAsCodeArray(): IntArray {
     val groups = IntArray(Tile.MAX_TILE_CODE + 1)
     this.forEach {
         groups[it.code] += 1

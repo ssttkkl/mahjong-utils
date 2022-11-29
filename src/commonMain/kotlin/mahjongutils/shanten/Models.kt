@@ -57,7 +57,11 @@ data class ShantenWithGot(
     /**
      * 每种弃牌后的向听信息
      */
-    val discardToAdvance: Map<Tile, ShantenWithoutGot>
+    val discardToAdvance: Map<Tile, ShantenWithoutGot>,
+    /**
+     * 每种暗杠后的向听信息
+     */
+    @EncodeDefault val ankanToAdvance: Map<Tile, ShantenWithoutGot> = emptyMap()
 ) : Shanten
 
 /**
