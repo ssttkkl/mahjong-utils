@@ -87,7 +87,17 @@ class Entry private constructor(private val router: Map<String, Method<*, *>>) {
 data class ShantenArgs(
     val tiles: List<Tile>,
     val furo: List<Furo> = listOf(),
-    val calcAdvanceNum: Boolean = true
+    val calcAdvanceNum: Boolean = true,
+    val bestShantenOnly: Boolean = false,
+)
+
+@Serializable
+data class FuroChanceShantenArgs(
+    val tiles: List<Tile>,
+    val chanceTile: Tile,
+    val allowChi: Boolean = true,
+    val calcAdvanceNum: Boolean = true,
+    val bestShantenOnly: Boolean = false,
 )
 
 @Serializable
@@ -112,16 +122,19 @@ data class HoraArgs(
 
 val ENTRY = Entry.Builder().apply {
     register<ShantenArgs, ShantenResult>("shanten") { args ->
-        shanten(args.tiles, args.furo, args.calcAdvanceNum)
+        shanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly)
     }
     register<ShantenArgs, ShantenResult>("regularShanten") { args ->
-        regularShanten(args.tiles, args.furo, args.calcAdvanceNum)
+        regularShanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly)
     }
     register<ShantenArgs, ShantenResult>("chitoiShanten") { args ->
-        chitoiShanten(args.tiles, args.calcAdvanceNum)
+        chitoiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
     }
     register<ShantenArgs, ShantenResult>("kokushiShanten") { args ->
-        kokushiShanten(args.tiles, args.calcAdvanceNum)
+        kokushiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
+    }
+    register<FuroChanceShantenArgs, ShantenResult>("furoChanceShanten") { args ->
+        furoChanceShanten(args.tiles, args.chanceTile, args.allowChi, args.calcAdvanceNum, args.bestShantenOnly)
     }
 
     register<HanHu, ParentPoint>("getParentPointByHanHu") { args ->
