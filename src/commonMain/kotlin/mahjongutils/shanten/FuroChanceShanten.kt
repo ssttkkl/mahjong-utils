@@ -31,7 +31,8 @@ fun furoChanceShanten(
         val shantenAfterPon = regularShanten(
             tilesAfterPon,
             calcAdvanceNum = calcAdvanceNum,
-            bestShantenOnly = bestShantenOnly
+            bestShantenOnly = bestShantenOnly,
+            allowAnkan = false
         )
         shantenAfterPon.shantenInfo as ShantenWithGot
     } else {
@@ -68,7 +69,8 @@ fun furoChanceShanten(
             val shantenAfterChi = regularShanten(
                 tilesAfterChi,
                 calcAdvanceNum = calcAdvanceNum,
-                bestShantenOnly = bestShantenOnly
+                bestShantenOnly = bestShantenOnly,
+                allowAnkan = false
             )
             shantenAfterChi.shantenInfo as ShantenWithGot
         }
@@ -82,7 +84,8 @@ fun furoChanceShanten(
         val shantenAfterMinkan = regularShanten(
             tilesAfterMinkan,
             calcAdvanceNum = calcAdvanceNum,
-            bestShantenOnly = bestShantenOnly
+            bestShantenOnly = bestShantenOnly,
+            allowAnkan = false
         )
         shantenAfterMinkan.shantenInfo as ShantenWithoutGot
     } else {
@@ -100,8 +103,20 @@ fun furoChanceShanten(
         shantenNum = min(shantenNum, it)
     }
 
-    return ShantenResult(
-        type = ShantenResult.Type.FuroChance, hand = passShanten.hand,
-        shantenInfo = ShantenWithFuroChance(shantenNum, pass, chi, pon, minkan)
-    )
+    return if (bestShantenOnly) {
+        val pass_ = if (pass.shantenNum == shantenNum) pass else null
+        val chi_ = chi.filterValues { it.shantenNum == shantenNum }
+        val pon_ = if (pon?.shantenNum == shantenNum) pon else null
+        val minkan_ = if (minkan?.shantenNum == shantenNum) minkan else null
+
+        ShantenResult(
+            type = ShantenResult.Type.FuroChance, hand = passShanten.hand,
+            shantenInfo = ShantenWithFuroChance(shantenNum, pass_, chi_, pon_, minkan_)
+        )
+    } else {
+        ShantenResult(
+            type = ShantenResult.Type.FuroChance, hand = passShanten.hand,
+            shantenInfo = ShantenWithFuroChance(shantenNum, pass, chi, pon, minkan)
+        )
+    }
 }

@@ -74,7 +74,7 @@ data class ShantenWithFuroChance(
     /**
      * Pass后的向听信息
      */
-    val pass: ShantenWithoutGot,
+    val pass: ShantenWithoutGot?,
     /**
      * 每种搭子吃后的向听信息
      */

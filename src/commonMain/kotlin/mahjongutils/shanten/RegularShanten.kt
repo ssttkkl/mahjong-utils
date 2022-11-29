@@ -56,6 +56,7 @@ private fun handleRegularShantenWithGot(
     patterns: Collection<RegularHandPattern>,
     calcGoodShapeAdvance: Boolean = true,
     bestShantenOnly: Boolean = false,
+    allowAnkan: Boolean = true,
 ): Pair<ShantenWithGot, Collection<RegularHandPattern>> {
     val (bestShanten, bestPatterns) = selectBestPatterns(patterns, RegularHandPattern::calcShanten)
 
@@ -110,25 +111,28 @@ private fun handleRegularShantenWithGot(
     }
 
     // 最后计算暗杠
-    val tilesCount = tiles.countAsMap()
-    var ankanToAdvance = buildMap {
-        for ((t, count) in tilesCount) {
-            if (count == 4) {
-                val tilesAfterAnkan = tiles - t - t - t - t
-                val patternsAfterAnkan = regularHandPatternSearch(tilesAfterAnkan, furo + Kan(t, true))
-                this[t] = handleRegularShantenWithoutGot(patternsAfterAnkan).first
+    var ankanToAdvance: Map<Tile, ShantenWithoutGot>? = null
+    if (allowAnkan) {
+        val tilesCount = tiles.countAsMap()
+        ankanToAdvance = buildMap {
+            for ((t, count) in tilesCount) {
+                if (count == 4) {
+                    val tilesAfterAnkan = tiles - t - t - t - t
+                    val patternsAfterAnkan = regularHandPatternSearch(tilesAfterAnkan, furo + Kan(t, true))
+                    this[t] = handleRegularShantenWithoutGot(patternsAfterAnkan).first
+                }
             }
         }
-    }
 
-    if (bestShantenOnly) {
-        ankanToAdvance = ankanToAdvance.filterValues { it.shantenNum == bestShanten }
+        if (bestShantenOnly) {
+            ankanToAdvance = ankanToAdvance.filterValues { it.shantenNum == bestShanten }
+        }
     }
 
     val shantenInfo = ShantenWithGot(
         shantenNum = bestShanten,
         discardToAdvance = discardToShanten,
-        ankanToAdvance = ankanToAdvance
+        ankanToAdvance = ankanToAdvance ?: emptyMap()
     )
     return Pair(shantenInfo, bestPatterns)
 }
@@ -146,6 +150,7 @@ fun regularShanten(
     tiles: List<Tile>, furo: List<Furo> = listOf(),
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
+    allowAnkan: Boolean = true,
 ): ShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
@@ -154,7 +159,7 @@ fun regularShanten(
     var (shantenInfo, bestPatterns) = if (!withGot) {
         handleRegularShantenWithoutGot(patterns)
     } else {
-        handleRegularShantenWithGot(patterns, bestShantenOnly = bestShantenOnly)
+        handleRegularShantenWithGot(patterns, bestShantenOnly = bestShantenOnly, allowAnkan = allowAnkan)
     }
 
     if (calcAdvanceNum) {

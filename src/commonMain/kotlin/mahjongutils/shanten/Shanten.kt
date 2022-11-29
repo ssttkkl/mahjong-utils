@@ -65,6 +65,7 @@ fun shanten(
     tiles: List<Tile>, furo: List<Furo> = emptyList(),
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
+    allowAnkan: Boolean = true,
 ): ShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
@@ -72,14 +73,14 @@ fun shanten(
     val k = tiles.size / 3
 
     if (k != 4) {
-        val regular = regularShanten(tiles, furo, calcAdvanceNum, bestShantenOnly)
+        val regular = regularShanten(tiles, furo, calcAdvanceNum, bestShantenOnly, allowAnkan)
         return ShantenResult(
             type = ShantenResult.Type.Union, hand = regular.hand, shantenInfo = regular.shantenInfo,
             regular = regular
         )
     }
 
-    val regular = regularShanten(tiles, furo, false, bestShantenOnly)
+    val regular = regularShanten(tiles, furo, false, bestShantenOnly, allowAnkan)
     val chitoi = chitoiShanten(tiles, false, bestShantenOnly)
     val kokushi = kokushiShanten(tiles, false, bestShantenOnly)
 

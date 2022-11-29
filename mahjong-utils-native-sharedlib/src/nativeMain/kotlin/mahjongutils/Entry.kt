@@ -89,6 +89,7 @@ data class ShantenArgs(
     val furo: List<Furo> = listOf(),
     val calcAdvanceNum: Boolean = true,
     val bestShantenOnly: Boolean = false,
+    val allowAnkan: Boolean = true
 )
 
 @Serializable
@@ -122,10 +123,10 @@ data class HoraArgs(
 
 val ENTRY = Entry.Builder().apply {
     register<ShantenArgs, ShantenResult>("shanten") { args ->
-        shanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly)
+        shanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
     }
     register<ShantenArgs, ShantenResult>("regularShanten") { args ->
-        regularShanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly)
+        regularShanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
     }
     register<ShantenArgs, ShantenResult>("chitoiShanten") { args ->
         chitoiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
