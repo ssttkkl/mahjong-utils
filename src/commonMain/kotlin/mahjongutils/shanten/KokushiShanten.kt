@@ -2,6 +2,7 @@ package mahjongutils.shanten
 
 import mahjongutils.common.calcShanten
 import mahjongutils.models.Tile
+import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.KokushiHandPattern
 import mahjongutils.models.isYaochu
@@ -109,7 +110,7 @@ fun kokushiShanten(
     }
 
     if (calcAdvanceNum) {
-        shantenInfo = shantenInfo.fillAdvanceNum(*tiles.toTypedArray())
+        shantenInfo = shantenInfo.fillAdvanceNum(tiles.countAsCodeArray())
     }
 
     val hand = Hand(tiles = tiles, furo = emptyList(), patterns = patterns)

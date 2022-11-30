@@ -2,6 +2,7 @@ package mahjongutils.shanten
 
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
+import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.HandPattern
 import kotlin.math.min
@@ -113,10 +114,8 @@ fun shanten(
     }
 
     if (calcAdvanceNum) {
-        shantenInfo = shantenInfo.fillAdvanceNum(
-            *tiles.toTypedArray(),
-            *(furo.flatMap { it.asMentsu().tiles }.toTypedArray())
-        )
+        val tilesCount = (tiles + furo.flatMap { it.asMentsu().tiles }).countAsCodeArray()
+        shantenInfo = shantenInfo.fillAdvanceNum(tilesCount)
     }
 
     val hand = Hand(tiles = tiles, furo = furo, patterns = patterns)

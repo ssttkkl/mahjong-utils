@@ -53,28 +53,28 @@ internal fun <T : HandPattern> selectBestPatterns(
     return Pair(bestShanten, bestPattern)
 }
 
-internal fun ShantenWithoutGot.fillAdvanceNum(remaining: IntArray): ShantenWithoutGot {
+private fun ShantenWithoutGot.fillAdvanceNumByRemaining(remaining: IntArray): ShantenWithoutGot {
     val advanceNum = advance.sumOf { remaining[it.code] }
     val goodShapeAdvanceNum = goodShapeAdvance?.sumOf { remaining[it.code] }
 
     return copy(advanceNum = advanceNum, goodShapeAdvanceNum = goodShapeAdvanceNum)
 }
 
-internal inline fun <reified T : Shanten> T.fillAdvanceNum(vararg tiles: Tile): T {
+internal inline fun <reified T : Shanten> T.fillAdvanceNum(tileCount: IntArray): T {
     val remaining = IntArray(Tile.MAX_TILE_CODE + 1) { 4 }
-    tiles.forEach {
-        remaining[it.code] -= 1
+    for (i in tileCount.indices) {
+        remaining[i] -= tileCount[i]
     }
 
     return when (this) {
         is ShantenWithoutGot -> {
-            this.fillAdvanceNum(remaining) as T
+            this.fillAdvanceNumByRemaining(remaining) as T
         }
 
         is ShantenWithGot -> {
             copy(
-                discardToAdvance = discardToAdvance.mapValues { (k, v) -> v.fillAdvanceNum(remaining) },
-                ankanToAdvance = ankanToAdvance.mapValues { (k, v) -> v.fillAdvanceNum(remaining) },
+                discardToAdvance = discardToAdvance.mapValues { (k, v) -> v.fillAdvanceNumByRemaining(remaining) },
+                ankanToAdvance = ankanToAdvance.mapValues { (k, v) -> v.fillAdvanceNumByRemaining(remaining) },
             ) as T
         }
 

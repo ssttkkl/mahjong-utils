@@ -1,29 +1,36 @@
 package mahjongutils.shanten
 
-import mahjongutils.common.afterAdvanceForOneShantenHand
 import mahjongutils.common.calcAdvance
 import mahjongutils.common.calcShanten
 import mahjongutils.common.regularHandPatternSearch
 import mahjongutils.models.Furo
 import mahjongutils.models.Kan
 import mahjongutils.models.Tile
-import mahjongutils.models.countAsMap
+import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.RegularHandPattern
 
 private fun getGoodShapeAdvance(
-    bestPatterns: Collection<RegularHandPattern>,
+    tiles: List<Tile>, furo: List<Furo>,
     advance: Set<Tile>,
-    usedTiles: Collection<Tile>
+    otherUsedTiles: Collection<Tile> = emptyList()
 ): Set<Tile> {
     return buildSet {
         for (adv in advance) {
-            val patternsAfterAdv = bestPatterns.map { it.afterAdvanceForOneShantenHand(adv) }.flatten().toSet()
-            val shantenAfterAdv = handleRegularShantenWithGot(
-                patternsAfterAdv,
+            val tilesAfterAdv = tiles + adv
+            var shantenAfterAdv = handleRegularShantenWithGot(
+                tilesAfterAdv, furo,
                 calcGoodShapeAdvance = false,
-                bestShantenOnly = true
-            ).first.fillAdvanceNum(adv, *usedTiles.toTypedArray())
+                bestShantenOnly = true,
+                allowAnkan = false
+            ).first
+
+            val tilesCount = (tilesAfterAdv + furo.flatMap { it.tiles }).countAsCodeArray()
+            otherUsedTiles.forEach {
+                tilesCount[it.code] += 1
+            }
+            shantenAfterAdv = shantenAfterAdv.fillAdvanceNum(tilesCount)
+
             val maxAdvAfterAdv = shantenAfterAdv.discardToAdvance.values.maxBy { it.advanceNum!! }
             if (maxAdvAfterAdv.advanceNum!! > 4) {
                 add(adv)
@@ -33,17 +40,17 @@ private fun getGoodShapeAdvance(
 }
 
 private fun handleRegularShantenWithoutGot(
-    patterns: Collection<RegularHandPattern>,
+    tiles: List<Tile>, furo: List<Furo>,
     calcGoodShapeAdvance: Boolean = true,
 ): Pair<ShantenWithoutGot, Collection<RegularHandPattern>> {
+    val patterns = regularHandPatternSearch(tiles, furo)
     val (bestShanten, bestPatterns) = selectBestPatterns(patterns, RegularHandPattern::calcShanten)
 
-    val advance = bestPatterns.map { it.calcAdvance() }.flatten().toSet()
+    val tilesCount = (tiles + furo.flatMap { it.tiles }).countAsCodeArray()
+    val advance = bestPatterns.map { it.calcAdvance() }.flatten().filter { tilesCount[it.code] < 4 }.toSet()
 
     val goodShape = if (calcGoodShapeAdvance && bestShanten == 1) {
-        val pat = bestPatterns.first()
-        val usedTiles = pat.tiles + pat.furo.flatMap { it.asMentsu().tiles }
-        getGoodShapeAdvance(bestPatterns, advance, usedTiles)
+        getGoodShapeAdvance(tiles, furo, advance)
     } else {
         null
     }
@@ -53,20 +60,19 @@ private fun handleRegularShantenWithoutGot(
 }
 
 private fun handleRegularShantenWithGot(
-    patterns: Collection<RegularHandPattern>,
+    tiles: List<Tile>, furo: List<Furo>,
     calcGoodShapeAdvance: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowAnkan: Boolean = true,
 ): Pair<ShantenWithGot, Collection<RegularHandPattern>> {
+    val patterns = regularHandPatternSearch(tiles, furo)
     val (bestShanten, bestPatterns) = selectBestPatterns(patterns, RegularHandPattern::calcShanten)
 
-    val tiles = bestPatterns.first().tiles
-    val furo = bestPatterns.first().furo
+    val tilesCount = (tiles + furo.flatMap { it.tiles }).countAsCodeArray()
 
     // 先计算不退向的打法
     val discardToShanten = HashMap<Tile, ShantenWithoutGot>().run {
         val discardToAdvance = HashMap<Tile, MutableSet<Tile>>()
-        val patternsAfterDiscard = HashMap<Tile, MutableSet<RegularHandPattern>>()
 
         bestPatterns.forEach { pat ->
             pat.remaining.forEachIndexed { i, discard ->
@@ -75,9 +81,7 @@ private fun handleRegularShantenWithGot(
                             pat.remaining.slice(i + 1 until pat.remaining.size)
                 )
 
-                (patternsAfterDiscard.getOrPut(discard) { HashSet() }).add(patAfterDiscard)
-
-                val advance = patAfterDiscard.calcAdvance()
+                val advance = patAfterDiscard.calcAdvance().filter { tilesCount[it.code] < 4 }
                 if (!discardToAdvance.containsKey(discard)) {
                     discardToAdvance[discard] = advance.toMutableSet()
                 } else {
@@ -88,8 +92,7 @@ private fun handleRegularShantenWithGot(
 
         for ((discard, advance) in discardToAdvance) {
             val goodShape = if (calcGoodShapeAdvance && bestShanten == 1) {
-                val usedTiles = tiles + furo.flatMap { it.asMentsu().tiles }
-                getGoodShapeAdvance(patternsAfterDiscard[discard]!!, advance, usedTiles)
+                getGoodShapeAdvance(tiles - discard, furo, advance, listOf(discard))
             } else {
                 null
             }
@@ -104,8 +107,9 @@ private fun handleRegularShantenWithGot(
         val nonBestShantenTiles = tiles.toSet() - discardToShanten.keys
         for (discard in nonBestShantenTiles) {
             val tilesAfterDiscard = tiles - discard
-            val patternsAfterDiscard = regularHandPatternSearch(tilesAfterDiscard, furo)
-            val shantenAfterDiscard = handleRegularShantenWithoutGot(patternsAfterDiscard, calcGoodShapeAdvance).first
+            val shantenAfterDiscard = handleRegularShantenWithoutGot(
+                tilesAfterDiscard, furo, calcGoodShapeAdvance
+            ).first
             discardToShanten[discard] = shantenAfterDiscard
         }
     }
@@ -113,13 +117,13 @@ private fun handleRegularShantenWithGot(
     // 最后计算暗杠
     var ankanToAdvance: Map<Tile, ShantenWithoutGot>? = null
     if (allowAnkan) {
-        val tilesCount = tiles.countAsMap()
         ankanToAdvance = buildMap {
-            for ((t, count) in tilesCount) {
+            for (t in Tile.allExcludeAkaDora) {
+                val count = tilesCount[t.code]
                 if (count == 4) {
                     val tilesAfterAnkan = tiles - t - t - t - t
-                    val patternsAfterAnkan = regularHandPatternSearch(tilesAfterAnkan, furo + Kan(t, true))
-                    this[t] = handleRegularShantenWithoutGot(patternsAfterAnkan).first
+                    val furoAfterAnkan = furo + Kan(t, true)
+                    this[t] = handleRegularShantenWithoutGot(tilesAfterAnkan, furoAfterAnkan).first
                 }
             }
         }
@@ -154,19 +158,16 @@ fun regularShanten(
 ): ShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
-    val patterns = regularHandPatternSearch(tiles, furo)
     val withGot = tiles.size % 3 == 2
     var (shantenInfo, bestPatterns) = if (!withGot) {
-        handleRegularShantenWithoutGot(patterns)
+        handleRegularShantenWithoutGot(tiles, furo)
     } else {
-        handleRegularShantenWithGot(patterns, bestShantenOnly = bestShantenOnly, allowAnkan = allowAnkan)
+        handleRegularShantenWithGot(tiles, furo, bestShantenOnly = bestShantenOnly, allowAnkan = allowAnkan)
     }
 
     if (calcAdvanceNum) {
-        shantenInfo = shantenInfo.fillAdvanceNum(
-            *tiles.toTypedArray(),
-            *(furo.flatMap { it.asMentsu().tiles }.toTypedArray())
-        )
+        val tilesCount = (tiles + furo.flatMap { it.tiles }).countAsCodeArray()
+        shantenInfo = shantenInfo.fillAdvanceNum(tilesCount)
     }
 
     val hand = Hand(tiles = tiles, furo = furo, patterns = bestPatterns)

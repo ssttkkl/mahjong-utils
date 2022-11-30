@@ -158,6 +158,50 @@ class TestShanten {
     @Test
     fun testWithGot() {
         tester(
+            "12233344445556s", ShantenWithGot(
+                shantenNum = 0, discardToAdvance = mapOf(
+                    Tile.get("3s") to ShantenWithoutGot(
+                        shantenNum = 0,
+                        advance = Tile.parseTiles("1567s").toSet(),
+                        advanceNum = 11
+                    ),
+                    Tile.get("2s") to ShantenWithoutGot(
+                        shantenNum = 0,
+                        advance = Tile.parseTiles("1357s").toSet(),
+                        advanceNum = 9
+                    ),
+                    Tile.get("5s") to ShantenWithoutGot(
+                        shantenNum = 0,
+                        advance = Tile.parseTiles("17s").toSet(),
+                        advanceNum = 7
+                    ),
+                    Tile.get("6s") to ShantenWithoutGot(
+                        shantenNum = 0,
+                        advance = Tile.parseTiles("1235s").toSet(),
+                        advanceNum = 7
+                    ),
+                    Tile.get("1s") to ShantenWithoutGot(
+                        shantenNum = 0,
+                        advance = Tile.parseTiles("25s").toSet(),
+                        advanceNum = 3
+                    ),
+                    Tile.get("4s") to ShantenWithoutGot(
+                        shantenNum = 0,
+                        advance = Tile.parseTiles("25s").toSet(),
+                        advanceNum = 3
+                    ),
+                ), ankanToAdvance = mapOf(
+                    Tile.get("4s") to ShantenWithoutGot(
+                        shantenNum = 1,
+                        advance = Tile.parseTiles("1235678s").toSet(),
+                        advanceNum = 18,
+                        goodShapeAdvance = Tile.parseTiles("1237s").toSet(),
+                        goodShapeAdvanceNum = 10
+                    )
+                )
+            )
+        )
+        tester(
             "34568m235p368s", ShantenWithGot(
                 shantenNum = 2, discardToAdvance = mapOf(
                     Tile.get("5p") to ShantenWithoutGot(

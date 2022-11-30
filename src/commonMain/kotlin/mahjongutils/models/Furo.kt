@@ -17,6 +17,8 @@ sealed interface Furo {
      */
     fun asMentsu(): Mentsu
 
+    val tiles: List<Tile>
+
     companion object {
         /**
          * 根据给定牌构造副露
@@ -84,6 +86,9 @@ data class Chi(
     override fun asMentsu(): Shuntsu {
         return Shuntsu(tile)
     }
+
+    override val tiles: List<Tile>
+        get() = listOf(tile, tile.advance(1), tile.advance(2))
 }
 
 /**
@@ -100,6 +105,9 @@ data class Pon(
     override fun asMentsu(): Kotsu {
         return Kotsu(tile)
     }
+
+    override val tiles: List<Tile>
+        get() = listOf(tile, tile, tile)
 }
 
 /**
@@ -120,4 +128,6 @@ data class Kan(
     override fun asMentsu(): Kotsu {
         return Kotsu(tile)
     }
+    override val tiles: List<Tile>
+        get() = listOf(tile, tile, tile, tile)
 }

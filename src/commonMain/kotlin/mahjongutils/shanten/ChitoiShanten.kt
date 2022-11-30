@@ -1,6 +1,7 @@
 package mahjongutils.shanten
 
 import mahjongutils.models.Tile
+import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.countAsMap
 import mahjongutils.models.hand.ChitoiHandPattern
 import mahjongutils.models.hand.Hand
@@ -109,7 +110,7 @@ fun chitoiShanten(
     }
 
     if (calcAdvanceNum) {
-        shantenInfo = shantenInfo.fillAdvanceNum(*tiles.toTypedArray())
+        shantenInfo = shantenInfo.fillAdvanceNum(tiles.countAsCodeArray())
     }
 
     val hand = Hand(tiles = tiles, furo = emptyList(), patterns = listOf(pattern))
