@@ -73,7 +73,8 @@ publishing {
 
         // Provide artifacts information requited by Maven Central
         pom {
-            name.set("Mahjong Utils (for Japanese Riichi Mahjong)")
+            name.set("Mahjong Utils")
+            description.set("Mahjong Utils (for Japanese Riichi Mahjong)")
             url.set("https://github.com/ssttkkl/mahjong-utils")
 
             licenses {
@@ -90,7 +91,9 @@ publishing {
                 }
             }
             scm {
-                url.set("https://github.com/ssttkkl/mahjong-utils.git")
+                connection.set("scm:git:git://github.com/ssttkkl/mahjong-utils.git")
+                developerConnection.set("scm:git:ssh://github.com:ssttkkl/mahjong-utils.git")
+                url.set("https://github.com/ssttkkl/mahjong-utils/tree/master")
             }
 
         }
