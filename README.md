@@ -21,7 +21,7 @@ Maven：
 <dependency>
   <groupId>io.github.ssttkkl</groupId>
   <artifactId>mahjong-utils</artifactId>
-  <version>0.2.0</version>
+  <version>${mahjongUtilsVersion}</version>
 </dependency>
 ```
 
