@@ -165,7 +165,7 @@ object Yakus {
     /**
      * 三色同刻
      */
-    val Sandoku = Yaku("Sandoku", 2) { pattern ->
+    val Sandoko = Yaku("Sandoko", 2) { pattern ->
         if (pattern !is RegularHoraHandPattern)
             return@Yaku false
 
@@ -358,7 +358,7 @@ object Yakus {
      */
     val allCommonYaku = setOf(
         Tsumo, Pinhu, Tanyao, Ipe, SelfWind, RoundWind, Haku, Hatsu, Chun,
-        Sanshoku, Ittsu, Chanta, Chitoi, Toitoi, Sananko, Honroto, Sandoku, Sankantsu, Shosangen,
+        Sanshoku, Ittsu, Chanta, Chitoi, Toitoi, Sananko, Honroto, Sandoko, Sankantsu, Shosangen,
         Honitsu, Junchan, Ryanpe, Chinitsu
     )
 
