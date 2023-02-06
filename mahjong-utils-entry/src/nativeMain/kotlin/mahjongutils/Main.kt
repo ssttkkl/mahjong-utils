@@ -20,4 +20,14 @@ private object JsonResultEncoder : ResultEncoder<String> {
     }
 }
 
-val ENTRY = buildEntry(JsonParamsDecoder, JsonResultEncoder)
+class Entry(
+    router: Map<String, Method<String, String>>
+) : IEntry<String, String> by EntryImpl(router, JsonParamsDecoder, JsonResultEncoder)
+
+val ENTRY = buildEntry(object : EntryFactory<String, String, Entry> {
+    override val paramsDecoder: ParamsDecoder<String> = JsonParamsDecoder
+    override val resultEncoder: ResultEncoder<String> = JsonResultEncoder
+    override fun create(router: Map<String, Method<String, String>>): Entry {
+        return Entry(router)
+    }
+})

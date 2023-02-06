@@ -8,11 +8,10 @@ import mahjongutils.hora.Hora
 import mahjongutils.hora.hora
 import mahjongutils.shanten.*
 
-internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
-    paramsDecoder: ParamsDecoder<RAW_PARAMS>,
-    resultEncoder: ResultEncoder<RAW_RESULT>
-): IEntry<RAW_PARAMS, RAW_RESULT> {
-    return Entry.Builder(paramsDecoder, resultEncoder).apply {
+fun <RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_PARAMS, RAW_RESULT>> buildEntry(
+    factory: EntryFactory<RAW_PARAMS, RAW_RESULT, E>
+): E {
+    return EntryBuilder(factory).apply {
         register<ShantenArgs, ShantenResult>("shanten") { args ->
             shanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
         }
