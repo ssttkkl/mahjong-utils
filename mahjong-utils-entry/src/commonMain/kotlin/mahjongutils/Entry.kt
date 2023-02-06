@@ -1,8 +1,10 @@
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalJsExport::class)
 
 package mahjongutils
 
 import kotlinx.serialization.*
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -29,11 +31,16 @@ interface ParamsDecoder<RAW_PARAMS : Any> {
     fun <PARAMS : Any> decodeParams(rawParams: RAW_PARAMS, paramsType: KType): PARAMS
 }
 
+@JsExport
+interface IEntry<RAW_PARAMS : Any, RAW_RESULT : Any> {
+    fun call(name: String, rawParams: RAW_PARAMS): RAW_RESULT
+}
+
 class Entry<RAW_PARAMS : Any, RAW_RESULT : Any> private constructor(
     private val router: Map<String, Method<RAW_PARAMS, RAW_RESULT>>,
     private val paramsDecoder: ParamsDecoder<RAW_PARAMS>,
     private val resultEncoder: ResultEncoder<RAW_RESULT>
-) {
+) : IEntry<RAW_PARAMS, RAW_RESULT> {
 
     internal class Builder<RAW_PARAMS : Any, RAW_RESULT : Any>(
         private val paramsDecoder: ParamsDecoder<RAW_PARAMS>,
@@ -71,7 +78,7 @@ class Entry<RAW_PARAMS : Any, RAW_RESULT : Any> private constructor(
         }
     }
 
-    fun call(name: String, rawParams: RAW_PARAMS): RAW_RESULT {
+    override fun call(name: String, rawParams: RAW_PARAMS): RAW_RESULT {
         val method = router[name]
         return if (method != null) {
             method.call(rawParams)

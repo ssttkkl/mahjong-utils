@@ -3,14 +3,21 @@ plugins {
     kotlin("plugin.serialization") version "1.7.21"
 }
 
-group = "io.github.ssttkkl"
-version = "0.2.0-SNAPSHOT"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
     mavenCentral()
 }
 
 kotlin {
+    js(IR) {
+        browser {
+            useCommonJs()
+            binaries.library()
+        }
+    }
+
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = when {
@@ -39,6 +46,11 @@ kotlin {
             }
         }
         val nativeMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+            }
+        }
+        val jsMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }

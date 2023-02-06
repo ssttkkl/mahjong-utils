@@ -11,7 +11,7 @@ import mahjongutils.shanten.*
 internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
     paramsDecoder: ParamsDecoder<RAW_PARAMS>,
     resultEncoder: ResultEncoder<RAW_RESULT>
-): Entry<RAW_PARAMS, RAW_RESULT> {
+): IEntry<RAW_PARAMS, RAW_RESULT> {
     return Entry.Builder(paramsDecoder, resultEncoder).apply {
         register<ShantenArgs, ShantenResult>("shanten") { args ->
             shanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)

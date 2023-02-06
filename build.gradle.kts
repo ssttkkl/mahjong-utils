@@ -14,7 +14,7 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js {
+    js(IR) {
         // To build distributions for and run tests on browser or Node.js use one or both of:
         browser()
         nodejs()
