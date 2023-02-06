@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalJsExport::class, ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalJsExport::class)
 
 package mahjongutils
 
@@ -26,14 +26,14 @@ private object DynamicResultEncoder : ResultEncoder<dynamic> {
 
 @JsExport
 class Entry internal constructor(
-    router: Map<String, Method<String, String>>
-) : IEntry<String, String> by EntryImpl(router, DynamicParamsDecoder, DynamicResultEncoder)
+    router: Map<String, Method<dynamic, dynamic>>
+) : IEntry<dynamic, dynamic> by EntryImpl(router, DynamicParamsDecoder, DynamicResultEncoder)
 
 @JsExport
-val ENTRY = buildEntry(object : EntryFactory<String, String, Entry> {
-    override val paramsDecoder: ParamsDecoder<String> = DynamicParamsDecoder
-    override val resultEncoder: ResultEncoder<String> = DynamicResultEncoder
-    override fun create(router: Map<String, Method<String, String>>): Entry {
+val ENTRY = buildEntry(object : EntryFactory<dynamic, dynamic, Entry> {
+    override val paramsDecoder: ParamsDecoder<dynamic> = DynamicParamsDecoder
+    override val resultEncoder: ResultEncoder<dynamic> = DynamicResultEncoder
+    override fun create(router: Map<String, Method<dynamic, dynamic>>): Entry {
         return Entry(router)
     }
 })
