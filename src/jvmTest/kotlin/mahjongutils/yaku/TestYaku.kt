@@ -19,7 +19,7 @@ import mahjongutils.yaku.Yakus.Pinhu
 import mahjongutils.yaku.Yakus.RoundWind
 import mahjongutils.yaku.Yakus.Ryanpe
 import mahjongutils.yaku.Yakus.Sananko
-import mahjongutils.yaku.Yakus.Sandoku
+import mahjongutils.yaku.Yakus.Sandoko
 import mahjongutils.yaku.Yakus.Sankantsu
 import mahjongutils.yaku.Yakus.Sanshoku
 import mahjongutils.yaku.Yakus.SelfWind
@@ -266,7 +266,7 @@ internal class TestYaku {
 
 
     @Test
-    fun testSananko_Sandoku() {
+    fun testSananko_Sandoko() {
         val pattern = RegularHoraHandPattern(
             RegularHandPattern(
                 k = 4,
@@ -281,12 +281,12 @@ internal class TestYaku {
             tsumo = false,
         )
 
-        tester(pattern, setOf(Sananko, Sandoku))
+        tester(pattern, setOf(Sananko, Sandoko))
     }
 
 
     @Test
-    fun testSandoku_Sankantsu() {
+    fun testSandoko_Sankantsu() {
         val pattern = RegularHoraHandPattern(
             RegularHandPattern(
                 k = 4,
@@ -301,7 +301,7 @@ internal class TestYaku {
             tsumo = false,
         )
 
-        tester(pattern, setOf(Sandoku, Sankantsu))
+        tester(pattern, setOf(Sandoko, Sankantsu))
     }
 
 
