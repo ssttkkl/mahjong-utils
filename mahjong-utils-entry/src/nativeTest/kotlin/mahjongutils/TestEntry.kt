@@ -15,7 +15,8 @@ class TestEntry {
     fun testRegularShanten() {
         val args = ShantenArgs(Tile.parseTiles("11123456789999s"))
         val rawResult = ENTRY.call("regularShanten", Json.encodeToString(args))
-        print(rawResult)
+        print("rawResult: ")
+        println(rawResult)
         val result = Json.decodeFromString<Result<ShantenResult>>(rawResult)
         assertEquals(200, result.code)
     }
@@ -24,6 +25,7 @@ class TestEntry {
     fun testPointByHanHu() {
         val args = HanHu(5, 30)
         val rawResult = ENTRY.call("getParentPointByHanHu", Json.encodeToString(args))
+        print("rawResult: ")
         print(rawResult)
         val result = Json.decodeFromString<Result<ParentPoint>>(rawResult)
         assertEquals(200, result.code)
@@ -33,6 +35,7 @@ class TestEntry {
     fun testPointByHanHu2() {
         val args = HanHu(1, 20)
         val rawResult = ENTRY.call("getParentPointByHanHu", Json.encodeToString(args))
+        print("rawResult: ")
         print(rawResult)
         val result = Json.decodeFromString<Result<ParentPoint>>(rawResult)
         assertEquals(400, result.code)
@@ -42,6 +45,7 @@ class TestEntry {
     fun testHora() {
         val args = HoraArgs(Tile.parseTiles("11123456778999s"), agari = Tile.get("7s"), tsumo = true)
         val rawResult = ENTRY.call("hora", Json.encodeToString(args))
+        print("rawResult: ")
         print(rawResult)
         val result = Json.decodeFromString<Result<Hora>>(rawResult)
         assertEquals(200, result.code)

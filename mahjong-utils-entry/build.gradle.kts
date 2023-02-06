@@ -27,15 +27,20 @@ kotlin {
     }
 
     sourceSets {
-        val nativeMain by getting {
+        val commonMain by getting {
             dependencies {
                 implementation(rootProject)
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.1")
             }
         }
-        val nativeTest by getting {
+        val commonTest by getting {
             dependencies {
-                implementation(kotlin("test")) // This brings all the platform dependencies automatically
+                implementation(kotlin("test"))
+            }
+        }
+        val nativeMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }
         }
     }
