@@ -5,8 +5,6 @@ mahjong-utils
 
 日麻小工具
 
-（Python版：[ssttkkl/mahjong-utils-py](https://github.com/ssttkkl/mahjong-utils-py)）
-
 已实现功能：
 
 - [x] 获取番符对应和牌点数
@@ -14,6 +12,16 @@ mahjong-utils
 - [x] 摸牌何切分析
 - [x] 鸣牌分析
 - [x] 和了分析（役种、番数、符数）
+
+## 平台支持
+
+本项目使用Kotlin/Multiplatform编写，支持多平台调用
+
+对于Kotlin、Java：请直接往下阅读
+
+对于Python：我们提供了绑定方便Python侧调用，具体请看 https://github.com/ssttkkl/mahjong-utils/tree/py
+
+对于JavaScript/TypeScript：我们提供了绑定方便JS/TS侧调用，具体请看 https://github.com/ssttkkl/mahjong-utils/tree/js
 
 ## 使用（Kotlin）
 
@@ -181,5 +189,6 @@ System.out.println(result.getParentPoint());  // ParentPoint(ron=18000, tsumo=60
 System.out.println(result.getChildPoint());  // ChildPoint(ron=12000, tsumoParent=6000, tsumoChild=3000)
 ```
 
-## 使用（动态库、JS）
+## 使用（动态库）
 
+待续
