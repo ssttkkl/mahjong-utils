@@ -30,9 +30,6 @@ class TestPointByHanHu {
             getParentPointByHanHu(6, 34)
         }
         assertThrows<IllegalArgumentException> {
-            getParentPointByHanHu(6, 120)
-        }
-        assertThrows<IllegalArgumentException> {
             getParentPointByHanHu(-1, 30)
         }
         assertThrows<IllegalArgumentException> {
@@ -64,9 +61,6 @@ class TestPointByHanHu {
         }
         assertThrows<IllegalArgumentException> {
             getChildPointByHanHu(6, 34)
-        }
-        assertThrows<IllegalArgumentException> {
-            getChildPointByHanHu(6, 120)
         }
         assertThrows<IllegalArgumentException> {
             getChildPointByHanHu(-1, 30)

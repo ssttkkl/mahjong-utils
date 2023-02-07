@@ -182,17 +182,20 @@ data class Tile private constructor(
                 for (c in text) {
                     if (c.uppercase() in typeNames) {
                         val type = TileType.valueOf(c.uppercase())
+                        if (pending.isEmpty()) {
+                            throw IllegalArgumentException("invalid text: $text")
+                        }
                         addAll(pending.map { Tile.get(type, it) })
                         pending.clear()
                     } else if (c.isDigit()) {
                         pending.add(c.digitToInt())
                     } else {
-                        throw IllegalArgumentException("invalid character: $c")
+                        throw IllegalArgumentException("invalid text: $text")
                     }
                 }
 
                 if (pending.size > 0) {
-                    throw IllegalArgumentException("missing tile type at the end of your given text")
+                    throw IllegalArgumentException("invalid text: $text")
                 }
             }
         }
