@@ -1,98 +1,161 @@
-import React, {useState} from "react";
-import {Button, Form, FormProps, Input, Radio} from "antd";
-import {getChildPointByHanHu, getParentPointByHanHu} from "mahjong-utils";
+import React, { useState } from 'react'
+import { Alert, Button, Descriptions, Form, type FormProps, InputNumber, Radio, Space } from 'antd'
+import { getChildPointByHanHu, getParentPointByHanHu } from 'mahjong-utils'
 
-const initialValues = {
-    han: 3,
-    hu: 40,
-    parent: true
+interface PointByHanHuFormValues {
+  han: number
+  hu: number
+  isParent: boolean
 }
 
-const PointByHanHuForm: React.FC<FormProps> = (props) => {
-    return (
-        <Form
-            labelCol={{span: 8}}
-            wrapperCol={{span: 16}}
-            style={{maxWidth: 600}}
-            {...props}>
-
-            <Form.Item
-                label="番数"
-                name="han"
-                rules={[{required: true, message: '请填入番数！'}]}
-            >
-                <Input suffix="番"/>
-            </Form.Item>
-
-            <Form.Item
-                label="符数"
-                name="hu"
-                rules={[{required: true, message: '请填入符数！'}]}
-            >
-                <Input suffix="符"/>
-            </Form.Item>
-
-            <Form.Item
-                label=" "
-                colon={false}
-                name="parent"
-                initialValue={true}>
-                <Radio.Group>
-                    <Radio.Button value={true}>亲家</Radio.Button>
-                    <Radio.Button value={false}>子家</Radio.Button>
-                </Radio.Group>
-
-            </Form.Item>
-
-            <Form.Item wrapperCol={{offset: 8, span: 16}}>
-                <Button type="primary" htmlType="submit">
-                    计算
-                </Button>
-            </Form.Item>
-        </Form>
-    )
+const exampleValues: PointByHanHuFormValues = {
+  han: 3,
+  hu: 40,
+  isParent: true
 }
 
-const PointByHanHuResult: React.FC<{ parent: boolean, result?: any }> = (props) => {
-    if (props.result === undefined) {
-        return null
-    }
-    const {result} = props
+const PointByHanHuForm: React.FC<FormProps<PointByHanHuFormValues>> = (props) => {
+  const [form] = Form.useForm<PointByHanHuFormValues>()
+  return (
+    <Form<PointByHanHuFormValues>
+      form={form}
+      labelCol={{ span: 8 }}
+      wrapperCol={{ span: 16 }}
+      style={{ maxWidth: 600 }}
+      {...props}>
 
-    return (
-        <React.Fragment>
-            <div>荣和：{result.ron}</div>
-            <div>自摸：{
-                props.parent
-                    ? `${result.tsumo} ALL`
-                    : `${result.tsumoParent} ${result.tsumoChild}`
-            }</div>
-        </React.Fragment>
-    )
+      <Form.Item
+        label="番数"
+        name="han"
+        rules={[{
+          required: true,
+          message: '请填入番数！'
+        }]}
+      >
+        <InputNumber min={1} max={13} step={1}/>
+      </Form.Item>
+
+      <Form.Item
+        label="符数"
+        name="hu"
+        rules={[{
+          required: true,
+          message: '请填入符数！'
+        }]}
+      >
+        <InputNumber min={20} max={140} step={10}/>
+      </Form.Item>
+
+      <Form.Item
+        label=" "
+        colon={false}
+        name="parent"
+        initialValue={true}>
+        <Radio.Group>
+          <Radio.Button value={true}>亲家</Radio.Button>
+          <Radio.Button value={false}>子家</Radio.Button>
+        </Radio.Group>
+
+      </Form.Item>
+
+      <Form.Item wrapperCol={{
+        offset: 8,
+        span: 16
+      }}>
+        <Space wrap>
+          <Button type="primary" htmlType="submit">
+            计算
+          </Button>
+          <Button onClick={() => {
+            form.resetFields()
+          }}>
+            清空
+          </Button>
+          <Button onClick={() => {
+            form.setFieldsValue(exampleValues)
+          }}>
+            填入示例
+          </Button>
+        </Space>
+      </Form.Item>
+    </Form>
+  )
+}
+
+export const PointByHanHuResult: React.FC<{
+  ron: number
+  tsumoParent: number
+  tsumoChild: number
+  isParent: boolean
+}> = ({
+  isParent,
+  ron,
+  tsumoChild,
+  tsumoParent
+}) => {
+  return (
+    <Descriptions title="番符算点" column={1}>
+      {ron !== 0
+        ? <Descriptions.Item label="荣和">
+          {ron}点
+        </Descriptions.Item>
+        : null}
+      {(tsumoChild !== 0 || tsumoParent !== 0)
+        ? <Descriptions.Item label="自摸">
+          {tsumoChild !== 0 ? `子家${tsumoChild}点` : ''}
+          {(tsumoChild !== 0 && tsumoParent !== 0) ? '，' : ''}
+          {tsumoParent !== 0 ? `亲家${tsumoParent}点` : ''}
+          （共{isParent ? tsumoChild * 3 : tsumoChild * 2 + tsumoParent}点）
+        </Descriptions.Item>
+        : null}
+    </Descriptions>
+  )
 }
 
 const PointByHanHuTab: React.FC = () => {
-    const [values, setValues] = useState<any>()
-    const [result, setResult] = useState<any>()
+  const [isParent, setIsParent] = useState(true)
+  const [result, setResult] = useState<{ ron: number, tsumoParent: number, tsumoChild: number }>()
+  const [error, setError] = useState<unknown>()
 
-    const onFinish = (values: any) => {
-        setValues(values)
-        if (values.parent) {
-            setResult(getParentPointByHanHu(values.han, values.hu))
-        } else {
-            setResult(getChildPointByHanHu(values.han, values.hu))
-        }
-    };
+  const onFinish = (values: PointByHanHuFormValues): void => {
+    try {
+      setIsParent(values.isParent)
+      if (values.isParent) {
+        const r = getParentPointByHanHu(values.han, values.hu)
+        setResult({
+          ron: r.ron,
+          tsumoChild: r.tsumo,
+          tsumoParent: 0
+        })
+      } else {
+        setResult(getChildPointByHanHu(values.han, values.hu))
+      }
+      setError(undefined)
+    } catch (e) {
+      setResult(undefined)
+      setError(e)
+    }
+  }
 
-    return (
-        <React.Fragment>
-            <PointByHanHuForm
-                name="shanten"
-                initialValues={initialValues}
-                onFinish={onFinish}/>
-            <PointByHanHuResult parent={values?.parent} result={result}/>
-        </React.Fragment>
-    )
+  return (
+    <React.Fragment>
+      <PointByHanHuForm
+        name="shanten"
+        onFinish={onFinish}/>
+      <Alert
+        message="发生错误"
+        description={error?.toString()}
+        type="error"
+        style={{ visibility: error !== undefined ? 'visible' : 'hidden' }}
+      />
+      <PointByHanHuResult
+        isParent={isParent}
+        ron={result?.ron ?? 0}
+        tsumoChild={result?.tsumoChild ?? 0}
+        tsumoParent={result?.tsumoParent ?? 0}
+      />
+    </React.Fragment>
+  )
 }
 
 export default PointByHanHuTab

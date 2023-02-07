@@ -1,0 +1,11 @@
+.tile-large {
+    width: 48px;
+}
+
+.tile-normal {
+    width: 32px;
+}
+
+.tile-small {
+    width: 24px;
+}

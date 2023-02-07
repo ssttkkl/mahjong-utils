@@ -1,171 +1,241 @@
-import {Form, Input, Button, FormProps} from "antd";
-import React, {useState} from "react";
-import {shanten, Tile, UnionShantenResult, ShantenWithoutGot, ShantenWithGot} from "mahjong-utils";
+import { Alert, Button, Descriptions, Form, type FormProps, Input, Space, Typography } from 'antd'
+import React, { useState } from 'react'
+import { shanten, type ShantenWithGot, type ShantenWithoutGot, Tile, type UnionShantenResult } from 'mahjong-utils'
+import ActionToDiscardTable, { type ActionToDiscard } from './ActionToDiscardTable'
+import { tilesRule } from '../utils/form-rules'
+import Tiles from './Tiles/Tiles'
+import { useWindowWidth } from '@react-hook/window-size'
 
-const initialValues = {
-    tiles: "34568m235p68s"
+const { Title } = Typography
+
+interface ShantenFormValues {
+  tiles: string
 }
 
-const ShantenForm: React.FC<FormProps> = (props) => {
-    return (
-        <Form
-            labelCol={{span: 8}}
-            wrapperCol={{span: 16}}
-            style={{maxWidth: 600}}
-            {...props}>
-
-            <Form.Item
-                label="手牌"
-                name="tiles"
-                rules={[{required: true, message: '请填入手牌！'}]}
-            >
-                <Input/>
-            </Form.Item>
-
-            <Form.Item wrapperCol={{offset: 8, span: 16}}>
-                <Button type="primary" htmlType="submit">
-                    计算
-                </Button>
-            </Form.Item>
-        </Form>
-    )
+const exampleValues: ShantenFormValues = {
+  tiles: '34568m235p688s'
 }
 
-const ShantenResult: React.FC<{ result?: UnionShantenResult }> = (props) => {
-    if (props.result === undefined) {
-        return null
+const ShantenForm: React.FC<
+FormProps<ShantenFormValues>
+> = (props) => {
+  const [form] = Form.useForm<ShantenFormValues>()
+  return (
+    <Form<ShantenFormValues>
+      form={form}
+      labelCol={{ span: 8 }}
+      wrapperCol={{ span: 16 }}
+      style={{ maxWidth: 600 }}
+      {...props}>
+
+      <Form.Item
+        label="手牌"
+        name="tiles"
+        rules={[
+          {
+            required: true,
+            message: '请填入手牌！'
+          },
+          tilesRule({
+            maxLength: 14,
+            allowRestModThree: [1, 2]
+          })
+        ]}
+        validateFirst
+      >
+        <Input/>
+      </Form.Item>
+
+      <Form.Item wrapperCol={{
+        offset: 8,
+        span: 16
+      }}>
+        <Space wrap>
+          <Button type="primary" htmlType="submit">
+            计算
+          </Button>
+          <Button onClick={() => {
+            form.resetFields()
+          }}>
+            清空
+          </Button>
+          <Button onClick={() => {
+            form.setFieldsValue(exampleValues)
+          }}>
+            填入示例
+          </Button>
+        </Space>
+      </Form.Item>
+    </Form>
+  )
+}
+
+const ShantenWithoutGotView: React.FC<{
+  shantenInfo: ShantenWithoutGot
+}> = ({ shantenInfo }) => {
+  const windowWidth = useWindowWidth()
+  const tileSize = windowWidth < 540 ? 'small' : 'normal'
+
+  return (
+    <Descriptions title="向听计算（未摸牌）" column={1}>
+      <Descriptions.Item label="向听数">
+        {shantenInfo.shantenNum
+        }</Descriptions.Item>
+      <Descriptions.Item label="进张">
+        <div style={{ overflowWrap: 'break-word' }}>
+          <Tiles tiles={shantenInfo.advance} size={tileSize} sorted/>
+          <span>（{shantenInfo.advanceNum}张）</span>
+        </div>
+      </Descriptions.Item>
+      {shantenInfo.goodShapeAdvance !== undefined && shantenInfo.goodShapeAdvanceNum !== undefined
+        ? <>
+          <Descriptions.Item label="好型进张">
+            <Tiles
+              tiles={shantenInfo.goodShapeAdvance} sorted/>
+            <span>（{shantenInfo.goodShapeAdvanceNum}张）</span>
+          </Descriptions.Item>
+          <Descriptions.Item label="好型率">
+            {(shantenInfo.goodShapeAdvanceNum / shantenInfo.advanceNum * 100).toFixed(2)}%
+          </Descriptions.Item>
+        </>
+        : null}
+    </Descriptions>
+  )
+}
+
+const ShantenWithGotView: React.FC<{
+  shantenInfo: ShantenWithGot
+}> = ({ shantenInfo }) => {
+  const {
+    discardToAdvance,
+    ankanToAdvance
+  } = shantenInfo
+  const grouped = new Map<number, Map<['discard' | 'ankan', Tile], ShantenWithoutGot>>()
+  discardToAdvance.forEach((shantenAfterDiscard, discard) => {
+    if (!grouped.has(shantenAfterDiscard.shantenNum)) {
+      grouped.set(shantenAfterDiscard.shantenNum, new Map())
     }
-    const {result} = props
-    const {shantenInfo} = result
+    grouped.get(shantenAfterDiscard.shantenNum)?.set(['discard', discard], shantenAfterDiscard)
 
-    let content: React.ReactNode[] = []
-    if (shantenInfo.type === 'ShantenWithoutGot') {
-        const {
-            shantenNum,
-            advance,
-            advanceNum,
-            goodShapeAdvance,
-            goodShapeAdvanceNum
-        } = shantenInfo as ShantenWithoutGot
-
-        if (shantenNum === 0) {
-            content.push(<div>
-                <b>听牌</b>
-            </div>)
-        } else {
-            content.push(<div>
-                <b>{shantenNum.toString() + "向听："}</b>
-            </div>)
-        }
-        advance.sort((a, b) => a.compareTo(b))
-        content.push(<div>
-            {`进张：${advance.map(it => it.toString()).join(", ")} (共${advanceNum}张)`}
-        </div>)
-
-        if (shantenNum === 1) {
-            goodShapeAdvance?.sort((a, b) => a.compareTo(b))
-            content.push(<div>
-                {`好型进张：${goodShapeAdvance?.map(it => it.toString())?.join(", ")} (共${goodShapeAdvanceNum}张)`}
-            </div>)
-        }
-    } else {
-        const {
-            shantenNum,
-            discardToAdvance,
-            ankanToAdvance
-        } = shantenInfo as ShantenWithGot
-
-        if (shantenNum === -1) {
-            content.push(<div>
-                <b>已和牌</b>
-            </div>)
-        }
-
-        const grouped = new Map<number, Map<['discard' | 'ankan', Tile], ShantenWithoutGot>>()
-        // @ts-ignore
-        Object.entries(discardToAdvance).forEach(([discard, shantenAfterDiscard]: [Tile, ShantenWithoutGot]) => {
-            if (!grouped.has(shantenAfterDiscard.shantenNum)) {
-                grouped.set(shantenAfterDiscard.shantenNum, new Map())
-            }
-            grouped.get(shantenAfterDiscard.shantenNum)?.set(["discard", discard], shantenAfterDiscard)
-
-            shantenAfterDiscard.advance.sort((a, b) => a.compareTo(b))
-            if (shantenAfterDiscard.shantenNum === 1) {
-                shantenAfterDiscard.goodShapeAdvance?.sort((a, b) => a.compareTo(b))
-            }
-        })
-
-        // @ts-ignore
-        Object.entries(ankanToAdvance).forEach(([ankan, shantenAfterAnkan]: [Tile, ShantenWithoutGot]) => {
-            if (!grouped.has(shantenAfterAnkan.shantenNum)) {
-                grouped.set(shantenAfterAnkan.shantenNum, new Map())
-            }
-            grouped.get(shantenAfterAnkan.shantenNum)?.set(["ankan", ankan], shantenAfterAnkan)
-
-            shantenAfterAnkan.advance.sort((a, b) => a.compareTo(b))
-            if (shantenAfterAnkan.shantenNum === 1) {
-                shantenAfterAnkan.goodShapeAdvance?.sort((a, b) => a.compareTo(b))
-            }
-        })
-
-        grouped.forEach((groupedShanten, shantenNum) => {
-            if (shantenNum === 0) {
-                content.push(<div>
-                    <b>
-                        听牌
-                        {shantenNum !== shantenInfo.shantenNum ? "（退向）" : ""}
-                    </b>
-                </div>)
-            } else {
-                content.push(<div>
-                    <b>
-                        {shantenNum.toString()}向听
-                        {shantenNum !== shantenInfo.shantenNum ? "（退向）" : ""}
-                        ：
-                    </b>
-                </div>)
-            }
-
-            groupedShanten.forEach((shantenInfoAfterAction, [action, tile]) => {
-                let text =`[${action === 'discard' ? '打' : '暗杠'}${tile}] `
-                text += `进张：${shantenInfoAfterAction.advance.join(", ")} (共${shantenInfoAfterAction.advanceNum}张`
-                if (shantenNum === 1) {
-                    text += `，好型${shantenInfoAfterAction.goodShapeAdvanceNum}张)`
-                }
-                text += ')'
-                content.push(<div>{text}</div>)
-            })
-        })
+    shantenAfterDiscard.advance.sort((a, b) => a.compareTo(b))
+    if (shantenAfterDiscard.shantenNum === 1) {
+      shantenAfterDiscard.goodShapeAdvance?.sort((a, b) => a.compareTo(b))
     }
+  })
 
-    return (
-        <React.Fragment>
-            {content}
-        </React.Fragment>
-    )
+  ankanToAdvance.forEach((shantenAfterAnkan, ankan) => {
+    if (!grouped.has(shantenAfterAnkan.shantenNum)) {
+      grouped.set(shantenAfterAnkan.shantenNum, new Map())
+    }
+    grouped.get(shantenAfterAnkan.shantenNum)?.set(['ankan', ankan], shantenAfterAnkan)
+
+    shantenAfterAnkan.advance.sort((a, b) => a.compareTo(b))
+    if (shantenAfterAnkan.shantenNum === 1) {
+      shantenAfterAnkan.goodShapeAdvance?.sort((a, b) => a.compareTo(b))
+    }
+  })
+
+  const ordered = [...grouped.entries()]
+  ordered.sort((a, b) => a[0] - b[0])
+
+  return (
+    <React.Fragment>
+      <Descriptions title="向听计算（已摸牌）">
+        <Descriptions.Item label="向听数">
+          {shantenInfo.shantenNum}
+          {
+            shantenInfo.shantenNum === -1
+              ? '（和牌）'
+              : ''
+          }
+        </Descriptions.Item>
+      </Descriptions>
+      {ordered.map(([shantenNum, infos]) => {
+        let title = shantenNum === 0 ? '听牌' : `${shantenNum}向听`
+        if (shantenNum !== shantenInfo.shantenNum) {
+          title += '（退向）'
+        }
+
+        const curGroup = [...infos.entries()]
+        curGroup.sort((a, b) => {
+          if (a[1].advanceNum !== b[1].advanceNum) {
+            return a[1].advanceNum - b[1].advanceNum
+          } else if (a[1].goodShapeAdvanceNum !== undefined && b[1].goodShapeAdvanceNum !== undefined) {
+            return a[1].goodShapeAdvanceNum - b[1].goodShapeAdvanceNum
+          } else {
+            return 0
+          }
+        }).reverse()
+
+        const data: ActionToDiscard[] = curGroup.map(([action, shantenAfterAction]) => {
+          return {
+            action: [action[0] === 'discard' ? '打' : '暗杠', action[1]],
+            advance: shantenAfterAction.advance,
+            advanceNum: shantenAfterAction.advanceNum,
+            goodShapeAdvance: shantenAfterAction.goodShapeAdvance,
+            goodShapeAdvanceNum: shantenAfterAction.goodShapeAdvanceNum,
+            goodShapeRate: shantenAfterAction.goodShapeAdvanceNum !== undefined
+              ? shantenAfterAction.goodShapeAdvanceNum / shantenAfterAction.advanceNum
+              : undefined
+          }
+        })
+
+        return (
+          <>
+            <Title level={5}>{title} </Title>
+            <ActionToDiscardTable
+              dataSource={data}
+              showGoodShapeInfo={shantenNum === 1}
+            />
+          </>
+        )
+      })}
+    </React.Fragment>
+  )
 }
-
 
 const ShantenTab: React.FC = () => {
-    const [result, setResult] = useState<UnionShantenResult>()
+  const [result, setResult] = useState<UnionShantenResult>()
+  const [error, setError] = useState<unknown>()
 
-    const onFinish = (values: any) => {
-        const tiles = Tile.parseTiles(values.tiles)
-        if (tiles !== undefined) {
-            const r = shanten(tiles)
-            setResult(r)
-        }
-    };
+  const onFinish = (values: ShantenFormValues): void => {
+    try {
+      const tiles = Tile.parseTiles(values.tiles)
+      if (tiles !== undefined) {
+        const r = shanten(tiles)
+        setResult(r)
+        setError(undefined)
+      } else {
+        throw new Error('解析牌代码时发生错误')
+      }
+    } catch (e) {
+      setResult(undefined)
+      setError(e)
+    }
+  }
 
-    return (
-        <React.Fragment>
-            <ShantenForm
-                name="shanten"
-                initialValues={initialValues}
-                onFinish={onFinish}/>
-            <ShantenResult result={result}/>
-        </React.Fragment>
-    )
+  return (
+    <React.Fragment>
+      <ShantenForm
+        name="shanten"
+        onFinish={onFinish}/>
+      <Alert
+        message="发生错误"
+        description={error?.toString()}
+        type="error"
+        style={{ visibility: error !== undefined ? 'visible' : 'hidden' }}
+      />
+      {
+        (result != null)
+          ? (
+              result?.shantenInfo.type === 'ShantenWithoutGot'
+                ? <ShantenWithoutGotView shantenInfo={result.shantenInfo}/>
+                : <ShantenWithGotView shantenInfo={result.shantenInfo}/>
+            )
+          : null
+      }
+    </React.Fragment>
+  )
 }
 
 export default ShantenTab
