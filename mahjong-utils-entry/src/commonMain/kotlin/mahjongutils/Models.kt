@@ -23,6 +23,7 @@ data class FuroChanceShantenArgs(
     val allowChi: Boolean = true,
     val calcAdvanceNum: Boolean = true,
     val bestShantenOnly: Boolean = false,
+    val allowKuikae: Boolean = false,
 )
 
 @Serializable

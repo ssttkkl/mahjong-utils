@@ -10,6 +10,7 @@ import kotlin.math.min
  * @param allowChi 是否允许吃
  * @param calcAdvanceNum 是否计算进张数
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @param allowKuikae 是否允许食替
  * @return 向听分析结果（其中shantenInfo必定为ShantenWithFuroChance类型）
  */
 fun furoChanceShanten(
@@ -18,6 +19,7 @@ fun furoChanceShanten(
     allowChi: Boolean = true,
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
+    allowKuikae: Boolean = false
 ): ShantenResult {
     val tiles = ensureLegalTiles(tiles, allowWithGot = false)
     val tilesCount = tiles.countAsCodeArray()
@@ -72,8 +74,22 @@ fun furoChanceShanten(
                 bestShantenOnly = bestShantenOnly,
                 allowAnkan = false
             )
-            shantenAfterChi.shantenInfo as ShantenWithGot
-        }
+            val shantenInfo = shantenAfterChi.shantenInfo as ShantenWithGot
+            if (!allowKuikae) {
+                val discardToAdvance = shantenInfo.discardToAdvance.filterKeys {
+                    it !== chanceTile && (tt !is Ryanmen || (
+                            chanceTile > tt.second && it !== tt.first.advance(-1)
+                                    || chanceTile < tt.second && it !== tt.second.advance(1))
+                            )
+                }
+                shantenInfo.copy(
+                    shantenNum = discardToAdvance.values.maxOf { it.shantenNum },
+                    discardToAdvance = discardToAdvance
+                )
+            } else {
+                shantenInfo
+            }
+        }.filterValues { it.discardToAdvance.isNotEmpty() }
     } else {
         emptyMap()
     }
