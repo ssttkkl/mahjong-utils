@@ -57,13 +57,13 @@ jobs:
       with:
         system-packages: java-11-openjdk
         python-versions: cp310-cp310
-    - name: Upload a Build Artifact
+    - name: Upload the Build Artifact
       if: ${{ matrix.os != 'ubuntu-latest' }}
       uses: actions/upload-artifact@v3.1.1
       with:
           name: distribution
           path: dist/*
-    - name: Upload a Build Artifact (for Linux)
+    - name: Upload the Build Artifact (for Linux)
       if: ${{ matrix.os == 'ubuntu-latest' }}
       uses: actions/upload-artifact@v3.1.1
       with:
@@ -74,12 +74,15 @@ jobs:
     strategy:
       matrix:
         py: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
-        os: [ windows-latest, ubuntu-latest ]
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
     runs-on: ${{ matrix.os }}
+    env:
+      # https://github.com/actions/setup-python/issues/469
+      SYSTEM_VERSION_COMPAT: 0
     steps:
-    - name: Checkout my repository
+    - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Download a Build Artifact
+    - name: Download the Build Artifact
       uses: actions/download-artifact@v3.0.1
       with:
         name: distribution
@@ -90,14 +93,28 @@ jobs:
         python-version: ${{ matrix.py }}
     - name: Install dependencies
       run: |
-        python${{ matrix.py }} -m pip install --upgrade pip setuptools
-        python${{ matrix.py }} -m pip install pytest
-        python${{ matrix.py }} -m pip install -r requirements.txt
-        python${{ matrix.py }} -m pip install --find-links=dist mahjong-utils --no-index
+        python -m pip install --upgrade pip
+        python -m pip install pytest
+        python -m pip install -r requirements.txt
+    - name: Install package (for Linux)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        python -m pip install dist/*-manylinux*.whl
+    - name: Install package (for MacOS)
+      if: ${{ matrix.os == 'macos-latest' }}
+      run: |
+        python -m pip install dist/*-macosx*.whl
+    - name: Install package (for Windows)
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: |
+        Get-ChildItem "*-win*.whl" |
+        Foreach-Object {
+          python -m pip install $_.FullName
+        }
     - name: Test
       run: |
         mv mahjong_utils _mahjong_utils  # to avoid importing from workspace
-        python${{ matrix.py }} -m pytest
+        python -m pytest
   publish:
     if: ${{ github.event_name == 'release' }}
     needs: test
