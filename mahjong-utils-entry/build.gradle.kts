@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform") version "1.7.21"
     kotlin("plugin.serialization") version "1.7.21"
+    id("dev.petuska.npm.publish") version "3.2.0"
 }
 
 group = rootProject.group
@@ -15,6 +16,18 @@ kotlin {
         browser {
             useCommonJs()
             binaries.library()
+        }
+        compilations["main"].packageJson {
+            name = "mahjong-utils-entry"
+            customField(
+                "author", mapOf(
+                    "name" to "ssttkkl",
+                    "email" to "huang.wen.long@hotmail.com"
+                )
+            )
+            customField(
+                "license", "MIT"
+            )
         }
     }
 
@@ -54,6 +67,14 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }
+        }
+    }
+}
+
+npmPublish {
+    registries {
+        register("npmjs") {
+            uri.set("https://registry.npmjs.org")
         }
     }
 }
