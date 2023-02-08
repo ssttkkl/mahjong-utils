@@ -1688,10 +1688,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-mahjong-utils-entry@^0.2.5:
-  version "0.2.5"
-  resolved "http://localhost:4873/mahjong-utils-entry/-/mahjong-utils-entry-0.2.5.tgz#3a87b2fad2c20902c6466bc9bd8449193131b682"
-  integrity sha512-VNBlqDhjQtl8dogIxviCM3HwhlRrUmqNI1mfPDXkwtn/D4r/YNGwlVHXpFaZCpSpV+FtZ8VQQmdUgGIo+1HYMw==
+mahjong-utils-entry@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/mahjong-utils-entry/-/mahjong-utils-entry-0.3.1.tgz#d116d04222e00b7cd4aaeeed7da241e27b22484c"
+  integrity sha512-n5TeFDSJJIW/ddL27SmpUS1g72mOaXW74I+CgY/EyXRQgyUPmVd3CIvJCwzRNUgLS0DTqdpSbUBVFDtz7u8svg==
 
 make-dir@^3.0.0:
   version "3.1.0"

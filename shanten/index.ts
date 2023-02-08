@@ -82,7 +82,8 @@ export function furoChanceShanten(
     opts: {
         allowChi?: boolean,
         calcAdvanceNum?: boolean,
-        bestShantenOnly?: boolean
+        bestShantenOnly?: boolean,
+        allowKuikae?: boolean
     } = {}
 ): FuroChanceShantenResult {
     const result = ENTRY.call("furoChanceShanten", {
