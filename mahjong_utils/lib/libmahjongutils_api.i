@@ -154,9 +154,10 @@ typedef struct {
         } Entry;
         struct {
           libmahjongutils_KType* (*_type)(void);
-          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
-          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly);
+          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae);
           libmahjongutils_KBoolean (*get_allowChi)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
+          libmahjongutils_KBoolean (*get_allowKuikae)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_KBoolean (*get_bestShantenOnly)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_KBoolean (*get_calcAdvanceNum)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_kref_mahjongutils_models_Tile (*get_chanceTile)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
@@ -166,7 +167,8 @@ typedef struct {
           libmahjongutils_KBoolean (*component3)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_KBoolean (*component4)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_KBoolean (*component5)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
-          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*copy)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly);
+          libmahjongutils_KBoolean (*component6)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
+          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*copy)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae);
           libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz, libmahjongutils_kref_kotlin_Any other);
           libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           const char* (*toString)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);

@@ -296,6 +296,7 @@ def furo_chance_shanten(
         allow_chi: bool = True,
         calc_advance_num: bool = True,
         best_shanten_only: bool = False,
+        allow_kuikae: bool = False
 ):
     """
     副露判断分析
@@ -305,6 +306,7 @@ def furo_chance_shanten(
     :param allow_chi: 是否允许吃
     :param calc_advance_num: 是否计算进张数
     :param best_shanten_only: 仅计算最优向听数的打法（不计算退向打法）
+    :param allow_kuikae: 是否允许食替
     :return 向听分析结果
     """
     result = libmahjongutils.call("furoChanceShanten", {
@@ -313,6 +315,7 @@ def furo_chance_shanten(
         "allowChi": allow_chi,
         "calcAdvanceNum": calc_advance_num,
         "bestShantenOnly": best_shanten_only,
+        "allowKuikae": allow_kuikae
     })
 
     return ShantenResult.__decode__(result)
