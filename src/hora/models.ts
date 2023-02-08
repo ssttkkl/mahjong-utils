@@ -9,7 +9,9 @@ interface BaseHoraHandPattern {
     roundWind?: Wind
 }
 
-export type RegularHoraHandPattern = (BaseHoraHandPattern & RegularHandPattern)
+export type RegularHoraHandPattern = (BaseHoraHandPattern & RegularHandPattern & {
+    jyantou: Tile
+})
 
 export interface ChitoiHoraHandPattern extends BaseHoraHandPattern {
     pairs: Tile[]
@@ -20,7 +22,7 @@ export interface KokushiHoraHandPattern extends BaseHoraHandPattern {
 }
 
 
-export type HoraHandPattern = RegularHoraHandPattern | ChitoiHoraHandPattern | KokushiHoraHandPattern & {
+export type HoraHandPattern = (RegularHoraHandPattern | ChitoiHoraHandPattern | KokushiHoraHandPattern) & {
     type: 'RegularHoraHandPattern' | 'ChitoiHoraHandPattern' | 'KokushiHoraHandPattern'
 }
 

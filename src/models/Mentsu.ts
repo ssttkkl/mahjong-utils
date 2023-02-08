@@ -1,5 +1,5 @@
-import {Tile} from "./Tile";
-import {Decoder, Encoder} from "./types";
+import { Tile } from "./Tile";
+import { Decoder, Encoder } from "./types";
 
 export enum MentsuType {
     Shuntsu = "Shuntsu",
@@ -21,6 +21,16 @@ export class Mentsu {
         }
         return mentsu
     }
+
+    get tiles(): Tile[] {
+        switch (this.type) {
+            case MentsuType.Kotsu:
+                return [this.tile, this.tile, this.tile]
+            case MentsuType.Shuntsu:
+                return [this.tile, this.tile.advance(1)!, this.tile.advance(2)!]
+        }
+    }
+
 
     toString(): string {
         switch (this.type) {

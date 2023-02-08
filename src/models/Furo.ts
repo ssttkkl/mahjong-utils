@@ -1,5 +1,5 @@
-import {Tile, TileType} from "./Tile";
-import {Decoder, Encoder} from "./types";
+import { Tile, TileType } from "./Tile";
+import { Decoder, Encoder } from "./types";
 
 export enum FuroType {
     Chi = "Chi",
@@ -13,7 +13,7 @@ export class Furo {
     }
 
     static encode: Encoder<Furo> = (data) => {
-        let raw: any = {type: data.type, tile: Tile.encode(data.tile)}
+        let raw: any = { type: data.type, tile: Tile.encode(data.tile) }
         if (data.type === FuroType.Minkan) {
             raw.type = "Kan"
             raw.ankan = false
@@ -78,4 +78,29 @@ export class Furo {
         }
     }
 
+    get tiles(): Tile[] {
+        switch (this.type) {
+            case FuroType.Chi:
+                return [this.tile, this.tile.advance(1)!, this.tile.advance(2)!]
+            case FuroType.Pon:
+                return [this.tile, this.tile, this.tile]
+            case FuroType.Minkan:
+            case FuroType.Ankan:
+                return [this.tile, this.tile, this.tile, this.tile]
+        }
+    }
+
+    toString(): string {
+        switch (this.type) {
+            case FuroType.Chi:
+                return `${this.tile.num}${this.tile.num + 1}${this.tile.num + 2}${FuroType[this.type]}`.toLowerCase()
+            case FuroType.Pon:
+                return `${this.tile.num}${this.tile.num}${this.tile.num}${FuroType[this.type]}`.toLowerCase()
+            case FuroType.Minkan:
+                return `${this.tile.num}${this.tile.num}${this.tile.num}${this.tile.num}${FuroType[this.type]}`.toLowerCase()
+            case FuroType.Ankan:
+                return `0${this.tile.num}${this.tile.num}0${FuroType[this.type]}`.toLowerCase()
+
+        }
+    }
 }

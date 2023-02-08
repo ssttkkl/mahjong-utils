@@ -29,7 +29,7 @@ const decodeRegularHoraHandPattern: Decoder<RegularHoraHandPattern, RawRegularHo
         selfWind: raw.selfWind,
         roundWind: raw.roundWind,
         k: raw.pattern.k,
-        jyantou: raw.pattern.jyantou ? Tile.decode(raw.pattern.jyantou) : null,
+        jyantou: Tile.decode(raw.pattern.jyantou),
         menzenMentsu: raw.pattern.menzenMentsu.map(Mentsu.decode),
         furo: raw.pattern.furo.map(Furo.decode),
         tatsu: raw.pattern.tatsu.map(Tatsu.decode),
@@ -45,7 +45,7 @@ const decodeChitoiHoraHandPattern: Decoder<ChitoiHoraHandPattern, RawChitoiHoraH
     return {
         agari: Tile.decode(raw.agari),
         tsumo: raw.tsumo,
-        hu: raw.hu,
+        hu: 25,  // 符数不传过来
         selfWind: raw.selfWind,
         roundWind: raw.roundWind,
         pairs: raw.pairs.map(Tile.decode)
@@ -60,7 +60,7 @@ const decodeKokushiHoraHandPattern: Decoder<KokushiHoraHandPattern, RawKokushiHo
     return {
         agari: Tile.decode(raw.agari),
         tsumo: raw.tsumo,
-        hu: raw.hu,
+        hu: 20, // 符数不传过来
         selfWind: raw.selfWind,
         roundWind: raw.roundWind,
         repeated: Tile.decode(raw.repeated)
@@ -80,12 +80,12 @@ export const decodeHoraHandPattern: Decoder<HoraHandPattern, RawHoraHandPattern>
             }
         case 'ChitoiHoraHandPattern':
             return {
-                type: 'RegularHoraHandPattern',
+                type: 'ChitoiHoraHandPattern',
                 ...decodeChitoiHoraHandPattern(raw as RawChitoiHoraHandPattern)
             }
         case 'KokushiHoraHandPattern':
             return {
-                type: 'RegularHoraHandPattern',
+                type: 'KokushiHoraHandPattern',
                 ...decodeKokushiHoraHandPattern(raw as RawKokushiHoraHandPattern)
             }
     }
