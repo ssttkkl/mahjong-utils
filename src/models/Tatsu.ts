@@ -1,5 +1,5 @@
-import {Tile, TileType} from "./Tile";
-import {Decoder, Encoder} from "./types";
+import { Tile, TileType } from "./Tile";
+import { Decoder, Encoder } from "./types";
 
 export enum TatsuType {
     Ryanmen = "Ryanmen",
@@ -10,6 +10,22 @@ export enum TatsuType {
 
 export class Tatsu {
     constructor(readonly type: TatsuType, readonly first: Tile) {
+        let valid = true
+        switch (this.type) {
+            case TatsuType.Ryanmen:
+                valid &&= first.num >= 2 && first.num <= 7 && first.type !== TileType.Z
+                break
+            case TatsuType.Penchan:
+                valid &&= (first.num === 1 || first.num ===8) && first.type !== TileType.Z
+                break
+            case TatsuType.Kanchan:
+                valid &&= first.num >= 1 && first.num <= 7 && first.type !== TileType.Z
+                break
+        }
+
+        if (!valid) {
+            throw new Error(`${first} cannot be the first tile of ${type}`)
+        }
     }
 
     static encode: Encoder<Tatsu, string> = (data) => {

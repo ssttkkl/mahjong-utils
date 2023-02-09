@@ -1,4 +1,4 @@
-import { Tile } from "./Tile";
+import { Tile, TileType } from "./Tile";
 import { Decoder, Encoder } from "./types";
 
 export enum MentsuType {
@@ -8,6 +8,14 @@ export enum MentsuType {
 
 export class Mentsu {
     constructor(readonly type: MentsuType, readonly tile: Tile) {
+        let valid = true
+        if (this.type === MentsuType.Shuntsu) {
+            valid &&= tile.num >= 1 && tile.num <= 7 && tile.type !== TileType.Z
+        }
+
+        if (!valid) {
+            throw new Error(`${tile} cannot be the tile of ${type}`)
+        }
     }
 
     static encode: Encoder<Mentsu, string> = (data) => {

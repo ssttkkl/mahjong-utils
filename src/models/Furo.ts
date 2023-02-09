@@ -1,3 +1,4 @@
+import { Mentsu, MentsuType } from "./Mentsu";
 import { Tile, TileType } from "./Tile";
 import { Decoder, Encoder } from "./types";
 
@@ -10,6 +11,14 @@ export enum FuroType {
 
 export class Furo {
     constructor(readonly type: FuroType, readonly tile: Tile) {
+        let valid = true
+        if (this.type === FuroType.Chi) {
+            valid &&= tile.num >= 1 && tile.num <= 7 && tile.type !== TileType.Z
+        }
+
+        if (!valid) {
+            throw new Error(`${tile} cannot be the tile of ${type}`)
+        }
     }
 
     static encode: Encoder<Furo> = (data) => {
@@ -100,7 +109,17 @@ export class Furo {
                 return `${this.tile.num}${this.tile.num}${this.tile.num}${this.tile.num}${FuroType[this.type]}`.toLowerCase()
             case FuroType.Ankan:
                 return `0${this.tile.num}${this.tile.num}0${FuroType[this.type]}`.toLowerCase()
+        }
+    }
 
+    asMentsu(): Mentsu {
+        switch (this.type) {
+            case FuroType.Chi:
+                return new Mentsu(MentsuType.Shuntsu, this.tile)
+            case FuroType.Pon:
+            case FuroType.Minkan:
+            case FuroType.Ankan:
+                return new Mentsu(MentsuType.Kotsu, this.tile)
         }
     }
 }
