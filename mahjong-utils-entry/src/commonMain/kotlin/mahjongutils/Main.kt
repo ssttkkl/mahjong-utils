@@ -25,7 +25,14 @@ fun <RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_PARAMS, RAW_RESULT>> bui
             kokushiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
         }
         register<FuroChanceShantenArgs, ShantenResult>("furoChanceShanten") { args ->
-            furoChanceShanten(args.tiles, args.chanceTile, args.allowChi, args.calcAdvanceNum, args.bestShantenOnly)
+            furoChanceShanten(
+                args.tiles,
+                args.chanceTile,
+                args.allowChi,
+                args.calcAdvanceNum,
+                args.bestShantenOnly,
+                args.allowKuikae
+            )
         }
 
         register<HanHu, ParentPoint>("getParentPointByHanHu") { args ->
