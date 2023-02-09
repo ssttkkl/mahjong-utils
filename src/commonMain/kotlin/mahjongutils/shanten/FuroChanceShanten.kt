@@ -24,6 +24,10 @@ fun furoChanceShanten(
     val tiles = ensureLegalTiles(tiles, allowWithGot = false)
     val tilesCount = tiles.countAsCodeArray()
 
+    if (tilesCount[chanceTile.code] == 4) {
+        throw IllegalArgumentException("invalid num of tile: $chanceTile")
+    }
+
     val passShanten = regularShanten(tiles)
     val pass = passShanten.shantenInfo as ShantenWithoutGot
 
@@ -32,6 +36,7 @@ fun furoChanceShanten(
         val tilesAfterPon = tiles - chanceTile - chanceTile
         val shantenAfterPon = regularShanten(
             tilesAfterPon,
+            listOf(Pon(chanceTile)),
             calcAdvanceNum = calcAdvanceNum,
             bestShantenOnly = bestShantenOnly,
             allowAnkan = false
@@ -70,6 +75,7 @@ fun furoChanceShanten(
             val tilesAfterChi = tiles - tt.first - tt.second
             val shantenAfterChi = regularShanten(
                 tilesAfterChi,
+                listOf(Chi(tt.first)),
                 calcAdvanceNum = calcAdvanceNum,
                 bestShantenOnly = bestShantenOnly,
                 allowAnkan = false
@@ -99,6 +105,7 @@ fun furoChanceShanten(
         val tilesAfterMinkan = tiles - chanceTile - chanceTile - chanceTile
         val shantenAfterMinkan = regularShanten(
             tilesAfterMinkan,
+            listOf(Kan(chanceTile)),
             calcAdvanceNum = calcAdvanceNum,
             bestShantenOnly = bestShantenOnly,
             allowAnkan = false
