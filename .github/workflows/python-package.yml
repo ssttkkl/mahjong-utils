@@ -107,7 +107,7 @@ jobs:
     - name: Install package (for Windows)
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        Get-ChildItem "*-win*.whl" | Foreach-Object { python -m pip install $_.FullName }
+        Get-ChildItem "dist/*-win*.whl" | Foreach-Object { python -m pip install $_.FullName }
     - name: Test
       run: |
         mv mahjong_utils _mahjong_utils  # to avoid importing from workspace
