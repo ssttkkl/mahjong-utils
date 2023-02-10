@@ -1,9 +1,9 @@
 package mahjongutils.yaku
 
 import mahjongutils.models.*
-import mahjongutils.models.hand.ChitoiHoraHandPattern
-import mahjongutils.models.hand.KokushiHoraHandPattern
-import mahjongutils.models.hand.RegularHoraHandPattern
+import mahjongutils.hora.ChitoiHoraHandPattern
+import mahjongutils.hora.KokushiHoraHandPattern
+import mahjongutils.hora.RegularHoraHandPattern
 
 /**
  * 包含所有役种

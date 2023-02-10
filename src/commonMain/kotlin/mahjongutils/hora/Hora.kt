@@ -12,7 +12,6 @@ import mahjongutils.hanhu.getParentPointByHanHu
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
-import mahjongutils.models.hand.HoraHandPattern
 import mahjongutils.shanten.*
 import mahjongutils.yaku.Yaku
 import mahjongutils.yaku.Yakus

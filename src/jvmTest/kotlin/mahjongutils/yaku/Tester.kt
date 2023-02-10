@@ -1,6 +1,6 @@
 package mahjongutils.yaku
 
-import mahjongutils.models.hand.HoraHandPattern
+import mahjongutils.hora.HoraHandPattern
 import kotlin.test.assertEquals
 
 

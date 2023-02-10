@@ -7,34 +7,41 @@ import mahjongutils.models.*
 /**
  * 手牌形
  */
-@Serializable
-sealed interface HandPattern : IHasFuro {
+interface HandPattern : IHasFuro {
     /**
      * 手牌（包括门前与副露）
      */
     val tiles: List<Tile>
+
     /**
      * 浮牌
      */
     val remaining: List<Tile>
 }
 
+// 单纯是为了sealed
+@Serializable
+sealed interface CommonHandPattern : HandPattern
+
 /**
  * 以标准形为目标的手牌
  */
-sealed interface IRegularHandPattern : HandPattern {
+interface IRegularHandPattern : HandPattern {
     /**
      * 目标面子组数（=手牌数/4）
      */
     val k: Int
+
     /**
      * 雀头
      */
     val jyantou: Tile?
+
     /**
      * 门前面子
      */
     val menzenMentsu: List<Mentsu>
+
     /**
      * 搭子
      */
@@ -85,12 +92,12 @@ data class RegularHandPattern(
     override val furo: List<Furo>,
     override val tatsu: List<Tatsu>,
     override val remaining: List<Tile>,
-) : IRegularHandPattern
+) : IRegularHandPattern, CommonHandPattern
 
 /**
  * 以七对子为目标的手牌
  */
-sealed interface IChitoiHandPattern : HandPattern {
+interface IChitoiHandPattern : HandPattern {
     /**
      * 已有对子
      */
@@ -115,12 +122,12 @@ sealed interface IChitoiHandPattern : HandPattern {
 data class ChitoiHandPattern(
     override val pairs: Set<Tile>,
     override val remaining: List<Tile>
-) : IChitoiHandPattern
+) : IChitoiHandPattern, CommonHandPattern
 
 /**
  * 以国士无双为目标的手牌
  */
-sealed interface IKokushiHandPattern : HandPattern {
+interface IKokushiHandPattern : HandPattern {
     /**
      * 幺九牌
      */
@@ -151,4 +158,4 @@ data class KokushiHandPattern(
     override val yaochu: Set<Tile>,
     override val repeated: Tile?,
     override val remaining: List<Tile>
-) : IKokushiHandPattern
+) : IKokushiHandPattern, CommonHandPattern

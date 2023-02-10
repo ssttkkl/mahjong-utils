@@ -4,9 +4,9 @@ import mahjongutils.models.Furo
 import mahjongutils.models.Mentsu
 import mahjongutils.models.Tatsu
 import mahjongutils.models.Tile
-import mahjongutils.models.hand.KokushiHoraHandPattern
+import mahjongutils.hora.KokushiHoraHandPattern
 import mahjongutils.models.hand.RegularHandPattern
-import mahjongutils.models.hand.RegularHoraHandPattern
+import mahjongutils.hora.RegularHoraHandPattern
 import mahjongutils.yaku.Yakus.Chinroto
 import mahjongutils.yaku.Yakus.Churen
 import mahjongutils.yaku.Yakus.ChurenNineWaiting

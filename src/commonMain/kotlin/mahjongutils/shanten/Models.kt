@@ -93,7 +93,7 @@ data class ShantenWithFuroChance(
 ) : Shanten
 
 @Serializable
-sealed interface ShantenResult<out S : Shanten, out P : HandPattern> {
+sealed interface ShantenResult<out S : Shanten, out P : CommonHandPattern> {
     /**
      * 手牌
      */
@@ -106,7 +106,7 @@ sealed interface ShantenResult<out S : Shanten, out P : HandPattern> {
 }
 
 @Serializable
-sealed interface CommonShantenResult<out P : HandPattern> : ShantenResult<CommonShanten, P>
+sealed interface CommonShantenResult<out P : CommonHandPattern> : ShantenResult<CommonShanten, P>
 
 @Serializable
 @SerialName("RegularShantenResult")
@@ -132,7 +132,7 @@ data class KokushiShantenResult(
 @Serializable
 @SerialName("UnionShantenResult")
 data class UnionShantenResult(
-    override val hand: Hand<HandPattern>,
+    override val hand: Hand<CommonHandPattern>,
     override val shantenInfo: CommonShanten,
     /**
      * 标准形向听分析结果
@@ -150,7 +150,7 @@ data class UnionShantenResult(
      */
     @EncodeDefault
     val kokushi: KokushiShantenResult? = null,
-) : CommonShantenResult<HandPattern>
+) : CommonShantenResult<CommonHandPattern>
 
 @Serializable
 @SerialName("FuroChanceShantenResult")

@@ -3,6 +3,7 @@ package mahjongutils.shanten
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
+import mahjongutils.models.hand.CommonHandPattern
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.HandPattern
 import kotlin.math.min
@@ -12,7 +13,7 @@ private fun mergeIntoWithoutGot(
     targetShantenNum: Int,
     advance: MutableSet<Tile>,
     goodShapeAdvance: MutableSet<Tile>,
-    patterns: MutableCollection<HandPattern>,
+    patterns: MutableCollection<CommonHandPattern>,
     result: ShantenResult<*,*>
 ) {
     if (result.shantenInfo.shantenNum == targetShantenNum) {
@@ -28,7 +29,7 @@ private fun mergeIntoWithoutGot(
 private fun mergeIntoWithGot(
     targetShantenNum: Int,
     discardToAdvance: MutableMap<Tile, ShantenWithoutGot>,
-    patterns: MutableCollection<HandPattern>,
+    patterns: MutableCollection<CommonHandPattern>,
     result: ShantenResult<*,*>,
     bestShantenOnly: Boolean
 ) {
@@ -92,7 +93,7 @@ fun shanten(
         ),
         kokushi.shantenInfo.shantenNum
     )
-    val patterns = ArrayList<HandPattern>()
+    val patterns = ArrayList<CommonHandPattern>()
 
     var shantenInfo = if (!withGot) {
         val advance = HashSet<Tile>()

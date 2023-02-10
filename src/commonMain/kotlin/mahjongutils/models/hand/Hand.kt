@@ -8,7 +8,7 @@ import mahjongutils.models.Tile
  * 手牌
  */
 @Serializable
-data class Hand<out P : HandPattern>(
+data class Hand<out P : CommonHandPattern>(
     /**
      * 门前的牌
      */
