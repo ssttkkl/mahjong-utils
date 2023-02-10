@@ -133,10 +133,13 @@ data class RegularHoraHandPattern internal constructor(
         }
 
         // 役牌雀头（连风算4符）
-        if (selfWind != null && jyantou == selfWind.tile ||
-            roundWind != null && jyantou == roundWind.tile ||
-            jyantou.isSangen
-        ) {
+        if (selfWind != null && jyantou == selfWind.tile) {
+            ans += 2
+        }
+        if (roundWind != null && jyantou == roundWind.tile) {
+            ans += 2
+        }
+        if (jyantou.isSangen) {
             ans += 2
         }
 

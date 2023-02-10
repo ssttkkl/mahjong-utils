@@ -147,4 +147,18 @@ class TestHora {
             tsumo = false
         )
     }
+
+    @Test
+    fun test10() {
+        val hora = hora(
+            tiles = Tile.parseTiles("234p11z"),
+            furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m")),
+            agari = Tile.get("1z"),
+            tsumo = false,
+            selfWind = Wind.East,
+            roundWind = Wind.East
+        )
+        assertEquals(hora.han, 4)
+        assertEquals(hora.hu, 140)
+    }
 }
