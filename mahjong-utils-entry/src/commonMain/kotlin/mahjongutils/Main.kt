@@ -12,19 +12,19 @@ fun <RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_PARAMS, RAW_RESULT>> bui
     factory: EntryFactory<RAW_PARAMS, RAW_RESULT, E>
 ): E {
     return EntryBuilder(factory).apply {
-        register<ShantenArgs, ShantenResult>("shanten") { args ->
+        register<ShantenArgs, UnionShantenResult>("shanten") { args ->
             shanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
         }
-        register<ShantenArgs, ShantenResult>("regularShanten") { args ->
+        register<ShantenArgs, RegularShantenResult>("regularShanten") { args ->
             regularShanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
         }
-        register<ShantenArgs, ShantenResult>("chitoiShanten") { args ->
+        register<ShantenArgs, ChitoiShantenResult>("chitoiShanten") { args ->
             chitoiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
         }
-        register<ShantenArgs, ShantenResult>("kokushiShanten") { args ->
+        register<ShantenArgs, KokushiShantenResult>("kokushiShanten") { args ->
             kokushiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
         }
-        register<FuroChanceShantenArgs, ShantenResult>("furoChanceShanten") { args ->
+        register<FuroChanceShantenArgs, FuroChanceShantenResult>("furoChanceShanten") { args ->
             furoChanceShanten(
                 args.tiles,
                 args.chanceTile,

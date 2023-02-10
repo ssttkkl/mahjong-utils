@@ -8,7 +8,7 @@ import mahjongutils.models.Tile
  * 手牌
  */
 @Serializable
-data class Hand(
+data class Hand<out P : HandPattern>(
     /**
      * 门前的牌
      */
@@ -17,5 +17,5 @@ data class Hand(
     /**
      * 手牌形
      */
-    val patterns: Collection<HandPattern>
+    val patterns: Collection<P>
 ) : IHasFuro

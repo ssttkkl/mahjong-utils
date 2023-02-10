@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
+import mahjongutils.shanten.CommonShantenResult
 import mahjongutils.shanten.ShantenResult
 import mahjongutils.yaku.Yaku
 
@@ -37,7 +38,7 @@ data class HanHu(
 data class HoraArgs(
     val tiles: List<Tile>? = null,
     val furo: List<Furo>? = null,
-    val shantenResult: ShantenResult? = null,
+    val shantenResult: CommonShantenResult<*>? = null,
     val agari: Tile,
     val tsumo: Boolean,
     val dora: Int = 0,

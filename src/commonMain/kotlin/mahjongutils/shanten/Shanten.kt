@@ -13,7 +13,7 @@ private fun mergeIntoWithoutGot(
     advance: MutableSet<Tile>,
     goodShapeAdvance: MutableSet<Tile>,
     patterns: MutableCollection<HandPattern>,
-    result: ShantenResult
+    result: ShantenResult<*,*>
 ) {
     if (result.shantenInfo.shantenNum == targetShantenNum) {
         val shantenInfo = result.shantenInfo as ShantenWithoutGot
@@ -29,7 +29,7 @@ private fun mergeIntoWithGot(
     targetShantenNum: Int,
     discardToAdvance: MutableMap<Tile, ShantenWithoutGot>,
     patterns: MutableCollection<HandPattern>,
-    result: ShantenResult,
+    result: ShantenResult<*,*>,
     bestShantenOnly: Boolean
 ) {
     val shantenInfo = result.shantenInfo as ShantenWithGot
@@ -67,7 +67,7 @@ fun shanten(
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowAnkan: Boolean = true,
-): ShantenResult {
+): UnionShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
     val withGot = tiles.size % 3 == 2
@@ -75,8 +75,8 @@ fun shanten(
 
     if (k != 4) {
         val regular = regularShanten(tiles, furo, calcAdvanceNum, bestShantenOnly, allowAnkan)
-        return ShantenResult(
-            type = ShantenResult.Type.Union, hand = regular.hand, shantenInfo = regular.shantenInfo,
+        return UnionShantenResult(
+            hand = regular.hand, shantenInfo = regular.shantenInfo,
             regular = regular
         )
     }
@@ -119,8 +119,8 @@ fun shanten(
     }
 
     val hand = Hand(tiles = tiles, furo = furo, patterns = patterns)
-    return ShantenResult(
-        type = ShantenResult.Type.Union, hand = hand, shantenInfo = shantenInfo,
+    return UnionShantenResult(
+        hand = hand, shantenInfo = shantenInfo,
         regular = regular, chitoi = chitoi, kokushi = kokushi
     )
 }

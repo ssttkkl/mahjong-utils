@@ -100,7 +100,7 @@ fun kokushiShanten(
     tiles: List<Tile>,
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
-): ShantenResult {
+): KokushiShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
     var (shantenInfo, patterns) = if (tiles.size == 13) {
@@ -114,5 +114,5 @@ fun kokushiShanten(
     }
 
     val hand = Hand(tiles = tiles, furo = emptyList(), patterns = patterns)
-    return ShantenResult(type = ShantenResult.Type.Kokushi, hand = hand, shantenInfo = shantenInfo)
+    return KokushiShantenResult(hand = hand, shantenInfo = shantenInfo)
 }

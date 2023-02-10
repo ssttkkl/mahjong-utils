@@ -13,9 +13,7 @@ import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
 import mahjongutils.models.hand.HoraHandPattern
-import mahjongutils.shanten.ShantenResult
-import mahjongutils.shanten.ShantenWithGot
-import mahjongutils.shanten.shanten
+import mahjongutils.shanten.*
 import mahjongutils.yaku.Yaku
 import mahjongutils.yaku.Yakus
 
@@ -153,7 +151,7 @@ fun hora(
  * @return 和牌分析结果
  */
 fun hora(
-    shantenResult: ShantenResult, agari: Tile, tsumo: Boolean,
+    shantenResult: CommonShantenResult<*>, agari: Tile, tsumo: Boolean,
     dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
 ): Hora {
     if (shantenResult.shantenInfo !is ShantenWithGot) {
@@ -164,14 +162,16 @@ fun hora(
     }
 
     val patterns = buildList {
-        if (shantenResult.regular?.shantenInfo?.shantenNum == -1) {
-            addAll(shantenResult.regular.hand.patterns)
-        }
-        if (shantenResult.chitoi?.shantenInfo?.shantenNum == -1) {
-            addAll(shantenResult.chitoi.hand.patterns)
-        }
-        if (shantenResult.kokushi?.shantenInfo?.shantenNum == -1) {
-            addAll(shantenResult.kokushi.hand.patterns)
+        if (shantenResult is UnionShantenResult) {
+            if (shantenResult.regular.shantenInfo.shantenNum == -1) {
+                addAll(shantenResult.regular.hand.patterns)
+            }
+            if (shantenResult.chitoi?.shantenInfo?.shantenNum == -1) {
+                addAll(shantenResult.chitoi.hand.patterns)
+            }
+            if (shantenResult.kokushi?.shantenInfo?.shantenNum == -1) {
+                addAll(shantenResult.kokushi.hand.patterns)
+            }
         }
     }
 

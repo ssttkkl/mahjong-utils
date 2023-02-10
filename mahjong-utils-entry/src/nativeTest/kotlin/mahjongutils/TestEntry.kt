@@ -6,6 +6,7 @@ import kotlinx.serialization.json.Json
 import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hora.Hora
 import mahjongutils.models.Tile
+import mahjongutils.shanten.RegularShantenResult
 import mahjongutils.shanten.ShantenResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,7 +18,7 @@ class TestEntry {
         val rawResult = ENTRY.call("regularShanten", Json.encodeToString(args))
         print("rawResult: ")
         println(rawResult)
-        val result = Json.decodeFromString<Result<ShantenResult>>(rawResult)
+        val result = Json.decodeFromString<Result<RegularShantenResult>>(rawResult)
         assertEquals(200, result.code)
     }
 

@@ -155,7 +155,7 @@ fun regularShanten(
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowAnkan: Boolean = true,
-): ShantenResult {
+): RegularShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
     val withGot = tiles.size % 3 == 2
@@ -171,5 +171,5 @@ fun regularShanten(
     }
 
     val hand = Hand(tiles = tiles, furo = furo, patterns = bestPatterns)
-    return ShantenResult(type = ShantenResult.Type.Regular, hand = hand, shantenInfo = shantenInfo)
+    return RegularShantenResult(hand = hand, shantenInfo = shantenInfo)
 }

@@ -9,6 +9,7 @@ import kotlinx.serialization.json.encodeToDynamic
 import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hora.Hora
 import mahjongutils.models.Tile
+import mahjongutils.shanten.RegularShantenResult
 import mahjongutils.shanten.ShantenResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,7 +21,7 @@ class TestEntry {
         val rawResult = ENTRY.call("regularShanten", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
-        val result = Json.decodeFromDynamic<Result<ShantenResult>>(rawResult)
+        val result = Json.decodeFromDynamic<Result<RegularShantenResult>>(rawResult)
         assertEquals(200, result.code)
     }
 

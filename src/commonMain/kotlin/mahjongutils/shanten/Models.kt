@@ -22,6 +22,9 @@ sealed interface Shanten {
     val shantenNum: Int
 }
 
+@Serializable
+sealed interface CommonShanten : Shanten
+
 /**
  * 未摸牌的手牌的向听信息
  */
@@ -45,7 +48,7 @@ data class ShantenWithoutGot(
      * 好型进张数
      */
     @EncodeDefault val goodShapeAdvanceNum: Int? = null
-) : Shanten
+) : CommonShanten
 
 /**
  * 摸牌的手牌的向听信息
@@ -62,7 +65,7 @@ data class ShantenWithGot(
      * 每种暗杠后的向听信息
      */
     @EncodeDefault val ankanToAdvance: Map<Tile, ShantenWithoutGot> = emptyMap()
-) : Shanten
+) : CommonShanten
 
 /**
  * 有副露机会的手牌的向听信息
@@ -89,40 +92,69 @@ data class ShantenWithFuroChance(
     val minkan: ShantenWithoutGot?
 ) : Shanten
 
-/**
- * 向听分析结果
- */
 @Serializable
-data class ShantenResult internal constructor(
-    /**
-     * 向听分析种类
-     */
-    val type: Type,
+sealed interface ShantenResult<out S : Shanten, out P : HandPattern> {
     /**
      * 手牌
      */
-    val hand: Hand,
+    val hand: Hand<P>
+
     /**
      * 向听信息
      */
-    val shantenInfo: Shanten,
-    /**
-     * 标准形向听分析结果（仅在type为Union时有值）
-     */
-    @EncodeDefault val regular: ShantenResult? = null,
-    /**
-     * 标准形向听分析结果（仅在type为Union且手牌无副露时时有值）
-     */
-    @EncodeDefault val chitoi: ShantenResult? = null,
-    /**
-     * 标准形向听分析结果（仅在type为Union且手牌无副露时有值）
-     */
-    @EncodeDefault val kokushi: ShantenResult? = null,
-) {
-    /**
-     * 向听分析种类
-     */
-    enum class Type {
-        Union, Regular, Chitoi, Kokushi, FuroChance
-    }
+    val shantenInfo: S
 }
+
+@Serializable
+sealed interface CommonShantenResult<out P : HandPattern> : ShantenResult<CommonShanten, P>
+
+@Serializable
+@SerialName("RegularShantenResult")
+data class RegularShantenResult(
+    override val hand: Hand<RegularHandPattern>,
+    override val shantenInfo: CommonShanten
+) : CommonShantenResult<RegularHandPattern>
+
+@Serializable
+@SerialName("ChitoiShantenResult")
+data class ChitoiShantenResult(
+    override val hand: Hand<ChitoiHandPattern>,
+    override val shantenInfo: CommonShanten
+) : CommonShantenResult<ChitoiHandPattern>
+
+@Serializable
+@SerialName("KokushiShantenResult")
+data class KokushiShantenResult(
+    override val hand: Hand<KokushiHandPattern>,
+    override val shantenInfo: CommonShanten
+) : CommonShantenResult<KokushiHandPattern>
+
+@Serializable
+@SerialName("UnionShantenResult")
+data class UnionShantenResult(
+    override val hand: Hand<HandPattern>,
+    override val shantenInfo: CommonShanten,
+    /**
+     * 标准形向听分析结果
+     */
+    val regular: RegularShantenResult,
+
+    /**
+     * 标准形向听分析结果
+     */
+    @EncodeDefault
+    val chitoi: ChitoiShantenResult? = null,
+
+    /**
+     * 标准形向听分析结果
+     */
+    @EncodeDefault
+    val kokushi: KokushiShantenResult? = null,
+) : CommonShantenResult<HandPattern>
+
+@Serializable
+@SerialName("FuroChanceShantenResult")
+data class FuroChanceShantenResult(
+    override val hand: Hand<RegularHandPattern>,
+    override val shantenInfo: ShantenWithFuroChance
+) : ShantenResult<ShantenWithFuroChance, RegularHandPattern>

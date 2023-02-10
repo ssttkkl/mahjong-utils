@@ -20,7 +20,7 @@ fun furoChanceShanten(
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowKuikae: Boolean = false
-): ShantenResult {
+): FuroChanceShantenResult {
     val tiles = ensureLegalTiles(tiles, allowWithGot = false)
     val tilesCount = tiles.countAsCodeArray()
 
@@ -132,13 +132,13 @@ fun furoChanceShanten(
         val pon_ = if (pon?.shantenNum == shantenNum) pon else null
         val minkan_ = if (minkan?.shantenNum == shantenNum) minkan else null
 
-        ShantenResult(
-            type = ShantenResult.Type.FuroChance, hand = passShanten.hand,
+        FuroChanceShantenResult(
+            hand = passShanten.hand,
             shantenInfo = ShantenWithFuroChance(shantenNum, pass_, chi_, pon_, minkan_)
         )
     } else {
-        ShantenResult(
-            type = ShantenResult.Type.FuroChance, hand = passShanten.hand,
+        FuroChanceShantenResult(
+            hand = passShanten.hand,
             shantenInfo = ShantenWithFuroChance(shantenNum, pass, chi, pon, minkan)
         )
     }
