@@ -5,7 +5,6 @@ import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.CommonHandPattern
 import mahjongutils.models.hand.Hand
-import mahjongutils.models.hand.HandPattern
 import kotlin.math.min
 
 
@@ -14,7 +13,7 @@ private fun mergeIntoWithoutGot(
     advance: MutableSet<Tile>,
     goodShapeAdvance: MutableSet<Tile>,
     patterns: MutableCollection<CommonHandPattern>,
-    result: ShantenResult<*,*>
+    result: ShantenResult<*, *>
 ) {
     if (result.shantenInfo.shantenNum == targetShantenNum) {
         val shantenInfo = result.shantenInfo as ShantenWithoutGot
@@ -30,7 +29,7 @@ private fun mergeIntoWithGot(
     targetShantenNum: Int,
     discardToAdvance: MutableMap<Tile, ShantenWithoutGot>,
     patterns: MutableCollection<CommonHandPattern>,
-    result: ShantenResult<*,*>,
+    result: ShantenResult<*, *>,
     bestShantenOnly: Boolean
 ) {
     val shantenInfo = result.shantenInfo as ShantenWithGot
@@ -59,11 +58,24 @@ private fun mergeIntoWithGot(
  * 向听分析
  * @param tiles 门前的牌
  * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
- * @param calcAdvanceNum 是否计算进张数
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
  * @return 向听分析结果
  */
 fun shanten(
+    tiles: List<Tile>, furo: List<Furo> = emptyList(),
+    bestShantenOnly: Boolean = false
+): UnionShantenResult = shanten(tiles, furo, true, bestShantenOnly, true)
+
+/**
+ * 向听分析
+ * @param tiles 门前的牌
+ * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
+ * @param calcAdvanceNum 是否计算进张数
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @param allowAnkan 是否允许暗杠
+ * @return 向听分析结果
+ */
+internal fun shanten(
     tiles: List<Tile>, furo: List<Furo> = emptyList(),
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,

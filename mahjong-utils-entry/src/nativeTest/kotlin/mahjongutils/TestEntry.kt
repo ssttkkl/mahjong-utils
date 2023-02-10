@@ -23,9 +23,7 @@ class TestEntry {
         val args = ShantenArgs(
             Tile.parseTiles("11112345678s"),
             listOf(Furo("999s")),
-            calcAdvanceNum = false,
-            bestShantenOnly = true,
-            allowAnkan = false
+            bestShantenOnly = true
         )
 
         val rawResult = ENTRY.call("shanten", Json.encodeToString(args))
@@ -35,7 +33,7 @@ class TestEntry {
         val actualResult: Result<UnionShantenResult> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
-        val exceptResult = shanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
+        val exceptResult = shanten(args.tiles, args.furo, args.bestShantenOnly)
         assertEquals(exceptResult, actualResult.data)
     }
 
@@ -44,9 +42,7 @@ class TestEntry {
         val args = ShantenArgs(
             Tile.parseTiles("11112345678s"),
             listOf(Furo("999s")),
-            calcAdvanceNum = false,
-            bestShantenOnly = true,
-            allowAnkan = false
+            bestShantenOnly = true
         )
 
         val rawResult = ENTRY.call("regularShanten", Json.encodeToString(args))
@@ -57,7 +53,7 @@ class TestEntry {
         assertEquals(200, actualResult.code)
 
         val exceptResult =
-            regularShanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
+            regularShanten(args.tiles, args.furo, args.bestShantenOnly)
         assertEquals(exceptResult, actualResult.data)
     }
 
@@ -65,7 +61,6 @@ class TestEntry {
     fun testChitoiShanten() {
         val args = ShantenArgs(
             Tile.parseTiles("11223344z556789p"),
-            calcAdvanceNum = false,
             bestShantenOnly = true
         )
 
@@ -76,7 +71,7 @@ class TestEntry {
         val actualResult: Result<ChitoiShantenResult> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
-        val exceptResult = chitoiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
+        val exceptResult = chitoiShanten(args.tiles, args.bestShantenOnly)
         assertEquals(exceptResult, actualResult.data)
     }
 
@@ -84,7 +79,6 @@ class TestEntry {
     fun testKokushiShanten() {
         val args = ShantenArgs(
             Tile.parseTiles("11223344556677z"),
-            calcAdvanceNum = false,
             bestShantenOnly = true
         )
 
@@ -95,7 +89,7 @@ class TestEntry {
         val actualResult: Result<KokushiShantenResult> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
-        val exceptResult = kokushiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
+        val exceptResult = kokushiShanten(args.tiles, args.bestShantenOnly)
         assertEquals(exceptResult, actualResult.data)
     }
 
@@ -161,9 +155,7 @@ class TestEntry {
         val shantenResult = shanten(
             tiles = Tile.parseTiles("11123456s"),
             furo = listOf(Furo("0110z"), Furo("789s")),
-            calcAdvanceNum = false,
-            bestShantenOnly = true,
-            allowAnkan = false
+            bestShantenOnly = true
         )
 
         val args = HoraArgs(

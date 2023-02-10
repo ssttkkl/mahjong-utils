@@ -12,9 +12,7 @@ import mahjongutils.yaku.Yaku
 data class ShantenArgs(
     val tiles: List<Tile>,
     val furo: List<Furo> = listOf(),
-    val calcAdvanceNum: Boolean = true,
-    val bestShantenOnly: Boolean = false,
-    val allowAnkan: Boolean = true
+    val bestShantenOnly: Boolean = false
 )
 
 @Serializable
@@ -22,7 +20,6 @@ data class FuroChanceShantenArgs(
     val tiles: List<Tile>,
     val chanceTile: Tile,
     val allowChi: Boolean = true,
-    val calcAdvanceNum: Boolean = true,
     val bestShantenOnly: Boolean = false,
     val allowKuikae: Boolean = false,
 )

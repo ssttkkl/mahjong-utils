@@ -8,12 +8,29 @@ import kotlin.math.min
  * @param tiles 门前的牌
  * @param chanceTile 副露机会牌（能够吃、碰的牌）
  * @param allowChi 是否允许吃
- * @param calcAdvanceNum 是否计算进张数
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
  * @param allowKuikae 是否允许食替
  * @return 向听分析结果（其中shantenInfo必定为ShantenWithFuroChance类型）
  */
 fun furoChanceShanten(
+    tiles: List<Tile>,
+    chanceTile: Tile,
+    allowChi: Boolean = true,
+    bestShantenOnly: Boolean = false,
+    allowKuikae: Boolean = false
+): FuroChanceShantenResult = furoChanceShanten(tiles, chanceTile, allowChi, true, bestShantenOnly, allowKuikae)
+
+/**
+ * 副露判断向听分析
+ * @param tiles 门前的牌
+ * @param chanceTile 副露机会牌（能够吃、碰的牌）
+ * @param allowChi 是否允许吃
+ * @param calcAdvanceNum 是否计算进张数
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @param allowKuikae 是否允许食替
+ * @return 向听分析结果（其中shantenInfo必定为ShantenWithFuroChance类型）
+ */
+internal fun furoChanceShanten(
     tiles: List<Tile>,
     chanceTile: Tile,
     allowChi: Boolean = true,

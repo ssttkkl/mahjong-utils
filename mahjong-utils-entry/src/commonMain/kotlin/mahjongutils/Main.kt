@@ -13,23 +13,22 @@ fun <RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_PARAMS, RAW_RESULT>> bui
 ): E {
     return EntryBuilder(factory).apply {
         register<ShantenArgs, UnionShantenResult>("shanten") { args ->
-            shanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
+            shanten(args.tiles, args.furo, args.bestShantenOnly)
         }
         register<ShantenArgs, RegularShantenResult>("regularShanten") { args ->
-            regularShanten(args.tiles, args.furo, args.calcAdvanceNum, args.bestShantenOnly, args.allowAnkan)
+            regularShanten(args.tiles, args.furo, args.bestShantenOnly)
         }
         register<ShantenArgs, ChitoiShantenResult>("chitoiShanten") { args ->
-            chitoiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
+            chitoiShanten(args.tiles,args.bestShantenOnly)
         }
         register<ShantenArgs, KokushiShantenResult>("kokushiShanten") { args ->
-            kokushiShanten(args.tiles, args.calcAdvanceNum, args.bestShantenOnly)
+            kokushiShanten(args.tiles, args.bestShantenOnly)
         }
         register<FuroChanceShantenArgs, FuroChanceShantenResult>("furoChanceShanten") { args ->
             furoChanceShanten(
                 args.tiles,
                 args.chanceTile,
                 args.allowChi,
-                args.calcAdvanceNum,
                 args.bestShantenOnly,
                 args.allowKuikae
             )
