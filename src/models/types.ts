@@ -1,7 +1,3 @@
-export interface Encoder<T, RAW = any> {
-    (data: T): RAW
-}
+export type Encoder<T, RAW = any> = (data: T) => RAW
 
-export interface Decoder<T, RAW = any> {
-    (raw: RAW): T
-}
+export type Decoder<T, RAW = any> = (raw: RAW) => T

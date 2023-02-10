@@ -1,6 +1,6 @@
 export enum Wind {
-    East = 'East',
-    South = 'South',
-    West = 'West',
-    North = 'North',
+  East = 'East',
+  South = 'South',
+  West = 'West',
+  North = 'North',
 }

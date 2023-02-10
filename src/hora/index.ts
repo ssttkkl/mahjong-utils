@@ -1,56 +1,33 @@
-import {ENTRY, handleResult} from "../entry";
-import {ShantenWithGot} from "../shanten";
-import {Furo, Tile, Wind} from "../models";
-import {Hora} from "./models";
-import {encodeShantenWithGot} from "../shanten/coder";
-import {decodeHora} from "./coder";
+import { ENTRY, handleResult } from '../entry'
+import { type Furo, type Tile, type Wind } from '../models'
+import { type Hora } from './models'
+import { decodeHora } from '../coder/hora'
+import { encodeFuro } from '../coder/models/furo'
+import { encodeTile } from '../coder/models/tile'
 
 export * from './models'
 
-export function buildHora(
-    opts: {
-        tiles: Tile[],
-        furo?: Furo[],
-        agari: Tile
-        tsumo: boolean
-        dora?: number
-        selfWind?: Wind
-        roundWind?: Wind
-        extraYaku?: string[]
-    }
-): Hora
+interface BasicBuildHoraParams {
+  agari: Tile
+  tsumo: boolean
+  dora?: number
+  selfWind?: Wind
+  roundWind?: Wind
+  extraYaku?: string[]
+}
 
-export function buildHora(
-    opts: {
-        shantenResult: ShantenWithGot
-        agari: Tile
-        tsumo: boolean
-        dora?: number
-        selfWind?: Wind
-        roundWind?: Wind
-        extraYaku?: string[]
-    }
-): Hora
+interface BuildHoraByTilesParams extends BasicBuildHoraParams {
+  tiles: Tile[]
+  furo?: Furo[]
+}
 
-export function buildHora(
-    opts: {
-        tiles?: Tile[],
-        furo?: Furo[],
-        shantenResult?: ShantenWithGot
-        agari: Tile
-        tsumo: boolean
-        dora?: number
-        selfWind?: Wind
-        roundWind?: Wind
-        extraYaku?: string[]
-    }
-): Hora {
-    const result = ENTRY.call("hora", {
-        ...opts,
-        tiles: opts.tiles?.map(Tile.encode),
-        furo: opts.furo?.map(Furo.encode),
-        shantenResult: opts.shantenResult ? encodeShantenWithGot(opts.shantenResult) : undefined,
-        agari: Tile.encode(opts.agari)
-    })
-    return decodeHora(handleResult(result))
+export function buildHora (opts: BuildHoraByTilesParams): Hora {
+  const result = ENTRY.call('hora', {
+    ...opts,
+    tiles: opts.tiles?.map(encodeTile),
+    furo: opts.furo?.map(encodeFuro),
+    // shantenResult: opts.shantenResult ? encodeCommonShantenResult(opts.shantenResult) : undefined,
+    agari: encodeTile(opts.agari)
+  })
+  return decodeHora(handleResult(result))
 }

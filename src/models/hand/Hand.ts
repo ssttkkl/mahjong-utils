@@ -1,9 +1,9 @@
-import {Furo} from "../Furo";
-import {ChitoiHandPattern, HandPattern, KokushiHandPattern, RegularHandPattern} from "./HandPattern";
-import {Tile} from "../Tile";
+import { type Furo } from '../Furo'
+import { type AbstractHandPattern, type HandPattern } from './HandPattern'
+import { type Tile } from '../Tile'
 
-export interface Hand<P extends (RegularHandPattern | ChitoiHandPattern | KokushiHandPattern) = HandPattern> {
-    tiles: Tile[]
-    furo: Furo[]
-    patterns: P[]
+export interface Hand<P extends HandPattern = AbstractHandPattern> {
+  tiles: Tile[]
+  furo: Furo[]
+  patterns: P[]
 }

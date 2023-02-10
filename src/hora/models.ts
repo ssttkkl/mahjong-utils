@@ -1,36 +1,40 @@
-import {RegularHandPattern, Tile, Wind} from "../models";
-import {ExtraYaku, Yaku} from "./yaku";
+import { ChildPoint, ParentPoint } from 'point-by-han-hu/models'
+import { type RegularHandPattern, type Tile, type Wind } from '../models'
+import { type ExtraYaku, type Yaku } from './yaku'
 
-interface BaseHoraHandPattern {
-    agari: Tile,
-    tsumo: boolean,
-    hu: number,
-    selfWind?: Wind,
-    roundWind?: Wind
+interface _HoraHandPattern {
+  agari: Tile
+  tsumo: boolean
+  hu: number
+  selfWind?: Wind
+  roundWind?: Wind
 }
 
-export type RegularHoraHandPattern = (BaseHoraHandPattern & RegularHandPattern & {
-    jyantou: Tile
+export type RegularHoraHandPattern = (_HoraHandPattern & RegularHandPattern & {
+  jyantou: Tile
 })
 
-export interface ChitoiHoraHandPattern extends BaseHoraHandPattern {
-    pairs: Tile[]
+export interface ChitoiHoraHandPattern extends _HoraHandPattern {
+  pairs: Tile[]
 }
 
-export interface KokushiHoraHandPattern extends BaseHoraHandPattern {
-    repeated: Tile
+export interface KokushiHoraHandPattern extends _HoraHandPattern {
+  repeated: Tile
 }
 
+export type HoraHandPattern = (RegularHoraHandPattern | ChitoiHoraHandPattern | KokushiHoraHandPattern)
+export type AbstractHoraHandPattern = (
+  RegularHoraHandPattern & { type: 'RegularHoraHandPattern' }
+  | ChitoiHoraHandPattern & { type: 'ChitoiHoraHandPattern' }
+  | KokushiHoraHandPattern & { type: 'KokushiHoraHandPattern' })
 
-export type HoraHandPattern = (RegularHoraHandPattern | ChitoiHoraHandPattern | KokushiHoraHandPattern) & {
-    type: 'RegularHoraHandPattern' | 'ChitoiHoraHandPattern' | 'KokushiHoraHandPattern'
-}
-
-export interface Hora {
-    pattern: HoraHandPattern
-    han: number
-    dora: number
-    yaku: Yaku[]
-    extraYaku: ExtraYaku[]
-    hasYakuman: boolean
+export interface Hora<P extends HoraHandPattern = AbstractHoraHandPattern> {
+  pattern: P
+  han: number
+  dora: number
+  yaku: Yaku[]
+  extraYaku: ExtraYaku[]
+  hasYakuman: boolean
+  parentPoint: ParentPoint
+  childPoint: ChildPoint
 }
