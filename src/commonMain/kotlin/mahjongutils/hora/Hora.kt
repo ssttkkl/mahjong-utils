@@ -35,6 +35,12 @@ data class Hora internal constructor(
      */
     val extraYaku: Set<Yaku>,
 ) : HoraInfo by pattern {
+    init {
+        if (dora < 0) {
+            throw IllegalArgumentException("dora cannot be less than 0")
+        }
+    }
+
     /**
      * 役种
      */
@@ -146,7 +152,7 @@ fun hora(
  * @param dora 宝牌数目
  * @param selfWind 自风
  * @param roundWind 场风
- * @param extraYaku 额外役种
+ * @param extraYaku 额外役种（不会对役种合法性进行检查）
  * @return 和牌分析结果
  */
 fun hora(
