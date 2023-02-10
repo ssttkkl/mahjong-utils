@@ -128,8 +128,7 @@ fun hora(
     tiles: List<Tile>, furo: List<Furo> = emptyList(), agari: Tile, tsumo: Boolean,
     dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
 ): Hora {
-    val k = tiles.size / 3 + furo.size
-    if (k != 4) {
+    if (tiles.size / 3 + furo.size != 4) {
         throw IllegalArgumentException("invalid length of tiles")
     }
 
@@ -159,6 +158,9 @@ fun hora(
     }
     if (shantenResult.shantenInfo.shantenNum != -1) {
         throw IllegalArgumentException("shantenNum != -1")
+    }
+    if (agari !in shantenResult.hand.tiles) {
+        throw IllegalArgumentException("agari not in tiles")
     }
 
     val patterns = buildList {
