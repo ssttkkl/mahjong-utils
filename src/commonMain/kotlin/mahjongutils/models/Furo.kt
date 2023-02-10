@@ -26,7 +26,7 @@ sealed interface Furo {
          * @param ankan 是否为暗杠
          * @return 副露
          */
-        operator fun invoke(tiles: List<Tile>, ankan: Boolean = false): Furo {
+        fun parse(tiles: List<Tile>, ankan: Boolean = false): Furo {
             if (tiles.size == 3) {
                 if (tiles[0] == tiles[1] && tiles[1] == tiles[2]) {
                     return Pon(tiles[0])
@@ -57,7 +57,7 @@ sealed interface Furo {
          * @param ankan 是否为暗杠
          * @return 副露
          */
-        operator fun invoke(text: String, ankan: Boolean = false): Furo {
+        fun parse(text: String, ankan: Boolean = false): Furo {
             var ankan_ = ankan
 
             val tiles = if (text.length == 5 && text[0] == text[3] && text[0] == '0' && text[1] == text[2]) {
@@ -67,7 +67,15 @@ sealed interface Furo {
                 Tile.parseTiles(text)
             }
 
-            return invoke(tiles, ankan_)
+            return parse(tiles, ankan_)
+        }
+
+        operator fun invoke(tiles: List<Tile>, ankan: Boolean = false): Furo {
+            return parse(tiles, ankan)
+        }
+
+        operator fun invoke(text: String, ankan: Boolean = false): Furo {
+            return parse(text, ankan)
         }
     }
 }
@@ -128,6 +136,7 @@ data class Kan(
     override fun asMentsu(): Kotsu {
         return Kotsu(tile)
     }
+
     override val tiles: List<Tile>
         get() = listOf(tile, tile, tile, tile)
 }
