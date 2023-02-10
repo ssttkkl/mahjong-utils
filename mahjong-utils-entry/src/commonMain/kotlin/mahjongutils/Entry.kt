@@ -8,38 +8,28 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 @JsExport
-interface IEntry<RAW_PARAMS : Any, RAW_RESULT : Any> {
+interface IEntry<in RAW_PARAMS : Any, out RAW_RESULT : Any> {
     fun call(name: String, rawParams: RAW_PARAMS): RAW_RESULT
 }
 
 @Serializable
-data class Result<T : Any>(
+data class Result<out T : Any>(
     @EncodeDefault val data: T?,
     @EncodeDefault val code: Int = 200,
     @EncodeDefault val msg: String = "",
 )
 
-interface Method<RAW_PARAMS : Any, RAW_RESULT : Any> {
+interface Method<in RAW_PARAMS : Any,out RAW_RESULT : Any> {
     fun call(rawParams: RAW_PARAMS): RAW_RESULT
 }
 
-fun interface MethodHandler<P : Any, R : Any> {
+fun interface MethodHandler<in P : Any, out R : Any> {
     fun handle(params: P): R
 }
 
-interface ResultEncoder<RAW_RESULT : Any> {
-    fun <RESULT : Any> encodeResult(result: Result<RESULT>, resultType: KType): RAW_RESULT
-}
-
-interface ParamsDecoder<RAW_PARAMS : Any> {
-    fun <PARAMS : Any> decodeParams(rawParams: RAW_PARAMS, paramsType: KType): PARAMS
-}
-
-interface EntryFactory<RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_PARAMS, RAW_RESULT>> {
+interface EntryFactory<RAW_PARAMS : Any, RAW_RESULT : Any, out E : IEntry<RAW_PARAMS, RAW_RESULT>> {
     val paramsDecoder: ParamsDecoder<RAW_PARAMS>
 
     val resultEncoder: ResultEncoder<RAW_RESULT>
@@ -59,23 +49,21 @@ internal class EntryBuilder<RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_P
     inline fun <reified P : Any, reified R : Any> register(name: String, handle: MethodHandler<P, R>) {
         router[name] = object : Method<RAW_PARAMS, RAW_RESULT> {
             override fun call(rawParams: RAW_PARAMS): RAW_RESULT {
-                val paramsType = typeOf<P>()
-                val resultType = typeOf<Result<R>>()
                 return try {
-                    val params = paramsDecoder.decodeParams<P>(rawParams, paramsType)
+                    val params:P = paramsDecoder.decodeParams(rawParams)
                     val data = handle.handle(params)
                     val result = Result(data)
-                    resultEncoder.encodeResult(result, resultType)
+                    resultEncoder.encodeResult(result)
                 } catch (e: SerializationException) {
                     val result = Result<R>(data = null, code = 400, msg = e.message ?: "")
-                    resultEncoder.encodeResult(result, resultType)
+                    resultEncoder.encodeResult(result)
                 } catch (e: IllegalArgumentException) {
                     val result = Result<R>(data = null, code = 400, msg = e.message ?: "")
-                    resultEncoder.encodeResult(result, resultType)
+                    resultEncoder.encodeResult(result)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     val result = Result<R>(data = null, code = 500, msg = e.message ?: "")
-                    resultEncoder.encodeResult(result, resultType)
+                    resultEncoder.encodeResult(result)
                 }
             }
         }
@@ -86,8 +74,8 @@ internal class EntryBuilder<RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_P
     }
 }
 
-// 为了封装kt侧的实现，各个平台导出时自行实现IEntry接口并委托到该类实现
-internal class EntryImpl<RAW_PARAMS : Any, RAW_RESULT : Any> internal constructor(
+// 为了封装kt侧的公共实现，各个平台导出时自行实现IEntry接口并委托到该类实现
+internal class EntryImpl<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constructor(
     private val router: Map<String, Method<RAW_PARAMS, RAW_RESULT>>,
     private val paramsDecoder: ParamsDecoder<RAW_PARAMS>,
     private val resultEncoder: ResultEncoder<RAW_RESULT>
@@ -98,7 +86,7 @@ internal class EntryImpl<RAW_PARAMS : Any, RAW_RESULT : Any> internal constructo
             method.call(rawParams)
         } else {
             val result = Result<Unit>(data = null, code = 404, msg = "method \"$name\" not found")
-            resultEncoder.encodeResult(result, typeOf<Unit>())
+            resultEncoder.encodeResult(result)
         }
     }
 }
