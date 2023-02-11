@@ -40,9 +40,9 @@ sealed interface Tatsu {
          * @param second 第二张牌
          * @return 搭子
          */
-        operator fun invoke(first: Tile, second: Tile): Tatsu {
+        fun parse(first: Tile, second: Tile): Tatsu {
             if (first > second)
-                return invoke(second, first)
+                return parse(second, first)
 
             if (first == second) {
                 return Toitsu(first)
@@ -76,12 +76,20 @@ sealed interface Tatsu {
          * @param text 牌的文本
          * @return 搭子
          */
-        operator fun invoke(text: String): Tatsu {
+        fun parse(text: String): Tatsu {
             val tiles = Tile.parseTiles(text)
             if (tiles.size != 2) {
                 throw IllegalArgumentException("invalid tiles: $text")
             }
-            return invoke(tiles[0], tiles[1])
+            return parse(tiles[0], tiles[1])
+        }
+
+        operator fun invoke(first: Tile, second: Tile): Tatsu {
+            return parse(first, second)
+        }
+
+        operator fun invoke(text: String): Tatsu {
+            return parse(text)
         }
     }
 }

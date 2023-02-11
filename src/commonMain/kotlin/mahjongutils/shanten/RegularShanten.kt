@@ -141,6 +141,17 @@ private fun handleRegularShantenWithGot(
     return Pair(shantenInfo, bestPatterns)
 }
 
+/**
+ * 标准形向听分析
+ * @param tiles 门前的牌
+ * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @return 向听分析结果
+ */
+fun regularShanten(
+    tiles: List<Tile>, furo: List<Furo> = listOf(),
+    bestShantenOnly: Boolean = false,
+): RegularShantenResult = regularShanten(tiles, furo, true, bestShantenOnly, true)
 
 /**
  * 标准形向听分析
@@ -150,12 +161,12 @@ private fun handleRegularShantenWithGot(
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
  * @return 向听分析结果
  */
-fun regularShanten(
+internal fun regularShanten(
     tiles: List<Tile>, furo: List<Furo> = listOf(),
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowAnkan: Boolean = true,
-): ShantenResult {
+): RegularShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
     val withGot = tiles.size % 3 == 2
@@ -171,5 +182,5 @@ fun regularShanten(
     }
 
     val hand = Hand(tiles = tiles, furo = furo, patterns = bestPatterns)
-    return ShantenResult(type = ShantenResult.Type.Regular, hand = hand, shantenInfo = shantenInfo)
+    return RegularShantenResult(hand = hand, shantenInfo = shantenInfo)
 }

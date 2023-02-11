@@ -1,14 +1,14 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package mahjongutils.models.hand
+package mahjongutils.hora
 
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import mahjongutils.common.afterDiscardForHoraHand
-import mahjongutils.hora.HoraInfo
 import mahjongutils.models.*
+import mahjongutils.models.hand.*
 
 /**
  * 和牌手牌
@@ -27,7 +27,7 @@ sealed interface HoraHandPattern : HoraInfo, HandPattern {
          * @return 所有可能的和牌手牌
          */
         fun build(
-            pattern: HandPattern,
+            pattern: CommonHandPattern,
             agari: Tile,
             tsumo: Boolean,
             selfWind: Wind? = null,
@@ -133,10 +133,13 @@ data class RegularHoraHandPattern internal constructor(
         }
 
         // 役牌雀头（连风算4符）
-        if (selfWind != null && jyantou == selfWind.tile ||
-            roundWind != null && jyantou == roundWind.tile ||
-            jyantou.isSangen
-        ) {
+        if (selfWind != null && jyantou == selfWind.tile) {
+            ans += 2
+        }
+        if (roundWind != null && jyantou == roundWind.tile) {
+            ans += 2
+        }
+        if (jyantou.isSangen) {
             ans += 2
         }
 

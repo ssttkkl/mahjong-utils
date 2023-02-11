@@ -21,8 +21,8 @@ class TestHora {
         assertEquals(setOf(Yakus.Richi, Yakus.Ittsu, Yakus.Chinitsu, Yakus.Ipe, Yakus.Tsumo, Yakus.Pinhu), hora.yaku)
         assertEquals(16, hora.han)
         assertEquals(20, hora.hu)
-        assertEquals(ParentPoint(48000, 16000), hora.parentPoint)
-        assertEquals(ChildPoint(32000, 16000, 8000), hora.childPoint)
+        assertEquals(ParentPoint(0, 16000), hora.parentPoint)
+        assertEquals(ChildPoint(0, 16000, 8000), hora.childPoint)
     }
 
     @Test
@@ -35,8 +35,8 @@ class TestHora {
         )
         assertEquals(setOf(Yakus.Churen), hora.yaku)
         assertEquals(13, hora.han)
-        assertEquals(ParentPoint(48000, 16000), hora.parentPoint)
-        assertEquals(ChildPoint(32000, 16000, 8000), hora.childPoint)
+        assertEquals(ParentPoint(0, 16000), hora.parentPoint)
+        assertEquals(ChildPoint(0, 16000, 8000), hora.childPoint)
     }
 
     @Test
@@ -50,8 +50,8 @@ class TestHora {
         assertEquals(setOf(Yakus.Ittsu, Yakus.Honitsu), hora.yaku)
         assertEquals(3, hora.han)
         assertEquals(40, hora.hu)
-        assertEquals(ParentPoint(7700, 2600), hora.parentPoint)
-        assertEquals(ChildPoint(5200, 2600, 1300), hora.childPoint)
+        assertEquals(ParentPoint(0, 2600), hora.parentPoint)
+        assertEquals(ChildPoint(0, 2600, 1300), hora.childPoint)
     }
 
     @Test
@@ -79,8 +79,8 @@ class TestHora {
         )
         assertEquals(setOf(Yakus.Tsuiso, Yakus.Daisushi, Yakus.SuankoTanki, Yakus.Tenhou), hora.yaku)
         assertEquals(13 * 6, hora.han)
-        assertEquals(ParentPoint(48000 * 6, 16000 * 6), hora.parentPoint)
-        assertEquals(ChildPoint(32000 * 6, 16000 * 6, 8000 * 6), hora.childPoint)
+        assertEquals(ParentPoint(0, 16000 * 6), hora.parentPoint)
+        assertEquals(ChildPoint(0, 16000 * 6, 8000 * 6), hora.childPoint)
     }
 
     @Test
@@ -93,8 +93,8 @@ class TestHora {
         )
         assertEquals(setOf(Yakus.SuankoTanki, Yakus.Sukantsu, Yakus.Daisushi, Yakus.Tsuiso), hora.yaku)
         assertEquals(13 * 6, hora.han)
-        assertEquals(ParentPoint(48000 * 6, 16000 * 6), hora.parentPoint)
-        assertEquals(ChildPoint(32000 * 6, 16000 * 6, 8000 * 6), hora.childPoint)
+        assertEquals(ParentPoint(0, 16000 * 6), hora.parentPoint)
+        assertEquals(ChildPoint(0, 16000 * 6, 8000 * 6), hora.childPoint)
     }
 
     @Test
@@ -107,8 +107,8 @@ class TestHora {
         )
         assertEquals(setOf(Yakus.Lyuiso, Yakus.Sukantsu, Yakus.SuankoTanki), hora.yaku)
         assertEquals(13 * 4, hora.han)
-        assertEquals(ParentPoint(48000 * 4, 16000 * 4), hora.parentPoint)
-        assertEquals(ChildPoint(32000 * 4, 16000 * 4, 8000 * 4), hora.childPoint)
+        assertEquals(ParentPoint(0, 16000 * 4), hora.parentPoint)
+        assertEquals(ChildPoint(0, 16000 * 4, 8000 * 4), hora.childPoint)
     }
 
     @Test
@@ -135,8 +135,8 @@ class TestHora {
         )
         assertEquals(13, hora.han)
         assertEquals(60, hora.hu)
-        assertEquals(ParentPoint(48000, 16000), hora.parentPoint)
-        assertEquals(ChildPoint(32000, 16000, 8000), hora.childPoint)
+        assertEquals(ParentPoint(48000, 0), hora.parentPoint)
+        assertEquals(ChildPoint(32000, 0, 0), hora.childPoint)
     }
 
     @Test
@@ -146,5 +146,21 @@ class TestHora {
             agari = Tile.get("9s"),
             tsumo = false
         )
+    }
+
+    @Test
+    fun test10() {
+        val hora = hora(
+            tiles = Tile.parseTiles("234p11z"),
+            furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m")),
+            agari = Tile.get("1z"),
+            tsumo = false,
+            selfWind = Wind.East,
+            roundWind = Wind.East
+        )
+        assertEquals(hora.han, 4)
+        assertEquals(hora.hu, 140)
+        assertEquals(ParentPoint(ParentPoint.Mangan.ron, 0), hora.parentPoint)
+        assertEquals(ChildPoint(ChildPoint.Mangan.ron, 0, 0), hora.childPoint)
     }
 }

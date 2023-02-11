@@ -29,7 +29,7 @@ sealed interface Mentsu {
          * @param tiles 牌
          * @return 面子
          */
-        operator fun invoke(tiles: List<Tile>): Mentsu {
+        fun parse(tiles: List<Tile>): Mentsu {
             if (tiles.size == 3) {
                 if (tiles[0] == tiles[1] && tiles[1] == tiles[2]) {
                     return Kotsu(tiles[0])
@@ -55,8 +55,16 @@ sealed interface Mentsu {
          * @param text 牌的文本
          * @return 面子
          */
+        fun parse(text: String): Mentsu {
+            return parse(Tile.parseTiles(text))
+        }
+
+        operator fun invoke(tiles: List<Tile>): Mentsu {
+            return parse(tiles)
+        }
+
         operator fun invoke(text: String): Mentsu {
-            return invoke(Tile.parseTiles(text))
+            return parse(text)
         }
     }
 }

@@ -12,10 +12,7 @@ import mahjongutils.hanhu.getParentPointByHanHu
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
-import mahjongutils.models.hand.HoraHandPattern
-import mahjongutils.shanten.ShantenResult
-import mahjongutils.shanten.ShantenWithGot
-import mahjongutils.shanten.shanten
+import mahjongutils.shanten.*
 import mahjongutils.yaku.Yaku
 import mahjongutils.yaku.Yakus
 
@@ -37,6 +34,12 @@ data class Hora internal constructor(
      */
     val extraYaku: Set<Yaku>,
 ) : HoraInfo by pattern {
+    init {
+        if (dora < 0) {
+            throw IllegalArgumentException("dora cannot be less than 0")
+        }
+    }
+
     /**
      * 役种
      */
@@ -87,30 +90,54 @@ data class Hora internal constructor(
     /**
      * 亲家（庄家）和牌点数
      */
-    val parentPoint: ParentPoint
-        get() = if (han == 0) {
+    @EncodeDefault
+    val parentPoint: ParentPoint = run {
+        if (han == 0) {
             ParentPoint(0, 0)
-        } else if (hasYakuman) {
-            val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
-            val ans = getParentPointByHanHu(13, 20)
-            ParentPoint(ans.ron * times, ans.tsumo * times)
         } else {
-            getParentPointByHanHu(han, hu)
+            val raw = if (hasYakuman) {
+                val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
+                val oneTimeYakuman = getParentPointByHanHu(13, 20)
+                ParentPoint(oneTimeYakuman.ron * times, oneTimeYakuman.tsumo * times)
+            } else {
+                getParentPointByHanHu(han, hu)
+            }
+
+            if (tsumo) {
+                ParentPoint(0, raw.tsumo)
+            } else {
+                ParentPoint(raw.ron, 0)
+            }
         }
+    }
 
     /**
      * 子家（闲家）和牌点数
      */
-    val childPoint: ChildPoint
-        get() = if (han == 0) {
+    @EncodeDefault
+    val childPoint: ChildPoint = run {
+        if (han == 0) {
             ChildPoint(0, 0, 0)
-        } else if (hasYakuman) {
-            val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
-            val ans = getChildPointByHanHu(13, 20)
-            ChildPoint(ans.ron * times, ans.tsumoParent * times, ans.tsumoChild * times)
         } else {
-            getChildPointByHanHu(han, hu)
+            val raw = if (hasYakuman) {
+                val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
+                val oneTimeYakuman = getChildPointByHanHu(13, 20)
+                ChildPoint(
+                    oneTimeYakuman.ron * times,
+                    oneTimeYakuman.tsumoParent * times,
+                    oneTimeYakuman.tsumoChild * times
+                )
+            } else {
+                getChildPointByHanHu(han, hu)
+            }
+
+            if (tsumo) {
+                ChildPoint(0, raw.tsumoParent, raw.tsumoChild)
+            } else {
+                ChildPoint(raw.ron, 0, 0)
+            }
         }
+    }
 }
 
 /**
@@ -130,8 +157,7 @@ fun hora(
     tiles: List<Tile>, furo: List<Furo> = emptyList(), agari: Tile, tsumo: Boolean,
     dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
 ): Hora {
-    val k = tiles.size / 3 + furo.size
-    if (k != 4) {
+    if (tiles.size / 3 + furo.size != 4) {
         throw IllegalArgumentException("invalid length of tiles")
     }
 
@@ -149,11 +175,11 @@ fun hora(
  * @param dora 宝牌数目
  * @param selfWind 自风
  * @param roundWind 场风
- * @param extraYaku 额外役种
+ * @param extraYaku 额外役种（不会对役种合法性进行检查）
  * @return 和牌分析结果
  */
 fun hora(
-    shantenResult: ShantenResult, agari: Tile, tsumo: Boolean,
+    shantenResult: CommonShantenResult<*>, agari: Tile, tsumo: Boolean,
     dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
 ): Hora {
     if (shantenResult.shantenInfo !is ShantenWithGot) {
@@ -162,16 +188,21 @@ fun hora(
     if (shantenResult.shantenInfo.shantenNum != -1) {
         throw IllegalArgumentException("shantenNum != -1")
     }
+    if (agari !in shantenResult.hand.tiles) {
+        throw IllegalArgumentException("agari not in tiles")
+    }
 
     val patterns = buildList {
-        if (shantenResult.regular?.shantenInfo?.shantenNum == -1) {
-            addAll(shantenResult.regular.hand.patterns)
-        }
-        if (shantenResult.chitoi?.shantenInfo?.shantenNum == -1) {
-            addAll(shantenResult.chitoi.hand.patterns)
-        }
-        if (shantenResult.kokushi?.shantenInfo?.shantenNum == -1) {
-            addAll(shantenResult.kokushi.hand.patterns)
+        if (shantenResult is UnionShantenResult) {
+            if (shantenResult.regular.shantenInfo.shantenNum == -1) {
+                addAll(shantenResult.regular.hand.patterns)
+            }
+            if (shantenResult.chitoi?.shantenInfo?.shantenNum == -1) {
+                addAll(shantenResult.chitoi.hand.patterns)
+            }
+            if (shantenResult.kokushi?.shantenInfo?.shantenNum == -1) {
+                addAll(shantenResult.kokushi.hand.patterns)
+            }
         }
     }
 

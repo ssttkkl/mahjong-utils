@@ -6,7 +6,7 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import mahjongutils.models.hand.HoraHandPattern
+import mahjongutils.hora.HoraHandPattern
 
 /**
  * 用于检测和了手牌是否具有役种

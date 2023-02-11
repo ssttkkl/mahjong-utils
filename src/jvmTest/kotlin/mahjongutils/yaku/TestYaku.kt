@@ -1,9 +1,9 @@
 package mahjongutils.yaku
 
 import mahjongutils.models.*
-import mahjongutils.models.hand.ChitoiHoraHandPattern
+import mahjongutils.hora.ChitoiHoraHandPattern
 import mahjongutils.models.hand.RegularHandPattern
-import mahjongutils.models.hand.RegularHoraHandPattern
+import mahjongutils.hora.RegularHoraHandPattern
 import mahjongutils.yaku.Yakus.Chanta
 import mahjongutils.yaku.Yakus.Chinitsu
 import mahjongutils.yaku.Yakus.Chitoi

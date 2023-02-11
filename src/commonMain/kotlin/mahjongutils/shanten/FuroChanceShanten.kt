@@ -8,7 +8,6 @@ import kotlin.math.min
  * @param tiles 门前的牌
  * @param chanceTile 副露机会牌（能够吃、碰的牌）
  * @param allowChi 是否允许吃
- * @param calcAdvanceNum 是否计算进张数
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
  * @param allowKuikae 是否允许食替
  * @return 向听分析结果（其中shantenInfo必定为ShantenWithFuroChance类型）
@@ -17,10 +16,28 @@ fun furoChanceShanten(
     tiles: List<Tile>,
     chanceTile: Tile,
     allowChi: Boolean = true,
+    bestShantenOnly: Boolean = false,
+    allowKuikae: Boolean = false
+): FuroChanceShantenResult = furoChanceShanten(tiles, chanceTile, allowChi, true, bestShantenOnly, allowKuikae)
+
+/**
+ * 副露判断向听分析
+ * @param tiles 门前的牌
+ * @param chanceTile 副露机会牌（能够吃、碰的牌）
+ * @param allowChi 是否允许吃
+ * @param calcAdvanceNum 是否计算进张数
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @param allowKuikae 是否允许食替
+ * @return 向听分析结果（其中shantenInfo必定为ShantenWithFuroChance类型）
+ */
+internal fun furoChanceShanten(
+    tiles: List<Tile>,
+    chanceTile: Tile,
+    allowChi: Boolean = true,
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowKuikae: Boolean = false
-): ShantenResult {
+): FuroChanceShantenResult {
     val tiles = ensureLegalTiles(tiles, allowWithGot = false)
     val tilesCount = tiles.countAsCodeArray()
 
@@ -132,13 +149,13 @@ fun furoChanceShanten(
         val pon_ = if (pon?.shantenNum == shantenNum) pon else null
         val minkan_ = if (minkan?.shantenNum == shantenNum) minkan else null
 
-        ShantenResult(
-            type = ShantenResult.Type.FuroChance, hand = passShanten.hand,
+        FuroChanceShantenResult(
+            hand = passShanten.hand,
             shantenInfo = ShantenWithFuroChance(shantenNum, pass_, chi_, pon_, minkan_)
         )
     } else {
-        ShantenResult(
-            type = ShantenResult.Type.FuroChance, hand = passShanten.hand,
+        FuroChanceShantenResult(
+            hand = passShanten.hand,
             shantenInfo = ShantenWithFuroChance(shantenNum, pass, chi, pon, minkan)
         )
     }

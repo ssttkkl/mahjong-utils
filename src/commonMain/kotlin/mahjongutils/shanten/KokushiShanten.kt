@@ -88,6 +88,16 @@ private fun handleKokushiShantenWithGot(
     return Pair(shantenInfo, bestPatterns)
 }
 
+/**
+ * 国士无双向听分析
+ * @param tiles 门前的牌
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @return 向听分析结果
+ */
+fun kokushiShanten(
+    tiles: List<Tile>,
+    bestShantenOnly: Boolean = false,
+): KokushiShantenResult = kokushiShanten(tiles, true, bestShantenOnly)
 
 /**
  * 国士无双向听分析
@@ -96,11 +106,11 @@ private fun handleKokushiShantenWithGot(
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
  * @return 向听分析结果
  */
-fun kokushiShanten(
+internal fun kokushiShanten(
     tiles: List<Tile>,
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
-): ShantenResult {
+): KokushiShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
     var (shantenInfo, patterns) = if (tiles.size == 13) {
@@ -114,5 +124,5 @@ fun kokushiShanten(
     }
 
     val hand = Hand(tiles = tiles, furo = emptyList(), patterns = patterns)
-    return ShantenResult(type = ShantenResult.Type.Kokushi, hand = hand, shantenInfo = shantenInfo)
+    return KokushiShantenResult(hand = hand, shantenInfo = shantenInfo)
 }

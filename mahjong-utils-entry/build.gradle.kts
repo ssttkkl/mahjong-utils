@@ -76,5 +76,8 @@ npmPublish {
         register("npmjs") {
             uri.set("https://registry.npmjs.org")
         }
+        register("verdaccio") {
+            uri.set("http://localhost:4873")
+        }
     }
 }

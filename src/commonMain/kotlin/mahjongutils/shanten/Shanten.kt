@@ -3,8 +3,8 @@ package mahjongutils.shanten
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
+import mahjongutils.models.hand.CommonHandPattern
 import mahjongutils.models.hand.Hand
-import mahjongutils.models.hand.HandPattern
 import kotlin.math.min
 
 
@@ -12,8 +12,8 @@ private fun mergeIntoWithoutGot(
     targetShantenNum: Int,
     advance: MutableSet<Tile>,
     goodShapeAdvance: MutableSet<Tile>,
-    patterns: MutableCollection<HandPattern>,
-    result: ShantenResult
+    patterns: MutableCollection<CommonHandPattern>,
+    result: ShantenResult<*, *>
 ) {
     if (result.shantenInfo.shantenNum == targetShantenNum) {
         val shantenInfo = result.shantenInfo as ShantenWithoutGot
@@ -28,8 +28,8 @@ private fun mergeIntoWithoutGot(
 private fun mergeIntoWithGot(
     targetShantenNum: Int,
     discardToAdvance: MutableMap<Tile, ShantenWithoutGot>,
-    patterns: MutableCollection<HandPattern>,
-    result: ShantenResult,
+    patterns: MutableCollection<CommonHandPattern>,
+    result: ShantenResult<*, *>,
     bestShantenOnly: Boolean
 ) {
     val shantenInfo = result.shantenInfo as ShantenWithGot
@@ -58,16 +58,29 @@ private fun mergeIntoWithGot(
  * 向听分析
  * @param tiles 门前的牌
  * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
- * @param calcAdvanceNum 是否计算进张数
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
  * @return 向听分析结果
  */
 fun shanten(
     tiles: List<Tile>, furo: List<Furo> = emptyList(),
+    bestShantenOnly: Boolean = false
+): UnionShantenResult = shanten(tiles, furo, true, bestShantenOnly, true)
+
+/**
+ * 向听分析
+ * @param tiles 门前的牌
+ * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
+ * @param calcAdvanceNum 是否计算进张数
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @param allowAnkan 是否允许暗杠
+ * @return 向听分析结果
+ */
+internal fun shanten(
+    tiles: List<Tile>, furo: List<Furo> = emptyList(),
     calcAdvanceNum: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowAnkan: Boolean = true,
-): ShantenResult {
+): UnionShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
     val withGot = tiles.size % 3 == 2
@@ -75,8 +88,8 @@ fun shanten(
 
     if (k != 4) {
         val regular = regularShanten(tiles, furo, calcAdvanceNum, bestShantenOnly, allowAnkan)
-        return ShantenResult(
-            type = ShantenResult.Type.Union, hand = regular.hand, shantenInfo = regular.shantenInfo,
+        return UnionShantenResult(
+            hand = regular.hand, shantenInfo = regular.shantenInfo,
             regular = regular
         )
     }
@@ -92,7 +105,7 @@ fun shanten(
         ),
         kokushi.shantenInfo.shantenNum
     )
-    val patterns = ArrayList<HandPattern>()
+    val patterns = ArrayList<CommonHandPattern>()
 
     var shantenInfo = if (!withGot) {
         val advance = HashSet<Tile>()
@@ -119,8 +132,8 @@ fun shanten(
     }
 
     val hand = Hand(tiles = tiles, furo = furo, patterns = patterns)
-    return ShantenResult(
-        type = ShantenResult.Type.Union, hand = hand, shantenInfo = shantenInfo,
+    return UnionShantenResult(
+        hand = hand, shantenInfo = shantenInfo,
         regular = regular, chitoi = chitoi, kokushi = kokushi
     )
 }
