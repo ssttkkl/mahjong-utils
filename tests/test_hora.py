@@ -2,6 +2,7 @@ from mahjong_utils.hora import build_hora, build_hora_from_shanten_result
 from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.tile import Tile, parse_tiles
 from mahjong_utils.models.wind import Wind
+from mahjong_utils.point_by_han_hu import ParentPoint, ChildPoint
 from mahjong_utils.shanten import shanten
 from mahjong_utils.yaku.common import ittsu, chinitsu, ipe, tsumo, pinhu, honitsu, sananko, toitoi, self_wind, \
     round_wind, haku, chitoi
@@ -16,8 +17,8 @@ def test_build_hora():
     assert hora.yaku == {richi, ittsu, chinitsu, ipe, tsumo, pinhu}
     assert hora.han == 16
     assert hora.hu == 20
-    assert hora.parent_point == (48000, 16000)
-    assert hora.child_point == (32000, 16000, 8000)
+    assert hora.parent_point == ParentPoint(0, 16000)
+    assert hora.child_point == (0, 16000, 8000)
 
 
 def test_build_hora_2():
@@ -25,8 +26,8 @@ def test_build_hora_2():
 
     assert hora.yaku == {churen}
     assert hora.han == 13
-    assert hora.parent_point == (48000, 16000)
-    assert hora.child_point == (32000, 16000, 8000)
+    assert hora.parent_point == ParentPoint(0, 16000)
+    assert hora.child_point == ChildPoint(0, 16000, 8000)
 
 
 def test_build_hora_3():
@@ -35,8 +36,8 @@ def test_build_hora_3():
     assert hora.yaku == {ittsu, honitsu}
     assert hora.han == 3
     assert hora.hu == 40
-    assert hora.parent_point == (7700, 2600)
-    assert hora.child_point == (5200, 2600, 1300)
+    assert hora.parent_point == ParentPoint(0, 2600)
+    assert hora.child_point == ChildPoint(0, 2600, 1300)
 
 
 def test_build_hora_4():
@@ -45,8 +46,8 @@ def test_build_hora_4():
     assert len(hora.yaku) == 0
     assert hora.han == 0
     assert hora.hu == 30
-    assert hora.parent_point == (0, 0)
-    assert hora.child_point == (0, 0, 0)
+    assert hora.parent_point == ParentPoint(0, 0)
+    assert hora.child_point == ChildPoint(0, 0, 0)
 
 
 def test_build_hora_5():
@@ -54,8 +55,8 @@ def test_build_hora_5():
 
     assert hora.yaku == {tsuiso, daisushi, suanko_tanki, tenhou}
     assert hora.han == 13 * 6
-    assert hora.parent_point == (48000 * 6, 16000 * 6)
-    assert hora.child_point == (32000 * 6, 16000 * 6, 8000 * 6)
+    assert hora.parent_point == ParentPoint(0, 16000 * 6)
+    assert hora.child_point == ChildPoint(0, 16000 * 6, 8000 * 6)
 
 
 def test_build_hora_6():
@@ -66,8 +67,8 @@ def test_build_hora_6():
 
     assert hora.yaku == {lyuiso, sukantsu}
     assert hora.han == 13 * 2
-    assert hora.parent_point == (48000 * 2, 16000 * 2)
-    assert hora.child_point == (32000 * 2, 16000 * 2, 8000 * 2)
+    assert hora.parent_point == ParentPoint(0, 16000 * 2)
+    assert hora.child_point == ChildPoint(0, 16000 * 2, 8000 * 2)
 
 
 def test_build_hora_7():
@@ -78,8 +79,8 @@ def test_build_hora_7():
 
     assert hora.yaku == {lyuiso, sukantsu, suanko_tanki}
     assert hora.han == 13 * 4
-    assert hora.parent_point == (48000 * 4, 16000 * 4)
-    assert hora.child_point == (32000 * 4, 16000 * 4, 8000 * 4)
+    assert hora.parent_point == ParentPoint(0, 16000 * 4)
+    assert hora.child_point == ChildPoint(0, 16000 * 4, 8000 * 4)
 
 
 def test_build_hora_8():
@@ -90,8 +91,8 @@ def test_build_hora_8():
     assert hora.yaku == {sananko, toitoi, richi, ippatsu, self_wind, round_wind, haku}
     assert hora.han == 13
     assert hora.hu == 60
-    assert hora.parent_point == (48000, 16000)
-    assert hora.child_point == (32000, 16000, 8000)
+    assert hora.parent_point == ParentPoint(48000, 0)
+    assert hora.child_point == ChildPoint(32000, 0, 0)
 
 
 def test_build_hora_9():
@@ -102,8 +103,8 @@ def test_build_hora_9():
 
     assert hora.yaku == {suanko_tanki, sukantsu, daisushi, tsuiso}
     assert hora.han == 13 * 6
-    assert hora.parent_point == (48000 * 6, 16000 * 6)
-    assert hora.child_point == (32000 * 6, 16000 * 6, 8000 * 6)
+    assert hora.parent_point == ParentPoint(0, 16000 * 6)
+    assert hora.child_point == ChildPoint(0, 16000 * 6, 8000 * 6)
 
 
 def test_build_hora_10():
@@ -114,8 +115,8 @@ def test_build_hora_10():
 
     assert hora.yaku == {kokushi_thirteen_waiting}
     assert hora.han == 13 * 2
-    assert hora.parent_point == (48000 * 2, 16000 * 2)
-    assert hora.child_point == (32000 * 2, 16000 * 2, 8000 * 2)
+    assert hora.parent_point == ParentPoint(0, 16000 * 2)
+    assert hora.child_point == ChildPoint(0, 16000 * 2, 8000 * 2)
 
 
 def test_build_hora_11():
@@ -126,8 +127,8 @@ def test_build_hora_11():
 
     assert hora.yaku == {chitoi}
     assert hora.han == 2
-    assert hora.parent_point == (2400, 0)
-    assert hora.child_point == (1600, 0, 0)
+    assert hora.parent_point == ParentPoint(2400, 0)
+    assert hora.child_point == ChildPoint(1600, 0, 0)
 
 
 def test_build_hora_from_shanten_result():
@@ -136,5 +137,5 @@ def test_build_hora_from_shanten_result():
 
     assert hora.yaku == {churen}
     assert hora.han == 13
-    assert hora.parent_point == (48000, 16000)
-    assert hora.child_point == (32000, 16000, 8000)
+    assert hora.parent_point == ParentPoint(0, 16000)
+    assert hora.child_point == ChildPoint(0, 16000, 8000)
