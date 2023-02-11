@@ -39,7 +39,7 @@ data class ShantenWithoutGot(
     /**
      * 进张数
      */
-    val advanceNum: Int = 0,
+    @EncodeDefault val advanceNum: Int = 0,
     /**
      * 好型进张
      */
