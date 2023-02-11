@@ -121,12 +121,12 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setup(
     name="mahjong-utils",
-    version="0.3.3",
+    version="0.4.0",
     author="ssttkkl",
     author_email="huang.wen.long@hotmail.com",
     license="MIT",
     url="https://github.com/ssttkkl/mahjong-utils",
-    description="立直麻将小工具",
+    description="日麻小工具",
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=[

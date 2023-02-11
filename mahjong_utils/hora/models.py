@@ -1,13 +1,18 @@
 from abc import ABC, abstractmethod
 from typing import Optional, FrozenSet, Tuple
+from typing import Set
 
+from pydantic import BaseModel
 from pydantic import Field
 from stringcase import pascalcase, snakecase
 
-from mahjong_utils.models.hand_pattern import RegularHandPattern, HandPattern, ChitoiHandPattern, KokushiHandPattern
+from mahjong_utils.models.hand_pattern import RegularHandPattern, HandPattern, _BaseRegularHandPattern, \
+    _BaseChitoiHandPattern, _BaseKokushiHandPattern
 from mahjong_utils.models.tatsu import Tatsu
 from mahjong_utils.models.tile import Tile, all_yaochu
 from mahjong_utils.models.wind import Wind
+from mahjong_utils.point_by_han_hu.models import ParentPoint, ChildPoint
+from mahjong_utils.yaku import Yaku, get_yaku
 
 
 class HoraHandPattern(HandPattern, ABC):
@@ -33,7 +38,7 @@ class HoraHandPattern(HandPattern, ABC):
             raise ValueError("invalid type: " + data['type'])
 
 
-class RegularHoraHandPattern(HoraHandPattern, RegularHandPattern):
+class RegularHoraHandPattern(HoraHandPattern, _BaseRegularHandPattern):
     agari_tatsu: Optional[Tatsu]
     jyantou: Tile
 
@@ -45,7 +50,7 @@ class RegularHoraHandPattern(HoraHandPattern, RegularHandPattern):
             self_wind=pascalcase(self.self_wind.name) if self.self_wind is not None else None,
             round_wind=pascalcase(self.round_wind.name) if self.round_wind is not None else None,
             agari_tatsu=self.agari_tatsu.__encode__() if self.agari_tatsu is not None else None,
-            pattern=RegularHandPattern.__encode__(self)
+            pattern=RegularHandPattern(**self.dict()).__encode__()
         )
 
     @classmethod
@@ -61,7 +66,7 @@ class RegularHoraHandPattern(HoraHandPattern, RegularHandPattern):
         )
 
 
-class ChitoiHoraHandPattern(HoraHandPattern, ChitoiHandPattern):
+class ChitoiHoraHandPattern(HoraHandPattern, _BaseChitoiHandPattern):
     hu: int = 25
     remaining: Tuple[Tile, ...] = Field(default_factory=tuple)
 
@@ -86,7 +91,7 @@ class ChitoiHoraHandPattern(HoraHandPattern, ChitoiHandPattern):
         )
 
 
-class KokushiHoraHandPattern(HoraHandPattern, KokushiHandPattern):
+class KokushiHoraHandPattern(HoraHandPattern, _BaseKokushiHandPattern):
     hu: int = 20
     repeated: Tile
     yaochu: FrozenSet[Tile] = all_yaochu
@@ -115,3 +120,47 @@ class KokushiHoraHandPattern(HoraHandPattern, KokushiHandPattern):
             self_wind=Wind[snakecase(data["selfWind"])] if data["selfWind"] is not None else None,
             round_wind=Wind[snakecase(data["roundWind"])] if data["roundWind"] is not None else None,
         )
+
+
+class Hora(BaseModel):
+    pattern: HoraHandPattern
+    han: int
+    dora: int
+    yaku: Set[Yaku]
+    extra_yaku: Set[Yaku]
+    has_yakuman: bool
+    parent_point: ParentPoint
+    child_point: ChildPoint
+
+    @classmethod
+    def __decode__(cls, data: dict) -> "Hora":
+        return Hora(
+            pattern=HoraHandPattern.__decode__(data["pattern"]),
+            han=data["han"],
+            dora=data["dora"],
+            yaku=set(get_yaku(snakecase(yk)) for yk in data["yaku"]),
+            extra_yaku=set(get_yaku(snakecase(yk)) for yk in data["extraYaku"]),
+            has_yakuman=data["hasYakuman"],
+            parent_point=ParentPoint.__decode__(data["parentPoint"]),
+            child_point=ChildPoint.__decode__(data["childPoint"]),
+        )
+
+    @property
+    def hu(self) -> int:
+        return self.pattern.hu
+
+    @property
+    def tsumo(self) -> bool:
+        return self.pattern.tsumo
+
+    @property
+    def self_wind(self) -> Optional[Wind]:
+        return self.pattern.self_wind
+
+    @property
+    def round_wind(self) -> Optional[Wind]:
+        return self.pattern.round_wind
+
+    @property
+    def agari(self) -> Tile:
+        return self.pattern.agari

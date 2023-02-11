@@ -52,9 +52,6 @@ typedef struct {
 } libmahjongutils_kref_mahjongutils_Entry;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
-} libmahjongutils_kref_kotlin_collections_Map;
-typedef struct {
-  libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
@@ -103,7 +100,7 @@ typedef struct {
 } libmahjongutils_kref_mahjongutils_HoraArgs;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
-} libmahjongutils_kref_mahjongutils_shanten_ShantenResult;
+} libmahjongutils_kref_mahjongutils_shanten_CommonShantenResult;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_mahjongutils_models_Wind;
@@ -149,17 +146,15 @@ typedef struct {
         libmahjongutils_kref_mahjongutils_Entry (*get_ENTRY)();
         struct {
           libmahjongutils_KType* (*_type)(void);
-          libmahjongutils_kref_mahjongutils_Entry (*Entry)(libmahjongutils_kref_kotlin_collections_Map router);
           const char* (*call)(libmahjongutils_kref_mahjongutils_Entry thiz, const char* name, const char* rawParams);
         } Entry;
         struct {
           libmahjongutils_KType* (*_type)(void);
-          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
-          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae);
+          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae);
           libmahjongutils_KBoolean (*get_allowChi)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_KBoolean (*get_allowKuikae)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_KBoolean (*get_bestShantenOnly)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
-          libmahjongutils_KBoolean (*get_calcAdvanceNum)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_kref_mahjongutils_models_Tile (*get_chanceTile)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*get_tiles)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*component1)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
@@ -167,8 +162,7 @@ typedef struct {
           libmahjongutils_KBoolean (*component3)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_KBoolean (*component4)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           libmahjongutils_KBoolean (*component5)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
-          libmahjongutils_KBoolean (*component6)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
-          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*copy)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae);
+          libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*copy)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae);
           libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz, libmahjongutils_kref_kotlin_Any other);
           libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           const char* (*toString)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
@@ -214,27 +208,27 @@ typedef struct {
         } HanHu;
         struct {
           libmahjongutils_KType* (*_type)(void);
-          libmahjongutils_kref_mahjongutils_HoraArgs (*HoraArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_kref_mahjongutils_shanten_ShantenResult shantenResult, libmahjongutils_kref_mahjongutils_models_Tile agari, libmahjongutils_KBoolean tsumo, libmahjongutils_KInt dora, libmahjongutils_kref_mahjongutils_models_Wind selfWind, libmahjongutils_kref_mahjongutils_models_Wind roundWind, libmahjongutils_kref_kotlin_collections_Set extraYaku, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
-          libmahjongutils_kref_mahjongutils_HoraArgs (*HoraArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_kref_mahjongutils_shanten_ShantenResult shantenResult, libmahjongutils_kref_mahjongutils_models_Tile agari, libmahjongutils_KBoolean tsumo, libmahjongutils_KInt dora, libmahjongutils_kref_mahjongutils_models_Wind selfWind, libmahjongutils_kref_mahjongutils_models_Wind roundWind, libmahjongutils_kref_kotlin_collections_Set extraYaku);
+          libmahjongutils_kref_mahjongutils_HoraArgs (*HoraArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_kref_mahjongutils_shanten_CommonShantenResult shantenResult, libmahjongutils_kref_mahjongutils_models_Tile agari, libmahjongutils_KBoolean tsumo, libmahjongutils_KInt dora, libmahjongutils_kref_mahjongutils_models_Wind selfWind, libmahjongutils_kref_mahjongutils_models_Wind roundWind, libmahjongutils_kref_kotlin_collections_Set extraYaku, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_HoraArgs (*HoraArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_kref_mahjongutils_shanten_CommonShantenResult shantenResult, libmahjongutils_kref_mahjongutils_models_Tile agari, libmahjongutils_KBoolean tsumo, libmahjongutils_KInt dora, libmahjongutils_kref_mahjongutils_models_Wind selfWind, libmahjongutils_kref_mahjongutils_models_Wind roundWind, libmahjongutils_kref_kotlin_collections_Set extraYaku);
           libmahjongutils_kref_mahjongutils_models_Tile (*get_agari)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_KInt (*get_dora)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_kotlin_collections_Set (*get_extraYaku)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*get_furo)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_mahjongutils_models_Wind (*get_roundWind)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_mahjongutils_models_Wind (*get_selfWind)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
-          libmahjongutils_kref_mahjongutils_shanten_ShantenResult (*get_shantenResult)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
+          libmahjongutils_kref_mahjongutils_shanten_CommonShantenResult (*get_shantenResult)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*get_tiles)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_KBoolean (*get_tsumo)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*component1)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*component2)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
-          libmahjongutils_kref_mahjongutils_shanten_ShantenResult (*component3)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
+          libmahjongutils_kref_mahjongutils_shanten_CommonShantenResult (*component3)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_mahjongutils_models_Tile (*component4)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_KBoolean (*component5)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_KInt (*component6)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_mahjongutils_models_Wind (*component7)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_mahjongutils_models_Wind (*component8)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           libmahjongutils_kref_kotlin_collections_Set (*component9)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
-          libmahjongutils_kref_mahjongutils_HoraArgs (*copy)(libmahjongutils_kref_mahjongutils_HoraArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_kref_mahjongutils_shanten_ShantenResult shantenResult, libmahjongutils_kref_mahjongutils_models_Tile agari, libmahjongutils_KBoolean tsumo, libmahjongutils_KInt dora, libmahjongutils_kref_mahjongutils_models_Wind selfWind, libmahjongutils_kref_mahjongutils_models_Wind roundWind, libmahjongutils_kref_kotlin_collections_Set extraYaku);
+          libmahjongutils_kref_mahjongutils_HoraArgs (*copy)(libmahjongutils_kref_mahjongutils_HoraArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_kref_mahjongutils_shanten_CommonShantenResult shantenResult, libmahjongutils_kref_mahjongutils_models_Tile agari, libmahjongutils_KBoolean tsumo, libmahjongutils_KInt dora, libmahjongutils_kref_mahjongutils_models_Wind selfWind, libmahjongutils_kref_mahjongutils_models_Wind roundWind, libmahjongutils_kref_kotlin_collections_Set extraYaku);
           libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_HoraArgs thiz, libmahjongutils_kref_kotlin_Any other);
           libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           const char* (*toString)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
@@ -254,19 +248,15 @@ typedef struct {
         } HoraArgs;
         struct {
           libmahjongutils_KType* (*_type)(void);
-          libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowAnkan, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
-          libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowAnkan);
-          libmahjongutils_KBoolean (*get_allowAnkan)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
+          libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly);
           libmahjongutils_KBoolean (*get_bestShantenOnly)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_KBoolean (*get_calcAdvanceNum)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*get_furo)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*get_tiles)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*component1)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
           libmahjongutils_kref_kotlin_collections_List (*component2)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
           libmahjongutils_KBoolean (*component3)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_KBoolean (*component4)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_KBoolean (*component5)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_kref_mahjongutils_ShantenArgs (*copy)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean calcAdvanceNum, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowAnkan);
+          libmahjongutils_kref_mahjongutils_ShantenArgs (*copy)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly);
           libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz, libmahjongutils_kref_kotlin_Any other);
           libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
           const char* (*toString)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);

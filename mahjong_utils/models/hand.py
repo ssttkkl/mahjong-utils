@@ -1,17 +1,19 @@
-from typing import Sequence
+from typing import Sequence, Generic, TypeVar, Type
 
 from pydantic.fields import Field
 from pydantic.main import BaseModel
 
 from mahjong_utils.models.furo import Furo, Kan
-from mahjong_utils.models.hand_pattern import HandPattern
+from mahjong_utils.models.hand_pattern import HandPattern, CommonHandPattern
 from mahjong_utils.models.tile import Tile
 
+T_HandPattern = TypeVar("T_HandPattern", bound=CommonHandPattern)
 
-class Hand(BaseModel):
+
+class Hand(BaseModel, Generic[T_HandPattern]):
     tiles: Sequence[Tile]
     furo: Sequence[Furo] = Field(default_factory=tuple)
-    patterns: Sequence[HandPattern]
+    patterns: Sequence[T_HandPattern]
 
     @property
     def menzen(self) -> bool:
@@ -28,9 +30,9 @@ class Hand(BaseModel):
         )
 
     @classmethod
-    def __decode__(cls, data: dict) -> "Hand":
+    def __decode__(cls, data: dict, hand_pattern_type: Type[T_HandPattern] = CommonHandPattern) -> "Hand[T_HandPattern]":
         return Hand(
             tiles=[Tile.__decode__(x) for x in data["tiles"]],
             furo=[Furo.__decode__(x) for x in data["furo"]],
-            patterns=[HandPattern.__decode__(x) for x in data["patterns"]]
+            patterns=[hand_pattern_type.__decode__(x) for x in data["patterns"]]
         )

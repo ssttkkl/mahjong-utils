@@ -1,7 +1,8 @@
 from mahjong_utils.lib import libmahjongutils
+from .models import ParentPoint, ChildPoint
 
 
-def get_parent_point_by_han_hu(han: int, hu: int):
+def get_parent_point_by_han_hu(han: int, hu: int) -> ParentPoint:
     """
     获取亲家X番Y符的点数
 
@@ -14,10 +15,10 @@ def get_parent_point_by_han_hu(han: int, hu: int):
         "hu": hu
     })
 
-    return result["ron"], result["tsumo"]
+    return ParentPoint.__decode__(result)
 
 
-def get_child_point_by_han_hu(han: int, hu: int):
+def get_child_point_by_han_hu(han: int, hu: int) -> ChildPoint:
     """
     获取子家X番Y符的点数
 
@@ -30,7 +31,7 @@ def get_child_point_by_han_hu(han: int, hu: int):
         "hu": hu
     })
 
-    return result["ron"], result["tsumoParent"], result["tsumoChild"]
+    return ChildPoint.__decode__(result)
 
 
 __all__ = ("get_parent_point_by_han_hu", "get_child_point_by_han_hu",)
