@@ -1,7 +1,7 @@
 from typing import Set
 
-from .extra import tenhou, chihou
 from .yaku import Yaku
+from .extra import tenhou, chihou
 
 kokushi = Yaku("kokushi", 13, 13, True)
 suanko = Yaku("suanko", 13, 13, True)

@@ -136,8 +136,11 @@ setup(
     ],
     packages=[
         "mahjong_utils",
+        "mahjong_utils.hora",
         "mahjong_utils.lib",
         "mahjong_utils.models",
+        "mahjong_utils.point_by_han_hu",
+        "mahjong_utils.shanten",
         "mahjong_utils.yaku"
     ],
     package_data={"": ["*_api.i"]},
