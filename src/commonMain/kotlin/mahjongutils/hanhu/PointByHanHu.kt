@@ -66,7 +66,7 @@ data class ChildPoint(
     companion object {
         val Mangan = ChildPoint(8000, 4000, 2000)
         val Haneman = ChildPoint(12000, 6000, 3000)
-        val Baiman = ChildPoint(18000, 8000, 4000)
+        val Baiman = ChildPoint(16000, 8000, 4000)
         val Sanbaiman = ChildPoint(24000, 12000, 6000)
         val Yakuman = ChildPoint(32000, 16000, 8000)
     }
