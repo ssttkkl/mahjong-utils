@@ -90,30 +90,54 @@ data class Hora internal constructor(
     /**
      * 亲家（庄家）和牌点数
      */
-    val parentPoint: ParentPoint
-        get() = if (han == 0) {
+    @EncodeDefault
+    val parentPoint: ParentPoint = run {
+        if (han == 0) {
             ParentPoint(0, 0)
-        } else if (hasYakuman) {
-            val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
-            val ans = getParentPointByHanHu(13, 20)
-            ParentPoint(ans.ron * times, ans.tsumo * times)
         } else {
-            getParentPointByHanHu(han, hu)
+            val raw = if (hasYakuman) {
+                val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
+                val oneTimeYakuman = getParentPointByHanHu(13, 20)
+                ParentPoint(oneTimeYakuman.ron * times, oneTimeYakuman.tsumo * times)
+            } else {
+                getParentPointByHanHu(han, hu)
+            }
+
+            if (tsumo) {
+                ParentPoint(0, raw.tsumo)
+            } else {
+                ParentPoint(raw.ron, 0)
+            }
         }
+    }
 
     /**
      * 子家（闲家）和牌点数
      */
-    val childPoint: ChildPoint
-        get() = if (han == 0) {
+    @EncodeDefault
+    val childPoint: ChildPoint = run {
+        if (han == 0) {
             ChildPoint(0, 0, 0)
-        } else if (hasYakuman) {
-            val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
-            val ans = getChildPointByHanHu(13, 20)
-            ChildPoint(ans.ron * times, ans.tsumoParent * times, ans.tsumoChild * times)
         } else {
-            getChildPointByHanHu(han, hu)
+            val raw = if (hasYakuman) {
+                val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
+                val oneTimeYakuman = getChildPointByHanHu(13, 20)
+                ChildPoint(
+                    oneTimeYakuman.ron * times,
+                    oneTimeYakuman.tsumoParent * times,
+                    oneTimeYakuman.tsumoChild * times
+                )
+            } else {
+                getChildPointByHanHu(han, hu)
+            }
+
+            if (tsumo) {
+                ChildPoint(0, raw.tsumoParent, raw.tsumoChild)
+            } else {
+                ChildPoint(raw.ron, 0, 0)
+            }
         }
+    }
 }
 
 /**
