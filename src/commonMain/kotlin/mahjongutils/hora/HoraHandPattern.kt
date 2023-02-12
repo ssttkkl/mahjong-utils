@@ -128,7 +128,7 @@ data class RegularHoraHandPattern internal constructor(
         }
 
         // 对碰荣和时该刻子计为明刻
-        if (agariTatsu is Toitsu) {
+        if (agariTatsu is Toitsu && !tsumo) {
             ans -= 2
         }
 
