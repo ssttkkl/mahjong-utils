@@ -51,4 +51,10 @@ class TestFuroChanceShanten {
             furoChanceShanten(Tile.parseTiles("9999m"), Tile.get("9m"))
         }
     }
+
+    @Test
+    fun test3(){
+        val result = furoChanceShanten(Tile.parseTiles("3456778m123457p"), Tile.get("7m"))
+        assertEquals(0,result.shantenInfo.shantenNum)
+    }
 }

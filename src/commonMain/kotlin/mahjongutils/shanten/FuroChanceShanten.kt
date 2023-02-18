@@ -106,7 +106,7 @@ internal fun furoChanceShanten(
                             )
                 }
                 shantenInfo.copy(
-                    shantenNum = discardToAdvance.values.maxOf { it.shantenNum },
+                    shantenNum = discardToAdvance.values.minOfOrNull { it.shantenNum } ?: 9999,
                     discardToAdvance = discardToAdvance
                 )
             } else {
