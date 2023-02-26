@@ -92,7 +92,7 @@ internal fun furoChanceShanten(
             val tilesAfterChi = tiles - tt.first - tt.second
             val shantenAfterChi = regularShanten(
                 tilesAfterChi,
-                listOf(Chi(tt.first)),
+                listOf(Chi((tt.withWaiting(chanceTile) as Shuntsu).tile)),
                 calcAdvanceNum = calcAdvanceNum,
                 bestShantenOnly = bestShantenOnly,
                 allowAnkan = false

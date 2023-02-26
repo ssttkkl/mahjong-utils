@@ -1,5 +1,6 @@
 package mahjongutils.shanten
 
+import mahjongutils.models.Tatsu
 import mahjongutils.models.Tile
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
@@ -53,8 +54,14 @@ class TestFuroChanceShanten {
     }
 
     @Test
-    fun test3(){
+    fun test3() {
         val result = furoChanceShanten(Tile.parseTiles("3456778m123457p"), Tile.get("7m"))
-        assertEquals(0,result.shantenInfo.shantenNum)
+        assertEquals(0, result.shantenInfo.shantenNum)
+    }
+
+    @Test
+    fun test4() {
+        val result = furoChanceShanten(Tile.parseTiles("3467m119p"), Tile.get("5m"))
+        assertEquals(7, result.shantenInfo.chi[Tatsu.parse("67m")]!!.discardToAdvance[Tile.get("9p")]!!.advanceNum)
     }
 }
