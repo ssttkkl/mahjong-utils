@@ -1,6 +1,6 @@
 plugins {
-    kotlin("multiplatform") version "1.7.21"
-    kotlin("plugin.serialization") version "1.7.21"
+    kotlin("multiplatform") version "1.8.21"
+    kotlin("plugin.serialization") version "1.8.10"
     id("dev.petuska.npm.publish") version "3.2.0"
 }
 
@@ -50,7 +50,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(rootProject)
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
             }
         }
         val commonTest by getting {
@@ -60,7 +60,7 @@ kotlin {
         }
         val nativeMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
             }
         }
         val jsMain by getting {
