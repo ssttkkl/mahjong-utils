@@ -137,7 +137,7 @@ class ShantenWithFuroChance(Shanten):
     pass_: Optional[ShantenWithoutGot]
     chi: Dict[Tatsu, ShantenWithGot]
     pon: Optional[ShantenWithGot]
-    minkan: Optional[ShantenWithGot]
+    minkan: Optional[ShantenWithoutGot]
 
     def __encode__(self) -> dict:
         return {
@@ -207,7 +207,7 @@ class CommonShantenResult(ShantenResult[CommonShanten, T_HandPattern], ABC):
         return getattr(self.shanten_info, "good_shape_advance_num", None)
 
     @property
-    def improvement(self) -> Optional[Dict[Tile, Set[Improvement]]]:
+    def improvement(self) -> Optional[Dict[Tile, List[Improvement]]]:
         return getattr(self.shanten_info, "improvement", None)
 
     @property
