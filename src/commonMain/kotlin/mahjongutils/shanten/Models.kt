@@ -25,6 +25,22 @@ sealed interface Shanten {
 @Serializable
 sealed interface CommonShanten : Shanten
 
+@Serializable
+data class Improvement(
+    /**
+     * 摸上改良张后的弃牌
+     */
+    val discard: Tile,
+    /**
+     * 摸上改良张且弃牌后的进张
+     */
+    val advance: Set<Tile>,
+    /**
+     * 摸上改良张且弃牌后的进张数
+     */
+    @EncodeDefault val advanceNum: Int = 0,
+)
+
 /**
  * 未摸牌的手牌的向听信息
  */
@@ -42,12 +58,25 @@ data class ShantenWithoutGot(
     @EncodeDefault val advanceNum: Int = 0,
     /**
      * 好型进张
+     * 仅当一向听时进行计算
      */
-    @EncodeDefault val goodShapeAdvance: Set<Tile>? = null,
+    @EncodeDefault val goodShapeAdvance: Set<Tile>? = if (shantenNum == 1) emptySet() else null,
     /**
      * 好型进张数
+     * 仅当一向听时进行计算
      */
-    @EncodeDefault val goodShapeAdvanceNum: Int? = null
+    @EncodeDefault val goodShapeAdvanceNum: Int? = if (shantenNum == 1) 0 else null,
+    /**
+     * 改良张（能让听牌数目增加的牌）
+     * 对于每种改良张，只计算能让进张最多的打法
+     * 仅当听牌时进行计算
+     */
+    @EncodeDefault val improvement: Map<Tile, Set<Improvement>>? = if (shantenNum == 0) emptyMap() else null,
+    /**
+     * 改良张数（能让听牌数目增加的牌）
+     * 仅当听牌时进行计算
+     */
+    @EncodeDefault val improvementNum: Int? = if (shantenNum == 0) 0 else null
 ) : CommonShanten
 
 /**

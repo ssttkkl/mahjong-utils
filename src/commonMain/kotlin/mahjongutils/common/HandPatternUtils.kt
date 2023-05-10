@@ -40,7 +40,7 @@ internal fun KokushiHandPattern.calcShanten(): Int {
 
 internal val TILE_CLING = buildMap<Tile, Set<Tile>> {
     repeat(3) {
-        val type = TileType.values()[it]
+        val type = TileType.valueOf(it)
         for (j in 1..9) {
             val t = Tile.get(type, j)
             this[t] = listOf(-2, -1, 0, 1, 2)

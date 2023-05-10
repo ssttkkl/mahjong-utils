@@ -161,7 +161,7 @@ fun hora(
         throw IllegalArgumentException("invalid length of tiles")
     }
 
-    val shantenResult = shanten(tiles, furo, false)
+    val shantenResult = shanten(tiles, furo, calcAdvanceNum = false, bestShantenOnly = true, allowAnkan = false)
     return hora(shantenResult, agari, tsumo, dora, selfWind, roundWind, extraYaku)
 
 }

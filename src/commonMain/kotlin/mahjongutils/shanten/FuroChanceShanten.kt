@@ -18,7 +18,9 @@ fun furoChanceShanten(
     allowChi: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowKuikae: Boolean = false
-): FuroChanceShantenResult = furoChanceShanten(tiles, chanceTile, allowChi, true, bestShantenOnly, allowKuikae)
+): FuroChanceShantenResult = furoChanceShanten(
+    tiles, chanceTile, allowChi, true, bestShantenOnly, allowKuikae
+)
 
 /**
  * 副露判断向听分析

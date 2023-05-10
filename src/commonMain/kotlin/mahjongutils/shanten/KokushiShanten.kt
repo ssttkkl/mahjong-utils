@@ -51,8 +51,7 @@ private fun handleKokushiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWitho
     if (pat.repeated != null) {
         // 非十三面
         val advance = Tile.allYaochu - pat.yaochu
-        val goodShapeAdvance = if (shantenNum == 1) emptySet<Tile>() else null
-        val shantenInfo = ShantenWithoutGot(shantenNum, advance, goodShapeAdvance = goodShapeAdvance)
+        val shantenInfo = ShantenWithoutGot(shantenNum, advance)
         return Pair(shantenInfo, bestPatterns)
     } else {
         // 十三面
@@ -120,7 +119,7 @@ internal fun kokushiShanten(
     }
 
     if (calcAdvanceNum) {
-        shantenInfo = shantenInfo.fillAdvanceNum(tiles.countAsCodeArray())
+        shantenInfo = shantenInfo.fillNum(tiles.countAsCodeArray())
     }
 
     val hand = Hand(tiles = tiles, furo = emptyList(), patterns = patterns)

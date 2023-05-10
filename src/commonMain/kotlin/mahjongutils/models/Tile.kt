@@ -29,7 +29,19 @@ enum class TileType {
     /**
      * 字
      */
-    Z
+    Z;
+
+    companion object {
+        fun valueOf(ordinal: Int): TileType {
+            return when (ordinal) {
+                0 -> M
+                1 -> P
+                2 -> S
+                3 -> Z
+                else -> throw IllegalArgumentException("invalid ordinal value: $ordinal")
+            }
+        }
+    }
 }
 
 /**
@@ -208,7 +220,7 @@ data class Tile private constructor(
         /**
          * 所有牌
          */
-        val allExcludeAkaDora = all.filter { it.num != 0 }
+        val allExcludeAkaDora = all.filter { it.num != 0 }.toSet()
 
         /**
          * 所有幺九牌

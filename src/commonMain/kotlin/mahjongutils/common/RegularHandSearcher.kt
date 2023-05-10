@@ -9,7 +9,7 @@ private fun encode(t: Tile): Int {
 }
 
 private fun decode(code: Int): Tile {
-    val type = TileType.values()[code / 9]
+    val type = TileType.valueOf(code / 9)
     val num = code % 9 + 1
     return Tile.get(type, num)
 }

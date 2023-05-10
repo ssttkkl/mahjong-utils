@@ -146,6 +146,10 @@ class TestHora {
             agari = Tile.get("9s"),
             tsumo = false
         )
+        assertEquals(hora.han, 3)
+        assertEquals(hora.hu, 40)
+        assertEquals(ParentPoint(7700, 0), hora.parentPoint)
+        assertEquals(ChildPoint(5200, 0, 0), hora.childPoint)
     }
 
     @Test

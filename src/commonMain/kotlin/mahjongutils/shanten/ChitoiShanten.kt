@@ -1,7 +1,6 @@
 package mahjongutils.shanten
 
 import mahjongutils.models.Tile
-import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.countAsMap
 import mahjongutils.models.hand.ChitoiHandPattern
 import mahjongutils.models.hand.Hand
@@ -44,11 +43,9 @@ private fun handleChitoiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithou
         advance = (Tile.allExcludeAkaDora - pattern.pairs).toSet()
     }
 
-    val goodShapeAdvance = if (shantenNum == 1) emptySet<Tile>() else null
     val shantenInfo = ShantenWithoutGot(
         shantenNum = shantenNum,
-        advance = advance.toSet(),
-        goodShapeAdvance = goodShapeAdvance
+        advance = advance.toSet()
     )
     return Pair(shantenInfo, pattern)
 }
@@ -120,7 +117,7 @@ internal fun chitoiShanten(
     }
 
     if (calcAdvanceNum) {
-        shantenInfo = shantenInfo.fillAdvanceNum(tiles.countAsCodeArray())
+        shantenInfo = shantenInfo.fillNum(getTileCount(tiles))
     }
 
     val hand = Hand(tiles = tiles, furo = emptyList(), patterns = listOf(pattern))

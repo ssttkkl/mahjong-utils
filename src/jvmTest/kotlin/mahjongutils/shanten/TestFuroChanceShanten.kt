@@ -12,7 +12,7 @@ class TestFuroChanceShanten {
         val result = furoChanceShanten(Tile.parseTiles("8999m"), Tile.get("9m"))
         assertEquals(0, result.shantenInfo.shantenNum)
 
-        val shantenInfo = result.shantenInfo as ShantenWithFuroChance
+        val shantenInfo = result.shantenInfo
         assertEquals(
             ShantenWithoutGot(
                 shantenNum = 0,
@@ -27,7 +27,17 @@ class TestFuroChanceShanten {
                     Tile.get("8m") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = setOf(),
-                        advanceNum = 0
+                        advanceNum = 0,
+                        improvement = Tile.allExcludeAkaDora.filter { it !== Tile.get("9m") }.associateWith {
+                            setOf(
+                                Improvement(
+                                    discard = Tile.get("9m"),
+                                    advance = setOf(it),
+                                    advanceNum = if (it == Tile.get("8m")) 2 else 3
+                                )
+                            )
+                        },
+                        improvementNum = 131,
                     ),
                     Tile.get("9m") to ShantenWithoutGot(
                         shantenNum = 0,

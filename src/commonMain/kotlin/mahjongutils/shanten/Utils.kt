@@ -1,6 +1,8 @@
 package mahjongutils.shanten
 
+import mahjongutils.models.Furo
 import mahjongutils.models.Tile
+import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.HandPattern
 
 
@@ -53,28 +55,44 @@ internal fun <T : HandPattern> selectBestPatterns(
     return Pair(bestShanten, bestPattern)
 }
 
-private fun ShantenWithoutGot.fillAdvanceNumByRemaining(remaining: IntArray): ShantenWithoutGot {
-    val advanceNum = advance.sumOf { remaining[it.code] }
-    val goodShapeAdvanceNum = goodShapeAdvance?.sumOf { remaining[it.code] }
-
-    return copy(advanceNum = advanceNum, goodShapeAdvanceNum = goodShapeAdvanceNum)
+internal fun getTileCount(tiles: Collection<Tile>, furo: Collection<Furo> = emptyList()): IntArray {
+    return (tiles + furo.flatMap { it.tiles }).countAsCodeArray()
 }
 
-internal inline fun <reified T : Shanten> T.fillAdvanceNum(tileCount: IntArray): T {
+internal fun getRemainingFromTileCount(tileCount: IntArray): IntArray {
     val remaining = IntArray(Tile.MAX_TILE_CODE + 1) { 4 }
     for (i in tileCount.indices) {
         remaining[i] -= tileCount[i]
     }
+    return remaining
+}
 
+internal inline fun <reified T : CommonShanten> T.fillNum(tileCount: IntArray): T {
+    val remaining = getRemainingFromTileCount(tileCount)
+    return fillNumByRemaining(remaining)
+}
+
+internal fun <T : CommonShanten> T.fillNumByRemaining(remaining: IntArray): T {
     return when (this) {
         is ShantenWithoutGot -> {
-            this.fillAdvanceNumByRemaining(remaining) as T
+            copy(
+                advanceNum = advance.sumOf { remaining[it.code] },
+                goodShapeAdvanceNum = goodShapeAdvance?.sumOf { remaining[it.code] },
+                improvement = improvement?.mapValues { (k, v) ->
+                    remaining[k.code] -= 1
+                    val v = v.map { imp -> imp.copy(advanceNum = imp.advance.sumOf { remaining[it.code] }) }.toSet()
+                    remaining[k.code] += 1
+
+                    v
+                },
+                improvementNum = improvement?.keys?.sumOf { remaining[it.code] }
+            ) as T
         }
 
         is ShantenWithGot -> {
             copy(
-                discardToAdvance = discardToAdvance.mapValues { (k, v) -> v.fillAdvanceNumByRemaining(remaining) },
-                ankanToAdvance = ankanToAdvance.mapValues { (k, v) -> v.fillAdvanceNumByRemaining(remaining) },
+                discardToAdvance = discardToAdvance.mapValues { (_, v) -> v.fillNumByRemaining(remaining) },
+                ankanToAdvance = ankanToAdvance.mapValues { (_, v) -> v.fillNumByRemaining(remaining) },
             ) as T
         }
 

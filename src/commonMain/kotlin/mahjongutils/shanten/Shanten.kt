@@ -64,22 +64,26 @@ private fun mergeIntoWithGot(
 fun shanten(
     tiles: List<Tile>, furo: List<Furo> = emptyList(),
     bestShantenOnly: Boolean = false
-): UnionShantenResult = shanten(tiles, furo, true, bestShantenOnly, true)
+): UnionShantenResult = shanten(tiles, furo, true, true, bestShantenOnly, true, true)
 
 /**
  * 向听分析
  * @param tiles 门前的牌
  * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
  * @param calcAdvanceNum 是否计算进张数
+ * @param calcGoodShapeAdvance 是否计算好型进张
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
  * @param allowAnkan 是否允许暗杠
+ * @param calcImprovement 是否计算改良
  * @return 向听分析结果
  */
 internal fun shanten(
     tiles: List<Tile>, furo: List<Furo> = emptyList(),
     calcAdvanceNum: Boolean = true,
+    calcGoodShapeAdvance: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowAnkan: Boolean = true,
+    calcImprovement: Boolean = true,
 ): UnionShantenResult {
     val tiles = ensureLegalTiles(tiles)
 
@@ -87,16 +91,30 @@ internal fun shanten(
     val k = tiles.size / 3
 
     if (k != 4) {
-        val regular = regularShanten(tiles, furo, calcAdvanceNum, bestShantenOnly, allowAnkan)
+        val regular = regularShanten(
+            tiles, furo,
+            calcAdvanceNum = calcAdvanceNum,
+            calcGoodShapeAdvance = calcGoodShapeAdvance,
+            bestShantenOnly = bestShantenOnly,
+            allowAnkan = allowAnkan,
+            calcImprovement = calcImprovement
+        )
         return UnionShantenResult(
             hand = regular.hand, shantenInfo = regular.shantenInfo,
             regular = regular
         )
     }
 
-    val regular = regularShanten(tiles, furo, false, bestShantenOnly, allowAnkan)
-    val chitoi = chitoiShanten(tiles, false, bestShantenOnly)
-    val kokushi = kokushiShanten(tiles, false, bestShantenOnly)
+    val regular = regularShanten(
+        tiles, furo,
+        calcAdvanceNum = false,
+        calcGoodShapeAdvance = calcGoodShapeAdvance,
+        bestShantenOnly = bestShantenOnly,
+        allowAnkan = allowAnkan,
+        calcImprovement = calcImprovement
+    )
+    val chitoi = chitoiShanten(tiles, calcAdvanceNum = false, bestShantenOnly = bestShantenOnly)
+    val kokushi = kokushiShanten(tiles, calcAdvanceNum = false, bestShantenOnly = bestShantenOnly)
 
     val shantenNum = min(
         min(
@@ -115,7 +133,12 @@ internal fun shanten(
         mergeIntoWithoutGot(shantenNum, advance, goodShapeAdvance, patterns, chitoi)
         mergeIntoWithoutGot(shantenNum, advance, goodShapeAdvance, patterns, kokushi)
 
-        ShantenWithoutGot(shantenNum, advance, goodShapeAdvance = if (shantenNum == 1) goodShapeAdvance else null)
+        ShantenWithoutGot(
+            shantenNum, advance,
+            goodShapeAdvance = if (shantenNum == 1) goodShapeAdvance else null,
+            improvement = (regular.shantenInfo as ShantenWithoutGot).improvement
+                ?: (if (shantenNum == 0) emptyMap() else null)
+        )
     } else {
         val discardToAdvance = HashMap<Tile, ShantenWithoutGot>()
 
@@ -123,12 +146,15 @@ internal fun shanten(
         mergeIntoWithGot(shantenNum, discardToAdvance, patterns, chitoi, bestShantenOnly)
         mergeIntoWithGot(shantenNum, discardToAdvance, patterns, kokushi, bestShantenOnly)
 
-        ShantenWithGot(shantenNum, discardToAdvance, (regular.shantenInfo as ShantenWithGot).ankanToAdvance)
+        ShantenWithGot(
+            shantenNum, discardToAdvance,
+            ankanToAdvance = (regular.shantenInfo as ShantenWithGot).ankanToAdvance
+        )
     }
 
     if (calcAdvanceNum) {
         val tilesCount = (tiles + furo.flatMap { it.asMentsu().tiles }).countAsCodeArray()
-        shantenInfo = shantenInfo.fillAdvanceNum(tilesCount)
+        shantenInfo = shantenInfo.fillNum(tilesCount)
     }
 
     val hand = Hand(tiles = tiles, furo = furo, patterns = patterns)
