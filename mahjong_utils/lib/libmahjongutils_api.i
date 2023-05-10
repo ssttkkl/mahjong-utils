@@ -49,6 +49,18 @@ typedef struct {
 } libmahjongutils_kref_kotlin_Unit;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_kotlin_UByte;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_kotlin_UShort;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_kotlin_UInt;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
+} libmahjongutils_kref_kotlin_ULong;
+typedef struct {
+  libmahjongutils_KNativePtr pinned;
 } libmahjongutils_kref_mahjongutils_Entry;
 typedef struct {
   libmahjongutils_KNativePtr pinned;
@@ -130,25 +142,53 @@ typedef struct {
   void (*DisposeString)(const char* string);
   libmahjongutils_KBoolean (*IsInstance)(libmahjongutils_KNativePtr ref, const libmahjongutils_KType* type);
   libmahjongutils_kref_kotlin_Byte (*createNullableByte)(libmahjongutils_KByte);
+  libmahjongutils_KByte (*getNonNullValueOfByte)(libmahjongutils_kref_kotlin_Byte);
   libmahjongutils_kref_kotlin_Short (*createNullableShort)(libmahjongutils_KShort);
+  libmahjongutils_KShort (*getNonNullValueOfShort)(libmahjongutils_kref_kotlin_Short);
   libmahjongutils_kref_kotlin_Int (*createNullableInt)(libmahjongutils_KInt);
+  libmahjongutils_KInt (*getNonNullValueOfInt)(libmahjongutils_kref_kotlin_Int);
   libmahjongutils_kref_kotlin_Long (*createNullableLong)(libmahjongutils_KLong);
+  libmahjongutils_KLong (*getNonNullValueOfLong)(libmahjongutils_kref_kotlin_Long);
   libmahjongutils_kref_kotlin_Float (*createNullableFloat)(libmahjongutils_KFloat);
+  libmahjongutils_KFloat (*getNonNullValueOfFloat)(libmahjongutils_kref_kotlin_Float);
   libmahjongutils_kref_kotlin_Double (*createNullableDouble)(libmahjongutils_KDouble);
+  libmahjongutils_KDouble (*getNonNullValueOfDouble)(libmahjongutils_kref_kotlin_Double);
   libmahjongutils_kref_kotlin_Char (*createNullableChar)(libmahjongutils_KChar);
+  libmahjongutils_KChar (*getNonNullValueOfChar)(libmahjongutils_kref_kotlin_Char);
   libmahjongutils_kref_kotlin_Boolean (*createNullableBoolean)(libmahjongutils_KBoolean);
+  libmahjongutils_KBoolean (*getNonNullValueOfBoolean)(libmahjongutils_kref_kotlin_Boolean);
   libmahjongutils_kref_kotlin_Unit (*createNullableUnit)(void);
+  libmahjongutils_kref_kotlin_UByte (*createNullableUByte)(libmahjongutils_KUByte);
+  libmahjongutils_KUByte (*getNonNullValueOfUByte)(libmahjongutils_kref_kotlin_UByte);
+  libmahjongutils_kref_kotlin_UShort (*createNullableUShort)(libmahjongutils_KUShort);
+  libmahjongutils_KUShort (*getNonNullValueOfUShort)(libmahjongutils_kref_kotlin_UShort);
+  libmahjongutils_kref_kotlin_UInt (*createNullableUInt)(libmahjongutils_KUInt);
+  libmahjongutils_KUInt (*getNonNullValueOfUInt)(libmahjongutils_kref_kotlin_UInt);
+  libmahjongutils_kref_kotlin_ULong (*createNullableULong)(libmahjongutils_KULong);
+  libmahjongutils_KULong (*getNonNullValueOfULong)(libmahjongutils_kref_kotlin_ULong);
 
 
   struct {
     struct {
       struct {
-        libmahjongutils_kref_mahjongutils_Entry (*get_ENTRY)();
         struct {
           libmahjongutils_KType* (*_type)(void);
           const char* (*call)(libmahjongutils_kref_mahjongutils_Entry thiz, const char* name, const char* rawParams);
         } Entry;
         struct {
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_descriptors_SerialDescriptor (*get_descriptor)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer thiz);
+            libmahjongutils_kref_kotlin_Array (*childSerializers)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer thiz);
+            libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*deserialize)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Decoder decoder);
+            void (*serialize)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Encoder encoder, libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs value);
+          } $serializer;
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_Companion (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_Companion thiz);
+          } Companion;
           libmahjongutils_KType* (*_type)(void);
           libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
           libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*FuroChanceShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_mahjongutils_models_Tile chanceTile, libmahjongutils_KBoolean allowChi, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_KBoolean allowKuikae);
@@ -166,32 +206,8 @@ typedef struct {
           libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz, libmahjongutils_kref_kotlin_Any other);
           libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
           const char* (*toString)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs thiz);
-          struct {
-            libmahjongutils_KType* (*_type)(void);
-            libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer (*_instance)();
-            libmahjongutils_kref_kotlinx_serialization_descriptors_SerialDescriptor (*get_descriptor)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer thiz);
-            libmahjongutils_kref_kotlin_Array (*childSerializers)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer thiz);
-            libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs (*deserialize)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Decoder decoder);
-            void (*serialize)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Encoder encoder, libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs value);
-          } $serializer;
-          struct {
-            libmahjongutils_KType* (*_type)(void);
-            libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_Companion (*_instance)();
-            libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_FuroChanceShantenArgs_Companion thiz);
-          } Companion;
         } FuroChanceShantenArgs;
         struct {
-          libmahjongutils_KType* (*_type)(void);
-          libmahjongutils_kref_mahjongutils_HanHu (*HanHu)(libmahjongutils_KInt seen1, libmahjongutils_KInt han, libmahjongutils_KInt hu, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
-          libmahjongutils_kref_mahjongutils_HanHu (*HanHu_)(libmahjongutils_KInt han, libmahjongutils_KInt hu);
-          libmahjongutils_KInt (*get_han)(libmahjongutils_kref_mahjongutils_HanHu thiz);
-          libmahjongutils_KInt (*get_hu)(libmahjongutils_kref_mahjongutils_HanHu thiz);
-          libmahjongutils_KInt (*component1)(libmahjongutils_kref_mahjongutils_HanHu thiz);
-          libmahjongutils_KInt (*component2)(libmahjongutils_kref_mahjongutils_HanHu thiz);
-          libmahjongutils_kref_mahjongutils_HanHu (*copy)(libmahjongutils_kref_mahjongutils_HanHu thiz, libmahjongutils_KInt han, libmahjongutils_KInt hu);
-          libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_HanHu thiz, libmahjongutils_kref_kotlin_Any other);
-          libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_HanHu thiz);
-          const char* (*toString)(libmahjongutils_kref_mahjongutils_HanHu thiz);
           struct {
             libmahjongutils_KType* (*_type)(void);
             libmahjongutils_kref_mahjongutils_HanHu_$serializer (*_instance)();
@@ -205,8 +221,32 @@ typedef struct {
             libmahjongutils_kref_mahjongutils_HanHu_Companion (*_instance)();
             libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_HanHu_Companion thiz);
           } Companion;
+          libmahjongutils_KType* (*_type)(void);
+          libmahjongutils_kref_mahjongutils_HanHu (*HanHu)(libmahjongutils_KInt seen1, libmahjongutils_KInt han, libmahjongutils_KInt hu, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_HanHu (*HanHu_)(libmahjongutils_KInt han, libmahjongutils_KInt hu);
+          libmahjongutils_KInt (*get_han)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          libmahjongutils_KInt (*get_hu)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          libmahjongutils_KInt (*component1)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          libmahjongutils_KInt (*component2)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          libmahjongutils_kref_mahjongutils_HanHu (*copy)(libmahjongutils_kref_mahjongutils_HanHu thiz, libmahjongutils_KInt han, libmahjongutils_KInt hu);
+          libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_HanHu thiz, libmahjongutils_kref_kotlin_Any other);
+          libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_HanHu thiz);
+          const char* (*toString)(libmahjongutils_kref_mahjongutils_HanHu thiz);
         } HanHu;
         struct {
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_HoraArgs_$serializer (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_descriptors_SerialDescriptor (*get_descriptor)(libmahjongutils_kref_mahjongutils_HoraArgs_$serializer thiz);
+            libmahjongutils_kref_kotlin_Array (*childSerializers)(libmahjongutils_kref_mahjongutils_HoraArgs_$serializer thiz);
+            libmahjongutils_kref_mahjongutils_HoraArgs (*deserialize)(libmahjongutils_kref_mahjongutils_HoraArgs_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Decoder decoder);
+            void (*serialize)(libmahjongutils_kref_mahjongutils_HoraArgs_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Encoder encoder, libmahjongutils_kref_mahjongutils_HoraArgs value);
+          } $serializer;
+          struct {
+            libmahjongutils_KType* (*_type)(void);
+            libmahjongutils_kref_mahjongutils_HoraArgs_Companion (*_instance)();
+            libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_HoraArgs_Companion thiz);
+          } Companion;
           libmahjongutils_KType* (*_type)(void);
           libmahjongutils_kref_mahjongutils_HoraArgs (*HoraArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_kref_mahjongutils_shanten_CommonShantenResult shantenResult, libmahjongutils_kref_mahjongutils_models_Tile agari, libmahjongutils_KBoolean tsumo, libmahjongutils_KInt dora, libmahjongutils_kref_mahjongutils_models_Wind selfWind, libmahjongutils_kref_mahjongutils_models_Wind roundWind, libmahjongutils_kref_kotlin_collections_Set extraYaku, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
           libmahjongutils_kref_mahjongutils_HoraArgs (*HoraArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_kref_mahjongutils_shanten_CommonShantenResult shantenResult, libmahjongutils_kref_mahjongutils_models_Tile agari, libmahjongutils_KBoolean tsumo, libmahjongutils_KInt dora, libmahjongutils_kref_mahjongutils_models_Wind selfWind, libmahjongutils_kref_mahjongutils_models_Wind roundWind, libmahjongutils_kref_kotlin_collections_Set extraYaku);
@@ -232,34 +272,8 @@ typedef struct {
           libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_HoraArgs thiz, libmahjongutils_kref_kotlin_Any other);
           libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
           const char* (*toString)(libmahjongutils_kref_mahjongutils_HoraArgs thiz);
-          struct {
-            libmahjongutils_KType* (*_type)(void);
-            libmahjongutils_kref_mahjongutils_HoraArgs_$serializer (*_instance)();
-            libmahjongutils_kref_kotlinx_serialization_descriptors_SerialDescriptor (*get_descriptor)(libmahjongutils_kref_mahjongutils_HoraArgs_$serializer thiz);
-            libmahjongutils_kref_kotlin_Array (*childSerializers)(libmahjongutils_kref_mahjongutils_HoraArgs_$serializer thiz);
-            libmahjongutils_kref_mahjongutils_HoraArgs (*deserialize)(libmahjongutils_kref_mahjongutils_HoraArgs_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Decoder decoder);
-            void (*serialize)(libmahjongutils_kref_mahjongutils_HoraArgs_$serializer thiz, libmahjongutils_kref_kotlinx_serialization_encoding_Encoder encoder, libmahjongutils_kref_mahjongutils_HoraArgs value);
-          } $serializer;
-          struct {
-            libmahjongutils_KType* (*_type)(void);
-            libmahjongutils_kref_mahjongutils_HoraArgs_Companion (*_instance)();
-            libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_HoraArgs_Companion thiz);
-          } Companion;
         } HoraArgs;
         struct {
-          libmahjongutils_KType* (*_type)(void);
-          libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
-          libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly);
-          libmahjongutils_KBoolean (*get_bestShantenOnly)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_kref_kotlin_collections_List (*get_furo)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_kref_kotlin_collections_List (*get_tiles)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_kref_kotlin_collections_List (*component1)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_kref_kotlin_collections_List (*component2)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_KBoolean (*component3)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          libmahjongutils_kref_mahjongutils_ShantenArgs (*copy)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly);
-          libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz, libmahjongutils_kref_kotlin_Any other);
-          libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
-          const char* (*toString)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
           struct {
             libmahjongutils_KType* (*_type)(void);
             libmahjongutils_kref_mahjongutils_ShantenArgs_$serializer (*_instance)();
@@ -273,7 +287,21 @@ typedef struct {
             libmahjongutils_kref_mahjongutils_ShantenArgs_Companion (*_instance)();
             libmahjongutils_kref_kotlinx_serialization_KSerializer (*serializer)(libmahjongutils_kref_mahjongutils_ShantenArgs_Companion thiz);
           } Companion;
+          libmahjongutils_KType* (*_type)(void);
+          libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs)(libmahjongutils_KInt seen1, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly, libmahjongutils_kref_kotlinx_serialization_internal_SerializationConstructorMarker serializationConstructorMarker);
+          libmahjongutils_kref_mahjongutils_ShantenArgs (*ShantenArgs_)(libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly);
+          libmahjongutils_KBoolean (*get_bestShantenOnly)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
+          libmahjongutils_kref_kotlin_collections_List (*get_furo)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
+          libmahjongutils_kref_kotlin_collections_List (*get_tiles)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
+          libmahjongutils_kref_kotlin_collections_List (*component1)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
+          libmahjongutils_kref_kotlin_collections_List (*component2)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
+          libmahjongutils_KBoolean (*component3)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
+          libmahjongutils_kref_mahjongutils_ShantenArgs (*copy)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz, libmahjongutils_kref_kotlin_collections_List tiles, libmahjongutils_kref_kotlin_collections_List furo, libmahjongutils_KBoolean bestShantenOnly);
+          libmahjongutils_KBoolean (*equals)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz, libmahjongutils_kref_kotlin_Any other);
+          libmahjongutils_KInt (*hashCode)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
+          const char* (*toString)(libmahjongutils_kref_mahjongutils_ShantenArgs thiz);
         } ShantenArgs;
+        libmahjongutils_kref_mahjongutils_Entry (*get_ENTRY)();
       } mahjongutils;
     } root;
   } kotlin;

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Set, Dict, Generic, TypeVar
+from typing import Optional, Set, Dict, Generic, TypeVar, List
 
 from pydantic import BaseModel
 from typing_extensions import Self
@@ -36,13 +36,43 @@ class CommonShanten(Shanten, ABC):
             raise ValueError("invalid type: " + data['type'])
 
 
+class Improvement(BaseModel):
+    discard: Tile
+    advance: Set[Tile]
+    advance_num: int
+
+    def __encode__(self) -> dict:
+        return dict(
+            discard=self.discard.__encode__(),
+            advance=[t.__encode__() for t in self.advance],
+            advanceNum=self.advance_num
+        )
+
+    @classmethod
+    def __decode__(cls, data: dict) -> "Improvement":
+        return Improvement(
+            discard=Tile.__decode__(data["discard"]),
+            advance=set(Tile.__decode__(x) for x in data["advance"]),
+            advance_num=data["advanceNum"]
+        )
+
+
 class ShantenWithoutGot(CommonShanten):
     advance: Set[Tile]
     advance_num: int
     good_shape_advance: Optional[Set[Tile]]
     good_shape_advance_num: Optional[int]
+    improvement: Optional[Dict[Tile, List[Improvement]]]
+    improvement_num: Optional[int]
 
     def __encode__(self) -> dict:
+        improvement = None
+
+        if self.improvement is not None:
+            improvement = dict()
+            for t in self.improvement:
+                improvement[t.__encode__()] = [x.__encode__() for x in self.improvement[t]]
+
         return dict(
             type="ShantenWithoutGot",
             shantenNum=self.shanten,
@@ -50,11 +80,20 @@ class ShantenWithoutGot(CommonShanten):
             advanceNum=self.advance_num,
             goodShapeAdvance=[t.__encode__() for t in self.good_shape_advance]
             if self.good_shape_advance is not None else None,
-            goodShapeAdvanceNum=self.good_shape_advance_num
+            goodShapeAdvanceNum=self.good_shape_advance_num,
+            improvement=improvement,
+            improvementNum=self.improvement_num,
         )
 
     @classmethod
     def __decode__(cls, data: dict) -> "ShantenWithoutGot":
+        improvement = None
+
+        if data["improvement"] is not None:
+            improvement = dict()
+            for t in data["improvement"]:
+                improvement[Tile.__decode__(t)] = [Improvement.__decode__(x) for x in data["improvement"][t]]
+
         return ShantenWithoutGot(
             shanten=data["shantenNum"],
             advance=set(Tile.__decode__(x) for x in data["advance"]),
@@ -63,6 +102,9 @@ class ShantenWithoutGot(CommonShanten):
             if data["goodShapeAdvance"] is not None else None,
             good_shape_advance_num=data["goodShapeAdvanceNum"]
             if data["goodShapeAdvanceNum"] is not None else None,
+            improvement=improvement,
+            improvement_num=data["improvementNum"]
+            if data["improvementNum"] is not None else None,
         )
 
 
@@ -163,6 +205,14 @@ class CommonShantenResult(ShantenResult[CommonShanten, T_HandPattern], ABC):
     @property
     def good_shape_advance_num(self) -> Optional[int]:
         return getattr(self.shanten_info, "good_shape_advance_num", None)
+
+    @property
+    def improvement(self) -> Optional[Dict[Tile, Set[Improvement]]]:
+        return getattr(self.shanten_info, "improvement", None)
+
+    @property
+    def improvement_num(self) -> Optional[int]:
+        return getattr(self.shanten_info, "improvement_num", None)
 
     @property
     def discard_to_advance(self) -> Optional[Dict[Tile, ShantenWithoutGot]]:
