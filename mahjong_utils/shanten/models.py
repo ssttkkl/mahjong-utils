@@ -57,6 +57,20 @@ class Improvement(BaseModel):
         )
 
 
+def _encode_improvement_dict(improvement: Dict[Tile, List[Improvement]]):
+    d = dict()
+    for t in improvement:
+        d[t.__encode__()] = [x.__encode__() for x in improvement[t]]
+    return d
+
+
+def _decode_improvement_dict(improvement: dict) -> Dict[Tile, List[Improvement]]:
+    d = dict()
+    for t in improvement:
+        d[Tile.__decode__(t)] = [Improvement.__decode__(x) for x in improvement[t]]
+    return d
+
+
 class ShantenWithoutGot(CommonShanten):
     advance: Set[Tile]
     advance_num: int
@@ -64,15 +78,10 @@ class ShantenWithoutGot(CommonShanten):
     good_shape_advance_num: Optional[int]
     improvement: Optional[Dict[Tile, List[Improvement]]]
     improvement_num: Optional[int]
+    good_shape_improvement: Optional[Dict[Tile, List[Improvement]]]
+    good_shape_improvement_num: Optional[int]
 
     def __encode__(self) -> dict:
-        improvement = None
-
-        if self.improvement is not None:
-            improvement = dict()
-            for t in self.improvement:
-                improvement[t.__encode__()] = [x.__encode__() for x in self.improvement[t]]
-
         return dict(
             type="ShantenWithoutGot",
             shantenNum=self.shanten,
@@ -81,19 +90,16 @@ class ShantenWithoutGot(CommonShanten):
             goodShapeAdvance=[t.__encode__() for t in self.good_shape_advance]
             if self.good_shape_advance is not None else None,
             goodShapeAdvanceNum=self.good_shape_advance_num,
-            improvement=improvement,
+            improvement=_encode_improvement_dict(self.improvement)
+            if self.improvement is not None else None,
             improvementNum=self.improvement_num,
+            goodShapeImprovement=_encode_improvement_dict(self.good_shape_improvement)
+            if self.good_shape_improvement is not None else None,
+            goodShapeImprovementNum=self.good_shape_improvement_num,
         )
 
     @classmethod
     def __decode__(cls, data: dict) -> "ShantenWithoutGot":
-        improvement = None
-
-        if data["improvement"] is not None:
-            improvement = dict()
-            for t in data["improvement"]:
-                improvement[Tile.__decode__(t)] = [Improvement.__decode__(x) for x in data["improvement"][t]]
-
         return ShantenWithoutGot(
             shanten=data["shantenNum"],
             advance=set(Tile.__decode__(x) for x in data["advance"]),
@@ -102,9 +108,14 @@ class ShantenWithoutGot(CommonShanten):
             if data["goodShapeAdvance"] is not None else None,
             good_shape_advance_num=data["goodShapeAdvanceNum"]
             if data["goodShapeAdvanceNum"] is not None else None,
-            improvement=improvement,
+            improvement=_decode_improvement_dict(data["improvement"])
+            if data["improvement"] is not None else None,
             improvement_num=data["improvementNum"]
             if data["improvementNum"] is not None else None,
+            good_shape_improvement=_decode_improvement_dict(data["goodShapeImprovement"])
+            if data["goodShapeImprovement"] is not None else None,
+            good_shape_improvement_num=data["goodShapeImprovementNum"]
+            if data["goodShapeImprovementNum"] is not None else None,
         )
 
 
@@ -213,6 +224,14 @@ class CommonShantenResult(ShantenResult[CommonShanten, T_HandPattern], ABC):
     @property
     def improvement_num(self) -> Optional[int]:
         return getattr(self.shanten_info, "improvement_num", None)
+
+    @property
+    def good_shape_improvement(self) -> Optional[Dict[Tile, List[Improvement]]]:
+        return getattr(self.shanten_info, "good_shape_improvement", None)
+
+    @property
+    def good_shape_improvement_num(self) -> Optional[int]:
+        return getattr(self.shanten_info, "good_shape_improvement_num", None)
 
     @property
     def discard_to_advance(self) -> Optional[Dict[Tile, ShantenWithoutGot]]:
