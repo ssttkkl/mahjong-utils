@@ -80,12 +80,20 @@ internal fun <T : CommonShanten> T.fillNumByRemaining(remaining: IntArray): T {
                 goodShapeAdvanceNum = goodShapeAdvance?.sumOf { remaining[it.code] },
                 improvement = improvement?.mapValues { (k, v) ->
                     remaining[k.code] -= 1
-                    val v = v.map { imp -> imp.copy(advanceNum = imp.advance.sumOf { remaining[it.code] }) }.toSet()
+                    val v = v.map { imp -> imp.copy(advanceNum = imp.advance.sumOf { remaining[it.code] }) }
                     remaining[k.code] += 1
 
                     v
                 },
-                improvementNum = improvement?.keys?.sumOf { remaining[it.code] }
+                goodShapeImprovement = goodShapeImprovement?.mapValues { (k, v) ->
+                    remaining[k.code] -= 1
+                    val v = v.map { imp -> imp.copy(advanceNum = imp.advance.sumOf { remaining[it.code] }) }
+                    remaining[k.code] += 1
+
+                    v
+                },
+                improvementNum = improvement?.keys?.sumOf { remaining[it.code] },
+                goodShapeImprovementNum = goodShapeImprovement?.keys?.sumOf { remaining[it.code] },
             ) as T
         }
 

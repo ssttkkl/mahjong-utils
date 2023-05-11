@@ -71,12 +71,23 @@ data class ShantenWithoutGot(
      * 对于每种改良张，只计算能让进张最多的打法
      * 仅当听牌时进行计算
      */
-    @EncodeDefault val improvement: Map<Tile, Set<Improvement>>? = if (shantenNum == 0) emptyMap() else null,
+    @EncodeDefault val improvement: Map<Tile, List<Improvement>>? = if (shantenNum == 0) emptyMap() else null,
     /**
      * 改良张数（能让听牌数目增加的牌）
      * 仅当听牌时进行计算
      */
-    @EncodeDefault val improvementNum: Int? = if (shantenNum == 0) 0 else null
+    @EncodeDefault val improvementNum: Int? = if (shantenNum == 0) 0 else null,
+    /**
+     * 好型改良张（能让听牌数目增加到大于4张的牌）
+     * 对于每种改良张，只计算能让进张最多的打法
+     * 仅当听牌时进行计算
+     */
+    @EncodeDefault val goodShapeImprovement: Map<Tile, List<Improvement>>? = if (shantenNum == 0) emptyMap() else null,
+    /**
+     * 好型改良张数（能让听牌数目增加到大于4张的牌）
+     * 仅当听牌时进行计算
+     */
+    @EncodeDefault val goodShapeImprovementNum: Int? = if (shantenNum == 0) 0 else null,
 ) : CommonShanten
 
 /**

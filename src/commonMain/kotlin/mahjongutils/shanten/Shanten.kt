@@ -137,6 +137,8 @@ internal fun shanten(
             shantenNum, advance,
             goodShapeAdvance = if (shantenNum == 1) goodShapeAdvance else null,
             improvement = (regular.shantenInfo as ShantenWithoutGot).improvement
+                ?: (if (shantenNum == 0) emptyMap() else null),
+            goodShapeImprovement = (regular.shantenInfo as ShantenWithoutGot).goodShapeImprovement
                 ?: (if (shantenNum == 0) emptyMap() else null)
         )
     } else {

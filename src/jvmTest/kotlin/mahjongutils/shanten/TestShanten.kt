@@ -122,42 +122,42 @@ class TestShanten {
                 advance = Tile.parseTiles("5p2s").toSet(),
                 advanceNum = 4,
                 improvement = mapOf(
-                    Tile.get("1p") to setOf(
+                    Tile.get("1p") to listOf(
                         Improvement(
                             discard = Tile.Companion.get("6p"),
                             advance = Tile.parseTiles("47p").toSet(),
                             advanceNum = 7
                         )
                     ),
-                    Tile.get("3p") to setOf(
+                    Tile.get("3p") to listOf(
                         Improvement(
                             discard = Tile.Companion.get("5p"),
                             advance = Tile.parseTiles("14p").toSet(),
                             advanceNum = 7
                         )
                     ),
-                    Tile.get("4p") to setOf(
+                    Tile.get("4p") to listOf(
                         Improvement(
                             discard = Tile.Companion.get("6p"),
                             advance = Tile.parseTiles("147p").toSet(),
                             advanceNum = 10
                         )
                     ),
-                    Tile.get("6p") to setOf(
+                    Tile.get("6p") to listOf(
                         Improvement(
                             discard = Tile.Companion.get("5p"),
                             advance = Tile.parseTiles("147p").toSet(),
                             advanceNum = 11
                         )
                     ),
-                    Tile.get("7p") to setOf(
+                    Tile.get("7p") to listOf(
                         Improvement(
                             discard = Tile.Companion.get("6p"),
                             advance = Tile.parseTiles("147p").toSet(),
                             advanceNum = 10
                         )
                     ),
-                    Tile.get("3s") to setOf(
+                    Tile.get("3s") to listOf(
                         Improvement(
                             discard = Tile.Companion.get("2s"),
                             advance = Tile.parseTiles("14s").toSet(),
@@ -165,7 +165,52 @@ class TestShanten {
                         )
                     ),
                 ),
-                improvementNum = 19
+                improvementNum = 19,
+                goodShapeImprovement = mapOf(
+                    Tile.get("1p") to listOf(
+                        Improvement(
+                            discard = Tile.Companion.get("6p"),
+                            advance = Tile.parseTiles("47p").toSet(),
+                            advanceNum = 7
+                        )
+                    ),
+                    Tile.get("3p") to listOf(
+                        Improvement(
+                            discard = Tile.Companion.get("5p"),
+                            advance = Tile.parseTiles("14p").toSet(),
+                            advanceNum = 7
+                        )
+                    ),
+                    Tile.get("4p") to listOf(
+                        Improvement(
+                            discard = Tile.Companion.get("6p"),
+                            advance = Tile.parseTiles("147p").toSet(),
+                            advanceNum = 10
+                        )
+                    ),
+                    Tile.get("6p") to listOf(
+                        Improvement(
+                            discard = Tile.Companion.get("5p"),
+                            advance = Tile.parseTiles("147p").toSet(),
+                            advanceNum = 11
+                        )
+                    ),
+                    Tile.get("7p") to listOf(
+                        Improvement(
+                            discard = Tile.Companion.get("6p"),
+                            advance = Tile.parseTiles("147p").toSet(),
+                            advanceNum = 10
+                        )
+                    ),
+                    Tile.get("3s") to listOf(
+                        Improvement(
+                            discard = Tile.Companion.get("2s"),
+                            advance = Tile.parseTiles("14s").toSet(),
+                            advanceNum = 8
+                        )
+                    ),
+                ),
+                goodShapeImprovementNum = 19
             )
         )
         tester(
@@ -238,14 +283,14 @@ class TestShanten {
                         advance = Tile.parseTiles("1357s").toSet(),
                         advanceNum = 9,
                         improvement = mapOf(
-                            Tile.get("2s") to setOf(
+                            Tile.get("2s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("1567s").toSet(),
                                     advanceNum = 11
                                 )
                             ),
-                            Tile.get("6s") to setOf(
+                            Tile.get("6s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("12567s").toSet(),
@@ -253,21 +298,38 @@ class TestShanten {
                                 )
                             ),
                         ),
-                        improvementNum = 5
+                        improvementNum = 5,
+                        goodShapeImprovement = mapOf(
+                            Tile.get("2s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("1567s").toSet(),
+                                    advanceNum = 11
+                                )
+                            ),
+                            Tile.get("6s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("12567s").toSet(),
+                                    advanceNum = 12
+                                )
+                            ),
+                        ),
+                        goodShapeImprovementNum = 5
                     ),
                     Tile.get("5s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("17s").toSet(),
                         advanceNum = 7,
                         improvement = mapOf(
-                            Tile.get("2s") to setOf(
+                            Tile.get("2s") to listOf(
                                 Improvement(
                                     discard = Tile.get("1s"),
                                     advance = Tile.parseTiles("23567s").toSet(),
                                     advanceNum = 10
                                 )
                             ),
-                            Tile.get("3s") to setOf(
+                            Tile.get("3s") to listOf(
                                 Improvement(
                                     discard = Tile.get("1s"),
                                     advance = Tile.parseTiles("267s").toSet(),
@@ -279,14 +341,14 @@ class TestShanten {
                                     advanceNum = 9
                                 ),
                             ),
-                            Tile.get("5s") to setOf(
+                            Tile.get("5s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("1567s").toSet(),
                                     advanceNum = 10
                                 )
                             ),
-                            Tile.get("6s") to setOf(
+                            Tile.get("6s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("1567s").toSet(),
@@ -294,14 +356,50 @@ class TestShanten {
                                 )
                             ),
                         ),
-                        improvementNum = 7
+                        improvementNum = 7,
+                        goodShapeImprovement = mapOf(
+                            Tile.get("2s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("1s"),
+                                    advance = Tile.parseTiles("23567s").toSet(),
+                                    advanceNum = 10
+                                )
+                            ),
+                            Tile.get("3s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("1s"),
+                                    advance = Tile.parseTiles("267s").toSet(),
+                                    advanceNum = 9
+                                ),
+                                Improvement(
+                                    discard = Tile.get("5s"),
+                                    advance = Tile.parseTiles("127s").toSet(),
+                                    advanceNum = 9
+                                ),
+                            ),
+                            Tile.get("5s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("1567s").toSet(),
+                                    advanceNum = 10
+                                )
+                            ),
+                            Tile.get("6s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("1567s").toSet(),
+                                    advanceNum = 10
+                                )
+                            ),
+                        ),
+                        goodShapeImprovementNum = 7
                     ),
                     Tile.get("6s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("1235s").toSet(),
                         advanceNum = 7,
                         improvement = mapOf(
-                            Tile.get("6s") to setOf(
+                            Tile.get("6s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("1567s").toSet(),
@@ -309,28 +407,38 @@ class TestShanten {
                                 )
                             )
                         ),
-                        improvementNum = 3
+                        improvementNum = 3,
+                        goodShapeImprovement = mapOf(
+                            Tile.get("6s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("1567s").toSet(),
+                                    advanceNum = 10
+                                )
+                            )
+                        ),
+                        goodShapeImprovementNum = 3
                     ),
                     Tile.get("1s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("25s").toSet(),
                         advanceNum = 3,
                         improvement = mapOf(
-                            Tile.get("1s") to setOf(
+                            Tile.get("1s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("1567s").toSet(),
                                     advanceNum = 10
                                 )
                             ),
-                            Tile.get("3s") to setOf(
+                            Tile.get("3s") to listOf(
                                 Improvement(
                                     discard = Tile.get("2s"),
                                     advance = Tile.parseTiles("1567s").toSet(),
                                     advanceNum = 11
                                 )
                             ),
-                            Tile.get("4s") to setOf(
+                            Tile.get("4s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("12567s").toSet(),
@@ -342,14 +450,14 @@ class TestShanten {
                                     advanceNum = 13
                                 )
                             ),
-                            Tile.get("6s") to setOf(
+                            Tile.get("6s") to listOf(
                                 Improvement(
                                     discard = Tile.get("5s"),
                                     advance = Tile.parseTiles("2367s").toSet(),
                                     advanceNum = 9
                                 )
                             ),
-                            Tile.get("7s") to setOf(
+                            Tile.get("7s") to listOf(
                                 Improvement(
                                     discard = Tile.get("2s"),
                                     advance = Tile.parseTiles("13578s").toSet(),
@@ -361,7 +469,7 @@ class TestShanten {
                                     advanceNum = 12
                                 ),
                             ),
-                            Tile.get("8s") to setOf(
+                            Tile.get("8s") to listOf(
                                 Improvement(
                                     discard = Tile.get("2s"),
                                     advance = Tile.parseTiles("78s").toSet(),
@@ -369,49 +477,104 @@ class TestShanten {
                                 )
                             ),
                         ),
-                        improvementNum = 15
+                        improvementNum = 15,
+                        goodShapeImprovement = mapOf(
+                            Tile.get("1s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("1567s").toSet(),
+                                    advanceNum = 10
+                                )
+                            ),
+                            Tile.get("3s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("2s"),
+                                    advance = Tile.parseTiles("1567s").toSet(),
+                                    advanceNum = 11
+                                )
+                            ),
+                            Tile.get("4s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("12567s").toSet(),
+                                    advanceNum = 13
+                                ),
+                                Improvement(
+                                    discard = Tile.get("5s"),
+                                    advance = Tile.parseTiles("12367s").toSet(),
+                                    advanceNum = 13
+                                )
+                            ),
+                            Tile.get("6s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("5s"),
+                                    advance = Tile.parseTiles("2367s").toSet(),
+                                    advanceNum = 9
+                                )
+                            ),
+                            Tile.get("7s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("2s"),
+                                    advance = Tile.parseTiles("13578s").toSet(),
+                                    advanceNum = 12
+                                ),
+                                Improvement(
+                                    discard = Tile.get("5s"),
+                                    advance = Tile.parseTiles("12367s").toSet(),
+                                    advanceNum = 12
+                                ),
+                            ),
+                            Tile.get("8s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("2s"),
+                                    advance = Tile.parseTiles("78s").toSet(),
+                                    advanceNum = 7
+                                )
+                            ),
+                        ),
+                        goodShapeImprovementNum = 15
                     ),
                     Tile.get("4s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("25s").toSet(),
                         advanceNum = 3,
                         improvement = mapOf(
-                            Tile.get("1s") to setOf(
+                            Tile.get("1s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("124567s").toSet(),
                                     advanceNum = 12
                                 )
                             ),
-                            Tile.get("3s") to setOf(
+                            Tile.get("3s") to listOf(
                                 Improvement(
                                     discard = Tile.get("2s"),
                                     advance = Tile.parseTiles("4567s").toSet(),
                                     advanceNum = 8
                                 )
                             ),
-                            Tile.get("4s") to setOf(
+                            Tile.get("4s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("1567s").toSet(),
                                     advanceNum = 11
                                 )
                             ),
-                            Tile.get("6s") to setOf(
+                            Tile.get("6s") to listOf(
                                 Improvement(
                                     discard = Tile.get("3s"),
                                     advance = Tile.parseTiles("12456s").toSet(),
                                     advanceNum = 8
                                 )
                             ),
-                            Tile.get("7s") to setOf(
+                            Tile.get("7s") to listOf(
                                 Improvement(
                                     discard = Tile.get("2s"),
                                     advance = Tile.parseTiles("134578s").toSet(),
                                     advanceNum = 12
                                 )
                             ),
-                            Tile.get("8s") to setOf(
+                            Tile.get("8s") to listOf(
                                 Improvement(
                                     discard = Tile.get("2s"),
                                     advance = Tile.parseTiles("78s").toSet(),
@@ -419,7 +582,52 @@ class TestShanten {
                                 )
                             ),
                         ),
-                        improvementNum = 15
+                        improvementNum = 15,
+                        goodShapeImprovement = mapOf(
+                            Tile.get("1s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("124567s").toSet(),
+                                    advanceNum = 12
+                                )
+                            ),
+                            Tile.get("3s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("2s"),
+                                    advance = Tile.parseTiles("4567s").toSet(),
+                                    advanceNum = 8
+                                )
+                            ),
+                            Tile.get("4s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("1567s").toSet(),
+                                    advanceNum = 11
+                                )
+                            ),
+                            Tile.get("6s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3s"),
+                                    advance = Tile.parseTiles("12456s").toSet(),
+                                    advanceNum = 8
+                                )
+                            ),
+                            Tile.get("7s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("2s"),
+                                    advance = Tile.parseTiles("134578s").toSet(),
+                                    advanceNum = 12
+                                )
+                            ),
+                            Tile.get("8s") to listOf(
+                                Improvement(
+                                    discard = Tile.get("2s"),
+                                    advance = Tile.parseTiles("78s").toSet(),
+                                    advanceNum = 7
+                                )
+                            ),
+                        ),
+                        goodShapeImprovementNum = 15
                     ),
                 ), ankanToAdvance = mapOf(
                     Tile.get("4s") to ShantenWithoutGot(
@@ -560,28 +768,36 @@ class TestShanten {
                         advance = Tile.parseTiles("1z").toSet(),
                         advanceNum = 3,
                         improvement = null,
-                        improvementNum = null
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
                     ),
                     Tile.get("5s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("1z").toSet(),
                         advanceNum = 3,
                         improvement = null,
-                        improvementNum = null
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
                     ),
                     Tile.get("8s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("1z").toSet(),
                         advanceNum = 3,
                         improvement = null,
-                        improvementNum = null
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
                     ),
                     Tile.get("1z") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("123456789s").toSet(),
                         advanceNum = 23,
                         improvement = null,
-                        improvementNum = null
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
                     ),
                     Tile.get("1s") to ShantenWithoutGot(
                         shantenNum = 1,
@@ -760,28 +976,36 @@ class TestShanten {
                         advance = Tile.parseTiles("14s").toSet(),
                         advanceNum = 7,
                         improvement = null,
-                        improvementNum = null
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
                     ),
                     Tile.get("1s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("23s").toSet(),
                         advanceNum = 4,
                         improvement = null,
-                        improvementNum = null
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
                     ),
                     Tile.get("2s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("3s").toSet(),
                         advanceNum = 2,
                         improvement = null,
-                        improvementNum = null
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
                     ),
                     Tile.get("3s") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("2s").toSet(),
                         advanceNum = 2,
                         improvement = null,
-                        improvementNum = null
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
                     )
                 )
             ),
@@ -797,7 +1021,7 @@ class TestShanten {
                         advance = Tile.parseTiles("457p").toSet(),
                         advanceNum = 9,
                         improvement = mapOf(
-                            Tile.get("2p") to setOf(
+                            Tile.get("2p") to listOf(
                                 Improvement(
                                     discard = Tile.get("5p"),
                                     advance = Tile.parseTiles("1247p").toSet(),
@@ -805,73 +1029,83 @@ class TestShanten {
                                 )
                             )
                         ),
-                        improvementNum = 4
+                        improvementNum = 4,
+                        goodShapeImprovement = mapOf(
+                            Tile.get("2p") to listOf(
+                                Improvement(
+                                    discard = Tile.get("5p"),
+                                    advance = Tile.parseTiles("1247p").toSet(),
+                                    advanceNum = 14
+                                )
+                            )
+                        ),
+                        goodShapeImprovementNum = 4
                     ),
                     Tile.get("5p") to ShantenWithoutGot(
                         shantenNum = 0,
                         advance = Tile.parseTiles("47m").toSet(),
                         advanceNum = 6,
                         improvement = mapOf(
-                            Tile.get("3m") to setOf(
-                                Improvement(
-                                    discard = Tile.get("6p"),
-                                    advance = Tile.parseTiles("25m").toSet(),
-                                    advanceNum = 7
-                                ),
+                            Tile.get("3m") to listOf(
                                 Improvement(
                                     discard = Tile.get("3p"),
                                     advance = Tile.parseTiles("25m").toSet(),
                                     advanceNum = 7
                                 ),
-                            ),
-                            Tile.get("5m") to setOf(
                                 Improvement(
                                     discard = Tile.get("6p"),
-                                    advance = Tile.parseTiles("36m").toSet(),
+                                    advance = Tile.parseTiles("25m").toSet(),
                                     advanceNum = 7
                                 ),
+                            ),
+                            Tile.get("5m") to listOf(
                                 Improvement(
                                     discard = Tile.get("3p"),
                                     advance = Tile.parseTiles("36m").toSet(),
                                     advanceNum = 7
                                 ),
+                                Improvement(
+                                    discard = Tile.get("6p"),
+                                    advance = Tile.parseTiles("36m").toSet(),
+                                    advanceNum = 7
+                                ),
                             ),
-                            Tile.get("1p") to setOf(
+                            Tile.get("1p") to listOf(
                                 Improvement(
                                     discard = Tile.get("4m"),
                                     advance = Tile.parseTiles("12p").toSet(),
                                     advanceNum = 7
                                 )
                             ),
-                            Tile.get("2p") to setOf(
+                            Tile.get("2p") to listOf(
                                 Improvement(
                                     discard = Tile.get("4m"),
                                     advance = Tile.parseTiles("1247p").toSet(),
                                     advanceNum = 14
                                 )
                             ),
-                            Tile.get("4p") to setOf(
+                            Tile.get("4p") to listOf(
                                 Improvement(
                                     discard = Tile.get("4m"),
                                     advance = Tile.parseTiles("2457p").toSet(),
                                     advanceNum = 12
                                 )
                             ),
-                            Tile.get("5p") to setOf(
+                            Tile.get("5p") to listOf(
                                 Improvement(
                                     discard = Tile.get("4m"),
                                     advance = Tile.parseTiles("457p").toSet(),
                                     advanceNum = 8
                                 )
                             ),
-                            Tile.get("7p") to setOf(
+                            Tile.get("7p") to listOf(
                                 Improvement(
                                     discard = Tile.get("4m"),
                                     advance = Tile.parseTiles("24578p").toSet(),
                                     advanceNum = 16
                                 )
                             ),
-                            Tile.get("8p") to setOf(
+                            Tile.get("8p") to listOf(
                                 Improvement(
                                     discard = Tile.get("4m"),
                                     advance = Tile.parseTiles("78p").toSet(),
@@ -879,7 +1113,76 @@ class TestShanten {
                                 )
                             ),
                         ),
-                        improvementNum = 28
+                        improvementNum = 28,
+                        goodShapeImprovement = mapOf(
+                            Tile.get("3m") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3p"),
+                                    advance = Tile.parseTiles("25m").toSet(),
+                                    advanceNum = 7
+                                ),
+                                Improvement(
+                                    discard = Tile.get("6p"),
+                                    advance = Tile.parseTiles("25m").toSet(),
+                                    advanceNum = 7
+                                ),
+                            ),
+                            Tile.get("5m") to listOf(
+                                Improvement(
+                                    discard = Tile.get("3p"),
+                                    advance = Tile.parseTiles("36m").toSet(),
+                                    advanceNum = 7
+                                ),
+                                Improvement(
+                                    discard = Tile.get("6p"),
+                                    advance = Tile.parseTiles("36m").toSet(),
+                                    advanceNum = 7
+                                ),
+                            ),
+                            Tile.get("1p") to listOf(
+                                Improvement(
+                                    discard = Tile.get("4m"),
+                                    advance = Tile.parseTiles("12p").toSet(),
+                                    advanceNum = 7
+                                )
+                            ),
+                            Tile.get("2p") to listOf(
+                                Improvement(
+                                    discard = Tile.get("4m"),
+                                    advance = Tile.parseTiles("1247p").toSet(),
+                                    advanceNum = 14
+                                )
+                            ),
+                            Tile.get("4p") to listOf(
+                                Improvement(
+                                    discard = Tile.get("4m"),
+                                    advance = Tile.parseTiles("2457p").toSet(),
+                                    advanceNum = 12
+                                )
+                            ),
+                            Tile.get("5p") to listOf(
+                                Improvement(
+                                    discard = Tile.get("4m"),
+                                    advance = Tile.parseTiles("457p").toSet(),
+                                    advanceNum = 8
+                                )
+                            ),
+                            Tile.get("7p") to listOf(
+                                Improvement(
+                                    discard = Tile.get("4m"),
+                                    advance = Tile.parseTiles("24578p").toSet(),
+                                    advanceNum = 16
+                                )
+                            ),
+                            Tile.get("8p") to listOf(
+                                Improvement(
+                                    discard = Tile.get("4m"),
+                                    advance = Tile.parseTiles("78p").toSet(),
+                                    advanceNum = 7
+                                )
+                            ),
+                        ),
+                        goodShapeImprovementNum = 28
                     ),
                 )
             ),

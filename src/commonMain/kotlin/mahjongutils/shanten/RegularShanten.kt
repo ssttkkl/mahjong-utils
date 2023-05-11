@@ -39,14 +39,14 @@ private fun getGoodShapeAdvance(
     }
 }
 
-private fun getImprovement(
+private fun ShantenWithoutGot.fillImprovement(
     tiles: List<Tile>,
     furo: List<Furo>,
     remaining: IntArray,
     shantenNum: Int,
     advanceMoreThan: Int,
     tryAllTile: Boolean = false
-): Map<Tile, Set<Improvement>> {
+): ShantenWithoutGot {
     val zone = if (!tryAllTile) {
         // 解空间为所有数牌的靠张
         tiles.filter { it.type !== TileType.Z }
@@ -57,7 +57,7 @@ private fun getImprovement(
         Tile.allExcludeAkaDora
     }
 
-    return zone.mapNotNull { t ->
+    val improvement = zone.mapNotNull { t ->
         // 摸上这张牌之后的向听信息
         val (shantenAfterGot, _) = handleRegularShantenWithGot(
             tiles + t, furo,
@@ -84,18 +84,25 @@ private fun getImprovement(
                 maxAdvanceNum = advanceNum
             }
             if (advanceNum == maxAdvanceNum) {
-                improvement.add(Improvement(discard, improvedShanten.advance))
+                improvement.add(Improvement(discard, improvedShanten.advance, advanceNum))
             }
         }
 
         remaining[t.code] += 1
 
+        // 保证顺序（为了单测）
+        improvement.sortBy { it.discard }
+
         if (maxAdvanceNum != advanceMoreThan) {
-            Pair(t, improvement.toSet())
+            Pair(t, improvement)
         } else {
             null
         }
     }.associate { it }
+
+    val goodShapeImprovement = improvement.filterValues { it.first().advanceNum >= 5 }
+
+    return copy(improvement = improvement, goodShapeImprovement = goodShapeImprovement)
 }
 
 private fun handleRegularShantenWithoutGot(
@@ -118,21 +125,29 @@ private fun handleRegularShantenWithoutGot(
         null
     }
 
-    // 听牌时计算改良张
-    val improvement = if (calcImprovement && bestShanten == 0) {
-        val advanceNum = advance.sumOf { remaining[it.code] }
-        val tryAllTile = bestPatterns.any { it.remaining.isNotEmpty() }  // 如果有单吊听牌就计算换听
-        getImprovement(tiles, furo, remaining, bestShanten, advanceNum, tryAllTile)
-    } else {
-        null
-    }
-
-    val shanten = ShantenWithoutGot(
+    var shanten = ShantenWithoutGot(
         shantenNum = bestShanten,
         advance = advance,
-        goodShapeAdvance = goodShape,
-        improvement = improvement
+        goodShapeAdvance = goodShape
     )
+
+    // 听牌时计算改良张
+    if (bestShanten == 0) {
+        shanten = if (calcImprovement) {
+            val advanceNum = advance.sumOf { remaining[it.code] }
+            val tryAllTile = bestPatterns.any { it.remaining.isNotEmpty() }  // 如果有单吊听牌就计算换听
+
+            shanten.fillImprovement(tiles, furo, remaining, bestShanten, advanceNum, tryAllTile)
+        } else {
+            shanten.copy(
+                improvement = null,
+                improvementNum = null,
+                goodShapeImprovement = null,
+                goodShapeImprovementNum = null
+            )
+        }
+    }
+
     return Pair(shanten, bestPatterns)
 }
 
@@ -177,21 +192,30 @@ private fun handleRegularShantenWithGot(
                 null
             }
 
-            // 听牌时计算改良张
-            val improvement = if (calcImprovement && bestShanten == 0) {
-                val advanceNum = advance.sumOf { remaining[it.code] }
-                val tryAllTile = bestPatterns.any { it.remaining.any { it != discard } }  // 如果有单吊听牌就计算换听
-                getImprovement(tiles - discard, furo, remaining, bestShanten, advanceNum, tryAllTile)
-            } else {
-                null
-            }
-
-            this[discard] = ShantenWithoutGot(
+            var shanten = ShantenWithoutGot(
                 shantenNum = bestShanten,
                 advance = advance,
-                goodShapeAdvance = goodShape,
-                improvement = improvement
+                goodShapeAdvance = goodShape
             )
+
+            // 听牌时计算改良张
+            if (bestShanten == 0) {
+                shanten = if (calcImprovement) {
+                    val advanceNum = advance.sumOf { remaining[it.code] }
+                    val tryAllTile = bestPatterns.any { it.remaining.any { it != discard } }  // 如果有单吊听牌就计算换听
+
+                    shanten.fillImprovement(tiles - discard, furo, remaining, bestShanten, advanceNum, tryAllTile)
+                } else {
+                    shanten.copy(
+                        improvement = null,
+                        improvementNum = null,
+                        goodShapeImprovement = null,
+                        goodShapeImprovementNum = null
+                    )
+                }
+            }
+
+            this[discard] = shanten
         }
 
         this

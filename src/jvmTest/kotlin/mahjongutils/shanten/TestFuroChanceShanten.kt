@@ -29,7 +29,7 @@ class TestFuroChanceShanten {
                         advance = setOf(),
                         advanceNum = 0,
                         improvement = Tile.allExcludeAkaDora.filter { it !== Tile.get("9m") }.associateWith {
-                            setOf(
+                            listOf(
                                 Improvement(
                                     discard = Tile.get("9m"),
                                     advance = setOf(it),
