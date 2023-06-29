@@ -1,3 +1,4 @@
+from os import system
 import subprocess
 import sys
 from distutils import log
@@ -14,12 +15,10 @@ from setuptools.command.build_py import build_py as origin_build_py
 def run_gradle_task(root, task):
     if sys.platform == 'win32':
         gradlew = "gradlew.bat"
-    else:
-        gradlew = "gradlew"
-
-    if sys.platform == 'win32':
         cmd = f"{gradlew} {task}"
     else:
+        gradlew = "gradlew"
+        system(f"chmod +x {gradlew}")
         cmd = f"./{gradlew} {task}"
 
     log.info(f"running {cmd} (in {root})")
