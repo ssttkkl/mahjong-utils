@@ -1,0 +1,20 @@
+//[mahjong-utils](../../index.md)/[mahjongutils.hora](index.md)
+
+# Package-level declarations
+
+## Types
+
+| Name | Summary |
+|---|---|
+| [ChitoiHoraHandPattern](-chitoi-hora-hand-pattern/index.md) | [common]<br>@Serializable<br>data class [ChitoiHoraHandPattern](-chitoi-hora-hand-pattern/index.md)(val pairs: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../mahjongutils.models/-tile/index.md)&gt;, val agari: [Tile](../mahjongutils.models/-tile/index.md), val tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), val selfWind: [Wind](../mahjongutils.models/-wind/index.md)? = null, val roundWind: [Wind](../mahjongutils.models/-wind/index.md)? = null) : [HoraHandPattern](-hora-hand-pattern/index.md), [IChitoiHandPattern](../mahjongutils.models.hand/-i-chitoi-hand-pattern/index.md)<br>七对子的和牌手牌 |
+| [Hora](-hora/index.md) | [common]<br>@Serializable<br>data class [Hora](-hora/index.md) : [HoraInfo](-hora-info/index.md)<br>和牌分析结果 |
+| [HoraHandPattern](-hora-hand-pattern/index.md) | [common]<br>@Serializable<br>interface [HoraHandPattern](-hora-hand-pattern/index.md) : [HoraInfo](-hora-info/index.md), [HandPattern](../mahjongutils.models.hand/-hand-pattern/index.md)<br>和牌手牌 |
+| [HoraInfo](-hora-info/index.md) | [common]<br>interface [HoraInfo](-hora-info/index.md)<br>和牌信息 |
+| [KokushiHoraHandPattern](-kokushi-hora-hand-pattern/index.md) | [common]<br>@Serializable<br>data class [KokushiHoraHandPattern](-kokushi-hora-hand-pattern/index.md)(val repeated: [Tile](../mahjongutils.models/-tile/index.md), val agari: [Tile](../mahjongutils.models/-tile/index.md), val tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), val selfWind: [Wind](../mahjongutils.models/-wind/index.md)? = null, val roundWind: [Wind](../mahjongutils.models/-wind/index.md)? = null) : [HoraHandPattern](-hora-hand-pattern/index.md), [IKokushiHandPattern](../mahjongutils.models.hand/-i-kokushi-hand-pattern/index.md)<br>国士无双的和牌手牌 |
+| [RegularHoraHandPattern](-regular-hora-hand-pattern/index.md) | [common]<br>@Serializable<br>data class [RegularHoraHandPattern](-regular-hora-hand-pattern/index.md) : [HoraHandPattern](-hora-hand-pattern/index.md), [IRegularHandPattern](../mahjongutils.models.hand/-i-regular-hand-pattern/index.md)<br>标准形的和牌手牌 |
+
+## Functions
+
+| Name | Summary |
+|---|---|
+| [hora](hora.md) | [common]<br>fun [hora](hora.md)(shantenResult: [CommonShantenResult](../mahjongutils.shanten/-common-shanten-result/index.md)&lt;*&gt;, agari: [Tile](../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), dora: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0, selfWind: [Wind](../mahjongutils.models/-wind/index.md)? = null, roundWind: [Wind](../mahjongutils.models/-wind/index.md)? = null, extraYaku: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../mahjongutils.yaku/-yaku/index.md)&gt; = emptySet()): [Hora](-hora/index.md)<br>fun [hora](hora.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../mahjongutils.models/-tile/index.md)&gt;, furo: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Furo](../mahjongutils.models/-furo/index.md)&gt; = emptyList(), agari: [Tile](../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), dora: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0, selfWind: [Wind](../mahjongutils.models/-wind/index.md)? = null, roundWind: [Wind](../mahjongutils.models/-wind/index.md)? = null, extraYaku: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../mahjongutils.yaku/-yaku/index.md)&gt; = emptySet()): [Hora](-hora/index.md)<br>和牌分析 |
