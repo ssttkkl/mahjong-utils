@@ -14,8 +14,8 @@ repositories {
 kotlin {
     js(IR) {
         browser {
-            useCommonJs()
             binaries.library()
+            useCommonJs()
         }
         compilations["main"].packageJson {
             name = "mahjong-utils-entry"
@@ -50,22 +50,12 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(rootProject)
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-            }
-        }
-        val nativeMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }
         }
     }

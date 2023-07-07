@@ -1,7 +1,8 @@
 package mahjongutils
 
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.serializer
+import mahjongutils.shanten.*
 import kotlin.reflect.KType
 
 private val json = Json { ignoreUnknownKeys = true }

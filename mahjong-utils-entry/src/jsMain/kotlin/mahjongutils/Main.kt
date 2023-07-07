@@ -2,11 +2,11 @@
 
 package mahjongutils
 
-import kotlinx.serialization.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromDynamic
 import kotlinx.serialization.json.encodeToDynamic
-import mahjongutils.shanten.*
+import kotlinx.serialization.serializer
 import kotlin.reflect.KType
 
 private val json = Json { ignoreUnknownKeys = true }
@@ -24,17 +24,10 @@ private object ResultEncoderImpl : ResultEncoder<dynamic> {
     }
 }
 
-@JsExport
-class Entry internal constructor(
-    router: Map<String, Method<dynamic, dynamic>>
-) : IEntry<dynamic, dynamic> by EntryImpl(router, ParamsDecoderImpl, ResultEncoderImpl)
 
+private val ENTRY = buildEntry(ParamsDecoderImpl, ResultEncoderImpl)
 
 @JsExport
-val ENTRY = buildEntry(object : EntryFactory<dynamic, dynamic, Entry> {
-    override val paramsDecoder: ParamsDecoder<dynamic> = ParamsDecoderImpl
-    override val resultEncoder: ResultEncoder<dynamic> = ResultEncoderImpl
-    override fun create(router: Map<String, Method<dynamic, dynamic>>): Entry {
-        return Entry(router)
-    }
-})
+fun call(name: String, rawParams: dynamic): dynamic {
+    return ENTRY.call(name, rawParams)
+}
