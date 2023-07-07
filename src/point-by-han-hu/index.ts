@@ -1,5 +1,5 @@
 import { ENTRY, handleResult } from '../entry'
-import { ChildPoint, ParentPoint } from './models'
+import { type ChildPoint, type ParentPoint } from './models'
 
 export function getParentPointByHanHu (han: number, hu: number): ParentPoint {
   const result = ENTRY.call('getParentPointByHanHu', { han, hu })

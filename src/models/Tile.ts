@@ -5,6 +5,8 @@ export enum TileType {
   Z
 }
 
+const _pool: Array<Tile | undefined> = []
+
 export class Tile {
   private constructor (readonly type: TileType, readonly num: number) {
   }
@@ -49,27 +51,25 @@ export class Tile {
     return `${this.num}${TileType[this.type]}`
   }
 
-  private static readonly pool: Array<Tile | undefined> = []
-
   static {
     for (let i = 0; i <= 9; i++) {
-      Tile.pool.push(new Tile(TileType.M, i))
+      _pool.push(new Tile(TileType.M, i))
     }
     for (let i = 0; i <= 9; i++) {
-      Tile.pool.push(new Tile(TileType.P, i))
+      _pool.push(new Tile(TileType.P, i))
     }
     for (let i = 0; i <= 9; i++) {
-      Tile.pool.push(new Tile(TileType.S, i))
+      _pool.push(new Tile(TileType.S, i))
     }
-    Tile.pool.push(undefined)
+    _pool.push(undefined)
     for (let i = 1; i <= 7; i++) {
-      Tile.pool.push(new Tile(TileType.Z, i))
+      _pool.push(new Tile(TileType.Z, i))
     }
   }
 
   static byTypeAndNum (type: TileType, num: number): Tile | undefined {
     const code = type * 10 + num
-    const tile = Tile.pool[code]
+    const tile = _pool[code]
     if (num < 0 || num > 9) {
       return undefined
     }

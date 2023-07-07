@@ -4902,6 +4902,11 @@ form-data@^3.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
+format-util@^1.0.5:
+  version "1.0.5"
+  resolved "http://localhost:4873/format-util/-/format-util-1.0.5.tgz#1ffb450c8a03e7bccffe40643180918cc297d271"
+  integrity sha512-varLbTj0e0yVyRpqQhuWV+8hlePAgaoFRhNFj50BNjEIrw1/DphHSObtqwskVCPWNgzwPoQrZAbfa/SBiicNeg==
+
 forwarded@0.2.0:
   version "0.2.0"
   resolved "https://registry.npmmirror.com/forwarded/-/forwarded-0.2.0.tgz#2269936428aad4c15c7ebe9779a84bf0b2a81811"
@@ -6562,17 +6567,19 @@ magic-string@^0.25.0, magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.8"
 
-mahjong-utils-entry@^0.2.5:
-  version "0.2.5"
-  resolved "http://localhost:4873/mahjong-utils-entry/-/mahjong-utils-entry-0.2.5.tgz#3a87b2fad2c20902c6466bc9bd8449193131b682"
-  integrity sha512-VNBlqDhjQtl8dogIxviCM3HwhlRrUmqNI1mfPDXkwtn/D4r/YNGwlVHXpFaZCpSpV+FtZ8VQQmdUgGIo+1HYMw==
-
-mahjong-utils@^0.3.0:
-  version "0.3.0"
-  resolved "http://localhost:4873/mahjong-utils/-/mahjong-utils-0.3.0.tgz#501643a22c31cfb27d1dd1d70d2bc63d6f0256fe"
-  integrity sha512-tBKBz2rMiiTSJbkKfiwITB58S9gXkFKOgTfxum046hILBfeDnK1P+2uBK3Z3eG4G6YWyQLfgAqxycU5JVGKpKw==
+mahjong-utils-entry@^0.6.0:
+  version "0.6.0"
+  resolved "http://localhost:4873/mahjong-utils-entry/-/mahjong-utils-entry-0.6.0.tgz#29fe1a9e6191f10d181157a6e829953b7bb69b7f"
+  integrity sha512-V5u9mUkkc6C96PRR9FesxOrvN4DiUmWAywNy9JhBVh7gxW2HsRIVpNDw7767qdodId2/Y0cvNO6ktw2S4fmB0A==
   dependencies:
-    mahjong-utils-entry "^0.2.5"
+    format-util "^1.0.5"
+
+mahjong-utils@^0.6.0:
+  version "0.6.0"
+  resolved "http://localhost:4873/mahjong-utils/-/mahjong-utils-0.6.0.tgz#ed0747754d68889865d5a09ccb1bda3677b9c0f9"
+  integrity sha512-IuIRErrCYRkNQhu7TiRGuNfzDZSVa43ScGsq+aNX+7MIk85rTBisNmIgEx9H63HEopcLmwgz5+6xRr5pCqelAA==
+  dependencies:
+    mahjong-utils-entry "^0.6.0"
 
 make-dir@^3.0.0, make-dir@^3.0.2, make-dir@^3.1.0:
   version "3.1.0"

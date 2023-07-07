@@ -1,3 +1,4 @@
+// @ts-expect-error 无法找到模块“mahjong-utils-entry”的声明文件 
 import { mahjongutils } from 'mahjong-utils-entry'
 
 export const { ENTRY } = mahjongutils

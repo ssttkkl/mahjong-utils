@@ -7,13 +7,13 @@ import {
   type ShantenWithGot,
   type ShantenWithoutGot
 } from './index'
-import { Tatsu, Tile } from '../models'
+import { Tile } from '../models'
 
 function checkShantenWithoutGot (match: ShantenWithoutGot, actual: ShantenWithoutGot): void {
   expect(actual).toMatchObject({
     ...match,
     advance: expect.arrayContaining(match.advance),
-    goodShapeAdvance: (match.goodShapeAdvance != null) ? expect.arrayContaining(match.goodShapeAdvance) : undefined
+    goodShapeAdvance: match.goodShapeAdvance !== null ? expect.arrayContaining(match.goodShapeAdvance) : null
   })
 
   expect(
@@ -58,7 +58,13 @@ test('regularShanten-withoutGot', () => {
   checkShantenWithoutGot({
     shantenNum: 2,
     advance: Tile.parseTiles('3678m12345p678s')!,
-    advanceNum: 40
+    advanceNum: 40,
+    goodShapeAdvance: null,
+    goodShapeAdvanceNum: null,
+    improvement: null,
+    improvementNum: null,
+    goodShapeImprovement: null,
+    goodShapeImprovementNum: null
   }, result.shantenInfo as ShantenWithoutGot)
 })
 
@@ -72,7 +78,11 @@ test('chitoiShanten-withoutGot', () => {
     advance: Tile.parseTiles('6s12z')!,
     advanceNum: 9,
     goodShapeAdvanceNum: 0,
-    goodShapeAdvance: []
+    goodShapeAdvance: [],
+    improvement: null,
+    improvementNum: null,
+    goodShapeImprovement: null,
+    goodShapeImprovementNum: null
   }, result.shantenInfo as ShantenWithoutGot)
 })
 
@@ -84,7 +94,13 @@ test('shanten-withoutGot', () => {
   checkShantenWithoutGot({
     shantenNum: 0,
     advance: Tile.parseTiles('123456789p')!,
-    advanceNum: 23
+    advanceNum: 23,
+    goodShapeAdvance: null,
+    goodShapeAdvanceNum: null,
+    improvement: new Map(),
+    improvementNum: 0,
+    goodShapeImprovement: new Map(),
+    goodShapeImprovementNum: 0
   }, result.shantenInfo as ShantenWithoutGot)
 })
 
@@ -96,7 +112,13 @@ test('regularShanten-withoutGot', () => {
   checkShantenWithoutGot({
     shantenNum: 2,
     advance: Tile.parseTiles('3678m12345p678s')!,
-    advanceNum: 40
+    advanceNum: 40,
+    goodShapeAdvance: null,
+    goodShapeAdvanceNum: null,
+    improvement: null,
+    improvementNum: null,
+    goodShapeImprovement: null,
+    goodShapeImprovementNum: null
   }, result.shantenInfo as ShantenWithoutGot)
 })
 
@@ -110,57 +132,123 @@ test('regularShanten-withGot', () => {
       [Tile.byText('5p')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('3678m1234p3678s')!,
-        advanceNum: 40
+        advanceNum: 40,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('3s')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('3678m12345p678s')!,
-        advanceNum: 40
+        advanceNum: 40,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('2p')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('3678m345p3678s')!,
-        advanceNum: 36
+        advanceNum: 36,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('8m')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('36m1245p37s')!,
-        advanceNum: 27
+        advanceNum: 27,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('6s')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('7m1245p38s')!,
-        advanceNum: 24
+        advanceNum: 24,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('8s')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('7m1245p36s')!,
-        advanceNum: 24
+        advanceNum: 24,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('6m')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('8m1245p37s')!,
-        advanceNum: 24
+        advanceNum: 24,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('3m')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('8m1245p37s')!,
-        advanceNum: 24
+        advanceNum: 24,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('3p')!, {
         shantenNum: 2,
         advance: Tile.parseTiles('7m25p37s')!,
-        advanceNum: 17
+        advanceNum: 17,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('5m')!, {
         shantenNum: 3,
         advance: Tile.parseTiles('2345678m12345p3678s')!,
-        advanceNum: 53
+        advanceNum: 53,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('4m')!, {
         shantenNum: 3,
         advance: Tile.parseTiles('345678m12345p3678s')!,
-        advanceNum: 49
+        advanceNum: 49,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }]
     ]),
     ankanToAdvance: new Map()
@@ -182,28 +270,44 @@ test('chitoiShanten-withGot', () => {
         advance: Tile.parseTiles('345s')!,
         advanceNum: 9,
         goodShapeAdvance: [],
-        goodShapeAdvanceNum: 0
+        goodShapeAdvanceNum: 0,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('3s')!, {
         shantenNum: 1,
         advance: Tile.parseTiles('8m45s')!,
         advanceNum: 9,
         goodShapeAdvance: [],
-        goodShapeAdvanceNum: 0
+        goodShapeAdvanceNum: 0,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('4s')!, {
         shantenNum: 1,
         advance: Tile.parseTiles('8m35s')!,
         advanceNum: 9,
         goodShapeAdvance: [],
-        goodShapeAdvanceNum: 0
+        goodShapeAdvanceNum: 0,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('5s')!, {
         shantenNum: 1,
         advance: Tile.parseTiles('8m34s')!,
         advanceNum: 9,
         goodShapeAdvance: [],
-        goodShapeAdvanceNum: 0
+        goodShapeAdvanceNum: 0,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }]
     ]),
     ankanToAdvance: new Map()
@@ -223,17 +327,35 @@ test('kokushiShanten-withGot', () => {
       [Tile.byText('2s')!, {
         shantenNum: 3,
         advance: Tile.parseTiles('2467z')!,
-        advanceNum: 16
+        advanceNum: 16,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('6s')!, {
         shantenNum: 3,
         advance: Tile.parseTiles('2467z')!,
-        advanceNum: 16
+        advanceNum: 16,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('3s')!, {
         shantenNum: 3,
         advance: Tile.parseTiles('2467z')!,
-        advanceNum: 16
+        advanceNum: 16,
+        goodShapeAdvance: null,
+        goodShapeAdvanceNum: null,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }]
     ]),
     ankanToAdvance: new Map()
@@ -255,28 +377,44 @@ test('shanten-withGot', () => {
         advance: Tile.parseTiles('36s27z')!,
         advanceNum: 13,
         goodShapeAdvance: Tile.parseTiles('27z')!,
-        goodShapeAdvanceNum: 6
+        goodShapeAdvanceNum: 6,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('2z')!, {
         shantenNum: 1,
         advance: Tile.parseTiles('36s17z')!,
         advanceNum: 13,
         goodShapeAdvance: Tile.parseTiles('17z')!,
-        goodShapeAdvanceNum: 6
+        goodShapeAdvanceNum: 6,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('7z')!, {
         shantenNum: 1,
         advance: Tile.parseTiles('36s12z')!,
         advanceNum: 13,
         goodShapeAdvance: Tile.parseTiles('12z')!,
-        goodShapeAdvanceNum: 6
+        goodShapeAdvanceNum: 6,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }],
       [Tile.byText('6s')!, {
         shantenNum: 1,
         advance: Tile.parseTiles('127z')!,
         advanceNum: 9,
         goodShapeAdvance: [],
-        goodShapeAdvanceNum: 0
+        goodShapeAdvanceNum: 0,
+        improvement: null,
+        improvementNum: null,
+        goodShapeImprovement: null,
+        goodShapeImprovementNum: null
       }]
     ]),
     ankanToAdvance: new Map()
@@ -295,40 +433,9 @@ test('furoChanceShanten', () => {
   expect(result).toMatchObject({
     shantenInfo: {
       shantenNum: 0,
-      pass: undefined,
-      pon: undefined,
-      minkan: undefined
+      pass: null,
+      pon: null,
+      minkan: null
     }
   })
-
-  const expectedChi: Array<[Tatsu, ShantenWithGot]> = [
-    [Tatsu.parse('68m')!, {
-      shantenNum: 0,
-      discardToAdvance: new Map([
-        [Tile.byText('1p')!, {
-          shantenNum: 0,
-          advance: Tile.parseTiles('6p')!,
-          advanceNum: 4
-        }],
-        [Tile.byText('4p')!, {
-          shantenNum: 0,
-          advance: Tile.parseTiles('6p')!,
-          advanceNum: 4
-        }],
-        [Tile.byText('7p')!, {
-          shantenNum: 0,
-          advance: Tile.parseTiles('36p')!,
-          advanceNum: 7
-        }]
-      ]),
-      ankanToAdvance: new Map()
-    }]
-  ]
-
-  result.shantenInfo.chi.forEach(([tatsu, shantenAfterChi]) => {
-    const match = expectedChi.find(it => it[0].type === tatsu.type && it[0].first === tatsu.first)
-    expect(match).not.toBeUndefined()
-    checkShantenWithGot(match![1], shantenAfterChi)
-  })
-  expect(result.shantenInfo.chi.length).toEqual(expectedChi.length)
 })

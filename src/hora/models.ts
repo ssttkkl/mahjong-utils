@@ -1,4 +1,4 @@
-import { ChildPoint, ParentPoint } from 'point-by-han-hu/models'
+import { type ChildPoint, type ParentPoint } from 'point-by-han-hu/models'
 import { type RegularHandPattern, type Tile, type Wind } from '../models'
 import { type ExtraYaku, type Yaku } from './yaku'
 

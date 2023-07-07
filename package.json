@@ -4,12 +4,12 @@
     "name": "ssttkkl",
     "email": "huang.wen.long@hotmail.com"
   },
-  "version": "0.4.0",
+  "version": "0.5.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf ./dist && tsc",
     "test": "jest",
     "lint": "eslint src/**/*.ts --fix"
   },
@@ -22,6 +22,7 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "jest": "^29.4.1",
+    "rimraf": "^5.0.1",
     "ts-jest": "^29.0.5",
     "ts-loader": "^9.4.2",
     "typescript": "*"
@@ -30,6 +31,6 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "mahjong-utils-entry": "^0.4.0"
+    "mahjong-utils-entry": "^0.5.2"
   }
 }

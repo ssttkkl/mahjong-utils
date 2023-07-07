@@ -1,14 +1,14 @@
 import { type AbstractHoraHandPattern, type Hora } from 'hora'
 import { decodeHoraHandPattern } from './hora-hand-pattern'
 
-export function decodeHora<T extends AbstractHoraHandPattern['type']>(
+export function decodeHora<T extends AbstractHoraHandPattern['type']> (
   raw: any,
   patternType: T
 ): Hora<AbstractHoraHandPattern & { type: T }>
 
-export function decodeHora(raw: any): Hora
+export function decodeHora (raw: any): Hora
 
-export function decodeHora(
+export function decodeHora (
   raw: any,
   patternType?: AbstractHoraHandPattern['type']
 ): Hora {

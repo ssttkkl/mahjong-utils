@@ -1,10 +1,10 @@
 export interface ParentPoint {
-    ron: number
-    tsumo: number
+  ron: number
+  tsumo: number
 }
 
 export interface ChildPoint {
-    ron: number
-    tsumoParent: number
-    tsumoChild: number
+  ron: number
+  tsumoParent: number
+  tsumoChild: number
 }
