@@ -1,11 +1,16 @@
 plugins {
     kotlin("multiplatform") version "1.8.21"
     kotlin("plugin.serialization") version "1.8.10"
+    id("org.jetbrains.dokka") version "1.8.20"
     id("build.publication")
 }
 
 repositories {
     mavenCentral()
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.dokka")
 }
 
 kotlin {
