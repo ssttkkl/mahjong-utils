@@ -2,9 +2,9 @@ package mahjongutils.shanten
 
 import mahjongutils.models.Tatsu
 import mahjongutils.models.Tile
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class TestFuroChanceShanten {
     @Test
@@ -58,7 +58,7 @@ class TestFuroChanceShanten {
 
     @Test
     fun test2() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith(IllegalArgumentException::class) {
             furoChanceShanten(Tile.parseTiles("9999m"), Tile.get("9m"))
         }
     }
