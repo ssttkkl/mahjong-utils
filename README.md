@@ -23,79 +23,7 @@ mahjong-utils
 
 对于JavaScript/TypeScript：我们提供了绑定方便JS/TS侧调用，具体请看 https://github.com/ssttkkl/mahjong-utils/tree/js
 
-## 使用（Kotlin）
-
-### 引用
-
-```groovy
-implementation "io.github.ssttkkl:mahjong-utils:{mahjongUtilsVersion}"
-```
-
-### 获取番符对应和牌点数
-
-```kotlin
-// 获取亲家X番Y符的点数
-val parentPoint = getParentPointByHanHu(3, 40)
-print(parentPoint.ron)  // 7700
-print(parentPoint.tsumo)  // 2600
-
-// 获取子家X番Y符的点数
-val childPoint = getChildPointByHanHu(3, 40)
-print(childPoint.ron)  // 5200
-print(childPoint.tsumoParent)  // 2600
-print(childPoint.tsumoChild)  // 1300
-```
-
-### 手牌向听数、进张分析
-
-```kotlin
-val result = shanten(Tile.parseTiles("34568m235p68s"))
-val shantenInfo = result.shantenInfo as ShantenWithoutGot
-print(shantenInfo.shantenNum)  // 2
-print(shantenInfo.advance)  // [7m, 1p, 4p, 5p, 6s, 8s, 7s, 2p, 3p, 6m, 8m, 3m]
-```
-
-### 摸牌何切分析
-
-```kotlin
-val result = shanten(Tile.parseTiles("112233p44556s127z"))
-val shantenInfo = result.shantenInfo as ShantenWithGot
-print(shantenInfo.shantenNum)  // 1
-print(shantenInfo.discardToAdvance)
-/*
-{1z=ShantenWithoutGot(shantenNum=1, advance=[3s, 6s, 2z, 7z], advanceNum=13, goodShapeAdvance=[2z, 7z], goodShapeAdvanceNum=6), 
-2z=ShantenWithoutGot(shantenNum=1, advance=[3s, 6s, 1z, 7z], advanceNum=13, goodShapeAdvance=[1z, 7z], goodShapeAdvanceNum=6), 
-6s=ShantenWithoutGot(shantenNum=1, advance=[1z, 2z, 7z], advanceNum=9, goodShapeAdvance=[], goodShapeAdvanceNum=0),
-7z=ShantenWithoutGot(shantenNum=1, advance=[3s, 6s, 1z, 2z], advanceNum=13, goodShapeAdvance=[1z, 2z], goodShapeAdvanceNum=6),
-5s=ShantenWithoutGot(shantenNum=2, advance=[2s, 3s, 4s, 5s, 6s, 1z, 2z, 7z, 7s], advanceNum=28, goodShapeAdvance=null, goodShapeAdvanceNum=null), 
-3p=ShantenWithoutGot(shantenNum=2, advance=[3p, 3s, 6s, 1z, 2z, 7z], advanceNum=18, goodShapeAdvance=null, goodShapeAdvanceNum=null), 
-4s=ShantenWithoutGot(shantenNum=2, advance=[3s, 4s, 5s, 6s, 7s, 1z, 2z, 7z], advanceNum=24, goodShapeAdvance=null, goodShapeAdvanceNum=null), 
-2p=ShantenWithoutGot(shantenNum=2, advance=[2p, 3s, 6s, 1z, 2z, 7z], advanceNum=18, goodShapeAdvance=null, goodShapeAdvanceNum=null), 
-1p=ShantenWithoutGot(shantenNum=2, advance=[1p, 4p, 3s, 6s, 1z, 2z, 7z], advanceNum=22, goodShapeAdvance=null, goodShapeAdvanceNum=null)}
-*/
-```
-
-### 和了分析
-
-```kotlin
-val result = hora(
-    tiles = Tile.parseTiles("12233466m111z"),
-    furo = listOf(Furo("789p")),
-    agari = Tile.get("1z"),
-    tsumo = true,
-    dora = 4,
-    selfWind = Wind.East,
-    roundWind = Wind.East
-)
-
-print(result.yaku)  // {SelfWind, RoundWind}
-print(result.han)  // 6
-print(result.hu)  // 30
-print(result.parentPoint)  // ParentPoint(ron=18000, tsumo=6000)
-print(result.childPoint)  // ChildPoint(ron=12000, tsumoParent=6000, tsumoChild=3000)
-```
-
-## 使用（Java）
+## 使用（Kotlin/Java）
 
 ### 引用
 
@@ -115,47 +43,30 @@ Gradle：
 implementation "io.github.ssttkkl:mahjong-utils:{mahjongUtilsVersion}"
 ```
 
-### 获取番符对应和牌点数
+### 向听分析/牌理
 
-```java
-// 获取亲家X番Y符的点数
-ParentPoint parentPoint = PointByHanHuKt.getParentPointByHanHu(3, 40);
-System.out.println(parentPoint.getRon());  // 7700
-System.out.println(parentPoint.getTsumo());  // 2600
+- 向听分析：[shanten](docs/mahjong-utils/mahjongutils.shanten/shanten.md)
+- 标准形向听分析：[regularShanten](docs/mahjong-utils/mahjongutils.shanten/regular-shanten.md)
+- 七对子向听分析：[chitoiShanten](docs/mahjong-utils/mahjongutils.shanten/chitoi-shanten.md)
+- 国士无双向听分析：[kokushiShanten](docs/mahjong-utils/mahjongutils.shanten/kokushi-shanten.md)
+- 副露判断向听分析：[furoChanceShanten](docs/mahjong-utils/mahjongutils.shanten/furo-chance-shanten.md)
 
-// 获取子家X番Y符的点数
-ChildPoint childPoint = PointByHanHuKt.getChildPointByHanHu(3, 40);
-System.out.println(childPoint.getRon());  // 5200
-System.out.println(childPoint.getTsumoParent());  // 2600
-System.out.println(childPoint.getTsumoChild());  // 1300
+未摸牌：
+
+```kotlin
+val result = shanten(Tile.parseTiles("34568m235p68s"))
+val shantenInfo = result.shantenInfo as ShantenWithoutGot
+print(shantenInfo.shantenNum)  // 2
+print(shantenInfo.advance)  // [7m, 1p, 4p, 5p, 6s, 8s, 7s, 2p, 3p, 6m, 8m, 3m]
 ```
 
-### 手牌向听数、进张分析
+已摸牌：
 
-```java
-ShantenResult result = ShantenKt.shanten(
-        Tile.Companion.parseTiles("34568m235p68s"),
-        Collections.emptyList(),  // furo
-        true,  // calcAdvanceNum
-        false  // bestShantenOnly
-);
-ShantenWithoutGot shantenInfo = (ShantenWithoutGot) result.getShantenInfo();
-System.out.println(shantenInfo.getShantenNum());  // 2
-System.out.println(shantenInfo.getAdvance());  // [7m, 1p, 4p, 5p, 6s, 8s, 7s, 2p, 3p, 6m, 8m, 3m]
-```
-
-### 摸牌何切分析
-
-```java
-ShantenResult result = ShantenKt.shanten(
-        Tile.Companion.parseTiles("112233p44556s127z"),
-        Collections.emptyList(),  // furo
-        true,  // calcAdvanceNum
-        false  // bestShantenOnly
-);
-ShantenWithGot shantenInfo = (ShantenWithGot) result.getShantenInfo();
-System.out.println(shantenInfo.getShantenNum());  // 1
-System.out.println(shantenInfo.getDiscardToAdvance());
+```kotlin
+val result = shanten(Tile.parseTiles("112233p44556s127z"))
+val shantenInfo = result.shantenInfo as ShantenWithGot
+print(shantenInfo.shantenNum)  // 1
+print(shantenInfo.discardToAdvance)
 /*
 {1z=ShantenWithoutGot(shantenNum=1, advance=[3s, 6s, 2z, 7z], advanceNum=13, goodShapeAdvance=[2z, 7z], goodShapeAdvanceNum=6), 
 2z=ShantenWithoutGot(shantenNum=1, advance=[3s, 6s, 1z, 7z], advanceNum=13, goodShapeAdvance=[1z, 7z], goodShapeAdvanceNum=6), 
@@ -169,25 +80,52 @@ System.out.println(shantenInfo.getDiscardToAdvance());
 */
 ```
 
-### 和了分析
+### 和牌分析
 
-```java
-Hora result = HoraKt.hora(
-        Tile.Companion.parseTiles("12233466m111z"),  // tiles
-        List.of(Furo.Companion.invoke("789p", false)),  // furo
-        Tile.Companion.get("1z"),  // agari
-        true,  // tsumo
-        4,  // dora
-        Wind.East,  // selfWind
-        Wind.East,  // roundWind
-        Collections.emptySet()  // extraYaku
-);
-System.out.println(result.getYaku());  // {SelfWind, RoundWind}
-System.out.println(result.getHan());  // 6
-System.out.println(result.getHu());  // 30
-System.out.println(result.getParentPoint());  // ParentPoint(ron=18000, tsumo=6000)
-System.out.println(result.getChildPoint());  // ChildPoint(ron=12000, tsumoParent=6000, tsumoChild=3000)
+- 和牌分析：[hora](docs/mahjong-utils/mahjongutils.hora/hora.md)
+
+```kotlin
+val result = hora(
+    tiles = Tile.parseTiles("12233466m111z"),
+    furo = listOf(Furo("789p")),
+    agari = Tile.get("1z"),
+    tsumo = true,
+    dora = 4,
+    selfWind = Wind.East,
+    roundWind = Wind.East
+)
+
+print(result.yaku)  // {SelfWind, RoundWind}
+print(result.han)  // 6
+print(result.hu)  // 30
+print(result.parentPoint)  // ParentPoint(ron=18000, tsumo=6000)
+print(result.childPoint)  // ChildPoint(ron=12000, tsumoParent=6000, tsumoChild=3000)
 ```
+
+### 根据番符获取和牌点数
+
+- 获取子家（闲家）和牌点数：[getChildPointByHanHu](docs/mahjong-utils/mahjongutils.hanhu/get-child-point-by-han-hu.md)
+- 获取亲家（庄家）和牌点数：[getParentPointByHanHu](docs/mahjong-utils/mahjongutils.hanhu/get-parent-point-by-han-hu.md)
+
+
+```kotlin
+// 获取亲家X番Y符的点数
+val parentPoint = getParentPointByHanHu(3, 40)
+print(parentPoint.ron)  // 7700
+print(parentPoint.tsumo)  // 2600
+print(parentPoint.tsumoTotal) // 7800
+
+// 获取子家X番Y符的点数
+val childPoint = getChildPointByHanHu(3, 40)
+print(childPoint.ron)  // 5200
+print(childPoint.tsumoParent)  // 2600
+print(childPoint.tsumoChild)  // 1300
+print(childPoint.tsumoTotal) // 5200
+```
+
+### API文档
+
+[API文档](docs/index.md)
 
 ## 使用（动态库）
 
