@@ -13,6 +13,8 @@ mahjong-utils
 - [x] 鸣牌分析
 - [x] 和了分析（役种、番数、符数）
 
+DEMO：https://mahjong-utils-taro.vercel.app/
+
 ## 平台支持
 
 本项目使用Kotlin/Multiplatform编写，支持多平台调用
