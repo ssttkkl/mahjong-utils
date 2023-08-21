@@ -2,12 +2,12 @@ plugins {
     kotlin("multiplatform") version "1.9.0"
     kotlin("plugin.serialization") version "1.9.0"
     id("org.jetbrains.dokka") version "1.8.20"
+    id("org.jetbrains.kotlinx.kover") version "0.7.3"
     id("build.publication")
 }
 
 repositories {
     mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
 }
 
 subprojects {
@@ -18,10 +18,12 @@ kotlin {
     jvm {
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
+            testLogging {
+                events("passed", "skipped", "failed")
+            }
         }
     }
     js(IR) {
-        // To build distributions for and run tests on browser or Node.js use one or both of:
         browser()
         nodejs()
     }
@@ -38,15 +40,25 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0-RC")
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test")) // This brings all the platform dependencies automatically
+                implementation(kotlin("test"))
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(platform("org.junit:junit-bom:5.10.0"))
+                implementation("org.junit.jupiter:junit-jupiter")
             }
         }
     }
+}
+
+dependencies {
+    kover(project(":mahjong-utils-entry"))
 }
 
 tasks.wrapper {
