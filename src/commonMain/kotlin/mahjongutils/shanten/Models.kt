@@ -6,8 +6,8 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import mahjongutils.common.*
-import mahjongutils.models.*
+import mahjongutils.models.Tatsu
+import mahjongutils.models.Tile
 import mahjongutils.models.hand.*
 
 
@@ -106,6 +106,12 @@ data class ShantenWithGot(
      */
     @EncodeDefault val ankanToAdvance: Map<Tile, ShantenWithoutGot> = emptyMap()
 ) : CommonShanten
+
+val CommonShanten.asWithoutGot: ShantenWithoutGot
+    get() = this as ShantenWithoutGot
+
+val CommonShanten.asWithGot: ShantenWithGot
+    get() = this as ShantenWithGot
 
 /**
  * 有副露机会的手牌的向听信息

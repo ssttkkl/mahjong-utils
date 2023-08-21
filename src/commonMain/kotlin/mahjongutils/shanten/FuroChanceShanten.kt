@@ -48,7 +48,7 @@ internal fun furoChanceShanten(
     }
 
     val passShanten = regularShanten(tiles)
-    val pass = passShanten.shantenInfo as ShantenWithoutGot
+    val pass = passShanten.shantenInfo.asWithoutGot
 
     // 碰
     val pon = if (tilesCount[chanceTile.code] >= 2) {
@@ -60,7 +60,7 @@ internal fun furoChanceShanten(
             bestShantenOnly = bestShantenOnly,
             allowAnkan = false
         )
-        shantenAfterPon.shantenInfo as ShantenWithGot
+        shantenAfterPon.shantenInfo.asWithGot
     } else {
         null
     }
@@ -99,7 +99,7 @@ internal fun furoChanceShanten(
                 bestShantenOnly = bestShantenOnly,
                 allowAnkan = false
             )
-            val shantenInfo = shantenAfterChi.shantenInfo as ShantenWithGot
+            val shantenInfo = shantenAfterChi.shantenInfo.asWithGot
             if (!allowKuikae) {
                 val discardToAdvance = shantenInfo.discardToAdvance.filterKeys {
                     it !== chanceTile && (tt !is Ryanmen || (
@@ -129,7 +129,7 @@ internal fun furoChanceShanten(
             bestShantenOnly = bestShantenOnly,
             allowAnkan = false
         )
-        shantenAfterMinkan.shantenInfo as ShantenWithoutGot
+        shantenAfterMinkan.shantenInfo.asWithoutGot
     } else {
         null
     }
