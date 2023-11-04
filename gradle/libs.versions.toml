@@ -1,0 +1,20 @@
+[versions]
+kotlin = "1.9.20"
+kotlinx-serialization = "1.6.0"
+buildlogic = "0.0.1"
+
+[libraries]
+kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.7.3" }
+devPetsuka-npmPublish = { id = "dev.petuska.npm.publish", version = "3.2.0" }
+jetbrains-dokka = { id = "org.jetbrains.dokka", version = "1.8.20" }
+
+buildlogic-kmplib = { id = "mahjongutils.buildlogic.kmplib", version.ref = "buildlogic" }
+buildlogic-mavenpublish = { id = "mahjongutils.buildlogic.mavenpublish", version.ref = "buildlogic" }

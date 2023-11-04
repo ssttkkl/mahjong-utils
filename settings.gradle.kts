@@ -1,4 +1,21 @@
 rootProject.name = "mahjong-utils"
 
-includeBuild("build-scripts")
+include(":mahjong-utils")
 include(":mahjong-utils-entry")
+
+pluginManagement {
+    includeBuild("build-logic")
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
