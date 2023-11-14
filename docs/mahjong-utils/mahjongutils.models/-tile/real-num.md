@@ -5,4 +5,4 @@
 [common]\
 val [realNum](real-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
 
-真正数字。当num为0时（该牌为红宝牌），realName为5。其余情况下与num相等。
+真正数字。当num为0时（该牌为红宝牌），realNum为5。其余情况下与num相等。
