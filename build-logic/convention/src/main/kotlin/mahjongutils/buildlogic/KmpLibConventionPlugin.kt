@@ -13,6 +13,8 @@ class KmpLibConventionPlugin : Plugin<Project> {
         with(pluginManager) {
             apply(libs.findPlugin("kotlin-multiplatform").get().get().pluginId)
             apply(libs.findPlugin("kotlin-serialization").get().get().pluginId)
+            apply(libs.findPlugin("jetbrains-dokka").get().get().pluginId)
+            apply(libs.findPlugin("kotlinx-kover").get().get().pluginId)
         }
 
         configure<KotlinMultiplatformExtension> {

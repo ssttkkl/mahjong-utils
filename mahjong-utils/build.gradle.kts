@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.buildlogic.kmplib)
     alias(libs.plugins.buildlogic.mavenpublish)
-    alias(libs.plugins.jetbrains.dokka)
 }
 
 

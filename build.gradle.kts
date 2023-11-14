@@ -13,3 +13,8 @@ tasks.wrapper {
     gradleVersion = "8.4"
     distributionType = Wrapper.DistributionType.ALL
 }
+
+dependencies {
+    kover(project(":mahjong-utils"))
+    kover(project(":mahjong-utils-entry"))
+}
