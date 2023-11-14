@@ -2,6 +2,7 @@ name: Kover Report
 
 on:
   pull_request:
+    branches: [main]
 
 jobs:
   dokka-gfm:
