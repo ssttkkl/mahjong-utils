@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;Kotsu&quot;)
+
 data class [Kotsu](index.md)(val tile: [Tile](../-tile/index.md)) : [Mentsu](../-mentsu/index.md)
 
 刻子

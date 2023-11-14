@@ -3,6 +3,9 @@
 # parentPoint
 
 [common]\
+
+@EncodeDefault
+
 val [parentPoint](parent-point.md): [ParentPoint](../../mahjongutils.hanhu/-parent-point/index.md)
 
 亲家（庄家）和牌点数

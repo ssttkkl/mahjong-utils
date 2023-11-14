@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;RegularHandPattern&quot;)
+
 data class [RegularHandPattern](index.md)(val k: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val jyantou: [Tile](../../mahjongutils.models/-tile/index.md)?, val menzenMentsu: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Mentsu](../../mahjongutils.models/-mentsu/index.md)&gt;, val furo: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Furo](../../mahjongutils.models/-furo/index.md)&gt;, val tatsu: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tatsu](../../mahjongutils.models/-tatsu/index.md)&gt;, val remaining: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;) : [IRegularHandPattern](../-i-regular-hand-pattern/index.md), [CommonHandPattern](../-common-hand-pattern/index.md)
 
 以标准形为目标的手牌

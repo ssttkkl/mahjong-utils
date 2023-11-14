@@ -3,6 +3,9 @@
 # kokushi
 
 [common]\
+
+@EncodeDefault
+
 val [kokushi](kokushi.md): [KokushiShantenResult](../-kokushi-shanten-result/index.md)? = null
 
 标准形向听分析结果

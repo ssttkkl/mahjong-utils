@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;Shuntsu&quot;)
+
 data class [Shuntsu](index.md)(val tile: [Tile](../-tile/index.md)) : [Mentsu](../-mentsu/index.md)
 
 顺子

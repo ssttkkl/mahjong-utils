@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;Toitsu&quot;)
+
 data class [Toitsu](index.md)(val first: [Tile](../-tile/index.md)) : [Tatsu](../-tatsu/index.md)
 
 对子

@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;Kan&quot;)
+
 data class [Kan](index.md)(val tile: [Tile](../-tile/index.md), val ankan: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false) : [Furo](../-furo/index.md)
 
 杠
@@ -19,7 +21,7 @@ data class [Kan](index.md)(val tile: [Tile](../-tile/index.md), val ankan: [Bool
 
 | Name | Summary |
 |---|---|
-| [ankan](ankan.md) | [common]<br>val [ankan](ankan.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false<br>是否为暗杠 |
+| [ankan](ankan.md) | [common]<br>@EncodeDefault<br>val [ankan](ankan.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false<br>是否为暗杠 |
 | [tile](tile.md) | [common]<br>val [tile](tile.md): [Tile](../-tile/index.md)<br>杠成的刻子的牌（如7777s，tile应为7s） |
 | [tiles](tiles.md) | [common]<br>open override val [tiles](tiles.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../-tile/index.md)&gt; |
 
