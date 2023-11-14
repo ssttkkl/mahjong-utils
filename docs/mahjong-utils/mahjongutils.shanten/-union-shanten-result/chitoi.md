@@ -3,6 +3,9 @@
 # chitoi
 
 [common]\
+
+@EncodeDefault
+
 val [chitoi](chitoi.md): [ChitoiShantenResult](../-chitoi-shanten-result/index.md)? = null
 
 标准形向听分析结果

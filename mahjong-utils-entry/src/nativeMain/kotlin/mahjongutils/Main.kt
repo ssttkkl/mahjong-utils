@@ -1,8 +1,7 @@
 package mahjongutils
 
-import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
-import mahjongutils.shanten.*
+import kotlinx.serialization.serializer
 import kotlin.reflect.KType
 
 private val json = Json { ignoreUnknownKeys = true }
@@ -20,14 +19,9 @@ private object ResultEncoderImpl : ResultEncoder<String> {
     }
 }
 
-class Entry internal constructor(
-    router: Map<String, Method<String, String>>
-) : IEntry<String, String> by EntryImpl(router, ParamsDecoderImpl, ResultEncoderImpl)
+private val ENTRY = buildEntry(ParamsDecoderImpl, ResultEncoderImpl)
 
-val ENTRY = buildEntry(object : EntryFactory<String, String, Entry> {
-    override val paramsDecoder: ParamsDecoder<String> = ParamsDecoderImpl
-    override val resultEncoder: ResultEncoder<String> = ResultEncoderImpl
-    override fun create(router: Map<String, Method<String, String>>): Entry {
-        return Entry(router)
-    }
-})
+
+fun call(name: String, rawParams: String): String {
+    return ENTRY.call(name, rawParams)
+}

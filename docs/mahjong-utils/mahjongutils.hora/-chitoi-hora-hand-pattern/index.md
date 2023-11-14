@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;ChitoiHoraHandPattern&quot;)
+
 data class [ChitoiHoraHandPattern](index.md)(val pairs: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;, val agari: [Tile](../../mahjongutils.models/-tile/index.md), val tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), val selfWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null, val roundWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null) : [HoraHandPattern](../-hora-hand-pattern/index.md), [IChitoiHandPattern](../../mahjongutils.models.hand/-i-chitoi-hand-pattern/index.md)
 
 七对子的和牌手牌
@@ -25,7 +27,7 @@ data class [ChitoiHoraHandPattern](index.md)(val pairs: [Set](https://kotlinlang
 | [menzen](../../mahjongutils.models.hand/-i-has-furo/menzen.md) | [common]<br>open val [menzen](../../mahjongutils.models.hand/-i-has-furo/menzen.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>是否门清 |
 | [pairs](pairs.md) | [common]<br>open override val [pairs](pairs.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;<br>手牌形 |
 | [remaining](remaining.md) | [common]<br>open override val [remaining](remaining.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;<br>浮牌 |
-| [roundWind](round-wind.md) | [common]<br>open override val [roundWind](round-wind.md): [Wind](../../mahjongutils.models/-wind/index.md)? = null<br>场风 |
-| [selfWind](self-wind.md) | [common]<br>open override val [selfWind](self-wind.md): [Wind](../../mahjongutils.models/-wind/index.md)? = null<br>自风 |
+| [roundWind](round-wind.md) | [common]<br>@EncodeDefault<br>open override val [roundWind](round-wind.md): [Wind](../../mahjongutils.models/-wind/index.md)? = null<br>场风 |
+| [selfWind](self-wind.md) | [common]<br>@EncodeDefault<br>open override val [selfWind](self-wind.md): [Wind](../../mahjongutils.models/-wind/index.md)? = null<br>自风 |
 | [tiles](../../mahjongutils.models.hand/-hand-pattern/tiles.md) | [common]<br>abstract val [tiles](../../mahjongutils.models.hand/-hand-pattern/tiles.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;<br>手牌（包括门前与副露） |
 | [tsumo](tsumo.md) | [common]<br>open override val [tsumo](tsumo.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>是否自摸 |

@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;ChitoiHandPattern&quot;)
+
 data class [ChitoiHandPattern](index.md)(val pairs: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;, val remaining: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;) : [IChitoiHandPattern](../-i-chitoi-hand-pattern/index.md), [CommonHandPattern](../-common-hand-pattern/index.md)
 
 以七对子为目标的手牌

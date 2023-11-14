@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;Ryanmen&quot;)
+
 data class [Ryanmen](index.md)(val first: [Tile](../-tile/index.md)) : [Tatsu](../-tatsu/index.md)
 
 两面

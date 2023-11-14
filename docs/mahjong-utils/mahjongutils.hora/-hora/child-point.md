@@ -3,6 +3,9 @@
 # childPoint
 
 [common]\
+
+@EncodeDefault
+
 val [childPoint](child-point.md): [ChildPoint](../../mahjongutils.hanhu/-child-point/index.md)
 
 子家（闲家）和牌点数

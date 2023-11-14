@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;ShantenWithFuroChance&quot;)
+
 data class [ShantenWithFuroChance](index.md)(val shantenNum: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val pass: [ShantenWithoutGot](../-shanten-without-got/index.md)?, val chi: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[Tatsu](../../mahjongutils.models/-tatsu/index.md), [ShantenWithGot](../-shanten-with-got/index.md)&gt;, val pon: [ShantenWithGot](../-shanten-with-got/index.md)?, val minkan: [ShantenWithoutGot](../-shanten-without-got/index.md)?) : [Shanten](../-shanten/index.md)
 
 有副露机会的手牌的向听信息

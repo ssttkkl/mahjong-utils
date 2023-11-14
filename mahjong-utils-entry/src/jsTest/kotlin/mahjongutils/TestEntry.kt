@@ -29,7 +29,7 @@ class TestEntry {
             bestShantenOnly = true
         )
 
-        val rawResult = ENTRY.call("shanten", Json.encodeToDynamic(args))
+        val rawResult = call("shanten", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 
@@ -48,7 +48,7 @@ class TestEntry {
             bestShantenOnly = true
         )
 
-        val rawResult = ENTRY.call("regularShanten", Json.encodeToDynamic(args))
+        val rawResult = call("regularShanten", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 
@@ -67,7 +67,7 @@ class TestEntry {
             bestShantenOnly = true
         )
 
-        val rawResult = ENTRY.call("chitoiShanten", Json.encodeToDynamic(args))
+        val rawResult = call("chitoiShanten", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 
@@ -85,7 +85,7 @@ class TestEntry {
             bestShantenOnly = true
         )
 
-        val rawResult = ENTRY.call("kokushiShanten", Json.encodeToDynamic(args))
+        val rawResult = call("kokushiShanten", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 
@@ -100,7 +100,7 @@ class TestEntry {
     fun testGetParentPointByHanHu() {
         val args = HanHu(5, 30)
 
-        val rawResult = ENTRY.call("getParentPointByHanHu", Json.encodeToDynamic(args))
+        val rawResult = call("getParentPointByHanHu", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 
@@ -115,7 +115,7 @@ class TestEntry {
     fun testGetChildPointByHanHu() {
         val args = HanHu(5, 30)
 
-        val rawResult = ENTRY.call("getChildPointByHanHu", Json.encodeToDynamic(args))
+        val rawResult = call("getChildPointByHanHu", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 
@@ -139,7 +139,7 @@ class TestEntry {
             extraYaku = setOf(Yakus.Rinshan)
         )
 
-        val rawResult = ENTRY.call("hora", Json.encodeToDynamic(args))
+        val rawResult = call("hora", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 
@@ -171,7 +171,7 @@ class TestEntry {
             extraYaku = setOf(Yakus.Rinshan)
         )
 
-        val rawResult = ENTRY.call("hora", Json.encodeToDynamic(args))
+        val rawResult = call("hora", Json.encodeToDynamic(args))
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 

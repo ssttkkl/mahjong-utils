@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;Pon&quot;)
+
 data class [Pon](index.md)(val tile: [Tile](../-tile/index.md)) : [Furo](../-furo/index.md)
 
 碰

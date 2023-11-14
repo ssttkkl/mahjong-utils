@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;Chi&quot;)
+
 data class [Chi](index.md)(val tile: [Tile](../-tile/index.md)) : [Furo](../-furo/index.md)
 
 吃

@@ -232,6 +232,7 @@ $dokka.location:mahjongutils.models/TileType.P///PointingToDeclaration/{"org.jet
 $dokka.location:mahjongutils.models/TileType.S///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.models/-tile-type/-s/index.md
 $dokka.location:mahjongutils.models/TileType.Z///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.models/-tile-type/-z/index.md
 $dokka.location:mahjongutils.models/TileType///PointingToDeclaration/mahjong-utils/mahjongutils.models/-tile-type/index.md
+$dokka.location:mahjongutils.models/TileType/entries/#/PointingToDeclaration/mahjong-utils/mahjongutils.models/-tile-type/entries.md
 $dokka.location:mahjongutils.models/TileType/valueOf/#kotlin.String/PointingToDeclaration/mahjong-utils/mahjongutils.models/-tile-type/value-of.md
 $dokka.location:mahjongutils.models/TileType/values/#/PointingToDeclaration/mahjong-utils/mahjongutils.models/-tile-type/values.md
 $dokka.location:mahjongutils.models/Toitsu///PointingToDeclaration/mahjong-utils/mahjongutils.models/-toitsu/index.md
@@ -246,10 +247,13 @@ $dokka.location:mahjongutils.models/Wind.North///PointingToDeclaration/{"org.jet
 $dokka.location:mahjongutils.models/Wind.South///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.models/-wind/-south/index.md
 $dokka.location:mahjongutils.models/Wind.West///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.models/-wind/-west/index.md
 $dokka.location:mahjongutils.models/Wind///PointingToDeclaration/mahjong-utils/mahjongutils.models/-wind/index.md
+$dokka.location:mahjongutils.models/Wind/entries/#/PointingToDeclaration/mahjong-utils/mahjongutils.models/-wind/entries.md
 $dokka.location:mahjongutils.models/Wind/tile/#/PointingToDeclaration/mahjong-utils/mahjongutils.models/-wind/tile.md
 $dokka.location:mahjongutils.models/Wind/valueOf/#kotlin.String/PointingToDeclaration/mahjong-utils/mahjongutils.models/-wind/value-of.md
 $dokka.location:mahjongutils.models/Wind/values/#/PointingToDeclaration/mahjong-utils/mahjongutils.models/-wind/values.md
 $dokka.location:mahjongutils.shanten////PointingToDeclaration/mahjong-utils/mahjongutils.shanten/index.md
+$dokka.location:mahjongutils.shanten//asWithGot/mahjongutils.shanten.CommonShanten#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/as-with-got.md
+$dokka.location:mahjongutils.shanten//asWithoutGot/mahjongutils.shanten.CommonShanten#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/as-without-got.md
 $dokka.location:mahjongutils.shanten//chitoiShanten/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/chitoi-shanten.md
 $dokka.location:mahjongutils.shanten//furoChanceShanten/#kotlin.collections.List[mahjongutils.models.Tile]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/furo-chance-shanten.md
 $dokka.location:mahjongutils.shanten//kokushiShanten/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/kokushi-shanten.md

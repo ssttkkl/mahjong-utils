@@ -8,10 +8,12 @@ import mahjongutils.hora.Hora
 import mahjongutils.hora.hora
 import mahjongutils.shanten.*
 
-fun <RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_PARAMS, RAW_RESULT>> buildEntry(
-    factory: EntryFactory<RAW_PARAMS, RAW_RESULT, E>
-): E {
-    return EntryBuilder(factory).apply {
+internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
+    paramsDecoder: ParamsDecoder<RAW_PARAMS>,
+
+    resultEncoder: ResultEncoder<RAW_RESULT>
+): Entry<RAW_PARAMS, RAW_RESULT> {
+    return EntryBuilder(paramsDecoder, resultEncoder).apply {
         register<ShantenArgs, UnionShantenResult>("shanten") { args ->
             shanten(args.tiles, args.furo, args.bestShantenOnly)
         }
@@ -19,7 +21,7 @@ fun <RAW_PARAMS : Any, RAW_RESULT : Any, E : IEntry<RAW_PARAMS, RAW_RESULT>> bui
             regularShanten(args.tiles, args.furo, args.bestShantenOnly)
         }
         register<ShantenArgs, ChitoiShantenResult>("chitoiShanten") { args ->
-            chitoiShanten(args.tiles,args.bestShantenOnly)
+            chitoiShanten(args.tiles, args.bestShantenOnly)
         }
         register<ShantenArgs, KokushiShantenResult>("kokushiShanten") { args ->
             kokushiShanten(args.tiles, args.bestShantenOnly)

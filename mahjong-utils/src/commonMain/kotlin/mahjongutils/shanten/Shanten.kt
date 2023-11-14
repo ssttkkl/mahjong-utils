@@ -8,15 +8,15 @@ import mahjongutils.models.hand.Hand
 import kotlin.math.min
 
 
-private fun mergeIntoWithoutGot(
+private fun <S : CommonShanten> mergeIntoWithoutGot(
     targetShantenNum: Int,
     advance: MutableSet<Tile>,
     goodShapeAdvance: MutableSet<Tile>,
     patterns: MutableCollection<CommonHandPattern>,
-    result: ShantenResult<*, *>
+    result: ShantenResult<S, *>
 ) {
     if (result.shantenInfo.shantenNum == targetShantenNum) {
-        val shantenInfo = result.shantenInfo as ShantenWithoutGot
+        val shantenInfo = result.shantenInfo.asWithoutGot
         advance += shantenInfo.advance
         patterns += result.hand.patterns
         if (shantenInfo.goodShapeAdvance != null) {
@@ -25,14 +25,14 @@ private fun mergeIntoWithoutGot(
     }
 }
 
-private fun mergeIntoWithGot(
+private fun <S : CommonShanten> mergeIntoWithGot(
     targetShantenNum: Int,
     discardToAdvance: MutableMap<Tile, ShantenWithoutGot>,
     patterns: MutableCollection<CommonHandPattern>,
-    result: ShantenResult<*, *>,
+    result: ShantenResult<S, *>,
     bestShantenOnly: Boolean
 ) {
-    val shantenInfo = result.shantenInfo as ShantenWithGot
+    val shantenInfo = result.shantenInfo.asWithGot
     for ((discard, shantenAfterDiscard) in shantenInfo.discardToAdvance) {
         if (!bestShantenOnly || shantenAfterDiscard.shantenNum == targetShantenNum) {
             val oldShantenAfterDiscard = discardToAdvance[discard]
@@ -136,9 +136,9 @@ internal fun shanten(
         ShantenWithoutGot(
             shantenNum, advance,
             goodShapeAdvance = if (shantenNum == 1) goodShapeAdvance else null,
-            improvement = (regular.shantenInfo as ShantenWithoutGot).improvement
+            improvement = (regular.shantenInfo.asWithoutGot).improvement
                 ?: (if (shantenNum == 0) emptyMap() else null),
-            goodShapeImprovement = (regular.shantenInfo as ShantenWithoutGot).goodShapeImprovement
+            goodShapeImprovement = (regular.shantenInfo.asWithoutGot).goodShapeImprovement
                 ?: (if (shantenNum == 0) emptyMap() else null)
         )
     } else {
@@ -150,7 +150,7 @@ internal fun shanten(
 
         ShantenWithGot(
             shantenNum, discardToAdvance,
-            ankanToAdvance = (regular.shantenInfo as ShantenWithGot).ankanToAdvance
+            ankanToAdvance = (regular.shantenInfo.asWithGot).ankanToAdvance
         )
     }
 

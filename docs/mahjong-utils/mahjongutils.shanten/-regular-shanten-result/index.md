@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;RegularShantenResult&quot;)
+
 data class [RegularShantenResult](index.md)(val hand: [Hand](../../mahjongutils.models.hand/-hand/index.md)&lt;[RegularHandPattern](../../mahjongutils.models.hand/-regular-hand-pattern/index.md)&gt;, val shantenInfo: [CommonShanten](../-common-shanten/index.md)) : [CommonShantenResult](../-common-shanten-result/index.md)&lt;[RegularHandPattern](../../mahjongutils.models.hand/-regular-hand-pattern/index.md)&gt;
 
 ## Constructors

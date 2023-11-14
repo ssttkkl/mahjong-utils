@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;KokushiHandPattern&quot;)
+
 data class [KokushiHandPattern](index.md)(val yaochu: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;, val repeated: [Tile](../../mahjongutils.models/-tile/index.md)?, val remaining: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;) : [IKokushiHandPattern](../-i-kokushi-hand-pattern/index.md), [CommonHandPattern](../-common-hand-pattern/index.md)
 
 以国士无双为目标的手牌

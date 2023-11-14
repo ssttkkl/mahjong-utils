@@ -5,6 +5,8 @@
 [common]\
 @Serializable
 
+@SerialName(value = &quot;Penchan&quot;)
+
 data class [Penchan](index.md)(val first: [Tile](../-tile/index.md)) : [Tatsu](../-tatsu/index.md)
 
 边张
