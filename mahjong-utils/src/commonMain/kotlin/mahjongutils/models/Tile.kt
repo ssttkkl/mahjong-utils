@@ -147,7 +147,7 @@ data class Tile private constructor(
         /**
          * 根据编号获取牌
          */
-        fun get(code: Int): Tile {
+        operator fun get(code: Int): Tile {
             if (code !in pool.indices || code == 30) {
                 throw IllegalArgumentException("invalid code: $code")
             }
@@ -164,7 +164,7 @@ data class Tile private constructor(
         /**
          * 根据文本获取牌
          */
-        fun get(text: String): Tile {
+        operator fun get(text: String): Tile {
             if (text.length != 2) {
                 throw IllegalArgumentException("invalid tile text: $text")
             }

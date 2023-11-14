@@ -5,9 +5,13 @@ import mahjongutils.hanhu.ParentPoint
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
+import mahjongutils.shanten.chitoiShanten
+import mahjongutils.shanten.shanten
 import mahjongutils.yaku.Yakus
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class TestHora {
     @Test
@@ -100,7 +104,7 @@ class TestHora {
     @Test
     fun test7() {
         val hora = hora(
-            tiles = Tile.parseTiles("66z"),
+            tiles = Tile.parseTiles("6z"),
             furo = listOf(Furo("0330s"), Furo("0220s"), Furo("0440s"), Furo("0880s")),
             agari = Tile.get("6z"),
             tsumo = true
@@ -166,5 +170,121 @@ class TestHora {
         assertEquals(hora.hu, 140)
         assertEquals(ParentPoint(ParentPoint.Mangan.ron, 0), hora.parentPoint)
         assertEquals(ChildPoint(ChildPoint.Mangan.ron, 0, 0), hora.childPoint)
+    }
+
+    @Test
+    fun test11() {
+        assertFailsWith<IllegalArgumentException>("invalid length of tiles") {
+            hora(
+                tiles = Tile.parseTiles("234p11z"),
+                furo = listOf(Furo("0110s"), Furo("0990m")),
+                agari = Tile.get("1z"),
+                tsumo = false,
+                selfWind = Wind.East,
+                roundWind = Wind.East
+            )
+        }
+
+        assertFailsWith<IllegalArgumentException>("agari not in tiles") {
+            hora(
+                tiles = Tile.parseTiles("234p11z"),
+                furo = listOf(Furo("0110s"), Furo("0990m")),
+                agari = Tile.get("2z"),
+                tsumo = false,
+                selfWind = Wind.East,
+                roundWind = Wind.East
+            )
+        }
+
+        assertFailsWith<IllegalArgumentException>("invalid length of tiles") {
+            val shantenResult = shanten(
+                tiles = Tile.parseTiles("234p11z"),
+                furo = listOf(Furo("0110s"), Furo("0990m"))
+            )
+            hora(
+                shantenResult = shantenResult,
+                agari = Tile.get("1z"),
+                tsumo = false,
+                selfWind = Wind.East,
+                roundWind = Wind.East
+            )
+        }
+
+        assertFailsWith<IllegalArgumentException>("agari not in tiles") {
+            val shantenResult = shanten(
+                tiles = Tile.parseTiles("234p11z"),
+                furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m"))
+            )
+            hora(
+                shantenResult = shantenResult,
+                agari = Tile.get("1p"),
+                tsumo = false,
+                selfWind = Wind.East,
+                roundWind = Wind.East
+            )
+        }
+
+        assertFailsWith<IllegalArgumentException>("shantenResult is not hora yet") {
+            val shantenResult = shanten(
+                tiles = Tile.parseTiles("235p11z"),
+                furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m"))
+            )
+            hora(
+                shantenResult = shantenResult,
+                agari = Tile.get("1p"),
+                tsumo = false,
+                selfWind = Wind.East,
+                roundWind = Wind.East
+            )
+        }
+
+        assertFailsWith<IllegalArgumentException>("shantenResult is not with got") {
+            val shantenResult = shanten(
+                tiles = Tile.parseTiles("235p1z"),
+                furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m"))
+            )
+            hora(
+                shantenResult = shantenResult,
+                agari = Tile.get("1p"),
+                tsumo = false,
+                selfWind = Wind.East,
+                roundWind = Wind.East
+            )
+        }
+    }
+
+    @Test
+    fun test12() {
+        val shantenResult = chitoiShanten(
+            Tile.parseTiles("1133557799m1122z")
+        )
+        val hora = hora(
+            shantenResult,
+            agari = Tile["1z"],
+            tsumo = false,
+            selfWind = Wind.East,
+            roundWind = Wind.East
+        )
+        assertEquals(hora.han, 5)
+        assertEquals(hora.hu, 25)
+        assertEquals(hora.yaku, setOf(Yakus.Chitoi, Yakus.Honitsu))
+        assertEquals(ParentPoint(ParentPoint.Mangan.ron, 0), hora.parentPoint)
+        assertEquals(ChildPoint(ChildPoint.Mangan.ron, 0, 0), hora.childPoint)
+    }
+
+    @Test
+    fun test13() {
+        val hora = hora(
+            tiles = Tile.parseTiles("19m19s19p12345677z"),
+            agari = Tile.get("1z"),
+            tsumo = false,
+            selfWind = Wind.East,
+            roundWind = Wind.East
+        )
+        assertEquals(hora.han, 13)
+        assertEquals(hora.hu, 20)
+        assertEquals(hora.yaku, setOf(Yakus.Kokushi))
+        assertEquals(ParentPoint(ParentPoint.Yakuman.ron, 0), hora.parentPoint)
+        assertEquals(ChildPoint(ChildPoint.Yakuman.ron, 0, 0), hora.childPoint)
     }
 }
