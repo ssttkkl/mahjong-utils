@@ -30,8 +30,8 @@ jobs:
         uses: mi-kas/kover-report@v1
         with:
           path: |
-            ${{ github.workspace }}/project1/build/reports/kover/report.xml
-            ${{ github.workspace }}/project2/build/reports/kover/report.xml
+            ${{ github.workspace }}/mahjong-utils/build/reports/kover/report.xml
+            ${{ github.workspace }}/mahjong-utils-entry/build/reports/kover/report.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: Code Coverage
           update-comment: true
