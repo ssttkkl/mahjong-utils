@@ -1,27 +1,27 @@
-package mahjongutils
+package mahjongutils.entry.coder
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import mahjongutils.entry.Result
 import kotlin.reflect.KType
+
 
 private val json = Json { ignoreUnknownKeys = true }
 
 @Suppress("UNCHECKED_CAST")
-private object ParamsDecoderImpl : ParamsDecoder<String> {
+internal object JsonParamsDecoder : ParamsDecoder<String> {
     override fun <PARAMS : Any> decodeParams(rawParams: String, paramsType: KType): PARAMS {
         return json.decodeFromString(serializer(paramsType), rawParams) as PARAMS
     }
 }
 
-private object ResultEncoderImpl : ResultEncoder<String> {
+internal object JsonResultEncoder : ResultEncoder<String> {
+    @OptIn(ExperimentalSerializationApi::class)
     override fun <RESULT : Any> encodeResult(result: Result<RESULT>, resultType: KType): String {
-        return json.encodeToString(serializer(resultType), result)
+        return json.encodeToString(
+            serializer(Result::class, listOf(serializer(resultType)), false),
+            result
+        )
     }
-}
-
-private val ENTRY = buildEntry(ParamsDecoderImpl, ResultEncoderImpl)
-
-
-fun call(name: String, rawParams: String): String {
-    return ENTRY.call(name, rawParams)
 }

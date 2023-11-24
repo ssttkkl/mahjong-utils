@@ -1,11 +1,12 @@
-@file:OptIn(ExperimentalSerializationApi::class)
+package mahjongutils.entry
 
-package mahjongutils
-
-import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromDynamic
-import kotlinx.serialization.json.encodeToDynamic
+import mahjongutils.entry.models.HanHu
+import mahjongutils.entry.models.HoraArgs
+import mahjongutils.entry.Result
+import mahjongutils.entry.call
+import mahjongutils.entry.models.ShantenArgs
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hanhu.getChildPointByHanHu
@@ -29,11 +30,11 @@ class TestEntry {
             bestShantenOnly = true
         )
 
-        val rawResult = call("shanten", Json.encodeToDynamic(args))
+        val rawResult = call("shanten", Json.encodeToString(args))
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
-        val actualResult: Result<UnionShantenResult> = Json.decodeFromDynamic(rawResult)
+        val actualResult: Result<UnionShantenResult> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
         val exceptResult = shanten(args.tiles, args.furo, args.bestShantenOnly)
@@ -48,11 +49,11 @@ class TestEntry {
             bestShantenOnly = true
         )
 
-        val rawResult = call("regularShanten", Json.encodeToDynamic(args))
+        val rawResult = call("regularShanten", Json.encodeToString(args))
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
-        val actualResult: Result<RegularShantenResult> = Json.decodeFromDynamic(rawResult)
+        val actualResult: Result<RegularShantenResult> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
         val exceptResult =
@@ -67,11 +68,11 @@ class TestEntry {
             bestShantenOnly = true
         )
 
-        val rawResult = call("chitoiShanten", Json.encodeToDynamic(args))
+        val rawResult = call("chitoiShanten", Json.encodeToString(args))
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
-        val actualResult: Result<ChitoiShantenResult> = Json.decodeFromDynamic(rawResult)
+        val actualResult: Result<ChitoiShantenResult> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
         val exceptResult = chitoiShanten(args.tiles, args.bestShantenOnly)
@@ -85,11 +86,11 @@ class TestEntry {
             bestShantenOnly = true
         )
 
-        val rawResult = call("kokushiShanten", Json.encodeToDynamic(args))
+        val rawResult = call("kokushiShanten", Json.encodeToString(args))
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
-        val actualResult: Result<KokushiShantenResult> = Json.decodeFromDynamic(rawResult)
+        val actualResult: Result<KokushiShantenResult> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
         val exceptResult = kokushiShanten(args.tiles, args.bestShantenOnly)
@@ -100,11 +101,11 @@ class TestEntry {
     fun testGetParentPointByHanHu() {
         val args = HanHu(5, 30)
 
-        val rawResult = call("getParentPointByHanHu", Json.encodeToDynamic(args))
+        val rawResult = call("getParentPointByHanHu", Json.encodeToString(args))
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
-        val actualResult: Result<ParentPoint> = Json.decodeFromDynamic(rawResult)
+        val actualResult: Result<ParentPoint> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
         val exceptResult = getParentPointByHanHu(args.han, args.hu)
@@ -115,11 +116,11 @@ class TestEntry {
     fun testGetChildPointByHanHu() {
         val args = HanHu(5, 30)
 
-        val rawResult = call("getChildPointByHanHu", Json.encodeToDynamic(args))
+        val rawResult = call("getChildPointByHanHu", Json.encodeToString(args))
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
-        val actualResult: Result<ChildPoint> = Json.decodeFromDynamic(rawResult)
+        val actualResult: Result<ChildPoint> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
         val exceptResult = getChildPointByHanHu(args.han, args.hu)
@@ -139,11 +140,11 @@ class TestEntry {
             extraYaku = setOf(Yakus.Rinshan)
         )
 
-        val rawResult = call("hora", Json.encodeToDynamic(args))
+        val rawResult = call("hora", Json.encodeToString(args))
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
-        val actualResult: Result<Hora> = Json.decodeFromDynamic(rawResult)
+        val actualResult: Result<Hora> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
         val exceptResult = hora(
@@ -171,11 +172,11 @@ class TestEntry {
             extraYaku = setOf(Yakus.Rinshan)
         )
 
-        val rawResult = call("hora", Json.encodeToDynamic(args))
+        val rawResult = call("hora", Json.encodeToString(args))
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
-        val actualResult: Result<Hora> = Json.decodeFromDynamic(rawResult)
+        val actualResult: Result<Hora> = Json.decodeFromString(rawResult)
         assertEquals(200, actualResult.code)
 
         val exceptResult = hora(

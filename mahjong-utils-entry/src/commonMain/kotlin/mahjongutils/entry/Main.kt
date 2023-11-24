@@ -1,5 +1,13 @@
-package mahjongutils
+@file:JvmName("MainEntryBuilder")
 
+package mahjongutils.entry
+
+import mahjongutils.entry.coder.ParamsDecoder
+import mahjongutils.entry.coder.ResultEncoder
+import mahjongutils.entry.models.FuroChanceShantenArgs
+import mahjongutils.entry.models.HanHu
+import mahjongutils.entry.models.HoraArgs
+import mahjongutils.entry.models.ShantenArgs
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hanhu.getChildPointByHanHu
@@ -7,13 +15,13 @@ import mahjongutils.hanhu.getParentPointByHanHu
 import mahjongutils.hora.Hora
 import mahjongutils.hora.hora
 import mahjongutils.shanten.*
+import kotlin.jvm.JvmName
 
 internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
     paramsDecoder: ParamsDecoder<RAW_PARAMS>,
-
     resultEncoder: ResultEncoder<RAW_RESULT>
 ): Entry<RAW_PARAMS, RAW_RESULT> {
-    return EntryBuilder(paramsDecoder, resultEncoder).apply {
+    return Entry(paramsDecoder, resultEncoder).apply {
         register<ShantenArgs, UnionShantenResult>("shanten") { args ->
             shanten(args.tiles, args.furo, args.bestShantenOnly)
         }
@@ -58,5 +66,5 @@ internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
                 throw IllegalArgumentException("either shantenResult or tiles/furo muse be set")
             }
         }
-    }.build()
+    }
 }
