@@ -32,6 +32,10 @@ class KmpLibConventionPlugin : Plugin<Project> {
                 browser()
                 nodejs()
             }
+            wasmJs {
+                browser()
+                nodejs()
+            }
 
             iosArm64()
             iosX64()

@@ -29,6 +29,29 @@ kotlin {
             )
         }
     }
+    wasmJs {
+        browser {
+            binaries.library()
+            useCommonJs()
+        }
+        nodejs {
+            binaries.library()
+            useCommonJs()
+        }
+        applyBinaryen()
+        compilations["main"].packageJson {
+            name = "mahjong-utils-entry-wasm"
+            customField(
+                "author", mapOf(
+                    "name" to "ssttkkl",
+                    "email" to "huang.wen.long@hotmail.com"
+                )
+            )
+            customField(
+                "license", "MIT"
+            )
+        }
+    }
 
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
@@ -63,6 +86,12 @@ kotlin {
             dependsOn(nonJsMain)
         }
         val nativeTest by getting {
+            dependsOn(nonJsTest)
+        }
+        val wasmJsMain by getting {
+            dependsOn(nonJsMain)
+        }
+        val wasmJsTest by getting {
             dependsOn(nonJsTest)
         }
     }

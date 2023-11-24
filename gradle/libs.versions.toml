@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.9.20"
-kotlinx-coroutines = "1.7.3"
-kotlinx-serialization = "1.6.0"
+kotlinx-coroutines = "1.8.0-RC"
+kotlinx-serialization = "1.6.2"
 ktor = "2.3.6"
 buildlogic = "0.0.1"
 
