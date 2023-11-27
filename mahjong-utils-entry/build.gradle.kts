@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
 
 plugins {
     alias(libs.plugins.buildlogic.kmplib)
+    alias(libs.plugins.buildlogic.mavenpublish)
     alias(libs.plugins.devPetsuka.npmPublish)
 }
 
@@ -72,6 +73,15 @@ npmPublish {
         }
         register("verdaccio") {
             uri.set("http://localhost:4873")
+        }
+    }
+}
+
+publishing {
+    publications.withType<MavenPublication> {
+        pom {
+            name.set("Mahjong Utils Entry")
+            description.set("Provider a union entry for Mahjong Utils (for Japanese Riichi Mahjong)")
         }
     }
 }
