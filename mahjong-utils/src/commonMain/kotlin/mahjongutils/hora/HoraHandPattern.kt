@@ -36,14 +36,14 @@ sealed interface HoraHandPattern : HoraInfo, HandPattern {
             is RegularHandPattern -> RegularHoraHandPattern.build(pattern, agari, tsumo, selfWind, roundWind)
             is ChitoiHandPattern -> {
                 require(pattern.pairs.size == 7 && pattern.remaining.isEmpty()) {
-                    "invalid ChitoiHandPattern"
+                    "this hand pattern is not hora yet"
                 }
                 listOf(ChitoiHoraHandPattern(pattern.pairs, agari, tsumo, selfWind, roundWind))
             }
 
             is KokushiHandPattern -> {
                 require(pattern.yaochu == Tile.allYaochu && pattern.remaining.isEmpty() && pattern.repeated != null) {
-                    "invalid KokushiHandPattern"
+                    "this hand pattern is not hora yet"
                 }
                 listOf(KokushiHoraHandPattern(pattern.repeated, agari, tsumo, selfWind, roundWind))
             }
@@ -73,10 +73,9 @@ data class RegularHoraHandPattern internal constructor(
     val agariTatsu: Tatsu?,
 ) : HoraHandPattern, IRegularHandPattern by pattern {
     init {
-        require(k == 4)
-        require(pattern.menzenMentsu.size + pattern.furo.size == 4)
-        require(pattern.jyantou != null)
-        require(pattern.remaining.isEmpty())
+        require(k == 4 && pattern.menzenMentsu.size + pattern.furo.size == 4 && pattern.jyantou != null && pattern.remaining.isEmpty()) {
+            "this hand pattern is not hora yet"
+        }
     }
 
     override val jyantou: Tile

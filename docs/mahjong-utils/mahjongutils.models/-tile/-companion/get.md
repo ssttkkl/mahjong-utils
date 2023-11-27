@@ -3,7 +3,7 @@
 # get
 
 [common]\
-fun [get](get.md)(code: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [Tile](../index.md)
+operator fun [get](get.md)(code: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [Tile](../index.md)
 
 根据编号获取牌
 
@@ -13,6 +13,6 @@ fun [get](get.md)(type: [TileType](../../-tile-type/index.md), num: [Int](https:
 根据种类和数字获取牌
 
 [common]\
-fun [get](get.md)(text: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Tile](../index.md)
+operator fun [get](get.md)(text: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Tile](../index.md)
 
 根据文本获取牌
