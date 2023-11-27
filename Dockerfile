@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk AS build-stage
+FROM eclipse-temurin:11-jdk AS build-stage
 COPY . .
 RUN ./gradlew :mahjong-utils-webapi:shadowJar
 
