@@ -49,7 +49,7 @@ class build_kt(Command):
         self.set_undefined_options('build_py',
                                    ('build_lib', 'build_lib'))
 
-    def get_kt_build_dir(self, lib_name, build_info):
+    def get_kt_build_dir(self, build_info):
         build_dir = Path(build_info.get("root"))
         subproject = build_info.get("subproject", None)
         if subproject is not None:
@@ -74,7 +74,7 @@ class build_kt(Command):
 
             run_gradle_task(root, task)
 
-            build_dir = self.get_kt_build_dir(lib_name, build_info)
+            build_dir = self.get_kt_build_dir(build_info)
 
             if sys.platform == 'win32':
                 lib_filename = f"{lib_name}.dll"  # windows
