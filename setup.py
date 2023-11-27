@@ -76,14 +76,14 @@ class build_kt(Command):
 
             build_dir = self.get_kt_build_dir(build_info)
 
-            if sys.platform == 'win32':
-                lib_filename = f"{lib_name}.dll"  # windows
-            elif sys.platform == 'darwin':
-                lib_filename = f"{lib_name}.dylib"  # macOS
-            else:
-                lib_filename = f"{lib_name}.so"  # unix/linux
+            for file in build_dir.iterdir():
+                if sys.platform == 'win32' and file.name.endswith(".dll"):  # windows
+                    copy_file(str(file), str(out_dir))
+                elif sys.platform == 'darwin' and file.name.endswith(".dylib"):  # macOS
+                    copy_file(str(file), str(out_dir))
+                elif file.name.endswith(".so"):  # unix/linux
+                    copy_file(str(file), str(out_dir))
 
-            copy_file(str(build_dir / lib_filename), str(out_dir))
 
     def run(self):
         self.build_sharedlib()
