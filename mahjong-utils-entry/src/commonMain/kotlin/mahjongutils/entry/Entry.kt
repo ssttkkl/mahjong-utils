@@ -3,7 +3,6 @@ package mahjongutils.entry
 import kotlinx.serialization.SerializationException
 import mahjongutils.entry.coder.ParamsDecoder
 import mahjongutils.entry.coder.ResultEncoder
-import mahjongutils.entry.coder.encodeResult
 import kotlin.concurrent.Volatile
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -19,25 +18,40 @@ internal class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constru
 
     private inner class MethodEntry<in P : Any, out R : Any>(
         val paramsType: KType,
-        val resultType: KType,
+        val dataType: KType,
         val handler: Method<P, R>
     ) : IMethodEntry<RAW_PARAMS, RAW_RESULT> {
         override fun call(rawParams: RAW_PARAMS): RAW_RESULT {
             return try {
                 val params: P = paramsDecoder.decodeParams(rawParams, paramsType)
-                val data = handler.handle(params)
-                val result = Result(data)
-                resultEncoder.encodeResult(result, resultType)
+                val data: R = handler.handle(params)
+                resultEncoder.encodeResult(Result(data), dataType)
             } catch (e: SerializationException) {
                 val result = Result<R>(data = null, code = 400, msg = e.message ?: "")
-                resultEncoder.encodeResult(result, resultType)
+                resultEncoder.encodeResult(result, dataType)
             } catch (e: IllegalArgumentException) {
                 val result = Result<R>(data = null, code = 400, msg = e.message ?: "")
-                resultEncoder.encodeResult(result, resultType)
+                resultEncoder.encodeResult(result, dataType)
             } catch (e: Exception) {
                 e.printStackTrace()
                 val result = Result<R>(data = null, code = 500, msg = e.message ?: "")
-                resultEncoder.encodeResult(result, resultType)
+                resultEncoder.encodeResult(result, dataType)
+            }
+        }
+
+        @Throws(MethodExecutionException::class)
+        override fun callReceivingData(rawParams: RAW_PARAMS): RAW_RESULT {
+            return try {
+                val params: P = paramsDecoder.decodeParams(rawParams, paramsType)
+                val data = handler.handle(params)
+                resultEncoder.encodeData(data, dataType)
+            } catch (e: SerializationException) {
+                throw MethodExecutionException(400, e)
+            } catch (e: IllegalArgumentException) {
+                throw MethodExecutionException(400, e)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw MethodExecutionException(500, e)
             }
         }
     }
@@ -56,14 +70,25 @@ internal class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constru
         register(name, typeOf<P>(), typeOf<R>(), handle)
     }
 
+    /**
+    返回调用返回值使用[Result]包装并被序列化后的结果
+     */
     fun call(name: String, rawParams: RAW_PARAMS): RAW_RESULT {
         val method = router[name]
-        return if (method != null) {
-            method.call(rawParams)
-        } else {
+        return method?.call(rawParams) ?: run {
             val result = Result<Unit>(data = null, code = 404, msg = "method '$name' not found")
-            resultEncoder.encodeResult(result)
+            resultEncoder.encodeResult(result, typeOf<Unit>())
         }
+    }
+
+    /**
+    返回调用返回值被序列化后的结果
+     */
+    @Throws(MethodExecutionException::class)
+    fun callReceivingData(name: String, rawParams: RAW_PARAMS): RAW_RESULT {
+        val method = router[name]
+        return method?.callReceivingData(rawParams)
+            ?: throw MethodExecutionException(404, "method '$name' not found")
     }
 }
 

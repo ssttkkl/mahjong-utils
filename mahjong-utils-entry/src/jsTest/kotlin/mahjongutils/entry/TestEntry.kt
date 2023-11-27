@@ -8,8 +8,6 @@ import kotlinx.serialization.json.decodeFromDynamic
 import kotlinx.serialization.json.encodeToDynamic
 import mahjongutils.entry.models.HanHu
 import mahjongutils.entry.models.HoraArgs
-import mahjongutils.entry.Result
-import mahjongutils.entry.call
 import mahjongutils.entry.models.ShantenArgs
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint

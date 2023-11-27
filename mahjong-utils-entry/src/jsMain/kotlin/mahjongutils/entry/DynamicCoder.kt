@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 
 package mahjongutils.entry
 
@@ -22,9 +22,13 @@ internal object DynamicParamsDecoder : ParamsDecoder<dynamic> {
 }
 
 internal object DynamicResultEncoder : ResultEncoder<dynamic> {
-    override fun <RESULT : Any> encodeResult(result: Result<RESULT>, resultType: KType): dynamic {
+    override fun <DATA : Any> encodeData(result: DATA, dataType: KType): dynamic {
+        return json.encodeToDynamic(serializer(dataType), result)
+    }
+
+    override fun <DATA : Any> encodeResult(result: Result<DATA>, dataType: KType): dynamic {
         return json.encodeToDynamic(
-            serializer(Result::class, listOf(serializer(resultType)), false),
+            serializer(Result::class, listOf(serializer(dataType)), false),
             result
         )
     }
