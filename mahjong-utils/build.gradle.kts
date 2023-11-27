@@ -19,3 +19,12 @@ kotlin {
         }
     }
 }
+
+publishing {
+    publications.withType<MavenPublication> {
+        pom {
+            name.set("Mahjong Utils")
+            description.set("Mahjong Utils (for Japanese Riichi Mahjong)")
+        }
+    }
+}

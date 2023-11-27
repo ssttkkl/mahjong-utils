@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package mahjongutils.entry.coder
 
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -17,10 +19,13 @@ internal object JsonParamsDecoder : ParamsDecoder<String> {
 }
 
 internal object JsonResultEncoder : ResultEncoder<String> {
-    @OptIn(ExperimentalSerializationApi::class)
-    override fun <RESULT : Any> encodeResult(result: Result<RESULT>, resultType: KType): String {
+    override fun <DATA : Any> encodeData(result: DATA, dataType: KType): String {
+        return json.encodeToString(serializer(dataType), result)
+    }
+
+    override fun <DATA : Any> encodeResult(result: Result<DATA>, dataType: KType): String {
         return json.encodeToString(
-            serializer(Result::class, listOf(serializer(resultType)), false),
+            serializer(Result::class, listOf(serializer(dataType)), false),
             result
         )
     }

@@ -11,6 +11,7 @@ import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 import java.util.*
 import kotlin.io.path.Path
+import kotlin.io.path.exists
 
 class MavenPublishConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
@@ -88,8 +89,6 @@ class MavenPublishConventionPlugin : Plugin<Project> {
 
                 // Provide artifacts information requited by Maven Central
                 pom {
-                    name.set("Mahjong Utils")
-                    description.set("Mahjong Utils (for Japanese Riichi Mahjong)")
                     url.set("https://github.com/ssttkkl/mahjong-utils")
 
                     licenses {
@@ -115,16 +114,20 @@ class MavenPublishConventionPlugin : Plugin<Project> {
             }
         }
 
-        // Signing artifacts. Signing.* extra properties values will be used
-        extensions.configure<SigningExtension> {
-            sign(extensions.getByType<PublishingExtension>().publications)
+        if (secretKeyRingFile.exists()) {
+            // Signing artifacts. Signing.* extra properties values will be used
+            extensions.configure<SigningExtension> {
+                sign(extensions.getByType<PublishingExtension>().publications)
+            }
         }
 
-        //region Fix Gradle warning about signing tasks using publishing task outputs without explicit dependencies
+        // region Fix Gradle warning about signing tasks using publishing task outputs without explicit dependencies
         // https://github.com/gradle/gradle/issues/26091
         tasks.withType<AbstractPublishToMaven>().configureEach {
-            val signingTasks = tasks.withType<Sign>()
-            mustRunAfter(signingTasks)
+            if (!name.endsWith("MavenLocal", true)) {
+                val signingTasks = tasks.withType<Sign>()
+                mustRunAfter(signingTasks)
+            }
         }
     }
 }

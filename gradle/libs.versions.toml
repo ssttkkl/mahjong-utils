@@ -1,6 +1,7 @@
 [versions]
 kotlin = "1.9.20"
 kotlinx-serialization = "1.6.0"
+ktor = "2.3.6"
 buildlogic = "0.0.1"
 
 [libraries]
@@ -8,13 +9,19 @@ kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
+ktor-server-core = { group = "io.ktor", name = "ktor-server-core-jvm" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty-jvm" }
+
+qos-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.11" }
 
 [plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.7.3" }
 devPetsuka-npmPublish = { id = "dev.petuska.npm.publish", version = "3.2.0" }
 jetbrains-dokka = { id = "org.jetbrains.dokka", version = "1.9.10" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 
 buildlogic-kmplib = { id = "mahjongutils.buildlogic.kmplib", version.ref = "buildlogic" }
 buildlogic-mavenpublish = { id = "mahjongutils.buildlogic.mavenpublish", version.ref = "buildlogic" }
