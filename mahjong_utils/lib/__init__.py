@@ -43,9 +43,7 @@ class LibMahjongUtils:
 
         params = json.dumps(params, **params_dumps_kwargs)
 
-        entry = self.lib_sy.kotlin.root.mahjongutils.get_ENTRY()
-        result = self.lib_sy.kotlin.root.mahjongutils.Entry.call(
-            entry,
+        result = self.lib_sy.kotlin.root.mahjongutils.entry.call(
             self.ffi.new("char[]", name.encode()),
             self.ffi.new("char[]", params.encode()))
         result = self.ffi.string(result)
