@@ -8,7 +8,7 @@ import mahjongutils.shanten.CommonShantenResult
 import mahjongutils.yaku.Yaku
 
 @Serializable
-data class HoraArgs(
+internal data class HoraArgs(
     val tiles: List<Tile>? = null,
     val furo: List<Furo>? = null,
     val shantenResult: CommonShantenResult<*>? = null,

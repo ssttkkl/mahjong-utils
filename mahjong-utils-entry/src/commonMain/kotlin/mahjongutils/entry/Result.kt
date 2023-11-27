@@ -8,7 +8,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Result<out T : Any>(
+internal data class Result<out T : Any>(
     @EncodeDefault val data: T?,
     @EncodeDefault val code: Int = 200,
     @EncodeDefault val msg: String = "",

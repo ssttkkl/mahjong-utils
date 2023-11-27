@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import mahjongutils.models.Tile
 
 @Serializable
-data class FuroChanceShantenArgs(
+internal data class FuroChanceShantenArgs(
     val tiles: List<Tile>,
     val chanceTile: Tile,
     val allowChi: Boolean = true,
