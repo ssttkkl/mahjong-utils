@@ -30,10 +30,12 @@ kotlin {
         }
     }
 
+    val hostOs = System.getProperty("os.name")
+    val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = targets.filterIsInstance<KotlinNativeTargetWithHostTests>().firstOrNull()
     nativeTarget?.binaries {
         sharedLib {
-            baseName = if (nativeTarget.name == "mingwX64") "libmahjongutils" else "mahjongutils"
+            baseName = if (isMingwX64) "libmahjongutils" else "mahjongutils"
         }
     }
 
