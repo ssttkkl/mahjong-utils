@@ -61,7 +61,7 @@ internal class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constru
         return if (method != null) {
             method.call(rawParams)
         } else {
-            val result = Result<Unit>(data = null, code = 404, msg = "method \"$name\" not found")
+            val result = Result<Unit>(data = null, code = 404, msg = "method '$name' not found")
             resultEncoder.encodeResult(result)
         }
     }
