@@ -43,6 +43,25 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
             }
         }
+        val commonTest by getting
+        val nonJsMain by creating {
+            dependsOn(commonMain)
+        }
+        val nonJsTest by creating {
+            dependsOn(commonTest)
+        }
+        val jvmMain by getting {
+            dependsOn(nonJsMain)
+        }
+        val jvmTest by getting {
+            dependsOn(nonJsTest)
+        }
+        val nativeMain by getting {
+            dependsOn(nonJsMain)
+        }
+        val nativeTest by getting {
+            dependsOn(nonJsTest)
+        }
     }
 }
 
