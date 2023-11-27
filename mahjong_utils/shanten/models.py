@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Set, Dict, Generic, TypeVar, List
+from typing import Optional, Set, Dict, Generic, TypeVar, List, cast
 
 from pydantic import BaseModel
+from pydantic.generics import GenericModel
 from typing_extensions import Self
 
 from mahjong_utils.models.hand import Hand, T_HandPattern
@@ -180,7 +181,7 @@ class ShantenWithFuroChance(Shanten):
 T_Shanten = TypeVar('T_Shanten', bound=Shanten)
 
 
-class ShantenResult(BaseModel, Generic[T_Shanten, T_HandPattern], ABC):
+class ShantenResult(GenericModel, Generic[T_Shanten, T_HandPattern], ABC):
     hand: Hand[T_HandPattern]
     shanten_info: T_Shanten
 
@@ -200,7 +201,7 @@ class ShantenResult(BaseModel, Generic[T_Shanten, T_HandPattern], ABC):
         return self.shanten_info.shanten
 
 
-class CommonShantenResult(ShantenResult[CommonShanten, T_HandPattern], ABC):
+class CommonShantenResult(ShantenResult[CommonShanten, T_HandPattern], GenericModel, Generic[T_HandPattern], ABC):
     @property
     def advance(self) -> Optional[Set[Tile]]:
         return getattr(self.shanten_info, "advance", None)
@@ -271,7 +272,7 @@ class RegularShantenResult(CommonShantenResult[RegularHandPattern]):
     def __decode__(cls, data: dict) -> Self:
         return RegularShantenResult(
             hand=Hand.__decode__(data["hand"], RegularHandPattern),
-            shanten_info=Shanten.__decode__(data["shantenInfo"])
+            shanten_info=cast(CommonShanten, Shanten.__decode__(data["shantenInfo"]))
         )
 
 
@@ -287,7 +288,7 @@ class ChitoiShantenResult(CommonShantenResult[ChitoiHandPattern]):
     def __decode__(cls, data: dict) -> Self:
         return ChitoiShantenResult(
             hand=Hand.__decode__(data["hand"], ChitoiHandPattern),
-            shanten_info=Shanten.__decode__(data["shantenInfo"])
+            shanten_info=cast(CommonShanten, Shanten.__decode__(data["shantenInfo"]))
         )
 
 
@@ -303,7 +304,7 @@ class KokushiShantenResult(CommonShantenResult[KokushiHandPattern]):
     def __decode__(cls, data: dict) -> Self:
         return KokushiShantenResult(
             hand=Hand.__decode__(data["hand"], KokushiHandPattern),
-            shanten_info=Shanten.__decode__(data["shantenInfo"])
+            shanten_info=cast(CommonShanten, Shanten.__decode__(data["shantenInfo"]))
         )
 
 
@@ -326,7 +327,7 @@ class UnionShantenResult(CommonShantenResult[HandPattern]):
     def __decode__(cls, data: dict) -> Self:
         return UnionShantenResult(
             hand=Hand.__decode__(data["hand"]),
-            shanten_info=Shanten.__decode__(data["shantenInfo"]),
+            shanten_info=cast(CommonShanten, Shanten.__decode__(data["shantenInfo"])),
             regular=RegularShantenResult.__decode__(data["regular"]),
             chitoi=ChitoiShantenResult.__decode__(data["chitoi"]) if data["chitoi"] is not None else None,
             kokushi=KokushiShantenResult.__decode__(data["kokushi"]) if data["kokushi"] is not None else None,

@@ -1,6 +1,7 @@
 from typing import Sequence, Generic, TypeVar, Type
 
 from pydantic.fields import Field
+from pydantic.generics import GenericModel
 from pydantic.main import BaseModel
 
 from mahjong_utils.models.furo import Furo, Kan
@@ -10,7 +11,7 @@ from mahjong_utils.models.tile import Tile
 T_HandPattern = TypeVar("T_HandPattern", bound=CommonHandPattern)
 
 
-class Hand(BaseModel, Generic[T_HandPattern]):
+class Hand(GenericModel, Generic[T_HandPattern]):
     tiles: Sequence[Tile]
     furo: Sequence[Furo] = Field(default_factory=tuple)
     patterns: Sequence[T_HandPattern]
