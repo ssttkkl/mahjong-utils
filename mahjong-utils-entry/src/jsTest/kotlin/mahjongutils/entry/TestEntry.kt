@@ -22,13 +22,14 @@ import mahjongutils.models.Tile
 import mahjongutils.models.Wind
 import mahjongutils.shanten.*
 import mahjongutils.yaku.Yakus
+import kotlin.js.json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestEntry {
     @Test
     fun testMethodNotFound() {
-        val rawResult = call("notExists", """{}""")
+        val rawResult = call("notExists", json())
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 
@@ -38,22 +39,17 @@ class TestEntry {
 
     @Test
     fun testInvalidArgument() {
-        val rawResult = call("shanten", """{}""")
+        ENTRY.register<Unit, Unit>("testInvalidArgument") { _ ->
+            throw IllegalArgumentException("Oops")
+        }
+
+        val rawResult = call("testInvalidArgument", json())
         print("rawResult: ")
-        println(JSON.stringify(rawResult))
+        println(rawResult)
 
         val actualResult: Result<Unit> = Json.decodeFromDynamic(rawResult)
         assertEquals(400, actualResult.code)
-    }
-
-    @Test
-    fun testInvalidArgument2() {
-        val rawResult = call("shanten", """{dfdafdfad}""")
-        print("rawResult: ")
-        println(JSON.stringify(rawResult))
-
-        val actualResult: Result<Unit> = Json.decodeFromDynamic(rawResult)
-        assertEquals(400, actualResult.code)
+        assertEquals("Oops", actualResult.msg)
     }
 
     @Test
@@ -62,7 +58,7 @@ class TestEntry {
             error("Oops")
         }
 
-        val rawResult = call("testInternalError", """{}""")
+        val rawResult = call("testInternalError", json())
         print("rawResult: ")
         println(JSON.stringify(rawResult))
 

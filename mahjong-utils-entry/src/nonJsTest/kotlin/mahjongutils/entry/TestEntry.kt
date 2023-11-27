@@ -34,12 +34,17 @@ class TestEntry {
 
     @Test
     fun testInvalidArgument() {
-        val rawResult = call("shanten", """{}""")
+        ENTRY.register<Unit, Unit>("testInvalidArgument") { _ ->
+            throw IllegalArgumentException("Oops")
+        }
+
+        val rawResult = call("testInvalidArgument", """{}""")
         print("rawResult: ")
         println(rawResult)
 
         val actualResult: Result<Unit> = Json.decodeFromString(rawResult)
         assertEquals(400, actualResult.code)
+        assertEquals("Oops", actualResult.msg)
     }
 
     @Test
