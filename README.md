@@ -131,4 +131,44 @@ print(childPoint.tsumoTotal) // 5200
 
 ## 使用（动态库）
 
-待续
+为方便其他语言以动态库的形式调用，mahjong-utils-entry项目将mahjong-utils的功能封装，并暴露一个统一入口 `call` 方法供外部调用。
+其参数与返回值均为JSON编码的字符串。
+
+### 构建
+
+确保本地安装了JDK11或更高版本，克隆本项目后，执行：
+
+```shell
+./gradlew :mahjong-utils-entry:linkReleaseSharedNative
+```
+
+会在mahjong-utils-entry/build/bin/native/releaseShared目录下得到动态库产物与头文件。
+
+### 使用
+
+以C语言为例：
+
+```c
+#include <stdio.h>
+#include "libmahjongutils_api.h"
+
+int main(int argc, char** argv) {
+  libmahjongutils_ExportedSymbols* lib = libmahjongutils_symbols();
+
+  const char* params = "{\"tiles\":[\"1s\",\"1s\",\"1s\",\"2s\",\"3s\",\"4s\",\"5s\",\"6s\",\"7s\",\"8s\"]}";
+  const char* result = lib->kotlin.root.mahjongutils.entry.call("shanten", params);
+  printf("%s", result);
+
+  return 0;
+}
+```
+
+输出：
+
+```
+{"data":{"hand":{"tiles":["1s","1s","1s","2s","3s","4s","5s","6s","7s","8s"],"furo":[],"patterns":[{"type":"RegularHandPattern","k":3,"jyantou":null,"menzenMentsu":["111s","234s","567s"],"furo":[],"tatsu":[],"remaining":["8s"]},{"type":"RegularHandPattern","k":3,"jyantou":null,"menzenMentsu":["111s","234s","678s"],"furo":[],"tatsu":[],"remaining":["5s"]},{"type":"RegularHandPattern","k":3,"jyantou":null,"menzenMentsu":["111s","345s","678s"],"furo":[],"tatsu":[],"remaining":["2s"]},{"type":"RegularHandPattern","k":3,"jyantou":"1s","menzenMentsu":["123s","456s"],"furo":[],"tatsu":["78s"],"remaining":[]},{"type":"RegularHandPattern","k":3,"jyantou":"1s","menzenMentsu":["123s","678s"],"furo":[],"tatsu":["45s"],"remaining":[]},{"type":"RegularHandPattern","k":3,"jyantou":"1s","menzenMentsu":["345s","678s"],"furo":[],"tatsu":["12s"],"remaining":[]}]},"shantenInfo":{"type":"ShantenWithoutGot","shantenNum":0,"advance":["8s","5s","2s","6s","9s","3s"],"advanceNum":19,"goodShapeAdvance":null,"goodShapeAdvanceNum":null,"improvement":{},"improvementNum":0,"goodShapeImprovement":{},"goodShapeImprovementNum":0},"regular":{"hand":{"tiles":["1s","1s","1s","2s","3s","4s","5s","6s","7s","8s"],"furo":[],"patterns":[{"k":3,"jyantou":null,"menzenMentsu":["111s","234s","567s"],"furo":[],"tatsu":[],"remaining":["8s"]},{"k":3,"jyantou":null,"menzenMentsu":["111s","234s","678s"],"furo":[],"tatsu":[],"remaining":["5s"]},{"k":3,"jyantou":null,"menzenMentsu":["111s","345s","678s"],"furo":[],"tatsu":[],"remaining":["2s"]},{"k":3,"jyantou":"1s","menzenMentsu":["123s","456s"],"furo":[],"tatsu":["78s"],"remaining":[]},{"k":3,"jyantou":"1s","menzenMentsu":["123s","678s"],"furo":[],"tatsu":["45s"],"remaining":[]},{"k":3,"jyantou":"1s","menzenMentsu":["345s","678s"],"furo":[],"tatsu":["12s"],"remaining":[]}]},"shantenInfo":{"type":"ShantenWithoutGot","shantenNum":0,"advance":["8s","5s","2s","6s","9s","3s"],"advanceNum":19,"goodShapeAdvance":null,"goodShapeAdvanceNum":null,"improvement":{},"improvementNum":0,"goodShapeImprovement":{},"goodShapeImprovementNum":0}},"chitoi":null,"kokushi":null},"code":200,"msg":""}
+```
+
+返回值有三个字段：`code`、`msg`与`data`。类似一般的WebAPI，其code指明执行是否成功，msg当执行失败时指明错误原因，data则为执行结果。
+
+关于Kotlin作为动态库调用的更多信息可参考官方文档： https://kotlinlang.org/docs/native-dynamic-libraries.html#use-generated-headers-from-c
