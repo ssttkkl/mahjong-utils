@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 
 package mahjongutils.entry
 
@@ -26,6 +26,51 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestEntry {
+    @Test
+    fun testMethodNotFound() {
+        val rawResult = call("notExists", """{}""")
+        print("rawResult: ")
+        println(JSON.stringify(rawResult))
+
+        val actualResult: Result<Unit> = Json.decodeFromDynamic(rawResult)
+        assertEquals(404, actualResult.code)
+    }
+
+    @Test
+    fun testInvalidArgument() {
+        val rawResult = call("shanten", """{}""")
+        print("rawResult: ")
+        println(JSON.stringify(rawResult))
+
+        val actualResult: Result<Unit> = Json.decodeFromDynamic(rawResult)
+        assertEquals(400, actualResult.code)
+    }
+
+    @Test
+    fun testInvalidArgument2() {
+        val rawResult = call("shanten", """{dfdafdfad}""")
+        print("rawResult: ")
+        println(JSON.stringify(rawResult))
+
+        val actualResult: Result<Unit> = Json.decodeFromDynamic(rawResult)
+        assertEquals(400, actualResult.code)
+    }
+
+    @Test
+    fun testInternalError() {
+        ENTRY.register<Unit, Unit>("testInternalError") { _ ->
+            error("Oops")
+        }
+
+        val rawResult = call("testInternalError", """{}""")
+        print("rawResult: ")
+        println(JSON.stringify(rawResult))
+
+        val actualResult: Result<Unit> = Json.decodeFromDynamic(rawResult)
+        assertEquals(500, actualResult.code)
+        assertEquals("Oops", actualResult.msg)
+    }
+
     @Test
     fun testShanten() {
         val args = ShantenArgs(

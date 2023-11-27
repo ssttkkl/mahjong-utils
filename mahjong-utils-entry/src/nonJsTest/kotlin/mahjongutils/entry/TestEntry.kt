@@ -23,6 +23,51 @@ import kotlin.test.assertEquals
 
 class TestEntry {
     @Test
+    fun testMethodNotFound() {
+        val rawResult = call("notExists", """{}""")
+        print("rawResult: ")
+        println(rawResult)
+
+        val actualResult: Result<Unit> = Json.decodeFromString(rawResult)
+        assertEquals(404, actualResult.code)
+    }
+
+    @Test
+    fun testInvalidArgument() {
+        val rawResult = call("shanten", """{}""")
+        print("rawResult: ")
+        println(rawResult)
+
+        val actualResult: Result<Unit> = Json.decodeFromString(rawResult)
+        assertEquals(400, actualResult.code)
+    }
+
+    @Test
+    fun testInvalidArgument2() {
+        val rawResult = call("shanten", """{dfdafdfad}""")
+        print("rawResult: ")
+        println(rawResult)
+
+        val actualResult: Result<Unit> = Json.decodeFromString(rawResult)
+        assertEquals(400, actualResult.code)
+    }
+
+    @Test
+    fun testInternalError() {
+        ENTRY.register<Unit, Unit>("testInternalError") { _ ->
+            error("Oops")
+        }
+
+        val rawResult = call("testInternalError", """{}""")
+        print("rawResult: ")
+        println(rawResult)
+
+        val actualResult: Result<Unit> = Json.decodeFromString(rawResult)
+        assertEquals(500, actualResult.code)
+        assertEquals("Oops", actualResult.msg)
+    }
+
+    @Test
     fun testShanten() {
         val args = ShantenArgs(
             Tile.parseTiles("11112345678s"),

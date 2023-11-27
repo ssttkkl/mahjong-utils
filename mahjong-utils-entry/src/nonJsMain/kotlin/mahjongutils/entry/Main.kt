@@ -3,7 +3,7 @@ package mahjongutils.entry
 import mahjongutils.entry.coder.JsonParamsDecoder
 import mahjongutils.entry.coder.JsonResultEncoder
 
-private val ENTRY = buildEntry(JsonParamsDecoder, JsonResultEncoder)
+internal val ENTRY = buildEntry(JsonParamsDecoder, JsonResultEncoder)
 
 
 fun call(name: String, rawParams: String): String {
