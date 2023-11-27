@@ -129,7 +129,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=[
-        "pydantic>=1.9.0",
+        "pydantic>=1.9.0,<2.0.0",
         "cffi>=1.15.1",
         "stringcase>=1.2.0"
     ],
