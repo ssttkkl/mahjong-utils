@@ -24,7 +24,7 @@ data class [Tile](index.md) : [Comparable](https://kotlinlang.org/api/latest/jvm
 | [isWind](../is-wind.md) | [common]<br>val [Tile](index.md).[isWind](../is-wind.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>是否为风牌 |
 | [isYaochu](../is-yaochu.md) | [common]<br>val [Tile](index.md).[isYaochu](../is-yaochu.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>是否为幺九牌 |
 | [num](num.md) | [common]<br>val [num](num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>数字 |
-| [realNum](real-num.md) | [common]<br>val [realNum](real-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>真正数字。当num为0时（该牌为红宝牌），realName为5。其余情况下与num相等。 |
+| [realNum](real-num.md) | [common]<br>val [realNum](real-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>真正数字。当num为0时（该牌为红宝牌），realNum为5。其余情况下与num相等。 |
 | [type](type.md) | [common]<br>val [type](type.md): [TileType](../-tile-type/index.md)<br>种类 |
 
 ## Functions

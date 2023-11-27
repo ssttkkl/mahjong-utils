@@ -157,9 +157,14 @@ fun hora(
     tiles: List<Tile>, furo: List<Furo> = emptyList(), agari: Tile, tsumo: Boolean,
     dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
 ): Hora {
-    if (tiles.size / 3 + furo.size != 4) {
-        throw IllegalArgumentException("invalid length of tiles")
+    val tiles = if (tiles.size + furo.size * 3 == 13) {
+        tiles + agari
+    } else {
+        tiles
     }
+
+    require(tiles.size + furo.size * 3 == 14) { "invalid length of tiles" }
+    require(agari in tiles) { "agari not in tiles" }
 
     val shantenResult = shanten(tiles, furo, calcAdvanceNum = false, bestShantenOnly = true, allowAnkan = false)
     return hora(shantenResult, agari, tsumo, dora, selfWind, roundWind, extraYaku)
@@ -182,26 +187,29 @@ fun hora(
     shantenResult: CommonShantenResult<*>, agari: Tile, tsumo: Boolean,
     dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
 ): Hora {
-    if (shantenResult.shantenInfo !is ShantenWithGot) {
-        throw IllegalArgumentException("shantenInfo is not with got")
-    }
-    if (shantenResult.shantenInfo.shantenNum != -1) {
-        throw IllegalArgumentException("shantenNum != -1")
-    }
-    if (agari !in shantenResult.hand.tiles) {
-        throw IllegalArgumentException("agari not in tiles")
-    }
+    require(shantenResult.shantenInfo is ShantenWithGot) { "shantenResult is not with got" }
+    require(shantenResult.shantenInfo.shantenNum == -1) { "shantenResult is not hora yet" }
+    require(agari in shantenResult.hand.tiles) { "agari not in tiles" }
+    require(shantenResult.hand.tiles.size + shantenResult.hand.furo.size * 3 == 14) { "invalid length of tiles" }
 
     val patterns = buildList {
-        if (shantenResult is UnionShantenResult) {
-            if (shantenResult.regular.shantenInfo.shantenNum == -1) {
-                addAll(shantenResult.regular.hand.patterns)
+        when (shantenResult) {
+            is UnionShantenResult -> {
+                if (shantenResult.regular.shantenInfo.shantenNum == -1) {
+                    addAll(shantenResult.regular.hand.patterns)
+                }
+                if (shantenResult.chitoi?.shantenInfo?.shantenNum == -1) {
+                    addAll(shantenResult.chitoi.hand.patterns)
+                }
+                if (shantenResult.kokushi?.shantenInfo?.shantenNum == -1) {
+                    addAll(shantenResult.kokushi.hand.patterns)
+                }
             }
-            if (shantenResult.chitoi?.shantenInfo?.shantenNum == -1) {
-                addAll(shantenResult.chitoi.hand.patterns)
-            }
-            if (shantenResult.kokushi?.shantenInfo?.shantenNum == -1) {
-                addAll(shantenResult.kokushi.hand.patterns)
+
+            else -> {
+                if (shantenResult.shantenInfo.shantenNum == -1) {
+                    addAll(shantenResult.hand.patterns)
+                }
             }
         }
     }

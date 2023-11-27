@@ -65,7 +65,7 @@ data class Tile private constructor(
         get() = type.ordinal * 10 + num
 
     /**
-     * 真正数字。当num为0时（该牌为红宝牌），realName为5。其余情况下与num相等。
+     * 真正数字。当num为0时（该牌为红宝牌），realNum为5。其余情况下与num相等。
      */
     val realNum: Int
         get() = if (type != TileType.Z && num == 0)
@@ -113,7 +113,7 @@ data class Tile private constructor(
             }
 
             else -> {
-                if (other.num <= 5) {
+                if (num <= 5) {
                     -1
                 } else {
                     1
@@ -147,7 +147,7 @@ data class Tile private constructor(
         /**
          * 根据编号获取牌
          */
-        fun get(code: Int): Tile {
+        operator fun get(code: Int): Tile {
             if (code !in pool.indices || code == 30) {
                 throw IllegalArgumentException("invalid code: $code")
             }
@@ -164,7 +164,7 @@ data class Tile private constructor(
         /**
          * 根据文本获取牌
          */
-        fun get(text: String): Tile {
+        operator fun get(text: String): Tile {
             if (text.length != 2) {
                 throw IllegalArgumentException("invalid tile text: $text")
             }
