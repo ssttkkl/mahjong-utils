@@ -16,7 +16,7 @@ class LibMahjongUtils:
             self.ffi.cdef(h)
 
         if sys.platform == 'win32':
-            libname = "mahjongutils.dll"  # windows
+            libname = "libmahjongutils.dll"  # windows
         elif sys.platform == 'darwin':
             libname = "libmahjongutils.dylib"  # macOS
         else:
