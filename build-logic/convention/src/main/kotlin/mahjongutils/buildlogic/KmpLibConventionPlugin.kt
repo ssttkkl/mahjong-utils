@@ -18,8 +18,6 @@ class KmpLibConventionPlugin : Plugin<Project> {
         }
 
         configure<KotlinMultiplatformExtension> {
-            jvmToolchain(11)
-
             jvm {
                 testRuns["test"].executionTask.configure {
                     useJUnitPlatform()

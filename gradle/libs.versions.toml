@@ -11,6 +11,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 
 ktor-server-core = { group = "io.ktor", name = "ktor-server-core-jvm" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty-jvm" }
+ktor-server-cio = { group = "io.ktor", name = "ktor-server-cio-jvm" }
 
 qos-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.11" }
 
@@ -22,6 +23,8 @@ kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.7.3" }
 devPetsuka-npmPublish = { id = "dev.petuska.npm.publish", version = "3.2.0" }
 jetbrains-dokka = { id = "org.jetbrains.dokka", version = "1.9.10" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+
+graalvm-buildtools-native = { id = "org.graalvm.buildtools.native", version = "0.9.20" }
 
 buildlogic-kmplib = { id = "mahjongutils.buildlogic.kmplib", version.ref = "buildlogic" }
 buildlogic-mavenpublish = { id = "mahjongutils.buildlogic.mavenpublish", version.ref = "buildlogic" }

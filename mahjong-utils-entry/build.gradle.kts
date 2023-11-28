@@ -58,6 +58,10 @@ kotlin {
         }
         val jvmTest by getting {
             dependsOn(nonJsTest)
+
+            dependencies {
+                implementation("org.reflections:reflections:0.10.2")
+            }
         }
         val nativeMain by getting {
             dependsOn(nonJsMain)

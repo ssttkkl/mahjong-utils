@@ -17,7 +17,7 @@ import mahjongutils.hora.hora
 import mahjongutils.shanten.*
 import kotlin.jvm.JvmName
 
-internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
+fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
     paramsDecoder: ParamsDecoder<RAW_PARAMS>,
     resultEncoder: ResultEncoder<RAW_RESULT>
 ): Entry<RAW_PARAMS, RAW_RESULT> {

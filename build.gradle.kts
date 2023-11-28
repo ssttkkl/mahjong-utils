@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.dokka) apply false
     alias(libs.plugins.devPetsuka.npmPublish) apply false
     alias(libs.plugins.ktor) apply false
+    alias(libs.plugins.graalvm.buildtools.native) apply false
     alias(libs.plugins.kotlinx.kover)
 }
 

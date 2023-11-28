@@ -1,6 +1,5 @@
 package mahjongutils.entry
 
-import kotlinx.serialization.SerializationException
 import mahjongutils.entry.coder.ParamsDecoder
 import mahjongutils.entry.coder.ResultEncoder
 import kotlin.concurrent.Volatile
@@ -8,8 +7,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 
-// 为了封装kt侧的公共实现，各个平台导出时自行实现IEntry接口并委托到该类实现
-internal class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constructor(
+class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constructor(
     private val paramsDecoder: ParamsDecoder<RAW_PARAMS>,
     private val resultEncoder: ResultEncoder<RAW_RESULT>
 ) {
@@ -26,9 +24,6 @@ internal class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constru
                 val params: P = paramsDecoder.decodeParams(rawParams, paramsType)
                 val data: R = handler.handle(params)
                 resultEncoder.encodeResult(Result(data), dataType)
-            } catch (e: SerializationException) {
-                val result = Result<R>(data = null, code = 400, msg = e.message ?: "")
-                resultEncoder.encodeResult(result, dataType)
             } catch (e: IllegalArgumentException) {
                 val result = Result<R>(data = null, code = 400, msg = e.message ?: "")
                 resultEncoder.encodeResult(result, dataType)
@@ -45,8 +40,6 @@ internal class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constru
                 val params: P = paramsDecoder.decodeParams(rawParams, paramsType)
                 val data = handler.handle(params)
                 resultEncoder.encodeData(data, dataType)
-            } catch (e: SerializationException) {
-                throw MethodExecutionException(400, e)
             } catch (e: IllegalArgumentException) {
                 throw MethodExecutionException(400, e)
             } catch (e: Exception) {
@@ -56,7 +49,7 @@ internal class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constru
         }
     }
 
-    fun <P : Any, R : Any> register(
+    internal fun <P : Any, R : Any> register(
         name: String,
         paramsType: KType,
         resultType: KType,
@@ -66,7 +59,7 @@ internal class Entry<in RAW_PARAMS : Any, out RAW_RESULT : Any> internal constru
         router = router + (name to method)
     }
 
-    inline fun <reified P : Any, reified R : Any> register(name: String, handle: Method<P, R>) {
+    internal inline fun <reified P : Any, reified R : Any> register(name: String, handle: Method<P, R>) {
         register(name, typeOf<P>(), typeOf<R>(), handle)
     }
 
