@@ -2,12 +2,13 @@ import json
 import sys
 import threading
 from importlib import resources
-from typing import Optional, Mapping, Any
 
 import cffi
 
+from ..protocol import MahjongUtilsBridge
 
-class LibMahjongUtils:
+
+class LibMahjongUtils(MahjongUtilsBridge):
     def __init__(self) -> None:
         self.ffi = cffi.FFI()
 
@@ -33,22 +34,15 @@ class LibMahjongUtils:
             self._lib_sy.value = self.lib.libmahjongutils_symbols()
         return self._lib_sy.value
 
-    def call(self, name: str, params: dict,
-             params_dumps_kwargs: Optional[Mapping[str, Any]] = None,
-             result_loads_kwargs: Optional[Mapping[str, Any]] = None) -> dict:
-        if params_dumps_kwargs is None:
-            params_dumps_kwargs = {}
-        if result_loads_kwargs is None:
-            result_loads_kwargs = {}
-
-        params = json.dumps(params, **params_dumps_kwargs)
+    def call(self, name: str, params: dict) -> dict:
+        params = json.dumps(params)
 
         result = self.lib_sy.kotlin.root.mahjongutils.entry.call(
             self.ffi.new("char[]", name.encode()),
             self.ffi.new("char[]", params.encode()))
         result = self.ffi.string(result)
 
-        result = json.loads(result, **result_loads_kwargs)
+        result = json.loads(result)
 
         if result['code'] == 200:
             return result['data']
@@ -63,6 +57,4 @@ class LibMahjongUtils:
         self.ffi.dlclose(self.lib)
 
 
-libmahjongutils = LibMahjongUtils()
-
-__all__ = ("LibMahjongUtils", "libmahjongutils")
+__all__ = ("LibMahjongUtils",)

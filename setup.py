@@ -153,7 +153,7 @@ setup(
                      "subproject": "mahjong-utils-entry"
                  })
             ],
-            "shared_location": "mahjong_utils/lib"
+            "shared_location": "mahjong_utils/bridge/lib"
         },
         "bdist_wheel": {
             "plat_name": get_platform()
