@@ -1,0 +1,29 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Build CLI
+on:
+  push:
+    branches: [ "feature/graalvm" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout my repository
+      uses: actions/checkout@v3
+    - name: Set up GraalVM
+      uses: graalvm/setup-graalvm@v1
+      with:
+        cache: gradle
+    - name: Build dist
+      run: |
+        ./gradlew mahjong-utils-cli:nativeCompile
+    - name: Upload the Build Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+          name: distribution
+          path: mahjong-utils-cli/build/native/nativeCompile/mahjong-utils-cli
