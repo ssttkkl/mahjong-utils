@@ -9,6 +9,7 @@ on:
   pull_request:
     branches: [ "py" ]
   release:
+    types: [published]
 
 jobs:
   build:
