@@ -2,6 +2,7 @@ name: Build DokkaGfm Documents
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   dokka-gfm:

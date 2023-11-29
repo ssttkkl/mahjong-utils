@@ -1,0 +1,28 @@
+name: Build WebApi FatJar
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout my repository
+      uses: actions/checkout@v3
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 17
+        cache: 'gradle'
+
+    - name: Compile
+      run: |
+        ./gradlew mahjong-utils-webapi:shadowJar
+
+    - name: Upload the Build Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+          name: distribution
+          path: mahjong-utils-webapi/build/libs/*-all.jar
