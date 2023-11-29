@@ -4,6 +4,7 @@ import socket
 import sys
 from pathlib import Path
 from random import randint
+from shutil import which
 from subprocess import Popen, DEVNULL
 from threading import Lock
 from time import sleep
@@ -11,14 +12,18 @@ from typing import Optional
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from mahjong_utils.bridge import MahjongUtilsBridge
-from mahjong_utils.bridge.webapi_jar.path import mahjongutils_webapi_jar_path
+from ..protocol import MahjongUtilsBridge
+from .path import mahjongutils_webapi_jar_path
 
 
 def _java_executable() -> Path:
+    java_executable = which("java")
+    if java_executable is not None:
+        return Path(java_executable)
+
     java_home = os.getenv("JAVA_HOME")
     if java_home is None:
-        raise RuntimeError("Environment Variable JAVA_HOME was not set or set to an invalid path. ")
+        raise RuntimeError("Environment Variable JAVA_HOME was not set. ")
 
     java_home = Path(os.getenv("JAVA_HOME")).absolute()
     if sys.platform == 'win32':
@@ -27,7 +32,7 @@ def _java_executable() -> Path:
         java_executable = java_home / "bin" / "java"  # macos/unix/linux
 
     if not java_executable.exists():
-        raise RuntimeError("Environment Variable JAVA_HOME was not set or set to an invalid path. ")
+        raise RuntimeError("Environment Variable JAVA_HOME was set to an invalid path. ")
     return java_executable
 
 
