@@ -6,7 +6,7 @@ _cli_path: Path
 if sys.platform == 'win32':
     _cli_path = Path("mahjong-utils-cli.exe").absolute()  # windows
 else:
-    _cli_path = Path("mahjong-utils").absolute()  # macos/unix/linux
+    _cli_path = Path("mahjong-utils-cli").absolute()  # macos/unix/linux
 
 
 def mahjongutils_cli_path() -> Path:
