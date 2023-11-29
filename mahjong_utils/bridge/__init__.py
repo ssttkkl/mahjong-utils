@@ -1,4 +1,3 @@
-from .cli import CliMahjongUtils, mahjongutils_cli_path
 from .lib import LibMahjongUtils
 from .protocol import MahjongUtilsBridge
 from .webapi_jar import WebApiJarMahjongUtils, mahjongutils_webapi_jar_path
@@ -13,8 +12,6 @@ class RouterMahjongUtils(MahjongUtilsBridge):
         if self._delegate is None:
             if mahjongutils_webapi_jar_path().exists():
                 self._delegate = WebApiJarMahjongUtils()
-            elif mahjongutils_cli_path().exists():
-                self._delegate = CliMahjongUtils()
             else:
                 self._delegate = LibMahjongUtils()
         return self._delegate
@@ -23,7 +20,7 @@ class RouterMahjongUtils(MahjongUtilsBridge):
         return self.delegate.call(name, params)
 
     def close(self):
-        return self.close()
+        return self.delegate.close()
 
 
 bridge_mahjongutils = RouterMahjongUtils()
