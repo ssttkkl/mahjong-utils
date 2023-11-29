@@ -135,8 +135,10 @@ setup(
     ],
     packages=[
         "mahjong_utils",
+        "mahjong_utils.bridge",
+        "mahjong_utils.bridge.lib",
+        "mahjong_utils.bridge.webapi_jar",
         "mahjong_utils.hora",
-        "mahjong_utils.lib",
         "mahjong_utils.models",
         "mahjong_utils.point_by_han_hu",
         "mahjong_utils.shanten",
