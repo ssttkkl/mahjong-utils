@@ -7,6 +7,8 @@ import io.ktor.server.netty.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.*
 import mahjongutils.entry.MethodExecutionException
 import mahjongutils.entry.callReceivingData
@@ -26,7 +28,9 @@ fun Application.module() {
             val paramsText = call.receiveText()
 
             try {
-                val data = callReceivingData(method, paramsText)
+                val data = withContext(Dispatchers.Default) {
+                    callReceivingData(method, paramsText)
+                }
                 call.respond(data)
             } catch (e: MethodExecutionException) {
                 call.respond(
