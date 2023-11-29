@@ -2,8 +2,8 @@ from typing import Optional, Set, List
 
 from stringcase import pascalcase
 
+from mahjong_utils.bridge import bridge_mahjongutils
 from mahjong_utils.hora.models import Hora
-from mahjong_utils.lib import libmahjongutils
 from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.tile import Tile
 from mahjong_utils.models.wind import Wind
@@ -31,7 +31,7 @@ def build_hora(
     :param extra_yaku: 额外役
     :return: 和牌分析结果
     """
-    result = libmahjongutils.call("hora", {
+    result = bridge_mahjongutils.call("hora", {
         "tiles": [str(t) for t in tiles],
         "furo": [fr.__encode__() for fr in furo] if furo is not None else [],
         "agari": str(agari),
@@ -65,7 +65,7 @@ def build_hora_from_shanten_result(
     :param extra_yaku: 额外役
     :return: 和牌分析结果
     """
-    result = libmahjongutils.call("hora", {
+    result = bridge_mahjongutils.call("hora", {
         "shantenResult": shanten_result.__encode__(),
         "agari": str(agari),
         "tsumo": tsumo,

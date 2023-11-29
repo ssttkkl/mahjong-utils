@@ -1,6 +1,6 @@
 from typing import Optional, Sequence
 
-from mahjong_utils.lib import libmahjongutils
+from mahjong_utils.bridge import bridge_mahjongutils
 from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.tile import Tile
 from mahjong_utils.shanten.models import ShantenResult, UnionShantenResult, KokushiShantenResult, ChitoiShantenResult, \
@@ -20,7 +20,7 @@ def regular_shanten(
     :param best_shanten_only: 仅计算最优向听数的打法（不计算退向打法）
     :return 向听分析结果
     """
-    result = libmahjongutils.call("regularShanten", {
+    result = bridge_mahjongutils.call("regularShanten", {
         "tiles": [str(t) for t in tiles],
         "furo": [fr.__encode__() for fr in furo] if furo is not None else [],
         "bestShantenOnly": best_shanten_only
@@ -40,7 +40,7 @@ def chitoi_shanten(
     :param best_shanten_only: 仅计算最优向听数的打法（不计算退向打法）
     :return 向听分析结果
     """
-    result = libmahjongutils.call("chitoiShanten", {
+    result = bridge_mahjongutils.call("chitoiShanten", {
         "tiles": [str(t) for t in tiles],
         "bestShantenOnly": best_shanten_only,
     })
@@ -59,7 +59,7 @@ def kokushi_shanten(
     :param best_shanten_only: 仅计算最优向听数的打法（不计算退向打法）
     :return 向听分析结果
     """
-    result = libmahjongutils.call("kokushiShanten", {
+    result = bridge_mahjongutils.call("kokushiShanten", {
         "tiles": [str(t) for t in tiles],
         "bestShantenOnly": best_shanten_only,
     })
@@ -80,7 +80,7 @@ def shanten(
     :param best_shanten_only: 仅计算最优向听数的打法（不计算退向打法）
     :return 向听分析结果
     """
-    result = libmahjongutils.call("shanten", {
+    result = bridge_mahjongutils.call("shanten", {
         "tiles": [str(t) for t in tiles],
         "furo": [fr.__encode__() for fr in furo] if furo is not None else [],
         "bestShantenOnly": best_shanten_only
@@ -106,7 +106,7 @@ def furo_chance_shanten(
     :param allow_kuikae: 是否允许食替
     :return 向听分析结果
     """
-    result = libmahjongutils.call("furoChanceShanten", {
+    result = bridge_mahjongutils.call("furoChanceShanten", {
         "tiles": [str(t) for t in tiles],
         "chanceTile": chance_tile.__encode__(),
         "allowChi": allow_chi,

@@ -1,5 +1,5 @@
-from mahjong_utils.lib import libmahjongutils
 from .models import ParentPoint, ChildPoint
+from ..bridge import bridge_mahjongutils
 
 
 def get_parent_point_by_han_hu(han: int, hu: int) -> ParentPoint:
@@ -10,7 +10,7 @@ def get_parent_point_by_han_hu(han: int, hu: int) -> ParentPoint:
     :param hu: 符
     :return: (荣和点数, 自摸各家点数)
     """
-    result = libmahjongutils.call("getParentPointByHanHu", {
+    result = bridge_mahjongutils.call("getParentPointByHanHu", {
         "han": han,
         "hu": hu
     })
@@ -26,7 +26,7 @@ def get_child_point_by_han_hu(han: int, hu: int) -> ChildPoint:
     :param hu: 符
     :return: (荣和点数, 自摸庄家点数, 自摸闲家点数)
     """
-    result = libmahjongutils.call("getChildPointByHanHu", {
+    result = bridge_mahjongutils.call("getChildPointByHanHu", {
         "han": han,
         "hu": hu
     })

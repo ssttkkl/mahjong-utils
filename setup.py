@@ -120,7 +120,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setup(
     name="mahjong-utils",
-    version="0.6.0",
+    version="0.6.1",
     author="ssttkkl",
     author_email="huang.wen.long@hotmail.com",
     license="MIT",
@@ -135,8 +135,10 @@ setup(
     ],
     packages=[
         "mahjong_utils",
+        "mahjong_utils.bridge",
+        "mahjong_utils.bridge.lib",
+        "mahjong_utils.bridge.webapi_jar",
         "mahjong_utils.hora",
-        "mahjong_utils.lib",
         "mahjong_utils.models",
         "mahjong_utils.point_by_han_hu",
         "mahjong_utils.shanten",
@@ -153,7 +155,7 @@ setup(
                      "subproject": "mahjong-utils-entry"
                  })
             ],
-            "shared_location": "mahjong_utils/lib"
+            "shared_location": "mahjong_utils/bridge/lib"
         },
         "bdist_wheel": {
             "plat_name": get_platform()
