@@ -1,3 +1,5 @@
+import atexit
+
 from .lib import LibMahjongUtils
 from .protocol import MahjongUtilsBridge
 from .webapi_jar import WebApiJarMahjongUtils, mahjongutils_webapi_jar_path
@@ -24,3 +26,4 @@ class RouterMahjongUtils(MahjongUtilsBridge):
 
 
 bridge_mahjongutils = RouterMahjongUtils()
+atexit.register(bridge_mahjongutils.close)
