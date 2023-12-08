@@ -33,6 +33,10 @@ class KmpLibConventionPlugin : Plugin<Project> {
                 nodejs()
             }
 
+            iosArm64()
+            iosX64()
+            iosSimulatorArm64()
+
             val hostOs = System.getProperty("os.name")
             val isMingwX64 = hostOs.startsWith("Windows")
             val isAarch64 = System.getProperty("os.arch") == "aarch64"

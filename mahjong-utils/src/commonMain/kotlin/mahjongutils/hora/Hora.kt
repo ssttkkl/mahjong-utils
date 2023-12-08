@@ -12,7 +12,10 @@ import mahjongutils.hanhu.getParentPointByHanHu
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
-import mahjongutils.shanten.*
+import mahjongutils.shanten.CommonShantenResult
+import mahjongutils.shanten.ShantenWithGot
+import mahjongutils.shanten.UnionShantenResult
+import mahjongutils.shanten.shanten
 import mahjongutils.yaku.Yaku
 import mahjongutils.yaku.Yakus
 

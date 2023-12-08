@@ -1,15 +1,20 @@
 package mahjongutils.shanten
 
-import mahjongutils.common.TILE_CLING
-import mahjongutils.common.calcAdvance
-import mahjongutils.common.calcShanten
-import mahjongutils.common.regularHandPatternSearch
+import mahjongutils.common.*
 import mahjongutils.models.Furo
 import mahjongutils.models.Kan
 import mahjongutils.models.Tile
 import mahjongutils.models.TileType
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.RegularHandPattern
+
+private fun bestRegularHandPatternSearch(tiles: List<Tile>, furo: List<Furo>): Pair<Int, List<RegularHandPattern>> {
+    val selector = BestHandPatternsSelector(RegularHandPattern::calcShanten)
+    regularHandPatternSearch(tiles, furo) {
+        selector.receive(it)
+    }
+    return Pair(selector.bestShanten, selector.bestPatterns)
+}
 
 private fun getGoodShapeAdvance(
     tiles: List<Tile>, furo: List<Furo>,
@@ -110,8 +115,7 @@ private fun handleRegularShantenWithoutGot(
     calcGoodShapeAdvance: Boolean = true,
     calcImprovement: Boolean = true
 ): Pair<ShantenWithoutGot, Collection<RegularHandPattern>> {
-    val patterns = regularHandPatternSearch(tiles, furo)
-    val (bestShanten, bestPatterns) = selectBestPatterns(patterns, RegularHandPattern::calcShanten)
+    val (bestShanten, bestPatterns) = bestRegularHandPatternSearch(tiles, furo)
 
     val tilesCount = getTileCount(tiles, furo)
     val remaining = getRemainingFromTileCount(tilesCount)
@@ -158,8 +162,7 @@ private fun handleRegularShantenWithGot(
     allowAnkan: Boolean = true,
     calcImprovement: Boolean = true,
 ): Pair<ShantenWithGot, Collection<RegularHandPattern>> {
-    val patterns = regularHandPatternSearch(tiles, furo)
-    val (bestShanten, bestPatterns) = selectBestPatterns(patterns, RegularHandPattern::calcShanten)
+    val (bestShanten, bestPatterns) = bestRegularHandPatternSearch(tiles, furo)
 
     val tilesCount = getTileCount(tiles, furo)
     val remaining = getRemainingFromTileCount(tilesCount)

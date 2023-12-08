@@ -1,5 +1,6 @@
 package mahjongutils.shanten
 
+import mahjongutils.common.BestHandPatternsSelector
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
@@ -35,24 +36,14 @@ internal fun ensureLegalTiles(
 }
 
 internal fun <T : HandPattern> selectBestPatterns(
-    patterns: Collection<T>,
+    patterns: Sequence<T>,
     calcShanten: (T) -> Int
 ): Pair<Int, Collection<T>> {
-    var bestShanten = 100
-    var bestPattern = ArrayList<T>()
-
-    for (pat in patterns) {
-        val patShanten = calcShanten(pat)
-        if (patShanten < bestShanten) {
-            bestShanten = patShanten
-            bestPattern = ArrayList()
-        }
-        if (patShanten == bestShanten) {
-            bestPattern.add(pat)
-        }
+    val selector = BestHandPatternsSelector(calcShanten)
+    patterns.forEach {
+        selector.receive(it)
     }
-
-    return Pair(bestShanten, bestPattern)
+    return Pair(selector.bestShanten, selector.bestPatterns)
 }
 
 internal fun getTileCount(tiles: Collection<Tile>, furo: Collection<Furo> = emptyList()): IntArray {
