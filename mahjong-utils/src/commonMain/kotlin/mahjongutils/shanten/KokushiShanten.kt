@@ -7,45 +7,44 @@ import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.KokushiHandPattern
 import mahjongutils.models.isYaochu
 
-private fun buildKokushiPattern(tiles: List<Tile>): Collection<KokushiHandPattern> {
-    val yaochu = HashSet<Tile>()
-    val repeated = HashSet<Tile>()
-    val remaining = ArrayList<Tile>()
+private fun buildKokushiPattern(tiles: List<Tile>): Sequence<KokushiHandPattern> {
+    return sequence {
+        val yaochu = HashSet<Tile>()
+        val repeated = HashSet<Tile>()
+        val remaining = ArrayList<Tile>()
 
-    for (t in tiles) {
-        if (t.isYaochu) {
-            if (t in yaochu) {
-                if (t in repeated) {
-                    remaining.add(t)
+        for (t in tiles) {
+            if (t.isYaochu) {
+                if (t in yaochu) {
+                    if (t in repeated) {
+                        remaining.add(t)
+                    } else {
+                        repeated.add(t)
+                    }
                 } else {
-                    repeated.add(t)
+                    yaochu.add(t)
                 }
             } else {
-                yaochu.add(t)
+                remaining.add(t)
             }
-        } else {
-            remaining.add(t)
         }
-    }
 
-    return buildList {
         if (repeated.isNotEmpty()) {
             // 非十三面
             for (t in repeated) {
                 val pat = KokushiHandPattern(yaochu, t, remaining + (repeated - t))
-                add(pat)
+                yield(pat)
             }
         } else {
             // 十三面
             val pat = KokushiHandPattern(yaochu, null, remaining)
-            add(pat)
+            yield(pat)
         }
     }
 }
 
 private fun handleKokushiShantenWithoutGot(tiles: List<Tile>): Pair<ShantenWithoutGot, Collection<KokushiHandPattern>> {
-    val patterns = buildKokushiPattern(tiles)
-    val (shantenNum, bestPatterns) = selectBestPatterns(patterns, KokushiHandPattern::calcShanten)
+    val (shantenNum, bestPatterns) = selectBestPatterns(buildKokushiPattern(tiles), KokushiHandPattern::calcShanten)
 
     val pat = bestPatterns.first()
     if (pat.repeated != null) {

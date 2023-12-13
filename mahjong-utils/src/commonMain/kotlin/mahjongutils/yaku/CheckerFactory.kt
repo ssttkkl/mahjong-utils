@@ -1,8 +1,8 @@
 package mahjongutils.yaku
 
-import mahjongutils.models.*
 import mahjongutils.hora.ChitoiHoraHandPattern
 import mahjongutils.hora.RegularHoraHandPattern
+import mahjongutils.models.*
 
 /**
  * 役牌系列checker工厂

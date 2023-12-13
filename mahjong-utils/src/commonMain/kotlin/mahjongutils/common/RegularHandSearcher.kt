@@ -221,11 +221,6 @@ private class RegularHandPatternSearcher(
     }
 }
 
-internal fun regularHandPatternSearch(tiles: List<Tile>, furo: List<Furo>): Collection<RegularHandPattern> {
-    val patterns = ArrayList<RegularHandPattern>()
-    val searcher = RegularHandPatternSearcher(tiles, furo) {
-        patterns.add(it)
-    }
-    searcher.run()
-    return patterns
+internal fun regularHandPatternSearch(tiles: List<Tile>, furo: List<Furo>, callback: (RegularHandPattern) -> Unit) {
+    RegularHandPatternSearcher(tiles, furo, callback).run()
 }

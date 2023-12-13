@@ -32,6 +32,14 @@ class KmpLibConventionPlugin : Plugin<Project> {
                 browser()
                 nodejs()
             }
+            wasmJs {
+                browser()
+                nodejs()
+            }
+
+            iosArm64()
+            iosX64()
+            iosSimulatorArm64()
 
             val hostOs = System.getProperty("os.name")
             val isMingwX64 = hostOs.startsWith("Windows")
