@@ -53,6 +53,7 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
           
     - name: Decode secret_ring.gpg
+      shell: bash
       env:
         SIGNING_SECRET_KEY_RING_BASE64: ${{ secrets.SIGNING_SECRET_KEY_RING_BASE64 }}
       run: |
