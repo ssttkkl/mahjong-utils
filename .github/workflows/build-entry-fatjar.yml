@@ -1,6 +1,7 @@
 name: Build WebApi FatJar
 on:
-  push:
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:

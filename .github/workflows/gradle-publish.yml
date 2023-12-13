@@ -9,61 +9,72 @@ name: Publish KMP with Gradle
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
-  build:
+  publish:
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
 
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
       packages: write
 
+    env:
+      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+      OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      SIGNING_KEY_ID: ${{ secrets.SIGNING_KEYID }}
+      SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+      SIGNING_SECRET_KEY_RING_FILE: secret_ring.gpg
+
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 11
+
+    - name: Setup Java JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
-        distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
+        distribution: temurin
+        java-version: 17
+        cache: 'gradle'
+
+    - name: Cache Kotlin/Native compiler
+      id: cache-konan
+      uses: actions/cache@v3
+      with:
+        path: ~/.konan
+        key: ${{ runner.os }}-konan
         
     - uses: actions/setup-node@v4
-    - name: Set up Node.js 22-v8-canary
+      name: Set up Node.js
       with:
-        node-version: '22-v8-canary'
+        node-version: '21-v8-canary'
+        registry-url: 'https://registry.npmjs.org'
           
     - name: Decode secret_ring.gpg
       env:
         SIGNING_SECRET_KEY_RING_BASE64: ${{ secrets.SIGNING_SECRET_KEY_RING_BASE64 }}
       run: |
-        echo $SIGNING_SECRET_KEY_RING_BASE64 | base64 --decode > secret_ring.gpg
-          
-    - name: Write local.properties
-      uses: christian-draeger/write-properties@1.1.0
-      with:
-        path: local.properties
-        # The property keys you want to write. Accepts an array.
-        property: |
-          'ossrhUsername'
-          'ossrhPassword'
-          'signing.keyId'
-          'signing.password'
-          'signing.secretKeyRingFile'
-        # The property values you want to write (same order as the keys). Accepts an array.
-        value: |
-          ${{ secrets.OSSRH_USERNAME }}
-          ${{ secrets.OSSRH_PASSWORD }}
-          ${{ secrets.SIGNING_KEYID }}
-          ${{ secrets.SIGNING_PASSWORD }}
-          'secret_ring.gpg'
+        echo $SIGNING_SECRET_KEY_RING_BASE64 | base64 --decode > $SIGNING_SECRET_KEY_RING_FILE
 
     - name: Publish mahjong-utils
+      if: ${{ matrix.os == 'macos-latest' }}
       run: |
-        ./gradlew :mahjong-utils:publish
+        ./gradlew :mahjong-utils:publishAllPublicationsToSonatypeRepository
+
+    - name: Publish mahjong-utils (linuxX64 only)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        ./gradlew :mahjong-utils:publishLinuxX64PublicationToSonatypeRepository
+
+    - name: Publish mahjong-utils (mingwX64 only)
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: |
+        ./gradlew :mahjong-utils:publishMingwX64PublicationToSonatypeRepository
         
     - name: Publish mahjong-utils-entry for JS/WASM
+      if: ${{ matrix.os == 'macos-latest' }}
       run: |
         ./gradlew :mahjong-utils-entry:publishJsPackageToNpmjsRegistry
         ./gradlew :mahjong-utils-entry:publishWasmJsPackageToNpmjsRegistry

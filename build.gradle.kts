@@ -22,7 +22,7 @@ tasks.wrapper {
 
 rootProject.plugins.withType<NodeJsRootPlugin> {
     rootProject.the<NodeJsRootExtension>().apply {
-        nodeVersion = "21.0.0-v8-canary20231024d0ddc81258"
+        nodeVersion = "21.0.0-v8-canary20231019bd785be450"
         nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
     }
 }

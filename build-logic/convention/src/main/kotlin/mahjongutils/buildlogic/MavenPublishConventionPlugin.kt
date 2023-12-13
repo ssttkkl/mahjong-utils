@@ -47,8 +47,11 @@ class MavenPublishConventionPlugin : Plugin<Project> {
             extra["gprToken"] = System.getenv("GPR_TOKEN")
         }
 
-        val secretKeyRingFile = Path(extra["signing.secretKeyRingFile"].toString())
-        extra["signing.secretKeyRingFile"] = rootProject.file(secretKeyRingFile)
+        val secretKeyRingFile = extra["signing.secretKeyRingFile"]?.toString()?.let {
+            rootProject.file(it)
+        }?.also {
+            extra["signing.secretKeyRingFile"] = it.absoluteFile
+        }
 
         val javadocJar by tasks.registering(Jar::class) {
             archiveClassifier.set("javadoc")
@@ -114,7 +117,7 @@ class MavenPublishConventionPlugin : Plugin<Project> {
             }
         }
 
-        if (secretKeyRingFile.exists()) {
+        if (secretKeyRingFile?.exists() == true) {
             // Signing artifacts. Signing.* extra properties values will be used
             extensions.configure<SigningExtension> {
                 sign(extensions.getByType<PublishingExtension>().publications)

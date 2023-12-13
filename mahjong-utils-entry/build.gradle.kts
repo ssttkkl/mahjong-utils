@@ -16,18 +16,6 @@ kotlin {
             binaries.library()
             useCommonJs()
         }
-        compilations["main"].packageJson {
-            name = "mahjong-utils-entry"
-            customField(
-                "author", mapOf(
-                    "name" to "ssttkkl",
-                    "email" to "huang.wen.long@hotmail.com"
-                )
-            )
-            customField(
-                "license", "MIT"
-            )
-        }
     }
     wasmJs {
         browser {
@@ -51,6 +39,10 @@ kotlin {
                 "license", "MIT"
             )
         }
+    }
+
+    afterEvaluate {
+        tasks.getByName("assembleWasmJsPackage").dependsOn("compileProductionLibraryKotlinWasmJsOptimize")
     }
 
     val hostOs = System.getProperty("os.name")
@@ -98,6 +90,28 @@ kotlin {
 }
 
 npmPublish {
+    packages {
+        get("js").apply {
+            packageJson {
+                name = "mahjong-utils-entry"
+                author {
+                    name = "ssttkkl"
+                    email = "huang.wen.long@hotmail.com"
+                }
+                license = "MIT"
+            }
+        }
+        get("wasmJs").apply {
+            packageJson {
+                name = "mahjong-utils-entry-wasm"
+                author {
+                    name = "ssttkkl"
+                    email = "huang.wen.long@hotmail.com"
+                }
+                license = "MIT"
+            }
+        }
+    }
     registries {
         register("npmjs") {
             uri.set("https://registry.npmjs.org")

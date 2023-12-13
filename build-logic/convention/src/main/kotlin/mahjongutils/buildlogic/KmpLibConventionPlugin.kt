@@ -18,6 +18,7 @@ class KmpLibConventionPlugin : Plugin<Project> {
         }
 
         configure<KotlinMultiplatformExtension> {
+            applyDefaultHierarchyTemplate()
             jvmToolchain(11)
 
             jvm {
@@ -47,21 +48,21 @@ class KmpLibConventionPlugin : Plugin<Project> {
             when {
                 hostOs == "Mac OS X" -> {
                     if (isAarch64) {
-                        macosArm64("native")
+                        macosArm64()
                     } else {
-                        macosX64("native")
+                        macosX64()
                     }
                 }
 
                 hostOs == "Linux" -> {
                     if (isAarch64) {
-                        linuxArm64("native")
+                        linuxArm64()
                     } else {
-                        linuxX64("native")
+                        linuxX64()
                     }
                 }
 
-                isMingwX64 -> mingwX64("native")
+                isMingwX64 -> mingwX64()
                 else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
             }
 
