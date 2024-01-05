@@ -1,6 +1,5 @@
 package mahjongutils.entry
 
-import kotlinx.serialization.json.Json
 import mahjongutils.entry.coder.JsonParamsDecoder
 import mahjongutils.entry.coder.JsonResultEncoder
 

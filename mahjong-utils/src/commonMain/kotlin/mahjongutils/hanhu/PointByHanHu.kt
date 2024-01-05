@@ -109,6 +109,7 @@ private fun validateHanHu(han: Int, hu: Int) {
  *
  * @param han 番数
  * @param hu 符数
+ * @param options 计算点数时应用的选项
  * @return 亲家（庄家）和牌点数
  */
 fun getParentPointByHanHu(
@@ -139,8 +140,7 @@ fun getParentPointByHanHu(
  *
  * @param han 番数
  * @param hu 符数
- * @param hasKiriageMangan 是否有切上满贯
- * @param hasKazoeYakuman 是否有累计役满
+ * @param options 计算点数时应用的选项
  * @return 子家（闲家）和牌点数
  */
 fun getChildPointByHanHu(
