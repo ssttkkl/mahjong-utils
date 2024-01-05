@@ -83,15 +83,15 @@ sealed interface Tatsu {
             }
             return parse(tiles[0], tiles[1])
         }
-
-        operator fun invoke(first: Tile, second: Tile): Tatsu {
-            return parse(first, second)
-        }
-
-        operator fun invoke(text: String): Tatsu {
-            return parse(text)
-        }
     }
+}
+
+fun Tatsu(first: Tile, second: Tile): Tatsu {
+    return Tatsu.parse(first, second)
+}
+
+fun Tatsu(text: String): Tatsu {
+    return Tatsu.parse(text)
 }
 
 /**

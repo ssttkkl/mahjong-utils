@@ -58,15 +58,19 @@ sealed interface Mentsu {
         fun parse(text: String): Mentsu {
             return parse(Tile.parseTiles(text))
         }
-
-        operator fun invoke(tiles: List<Tile>): Mentsu {
-            return parse(tiles)
-        }
-
-        operator fun invoke(text: String): Mentsu {
-            return parse(text)
-        }
     }
+}
+
+fun Mentsu(vararg tiles: Tile): Mentsu {
+    return Mentsu.parse(tiles.toList())
+}
+
+fun Mentsu(tiles: List<Tile>): Mentsu {
+    return Mentsu.parse(tiles)
+}
+
+fun Mentsu(text: String): Mentsu {
+    return Mentsu.parse(text)
 }
 
 /**

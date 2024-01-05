@@ -10,7 +10,6 @@ import mahjongutils.shanten.shanten
 import mahjongutils.yaku.Yakus
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 
 class TestHora {
@@ -282,9 +281,86 @@ class TestHora {
             roundWind = Wind.East
         )
         assertEquals(hora.han, 13)
-        assertEquals(hora.hu, 20)
+        assertEquals(hora.hu, 30)
         assertEquals(hora.yaku, setOf(Yakus.Kokushi))
         assertEquals(ParentPoint(ParentPoint.Yakuman.ron, 0), hora.parentPoint)
         assertEquals(ChildPoint(ChildPoint.Yakuman.ron, 0, 0), hora.childPoint)
+    }
+}
+
+class TestHoraWithCustomOptions {
+    @Test
+    fun testNotHaveComplexYakuman() {
+        val hora = hora(
+            Tile.parseTiles("11122233344455z"),
+            agari = Tile["5z"],
+            tsumo = true,
+            options = HoraOptions.Default.copy(hasComplexYakuman = false)
+        )
+        assertEquals(13 * 2, hora.han)
+    }
+
+    @Test
+    fun testNotHaveMultipleYakuman() {
+        val hora = hora(
+            Tile.parseTiles("11122233344455z"),
+            agari = Tile["5z"],
+            tsumo = true,
+            options = HoraOptions.Default.copy(hasMultipleYakuman = false)
+        )
+        assertEquals(13 * 3, hora.han)
+    }
+
+    @Test
+    fun testNotHaveRenpuuJyantouHu() {
+        val hora = hora(
+            Tile.parseTiles("111456p123456s11z"),
+            agari = Tile["1s"],
+            tsumo = false,
+            selfWind = Wind.East,
+            roundWind = Wind.East,
+            options = HoraOptions.Default.copy(hasRenpuuJyantouHu = false)
+        )
+        assertEquals(40, hora.hu)
+    }
+
+    @Test
+    fun testNotAllowKuitan() {
+        val hora = hora(
+            Tile.parseTiles("2233p"),
+            listOf(Furo("234s"), Furo("456s"), Furo("567s")),
+            Tile["3p"],
+            true,
+            options = HoraOptions.Default.copy(allowKuitan = false)
+        )
+        assertEquals(0, hora.han)
+    }
+
+    @Test
+    fun testNotHaveKazoeYakuman() {
+        val hora = hora(
+            Tile.parseTiles("111456p123456s11z"),
+            agari = Tile["1s"],
+            tsumo = true,
+            selfWind = Wind.East,
+            roundWind = Wind.East,
+            dora = 114514,
+            options = HoraOptions.Default.copy(hasKazoeYakuman = false)
+        )
+        assertEquals(ParentPoint.Sanbaiman.tsumo, hora.parentPoint.tsumo)
+    }
+
+    @Test
+    fun testHaveKiriageMangan() {
+        val hora = hora(
+            Tile.parseTiles("123456789p234m44s"),
+            agari = Tile["9p"],
+            tsumo = false,
+            dora = 1,
+            selfWind = Wind.East,
+            roundWind = Wind.East,
+            options = HoraOptions.Default.copy(hasKiriageMangan = true)
+        )
+        assertEquals(ParentPoint.Mangan.ron, hora.parentPoint.ron)
     }
 }

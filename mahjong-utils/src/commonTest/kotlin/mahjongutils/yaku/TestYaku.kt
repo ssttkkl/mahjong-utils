@@ -4,28 +4,7 @@ import mahjongutils.models.*
 import mahjongutils.hora.ChitoiHoraHandPattern
 import mahjongutils.models.hand.RegularHandPattern
 import mahjongutils.hora.RegularHoraHandPattern
-import mahjongutils.yaku.Yakus.Chanta
-import mahjongutils.yaku.Yakus.Chinitsu
-import mahjongutils.yaku.Yakus.Chitoi
-import mahjongutils.yaku.Yakus.Chun
-import mahjongutils.yaku.Yakus.Haku
-import mahjongutils.yaku.Yakus.Hatsu
-import mahjongutils.yaku.Yakus.Honitsu
-import mahjongutils.yaku.Yakus.Honroto
-import mahjongutils.yaku.Yakus.Ipe
-import mahjongutils.yaku.Yakus.Ittsu
-import mahjongutils.yaku.Yakus.Junchan
-import mahjongutils.yaku.Yakus.Pinhu
-import mahjongutils.yaku.Yakus.RoundWind
-import mahjongutils.yaku.Yakus.Ryanpe
-import mahjongutils.yaku.Yakus.Sananko
-import mahjongutils.yaku.Yakus.Sandoko
-import mahjongutils.yaku.Yakus.Sankantsu
-import mahjongutils.yaku.Yakus.Sanshoku
-import mahjongutils.yaku.Yakus.SelfWind
-import mahjongutils.yaku.Yakus.Tanyao
-import mahjongutils.yaku.Yakus.Toitoi
-import mahjongutils.yaku.Yakus.Tsumo
+import mahjongutils.yaku.Yakus
 import kotlin.test.Test
 
 internal class TestYaku {
@@ -37,7 +16,7 @@ internal class TestYaku {
             tsumo = true
         )
 
-        tester(pattern, setOf(Chitoi, Honroto, Tsumo))
+        tester(pattern, setOf(Yakus.Chitoi, Yakus.Honroto, Yakus.Tsumo))
     }
 
     @Test
@@ -48,7 +27,7 @@ internal class TestYaku {
             tsumo = true
         )
 
-        tester(pattern, setOf(Chitoi, Chinitsu, Tsumo, Tanyao))
+        tester(pattern, setOf(Yakus.Chitoi, Yakus.Chinitsu, Yakus.Tsumo, Yakus.Tanyao))
     }
 
     @Test
@@ -67,7 +46,7 @@ internal class TestYaku {
             tsumo = false
         )
 
-        tester(pattern, setOf(Toitoi, Honitsu, Honroto))
+        tester(pattern, setOf(Yakus.Toitoi, Yakus.Honitsu, Yakus.Honroto))
     }
 
     @Test
@@ -86,7 +65,7 @@ internal class TestYaku {
             tsumo = false
         )
 
-        tester(pattern, setOf(Ittsu, Chinitsu))
+        tester(pattern, setOf(Yakus.Ittsu, Yakus.Chinitsu))
     }
 
     @Test
@@ -105,7 +84,7 @@ internal class TestYaku {
             tsumo = false
         )
 
-        tester(pattern, setOf(Tanyao, Ryanpe))
+        tester(pattern, setOf(Yakus.Tanyao, Yakus.Ryanpe))
     }
 
     @Test
@@ -124,7 +103,7 @@ internal class TestYaku {
             tsumo = false
         )
 
-        tester(pattern, setOf(Tanyao, Ipe, Pinhu))
+        tester(pattern, setOf(Yakus.Tanyao, Yakus.Ipe, Yakus.Pinhu))
     }
 
     @Test
@@ -143,7 +122,7 @@ internal class TestYaku {
             tsumo = false
         )
 
-        tester(pattern, setOf(Tanyao, Sanshoku))
+        tester(pattern, setOf(Yakus.Tanyao, Yakus.Sanshoku))
     }
 
     @Test
@@ -164,7 +143,7 @@ internal class TestYaku {
             roundWind = Wind.East
         )
 
-        tester(pattern, setOf(SelfWind, RoundWind, Haku))
+        tester(pattern, setOf(Yakus.SelfWind, Yakus.RoundWind, Yakus.Haku))
     }
 
     @Test
@@ -185,7 +164,7 @@ internal class TestYaku {
             roundWind = Wind.East
         )
 
-        tester(pattern, setOf(Hatsu, Chun, Yakus.Shosangen))
+        tester(pattern, setOf(Yakus.Hatsu, Yakus.Chun, Yakus.Shosangen))
     }
 
     @Test
@@ -204,7 +183,7 @@ internal class TestYaku {
             tsumo = true,
         )
 
-        tester(pattern, setOf(Toitoi, Sananko))
+        tester(pattern, setOf(Yakus.Toitoi, Yakus.Sananko))
     }
 
     @Test
@@ -223,7 +202,7 @@ internal class TestYaku {
             tsumo = false,
         )
 
-        tester(pattern, setOf(Toitoi, Sananko))
+        tester(pattern, setOf(Yakus.Toitoi, Yakus.Sananko))
     }
 
     @Test
@@ -242,7 +221,7 @@ internal class TestYaku {
             tsumo = false,
         )
 
-        tester(pattern, setOf(Chanta))
+        tester(pattern, setOf(Yakus.Chanta))
     }
 
     @Test
@@ -261,7 +240,7 @@ internal class TestYaku {
             tsumo = false,
         )
 
-        tester(pattern, setOf(Junchan))
+        tester(pattern, setOf(Yakus.Junchan))
     }
 
 
@@ -281,7 +260,7 @@ internal class TestYaku {
             tsumo = false,
         )
 
-        tester(pattern, setOf(Sananko, Sandoko))
+        tester(pattern, setOf(Yakus.Sananko, Yakus.Sandoko))
     }
 
 
@@ -301,7 +280,7 @@ internal class TestYaku {
             tsumo = false,
         )
 
-        tester(pattern, setOf(Sandoko, Sankantsu))
+        tester(pattern, setOf(Yakus.Sandoko, Yakus.Sankantsu))
     }
 
 
