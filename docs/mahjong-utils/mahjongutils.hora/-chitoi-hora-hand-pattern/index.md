@@ -23,7 +23,6 @@ data class [ChitoiHoraHandPattern](index.md)(val pairs: [Set](https://kotlinlang
 |---|---|
 | [agari](agari.md) | [common]<br>open override val [agari](agari.md): [Tile](../../mahjongutils.models/-tile/index.md)<br>和牌张 |
 | [furo](../../mahjongutils.models.hand/-i-has-furo/furo.md) | [common]<br>abstract val [furo](../../mahjongutils.models.hand/-i-has-furo/furo.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Furo](../../mahjongutils.models/-furo/index.md)&gt;<br>副露 |
-| [hu](hu.md) | [common]<br>open override val [hu](hu.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>符数 |
 | [menzen](../../mahjongutils.models.hand/-i-has-furo/menzen.md) | [common]<br>open val [menzen](../../mahjongutils.models.hand/-i-has-furo/menzen.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>是否门清 |
 | [pairs](pairs.md) | [common]<br>open override val [pairs](pairs.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;<br>手牌形 |
 | [remaining](remaining.md) | [common]<br>open override val [remaining](remaining.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;<br>浮牌 |

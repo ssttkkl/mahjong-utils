@@ -2,10 +2,27 @@
 
 # Yakus
 
-[common]\
-object [Yakus](index.md)
+open class [Yakus](index.md)(val options: [HoraOptions](../../mahjongutils.hora/-hora-options/index.md))
 
 包含所有役种
+
+#### Inheritors
+
+| |
+|---|
+| [Default](-default/index.md) |
+
+## Constructors
+
+| | |
+|---|---|
+| [Yakus](-yakus.md) | [common]<br>constructor(options: [HoraOptions](../../mahjongutils.hora/-hora-options/index.md)) |
+
+## Types
+
+| Name | Summary |
+|---|---|
+| [Default](-default/index.md) | [common]<br>object [Default](-default/index.md) : [Yakus](index.md) |
 
 ## Properties
 
@@ -40,6 +57,7 @@ object [Yakus](index.md)
 | [Kokushi](-kokushi.md) | [common]<br>val [Kokushi](-kokushi.md): [Yaku](../-yaku/index.md)<br>国士无双 |
 | [KokushiThirteenWaiting](-kokushi-thirteen-waiting.md) | [common]<br>val [KokushiThirteenWaiting](-kokushi-thirteen-waiting.md): [Yaku](../-yaku/index.md)<br>国士无双十三面 |
 | [Lyuiso](-lyuiso.md) | [common]<br>val [Lyuiso](-lyuiso.md): [Yaku](../-yaku/index.md)<br>绿一色 |
+| [options](options.md) | [common]<br>val [options](options.md): [HoraOptions](../../mahjongutils.hora/-hora-options/index.md) |
 | [Pinhu](-pinhu.md) | [common]<br>val [Pinhu](-pinhu.md): [Yaku](../-yaku/index.md)<br>平和 |
 | [Richi](-richi.md) | [common]<br>val [Richi](-richi.md): [Yaku](../-yaku/index.md)<br>立直 |
 | [Rinshan](-rinshan.md) | [common]<br>val [Rinshan](-rinshan.md): [Yaku](../-yaku/index.md)<br>岭上自摸 |
