@@ -19,5 +19,4 @@ common
 |---|---|
 | han | 番数 |
 | hu | 符数 |
-| hasKiriageMangan | 是否有切上满贯 |
-| hasKazoeYakuman | 是否有累计役满 |
+| options | 计算点数时应用的选项 |
