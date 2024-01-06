@@ -10,7 +10,7 @@ $dokka.location:mahjongutils.hanhu/ChildPoint.Companion/Mangan/#/PointingToDecla
 $dokka.location:mahjongutils.hanhu/ChildPoint.Companion/Sanbaiman/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-child-point/-companion/-sanbaiman.md
 $dokka.location:mahjongutils.hanhu/ChildPoint.Companion/Yakuman/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-child-point/-companion/-yakuman.md
 $dokka.location:mahjongutils.hanhu/ChildPoint///PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-child-point/index.md
-$dokka.location:mahjongutils.hanhu/ChildPoint/ChildPoint/#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-child-point/-child-point.md
+$dokka.location:mahjongutils.hanhu/ChildPoint/ChildPoint/#kotlin.ULong#kotlin.ULong#kotlin.ULong/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-child-point/-child-point.md
 $dokka.location:mahjongutils.hanhu/ChildPoint/ron/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-child-point/ron.md
 $dokka.location:mahjongutils.hanhu/ChildPoint/tsumoChild/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-child-point/tsumo-child.md
 $dokka.location:mahjongutils.hanhu/ChildPoint/tsumoParent/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-child-point/tsumo-parent.md
@@ -29,7 +29,7 @@ $dokka.location:mahjongutils.hanhu/ParentPoint.Companion/Mangan/#/PointingToDecl
 $dokka.location:mahjongutils.hanhu/ParentPoint.Companion/Sanbaiman/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/-companion/-sanbaiman.md
 $dokka.location:mahjongutils.hanhu/ParentPoint.Companion/Yakuman/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/-companion/-yakuman.md
 $dokka.location:mahjongutils.hanhu/ParentPoint///PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/index.md
-$dokka.location:mahjongutils.hanhu/ParentPoint/ParentPoint/#kotlin.Int#kotlin.Int/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/-parent-point.md
+$dokka.location:mahjongutils.hanhu/ParentPoint/ParentPoint/#kotlin.ULong#kotlin.ULong/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/-parent-point.md
 $dokka.location:mahjongutils.hanhu/ParentPoint/ron/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/ron.md
 $dokka.location:mahjongutils.hanhu/ParentPoint/tsumo/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/tsumo.md
 $dokka.location:mahjongutils.hanhu/ParentPoint/tsumoTotal/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/tsumo-total.md

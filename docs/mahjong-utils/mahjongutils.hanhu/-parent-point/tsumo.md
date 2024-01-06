@@ -3,6 +3,6 @@
 # tsumo
 
 [common]\
-val [tsumo](tsumo.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+val [tsumo](tsumo.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)
 
 自摸各家点数

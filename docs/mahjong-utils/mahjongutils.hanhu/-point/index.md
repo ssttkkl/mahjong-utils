@@ -15,5 +15,5 @@ interface [Point](index.md)
 
 | Name | Summary |
 |---|---|
-| [ron](ron.md) | [common]<br>abstract val [ron](ron.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>荣和点数 |
-| [tsumoTotal](tsumo-total.md) | [common]<br>abstract val [tsumoTotal](tsumo-total.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>自摸总点数 |
+| [ron](ron.md) | [common]<br>abstract val [ron](ron.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)<br>荣和点数 |
+| [tsumoTotal](tsumo-total.md) | [common]<br>abstract val [tsumoTotal](tsumo-total.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)<br>自摸总点数 |

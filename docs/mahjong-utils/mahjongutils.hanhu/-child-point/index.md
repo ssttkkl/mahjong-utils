@@ -5,7 +5,7 @@
 [common]\
 @Serializable
 
-data class [ChildPoint](index.md)(val ron: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val tsumoParent: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val tsumoChild: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)) : [Point](../-point/index.md)
+data class [ChildPoint](index.md)(val ron: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html), val tsumoParent: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html), val tsumoChild: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)) : [Point](../-point/index.md)
 
 子家（闲家）和牌点数
 
@@ -13,7 +13,7 @@ data class [ChildPoint](index.md)(val ron: [Int](https://kotlinlang.org/api/late
 
 | | |
 |---|---|
-| [ChildPoint](-child-point.md) | [common]<br>constructor(ron: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), tsumoParent: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), tsumoChild: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)) |
+| [ChildPoint](-child-point.md) | [common]<br>constructor(ron: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html), tsumoParent: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html), tsumoChild: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)) |
 
 ## Types
 
@@ -25,7 +25,7 @@ data class [ChildPoint](index.md)(val ron: [Int](https://kotlinlang.org/api/late
 
 | Name | Summary |
 |---|---|
-| [ron](ron.md) | [common]<br>open override val [ron](ron.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>荣和点数 |
-| [tsumoChild](tsumo-child.md) | [common]<br>val [tsumoChild](tsumo-child.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>自摸子家（闲家）点数 |
-| [tsumoParent](tsumo-parent.md) | [common]<br>val [tsumoParent](tsumo-parent.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>自摸亲家（庄家）点数 |
-| [tsumoTotal](tsumo-total.md) | [common]<br>open override val [tsumoTotal](tsumo-total.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>自摸总点数 |
+| [ron](ron.md) | [common]<br>open override val [ron](ron.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)<br>荣和点数 |
+| [tsumoChild](tsumo-child.md) | [common]<br>val [tsumoChild](tsumo-child.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)<br>自摸子家（闲家）点数 |
+| [tsumoParent](tsumo-parent.md) | [common]<br>val [tsumoParent](tsumo-parent.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)<br>自摸亲家（庄家）点数 |
+| [tsumoTotal](tsumo-total.md) | [common]<br>open override val [tsumoTotal](tsumo-total.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)<br>自摸总点数 |

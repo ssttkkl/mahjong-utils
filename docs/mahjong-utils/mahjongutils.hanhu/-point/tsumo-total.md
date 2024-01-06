@@ -3,6 +3,6 @@
 # tsumoTotal
 
 [common]\
-abstract val [tsumoTotal](tsumo-total.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+abstract val [tsumoTotal](tsumo-total.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)
 
 自摸总点数
