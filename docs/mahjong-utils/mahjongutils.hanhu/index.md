@@ -6,9 +6,10 @@
 
 | Name | Summary |
 |---|---|
-| [ChildPoint](-child-point/index.md) | [common]<br>@Serializable<br>data class [ChildPoint](-child-point/index.md)(val ron: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val tsumoParent: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val tsumoChild: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html))<br>子家（闲家）和牌点数 |
-| [HanHuOptions](-han-hu-options/index.md) | [common]<br>@Serializable<br>data class [HanHuOptions](-han-hu-options/index.md)(val hasKiriageMangan: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, val hasKazoeYakuman: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true) |
-| [ParentPoint](-parent-point/index.md) | [common]<br>@Serializable<br>data class [ParentPoint](-parent-point/index.md)(val ron: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val tsumo: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html))<br>亲家（庄家）和牌点数 |
+| [ChildPoint](-child-point/index.md) | [common]<br>@Serializable<br>data class [ChildPoint](-child-point/index.md)(val ron: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val tsumoParent: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val tsumoChild: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)) : [Point](-point/index.md)<br>子家（闲家）和牌点数 |
+| [HanHuOptions](-han-hu-options/index.md) | [common]<br>@Serializable<br>data class [HanHuOptions](-han-hu-options/index.md)(val aotenjou: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, val hasKiriageMangan: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, val hasKazoeYakuman: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true) |
+| [ParentPoint](-parent-point/index.md) | [common]<br>@Serializable<br>data class [ParentPoint](-parent-point/index.md)(val ron: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val tsumo: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)) : [Point](-point/index.md)<br>亲家（庄家）和牌点数 |
+| [Point](-point/index.md) | [common]<br>interface [Point](-point/index.md) |
 
 ## Functions
 

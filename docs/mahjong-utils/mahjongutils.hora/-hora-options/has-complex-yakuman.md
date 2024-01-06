@@ -3,9 +3,6 @@
 # hasComplexYakuman
 
 [common]\
-
-@EncodeDefault
-
 val [hasComplexYakuman](has-complex-yakuman.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
 
 是否有复合役满

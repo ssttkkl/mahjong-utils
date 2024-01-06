@@ -3,6 +3,6 @@
 # ron
 
 [common]\
-val [ron](ron.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+open override val [ron](ron.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
 
 荣和点数

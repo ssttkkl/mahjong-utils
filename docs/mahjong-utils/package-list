@@ -18,7 +18,8 @@ $dokka.location:mahjongutils.hanhu/ChildPoint/tsumoTotal/#/PointingToDeclaration
 $dokka.location:mahjongutils.hanhu/HanHuOptions.Companion///PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-han-hu-options/-companion/index.md
 $dokka.location:mahjongutils.hanhu/HanHuOptions.Companion/Default/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-han-hu-options/-companion/-default.md
 $dokka.location:mahjongutils.hanhu/HanHuOptions///PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-han-hu-options/index.md
-$dokka.location:mahjongutils.hanhu/HanHuOptions/HanHuOptions/#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-han-hu-options/-han-hu-options.md
+$dokka.location:mahjongutils.hanhu/HanHuOptions/HanHuOptions/#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-han-hu-options/-han-hu-options.md
+$dokka.location:mahjongutils.hanhu/HanHuOptions/aotenjou/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-han-hu-options/aotenjou.md
 $dokka.location:mahjongutils.hanhu/HanHuOptions/hasKazoeYakuman/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-han-hu-options/has-kazoe-yakuman.md
 $dokka.location:mahjongutils.hanhu/HanHuOptions/hasKiriageMangan/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-han-hu-options/has-kiriage-mangan.md
 $dokka.location:mahjongutils.hanhu/ParentPoint.Companion///PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/-companion/index.md
@@ -32,6 +33,9 @@ $dokka.location:mahjongutils.hanhu/ParentPoint/ParentPoint/#kotlin.Int#kotlin.In
 $dokka.location:mahjongutils.hanhu/ParentPoint/ron/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/ron.md
 $dokka.location:mahjongutils.hanhu/ParentPoint/tsumo/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/tsumo.md
 $dokka.location:mahjongutils.hanhu/ParentPoint/tsumoTotal/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-parent-point/tsumo-total.md
+$dokka.location:mahjongutils.hanhu/Point///PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-point/index.md
+$dokka.location:mahjongutils.hanhu/Point/ron/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-point/ron.md
+$dokka.location:mahjongutils.hanhu/Point/tsumoTotal/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-point/tsumo-total.md
 $dokka.location:mahjongutils.hora////PointingToDeclaration/mahjong-utils/mahjongutils.hora/index.md
 $dokka.location:mahjongutils.hora//hora/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.collections.List[mahjongutils.models.Furo]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Int#mahjongutils.models.Wind?#mahjongutils.models.Wind?#kotlin.collections.Set[mahjongutils.yaku.Yaku]#mahjongutils.hora.HoraOptions/PointingToDeclaration/mahjong-utils/mahjongutils.hora/hora.md
 $dokka.location:mahjongutils.hora//hora/#mahjongutils.shanten.CommonShantenResult[*]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Int#mahjongutils.models.Wind?#mahjongutils.models.Wind?#kotlin.collections.Set[mahjongutils.yaku.Yaku]#mahjongutils.hora.HoraOptions/PointingToDeclaration/mahjong-utils/mahjongutils.hora/hora.md
@@ -65,8 +69,9 @@ $dokka.location:mahjongutils.hora/HoraInfo/tsumo/#/PointingToDeclaration/mahjon
 $dokka.location:mahjongutils.hora/HoraOptions.Companion///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/-companion/index.md
 $dokka.location:mahjongutils.hora/HoraOptions.Companion/Default/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/-companion/-default.md
 $dokka.location:mahjongutils.hora/HoraOptions///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/index.md
-$dokka.location:mahjongutils.hora/HoraOptions/HoraOptions/#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/-hora-options.md
+$dokka.location:mahjongutils.hora/HoraOptions/HoraOptions/#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/-hora-options.md
 $dokka.location:mahjongutils.hora/HoraOptions/allowKuitan/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/allow-kuitan.md
+$dokka.location:mahjongutils.hora/HoraOptions/aotenjou/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/aotenjou.md
 $dokka.location:mahjongutils.hora/HoraOptions/hanHuOptions/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/han-hu-options.md
 $dokka.location:mahjongutils.hora/HoraOptions/hasComplexYakuman/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/has-complex-yakuman.md
 $dokka.location:mahjongutils.hora/HoraOptions/hasKazoeYakuman/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-options/has-kazoe-yakuman.md

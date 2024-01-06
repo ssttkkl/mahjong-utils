@@ -3,9 +3,6 @@
 # hasRenpuuJyantouHu
 
 [common]\
-
-@EncodeDefault
-
 val [hasRenpuuJyantouHu](has-renpuu-jyantou-hu.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
 
 连风雀头是否记4符（true则记4符，false则记2符）
