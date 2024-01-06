@@ -363,4 +363,53 @@ class TestHoraWithCustomOptions {
         )
         assertEquals(ParentPoint.Mangan.ron, hora.parentPoint.ron)
     }
+
+    @Test
+    fun testAotenjou() {
+        val hora = hora(
+            Tile.parseTiles("111456p123456s11z"),
+            agari = Tile["1s"],
+            tsumo = true,
+            selfWind = Wind.East,
+            roundWind = Wind.East,
+            dora = 7,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(82000, hora.parentPoint.tsumo)
+
+        val hora2 = hora(
+            Tile.parseTiles("111456p123456s11z"),
+            agari = Tile["1s"],
+            tsumo = true,
+            selfWind = Wind.South,
+            roundWind = Wind.East,
+            dora = 7,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(82000, hora2.childPoint.tsumoParent)
+        assertEquals(41000, hora2.childPoint.tsumoChild)
+
+        val hora3 = hora(
+            Tile.parseTiles("19m19p19s12345677z"),
+            agari = Tile["6z"],
+            tsumo = true,
+            selfWind = Wind.East,
+            roundWind = Wind.East,
+            dora = 0,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(1966100, hora3.parentPoint.tsumo)
+
+        val hora4 = hora(
+            Tile.parseTiles("19m19p19s12345677z"),
+            agari = Tile["6z"],
+            tsumo = true,
+            selfWind = Wind.South,
+            roundWind = Wind.East,
+            dora = 0,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(1966100, hora4.childPoint.tsumoParent)
+        assertEquals(983100, hora4.childPoint.tsumoChild)
+    }
 }

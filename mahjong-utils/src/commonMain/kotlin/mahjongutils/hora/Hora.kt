@@ -121,8 +121,8 @@ data class Hora internal constructor(
             ParentPoint(0, 0)
         } else {
             val raw = if (hasYakuman) {
+                val oneTimeYakuman = getParentPointByHanHu(13, hu, options.hanHuOptions)
                 val times = han / 13
-                val oneTimeYakuman = ParentPoint.Yakuman
                 ParentPoint(oneTimeYakuman.ron * times, oneTimeYakuman.tsumo * times)
             } else {
                 getParentPointByHanHu(
@@ -147,8 +147,8 @@ data class Hora internal constructor(
             ChildPoint(0, 0, 0)
         } else {
             val raw = if (hasYakuman) {
+                val oneTimeYakuman = getChildPointByHanHu(13, hu, options.hanHuOptions)
                 val times = han / 13
-                val oneTimeYakuman = ChildPoint.Yakuman
                 ChildPoint(
                     oneTimeYakuman.ron * times,
                     oneTimeYakuman.tsumoParent * times,
