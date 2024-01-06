@@ -7,9 +7,9 @@ import kotlin.test.assertFailsWith
 class TestPointByHanHu {
     @Test
     fun testGetParentPointByHanHu() {
-        assertEquals(ParentPoint(2900, 1000), getParentPointByHanHu(2, 30))
+        assertEquals(ParentPoint(2900uL, 1000uL), getParentPointByHanHu(2, 30))
         assertEquals(ParentPoint.Mangan, getParentPointByHanHu(3, 70))
-        assertEquals(ParentPoint(9600, 3200), getParentPointByHanHu(4, 25))
+        assertEquals(ParentPoint(9600uL, 3200uL), getParentPointByHanHu(4, 25))
         assertEquals(ParentPoint.Mangan, getParentPointByHanHu(4, 40))
         assertEquals(ParentPoint.Mangan, getParentPointByHanHu(5, 60))
         assertEquals(ParentPoint.Haneman, getParentPointByHanHu(6, 30))
@@ -39,9 +39,9 @@ class TestPointByHanHu {
 
     @Test
     fun testGetChildPointByHanHu() {
-        assertEquals(ChildPoint(2000, 1000, 500), getChildPointByHanHu(2, 30))
+        assertEquals(ChildPoint(2000uL, 1000uL, 500uL), getChildPointByHanHu(2, 30))
         assertEquals(ChildPoint.Mangan, getChildPointByHanHu(3, 70))
-        assertEquals(ChildPoint(6400, 3200, 1600), getChildPointByHanHu(4, 25))
+        assertEquals(ChildPoint(6400uL, 3200uL, 1600uL), getChildPointByHanHu(4, 25))
         assertEquals(ChildPoint.Mangan, getChildPointByHanHu(4, 40))
         assertEquals(ChildPoint.Mangan, getChildPointByHanHu(5, 60))
         assertEquals(ChildPoint.Haneman, getChildPointByHanHu(6, 30))
@@ -98,12 +98,12 @@ class TestPointByHanHu {
     @Test
     fun testAotenjou() {
         assertEquals(
-            ChildPoint(15400, 7700, 3900),
+            ChildPoint(15400uL, 7700uL, 3900uL),
             getChildPointByHanHu(5, 30, HanHuOptions.Default.copy(aotenjou = true))
         )
 
         assertEquals(
-            ParentPoint(23100, 7700),
+            ParentPoint(23100uL, 7700uL),
             getParentPointByHanHu(5, 30, HanHuOptions.Default.copy(aotenjou = true))
         )
     }

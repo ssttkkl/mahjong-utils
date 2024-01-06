@@ -1,10 +1,8 @@
 package mahjongutils.hanhu
 
-import kotlinx.serialization.Serializable
-
-private fun ceil100(x: Int): Int {
-    return if (x % 100 > 0) {
-        x + (100 - x % 100)
+private fun ceil100(x: ULong): ULong {
+    return if (x % 100uL > 0uL) {
+        x + (100uL - x % 100uL)
     } else {
         x
     }
@@ -16,87 +14,26 @@ private fun ceil100(x: Int): Int {
 // 底符20+门清荣和10+暗杠32*3+单骑2+连风雀头4=132
 //private const val MAX_HU = 140
 
-interface Point {
-    /**
-     * 荣和点数
-     */
-    val ron: Int
-
-    /**
-     * 自摸总点数
-     */
-    val tsumoTotal: Int
-}
-
-/**
- * 亲家（庄家）和牌点数
- */
-@Serializable
-data class ParentPoint(
-    override val ron: Int,
-    /**
-     * 自摸各家点数
-     */
-    val tsumo: Int
-) : Point {
-    override val tsumoTotal: Int
-        get() = tsumo * 3
-
-    companion object {
-        val Mangan = ParentPoint(12000, 4000)
-        val Haneman = ParentPoint(18000, 6000)
-        val Baiman = ParentPoint(24000, 8000)
-        val Sanbaiman = ParentPoint(36000, 12000)
-        val Yakuman = ParentPoint(48000, 16000)
-    }
-}
-
-/**
- * 子家（闲家）和牌点数
- */
-@Serializable
-data class ChildPoint(
-    override val ron: Int,
-    /**
-     * 自摸亲家（庄家）点数
-     */
-    val tsumoParent: Int,
-    /**
-     * 自摸子家（闲家）点数
-     */
-    val tsumoChild: Int
-) : Point {
-    override val tsumoTotal: Int
-        get() = tsumoParent + tsumoChild * 2
-
-    companion object {
-        val Mangan = ChildPoint(8000, 4000, 2000)
-        val Haneman = ChildPoint(12000, 6000, 3000)
-        val Baiman = ChildPoint(16000, 8000, 4000)
-        val Sanbaiman = ChildPoint(24000, 12000, 6000)
-        val Yakuman = ChildPoint(32000, 16000, 8000)
-    }
-}
 
 private fun calcParentPoint(han: Int, hu: Int, aotenjou: Boolean = false): ParentPoint {
-    var a = hu * (1 shl (han + 2))
-    if (a > 2000 && !aotenjou) {
-        a = 2000
+    var a = hu.toULong() * (1uL shl (han + 2))
+    if (a > 2000uL && !aotenjou) {
+        a = 2000uL
     }
 
-    val ron = ceil100(6 * a)
-    val tsumo = ceil100(2 * a)
+    val ron = ceil100(6uL * a)
+    val tsumo = ceil100(2uL * a)
     return ParentPoint(ron, tsumo)
 }
 
 private fun calcChildPoint(han: Int, hu: Int, aotenjou: Boolean = false): ChildPoint {
-    var a = hu * (1 shl (han + 2))
-    if (a > 2000 && !aotenjou) {
-        a = 2000
+    var a = hu.toULong() * (1uL shl (han + 2))
+    if (a > 2000uL && !aotenjou) {
+        a = 2000uL
     }
 
-    val ron = ceil100(4 * a)
-    val tsumoParent = ceil100(2 * a)
+    val ron = ceil100(4uL * a)
+    val tsumoParent = ceil100(2uL * a)
     val tsumoChild = ceil100(a)
     return ChildPoint(ron, tsumoParent, tsumoChild)
 }

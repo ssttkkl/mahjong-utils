@@ -118,11 +118,11 @@ data class Hora internal constructor(
     @EncodeDefault
     val parentPoint: ParentPoint = run {
         if (han == 0) {
-            ParentPoint(0, 0)
+            ParentPoint(0uL, 0uL)
         } else {
             val raw = if (hasYakuman) {
                 val oneTimeYakuman = getParentPointByHanHu(13, hu, options.hanHuOptions)
-                val times = han / 13
+                val times = (han / 13).toULong()
                 ParentPoint(oneTimeYakuman.ron * times, oneTimeYakuman.tsumo * times)
             } else {
                 getParentPointByHanHu(
@@ -131,9 +131,9 @@ data class Hora internal constructor(
             }
 
             if (tsumo) {
-                ParentPoint(0, raw.tsumo)
+                ParentPoint(0uL, raw.tsumo)
             } else {
-                ParentPoint(raw.ron, 0)
+                ParentPoint(raw.ron, 0uL)
             }
         }
     }
@@ -144,11 +144,11 @@ data class Hora internal constructor(
     @EncodeDefault
     val childPoint: ChildPoint = run {
         if (han == 0) {
-            ChildPoint(0, 0, 0)
+            ChildPoint(0uL, 0uL, 0uL)
         } else {
             val raw = if (hasYakuman) {
                 val oneTimeYakuman = getChildPointByHanHu(13, hu, options.hanHuOptions)
-                val times = han / 13
+                val times = (han / 13).toULong()
                 ChildPoint(
                     oneTimeYakuman.ron * times,
                     oneTimeYakuman.tsumoParent * times,
@@ -161,9 +161,9 @@ data class Hora internal constructor(
             }
 
             if (tsumo) {
-                ChildPoint(0, raw.tsumoParent, raw.tsumoChild)
+                ChildPoint(0uL, raw.tsumoParent, raw.tsumoChild)
             } else {
-                ChildPoint(raw.ron, 0, 0)
+                ChildPoint(raw.ron, 0uL, 0uL)
             }
         }
     }
