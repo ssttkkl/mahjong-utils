@@ -27,9 +27,6 @@ class TestPointByHanHu {
             getParentPointByHanHu(3, 34)
         }
         assertFailsWith(IllegalArgumentException::class) {
-            getParentPointByHanHu(3, 180)
-        }
-        assertFailsWith(IllegalArgumentException::class) {
             getParentPointByHanHu(6, 34)
         }
         assertFailsWith(IllegalArgumentException::class) {
@@ -62,9 +59,6 @@ class TestPointByHanHu {
             getChildPointByHanHu(3, 34)
         }
         assertFailsWith(IllegalArgumentException::class) {
-            getChildPointByHanHu(3, 180)
-        }
-        assertFailsWith(IllegalArgumentException::class) {
             getChildPointByHanHu(6, 34)
         }
         assertFailsWith(IllegalArgumentException::class) {
@@ -73,5 +67,44 @@ class TestPointByHanHu {
         assertFailsWith(IllegalArgumentException::class) {
             getChildPointByHanHu(114, 514)
         }
+    }
+
+    @Test
+    fun testNotHaveKazoeYakuman() {
+        assertEquals(
+            ChildPoint.Sanbaiman,
+            getChildPointByHanHu(18, 30, HanHuOptions.Default.copy(hasKazoeYakuman = false))
+        )
+
+        assertEquals(
+            ParentPoint.Sanbaiman,
+            getParentPointByHanHu(18, 30, HanHuOptions.Default.copy(hasKazoeYakuman = false))
+        )
+    }
+
+    @Test
+    fun testHasKiriageMangan() {
+        assertEquals(
+            ChildPoint.Mangan,
+            getChildPointByHanHu(4, 30, HanHuOptions.Default.copy(hasKiriageMangan = true))
+        )
+
+        assertEquals(
+            ParentPoint.Mangan,
+            getParentPointByHanHu(4, 30, HanHuOptions.Default.copy(hasKiriageMangan = true))
+        )
+    }
+
+    @Test
+    fun testAotenjou() {
+        assertEquals(
+            ChildPoint(15400, 7700, 3900),
+            getChildPointByHanHu(5, 30, HanHuOptions.Default.copy(aotenjou = true))
+        )
+
+        assertEquals(
+            ParentPoint(23100, 7700),
+            getParentPointByHanHu(5, 30, HanHuOptions.Default.copy(aotenjou = true))
+        )
     }
 }

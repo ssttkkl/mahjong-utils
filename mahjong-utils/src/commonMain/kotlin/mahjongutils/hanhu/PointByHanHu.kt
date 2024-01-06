@@ -14,23 +14,32 @@ private fun ceil100(x: Int): Int {
 // 234s11z 0110m 0110s 0990p 自风东 场风东
 // 三杠子 三暗刻
 // 底符20+门清荣和10+暗杠32*3+单骑2+连风雀头4=132
-private const val MAX_HU = 140
+//private const val MAX_HU = 140
+
+interface Point {
+    /**
+     * 荣和点数
+     */
+    val ron: Int
+
+    /**
+     * 自摸总点数
+     */
+    val tsumoTotal: Int
+}
 
 /**
  * 亲家（庄家）和牌点数
  */
 @Serializable
 data class ParentPoint(
-    /**
-     * 荣和点数
-     */
-    val ron: Int,
+    override val ron: Int,
     /**
      * 自摸各家点数
      */
     val tsumo: Int
-) {
-    val tsumoTotal: Int
+) : Point {
+    override val tsumoTotal: Int
         get() = tsumo * 3
 
     companion object {
@@ -47,10 +56,7 @@ data class ParentPoint(
  */
 @Serializable
 data class ChildPoint(
-    /**
-     * 荣和点数
-     */
-    val ron: Int,
+    override val ron: Int,
     /**
      * 自摸亲家（庄家）点数
      */
@@ -59,8 +65,8 @@ data class ChildPoint(
      * 自摸子家（闲家）点数
      */
     val tsumoChild: Int
-) {
-    val tsumoTotal: Int
+) : Point {
+    override val tsumoTotal: Int
         get() = tsumoParent + tsumoChild * 2
 
     companion object {
@@ -72,9 +78,9 @@ data class ChildPoint(
     }
 }
 
-private fun calcParentPoint(han: Int, hu: Int): ParentPoint {
+private fun calcParentPoint(han: Int, hu: Int, aotenjou: Boolean = false): ParentPoint {
     var a = hu * (1 shl (han + 2))
-    if (a > 2000) {
+    if (a > 2000 && !aotenjou) {
         a = 2000
     }
 
@@ -83,9 +89,9 @@ private fun calcParentPoint(han: Int, hu: Int): ParentPoint {
     return ParentPoint(ron, tsumo)
 }
 
-private fun calcChildPoint(han: Int, hu: Int): ChildPoint {
+private fun calcChildPoint(han: Int, hu: Int, aotenjou: Boolean = false): ChildPoint {
     var a = hu * (1 shl (han + 2))
-    if (a > 2000) {
+    if (a > 2000 && !aotenjou) {
         a = 2000
     }
 
@@ -99,7 +105,7 @@ private fun validateHanHu(han: Int, hu: Int) {
     if (han < 0)
         throw IllegalArgumentException("invalid arguments: han=${han}, hu=${hu}")
 
-    if ((hu != 25 && hu % 10 != 0) || hu !in 20..MAX_HU) {
+    if (hu < 20 || hu != 25 && hu % 10 != 0) {
         throw IllegalArgumentException("invalid arguments: han=${han}, hu=${hu}")
     }
 }
@@ -117,6 +123,10 @@ fun getParentPointByHanHu(
     options: HanHuOptions = HanHuOptions.Default
 ): ParentPoint {
     validateHanHu(han, hu)
+
+    if (options.aotenjou) {
+        return calcParentPoint(han, hu, true)
+    }
 
     return if (han >= 5) {
         when (han) {
@@ -148,6 +158,10 @@ fun getChildPointByHanHu(
     options: HanHuOptions = HanHuOptions.Default
 ): ChildPoint {
     validateHanHu(han, hu)
+
+    if (options.aotenjou) {
+        return calcChildPoint(han, hu, true)
+    }
 
     return if (han >= 5) {
         when (han) {
