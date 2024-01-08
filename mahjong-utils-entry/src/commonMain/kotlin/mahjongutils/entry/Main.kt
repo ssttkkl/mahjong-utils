@@ -45,22 +45,24 @@ internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
         }
 
         register<HanHu, ParentPoint>("getParentPointByHanHu") { args ->
-            getParentPointByHanHu(args.han, args.hu)
+            getParentPointByHanHu(args.han, args.hu, args.options)
         }
         register<HanHu, ChildPoint>("getChildPointByHanHu") { args ->
-            getChildPointByHanHu(args.han, args.hu)
+            getChildPointByHanHu(args.han, args.hu, args.options)
         }
 
         register<HoraArgs, Hora>("hora") { args ->
             if (args.shantenResult != null) {
                 hora(
                     args.shantenResult, args.agari, args.tsumo,
-                    args.dora, args.selfWind, args.roundWind, args.extraYaku
+                    args.dora, args.selfWind, args.roundWind, args.extraYaku,
+                    args.options
                 )
             } else if (args.tiles != null) {
                 hora(
                     args.tiles, args.furo ?: emptyList(), args.agari, args.tsumo,
-                    args.dora, args.selfWind, args.roundWind, args.extraYaku
+                    args.dora, args.selfWind, args.roundWind, args.extraYaku,
+                    args.options
                 )
             } else {
                 throw IllegalArgumentException("either shantenResult or tiles/furo muse be set")

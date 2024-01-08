@@ -18,11 +18,6 @@ interface HoraInfo {
     val tsumo: Boolean
 
     /**
-     * 符数
-     */
-    val hu: Int
-
-    /**
      * 自风
      */
     val selfWind: Wind?

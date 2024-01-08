@@ -81,90 +81,6 @@ data class RegularHoraHandPattern internal constructor(
     override val jyantou: Tile
         get() = pattern.jyantou!!
 
-    @EncodeDefault
-    override val hu: Int = run {
-        var ans = 20
-
-        // 单骑、边张、坎张听牌
-        if (agariTatsu == null || agariTatsu is Penchan || agariTatsu is Kanchan) {
-            ans += 2
-        }
-
-        // 明刻、杠
-        furo.forEach { fr ->
-            if (fr is Pon) {
-                if (fr.tile.isYaochu) {
-                    ans += 4
-                } else {
-                    ans += 2
-                }
-            } else if (fr is Kan) {
-                if (!fr.ankan) {
-                    if (fr.tile.isYaochu) {
-                        ans += 16
-                    } else {
-                        ans += 8
-                    }
-                } else {
-                    if (fr.tile.isYaochu) {
-                        ans += 32
-                    } else {
-                        ans += 16
-                    }
-                }
-            }
-        }
-
-        // 暗刻（不含暗杠）
-        menzenMentsu.forEach { mt ->
-            if (mt is Kotsu) {
-                if (mt.tile.isYaochu) {
-                    ans += 8
-                } else {
-                    ans += 4
-                }
-            }
-        }
-
-        // 对碰荣和时该刻子计为明刻
-        if (agariTatsu is Toitsu && !tsumo) {
-            ans -= 2
-        }
-
-        // 役牌雀头（连风算4符）
-        if (selfWind != null && jyantou == selfWind.tile) {
-            ans += 2
-        }
-        if (roundWind != null && jyantou == roundWind.tile) {
-            ans += 2
-        }
-        if (jyantou.isSangen) {
-            ans += 2
-        }
-
-        // 门清荣和
-        if (menzen && !tsumo) {
-            ans += 10
-        }
-
-        // 非平和自摸
-        if (ans != 20 && tsumo) {
-            ans += 2
-        }
-
-        // 非门清最低30符
-        if (!menzen && ans < 30) {
-            ans = 30
-        }
-
-        // 切上
-        if (ans % 10 > 0) {
-            ans + (10 - ans % 10)
-        } else {
-            ans
-        }
-    }
-
     companion object {
         private fun buildWithoutGot(
             agari: Tile,
@@ -239,8 +155,6 @@ data class ChitoiHoraHandPattern(
     @EncodeDefault override val selfWind: Wind? = null,
     @EncodeDefault override val roundWind: Wind? = null,
 ) : HoraHandPattern, IChitoiHandPattern {
-    override val hu: Int
-        get() = 25
     override val remaining: List<Tile>
         get() = emptyList()
 }
@@ -260,8 +174,6 @@ data class KokushiHoraHandPattern(
     @EncodeDefault override val selfWind: Wind? = null,
     @EncodeDefault override val roundWind: Wind? = null,
 ) : HoraHandPattern, IKokushiHandPattern {
-    override val hu: Int
-        get() = 20
     override val yaochu: Set<Tile>
         get() = Tile.allYaochu
     override val remaining: List<Tile>

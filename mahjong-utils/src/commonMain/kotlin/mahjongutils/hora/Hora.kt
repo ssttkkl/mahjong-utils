@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 
 package mahjongutils.hora
 
@@ -16,6 +16,7 @@ import mahjongutils.shanten.CommonShantenResult
 import mahjongutils.shanten.ShantenWithGot
 import mahjongutils.shanten.UnionShantenResult
 import mahjongutils.shanten.shanten
+import mahjongutils.yaku.DefaultYakuSerializer
 import mahjongutils.yaku.Yaku
 import mahjongutils.yaku.Yakus
 
@@ -35,7 +36,11 @@ data class Hora internal constructor(
     /**
      * 额外役种
      */
-    val extraYaku: Set<Yaku>,
+    val extraYaku: Set<@Serializable(DefaultYakuSerializer::class) Yaku>,
+    /**
+     * 和牌规则选项
+     */
+    val options: HoraOptions,
 ) : HoraInfo by pattern {
     init {
         if (dora < 0) {
@@ -47,20 +52,21 @@ data class Hora internal constructor(
      * 役种
      */
     @EncodeDefault
-    val yaku: Set<Yaku> = buildSet {
+    val yaku: Set<@Serializable(DefaultYakuSerializer::class) Yaku> = buildSet {
+        val yakus = Yakus(options)
         if (pattern.menzen) {
-            addAll(Yakus.allYakuman.filter { it.check(pattern) })
+            addAll(yakus.allYakuman.filter { it.check(pattern) })
         } else {
-            addAll(Yakus.allYakuman.filter { !it.menzenOnly && it.check(pattern) })
+            addAll(yakus.allYakuman.filter { !it.menzenOnly && it.check(pattern) })
         }
         addAll(extraYaku.filter { it.isYakuman })
 
         if (isEmpty()) {
             // 非役满情况才判断其他役种
             if (pattern.menzen) {
-                addAll(Yakus.allCommonYaku.filter { it.check(pattern) })
+                addAll(yakus.allCommonYaku.filter { it.check(pattern) })
             } else {
-                addAll(Yakus.allCommonYaku.filter { !it.menzenOnly && it.check(pattern) })
+                addAll(yakus.allCommonYaku.filter { !it.menzenOnly && it.check(pattern) })
             }
             addAll(extraYaku.filter { !it.isYakuman })
         }
@@ -77,10 +83,18 @@ data class Hora internal constructor(
      */
     @EncodeDefault
     val han: Int = run {
-        var ans = if (pattern.menzen) {
-            yaku.sumOf { it.han }
+        var ans = if (hasYakuman && !options.hasComplexYakuman) {
+            if (pattern.menzen) {
+                yaku.maxOf { it.han }
+            } else {
+                yaku.maxOf { it.han - it.furoLoss }
+            }
         } else {
-            yaku.sumOf { it.han - it.furoLoss }
+            if (pattern.menzen) {
+                yaku.sumOf { it.han }
+            } else {
+                yaku.sumOf { it.han - it.furoLoss }
+            }
         }
 
         if (ans > 0 && !hasYakuman) {
@@ -90,26 +104,36 @@ data class Hora internal constructor(
         ans
     }
 
+    @EncodeDefault
+    val hu: Int = when (pattern) {
+        is RegularHoraHandPattern -> pattern.calcHu(options.hasRenpuuJyantouHu)
+        is ChitoiHoraHandPattern -> 25
+        is KokushiHoraHandPattern -> 30
+    }
+
+
     /**
      * 亲家（庄家）和牌点数
      */
     @EncodeDefault
     val parentPoint: ParentPoint = run {
         if (han == 0) {
-            ParentPoint(0, 0)
+            ParentPoint(0uL, 0uL)
         } else {
             val raw = if (hasYakuman) {
-                val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
-                val oneTimeYakuman = getParentPointByHanHu(13, 20)
+                val oneTimeYakuman = getParentPointByHanHu(13, hu, options.hanHuOptions)
+                val times = (han / 13).toULong()
                 ParentPoint(oneTimeYakuman.ron * times, oneTimeYakuman.tsumo * times)
             } else {
-                getParentPointByHanHu(han, hu)
+                getParentPointByHanHu(
+                    han, hu, options.hanHuOptions
+                )
             }
 
             if (tsumo) {
-                ParentPoint(0, raw.tsumo)
+                ParentPoint(0uL, raw.tsumo)
             } else {
-                ParentPoint(raw.ron, 0)
+                ParentPoint(raw.ron, 0uL)
             }
         }
     }
@@ -120,24 +144,26 @@ data class Hora internal constructor(
     @EncodeDefault
     val childPoint: ChildPoint = run {
         if (han == 0) {
-            ChildPoint(0, 0, 0)
+            ChildPoint(0uL, 0uL, 0uL)
         } else {
             val raw = if (hasYakuman) {
-                val times = yaku.filter { it.isYakuman }.sumOf { it.han / 13 }
-                val oneTimeYakuman = getChildPointByHanHu(13, 20)
+                val oneTimeYakuman = getChildPointByHanHu(13, hu, options.hanHuOptions)
+                val times = (han / 13).toULong()
                 ChildPoint(
                     oneTimeYakuman.ron * times,
                     oneTimeYakuman.tsumoParent * times,
                     oneTimeYakuman.tsumoChild * times
                 )
             } else {
-                getChildPointByHanHu(han, hu)
+                getChildPointByHanHu(
+                    han, hu, options.hanHuOptions
+                )
             }
 
             if (tsumo) {
-                ChildPoint(0, raw.tsumoParent, raw.tsumoChild)
+                ChildPoint(0uL, raw.tsumoParent, raw.tsumoChild)
             } else {
-                ChildPoint(raw.ron, 0, 0)
+                ChildPoint(raw.ron, 0uL, 0uL)
             }
         }
     }
@@ -158,7 +184,8 @@ data class Hora internal constructor(
  */
 fun hora(
     tiles: List<Tile>, furo: List<Furo> = emptyList(), agari: Tile, tsumo: Boolean,
-    dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
+    dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet(),
+    options: HoraOptions = HoraOptions.Default,
 ): Hora {
     val tiles = if (tiles.size + furo.size * 3 == 13) {
         tiles + agari
@@ -170,7 +197,7 @@ fun hora(
     require(agari in tiles) { "agari not in tiles" }
 
     val shantenResult = shanten(tiles, furo, calcAdvanceNum = false, bestShantenOnly = true, allowAnkan = false)
-    return hora(shantenResult, agari, tsumo, dora, selfWind, roundWind, extraYaku)
+    return hora(shantenResult, agari, tsumo, dora, selfWind, roundWind, extraYaku, options)
 
 }
 
@@ -188,7 +215,8 @@ fun hora(
  */
 fun hora(
     shantenResult: CommonShantenResult<*>, agari: Tile, tsumo: Boolean,
-    dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet()
+    dora: Int = 0, selfWind: Wind? = null, roundWind: Wind? = null, extraYaku: Set<Yaku> = emptySet(),
+    options: HoraOptions = HoraOptions.Default,
 ): Hora {
     require(shantenResult.shantenInfo is ShantenWithGot) { "shantenResult is not with got" }
     require(shantenResult.shantenInfo.shantenNum == -1) { "shantenResult is not hora yet" }
@@ -219,11 +247,11 @@ fun hora(
 
     val possibleHora = patterns.map { pat ->
         HoraHandPattern.build(pat, agari, tsumo, selfWind, roundWind).map { horaHandPat ->
-            Hora(horaHandPat, dora, extraYaku)
+            Hora(horaHandPat, dora, extraYaku, options)
         }
     }.flatten()
     val hora = possibleHora.maxBy {
-        it.han * 1000 + it.pattern.hu  // first key: han, second key: hu
+        it.han * 1000 + it.hu  // first key: han, second key: hu
     }
     return hora
 }

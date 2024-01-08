@@ -3,4 +3,4 @@
 # ChildPoint
 
 [common]\
-constructor(ron: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), tsumoParent: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), tsumoChild: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html))
+constructor(ron: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html), tsumoParent: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html), tsumoChild: [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html))

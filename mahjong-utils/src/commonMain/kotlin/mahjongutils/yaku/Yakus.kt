@@ -1,14 +1,12 @@
 package mahjongutils.yaku
 
-import mahjongutils.hora.ChitoiHoraHandPattern
-import mahjongutils.hora.KokushiHoraHandPattern
-import mahjongutils.hora.RegularHoraHandPattern
+import mahjongutils.hora.*
 import mahjongutils.models.*
 
 /**
  * 包含所有役种
  */
-object Yakus {
+open class Yakus(val options: HoraOptions) {
     // ========== Common ==========
 
     /**
@@ -25,16 +23,17 @@ object Yakus {
         if (pattern !is RegularHoraHandPattern || !pattern.menzen)
             return@Yaku false
 
+        val hu = pattern.calcHu()
         if (pattern.tsumo)
-            pattern.hu == 20
+            hu == 20
         else
-            pattern.hu == 30
+            hu == 30
     }
 
     /**
      * 断幺
      */
-    val Tanyao = Yaku("Tanyao", 1) { pattern ->
+    val Tanyao = Yaku("Tanyao", 1, furoLoss = if (options.allowKuitan) 0 else 1) { pattern ->
         pattern.tiles.none { t -> t.isYaochu }
     }
 
@@ -281,22 +280,45 @@ object Yakus {
     /**
      * 大四喜
      */
-    val Daisushi = Yaku("Daisushi", 26, 0, true, sushiSeriesCheckerFactory(4, windJyantou = false))
+    val Daisushi = Yaku(
+        "Daisushi",
+        if (options.hasMultipleYakuman) 26 else 13,
+        0,
+        true,
+        sushiSeriesCheckerFactory(4, windJyantou = false)
+    )
 
     /**
      * 纯正九莲宝灯（九莲宝灯九面）
      */
-    val ChurenNineWaiting = Yaku("ChurenNineWaiting", 26, 26, true, churenSeriesCheckerFactory(nineWaiting = true))
+    val ChurenNineWaiting = Yaku(
+        "ChurenNineWaiting",
+        if (options.hasMultipleYakuman) 26 else 13,
+        if (options.hasMultipleYakuman) 26 else 13,
+        true,
+        churenSeriesCheckerFactory(nineWaiting = true)
+    )
 
     /**
      * 四暗刻单骑
      */
-    val SuankoTanki = Yaku("SuankoTanki", 26, 26, true, ankoSeriesCheckerFactory(4, true))
+    val SuankoTanki = Yaku(
+        "SuankoTanki",
+        if (options.hasMultipleYakuman) 26 else 13,
+        if (options.hasMultipleYakuman) 26 else 13,
+        true,
+        ankoSeriesCheckerFactory(4, true)
+    )
 
     /**
      * 国士无双十三面
      */
-    val KokushiThirteenWaiting = Yaku("KokushiThirteenWaiting", 26, 26, true) { pattern ->
+    val KokushiThirteenWaiting = Yaku(
+        "KokushiThirteenWaiting",
+        if (options.hasMultipleYakuman) 26 else 13,
+        if (options.hasMultipleYakuman) 26 else 13,
+        true
+    ) { pattern ->
         pattern is KokushiHoraHandPattern && pattern.thirteenWaiting
     }
 
@@ -402,4 +424,6 @@ object Yakus {
     fun getYaku(name: String): Yaku {
         return allYakuMapping[name] ?: throw IllegalArgumentException("$name is not a yaku")
     }
+
+    companion object Default : Yakus(HoraOptions.Default)
 }

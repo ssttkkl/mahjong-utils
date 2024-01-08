@@ -69,15 +69,19 @@ sealed interface Furo {
 
             return parse(tiles, ankan_)
         }
-
-        operator fun invoke(tiles: List<Tile>, ankan: Boolean = false): Furo {
-            return parse(tiles, ankan)
-        }
-
-        operator fun invoke(text: String, ankan: Boolean = false): Furo {
-            return parse(text, ankan)
-        }
     }
+}
+
+fun Furo(vararg tiles: Tile, ankan: Boolean = false): Furo {
+    return Furo.parse(tiles.toList(), ankan)
+}
+
+fun Furo(tiles: List<Tile>, ankan: Boolean = false): Furo {
+    return Furo.parse(tiles, ankan)
+}
+
+fun Furo(text: String, ankan: Boolean = false): Furo {
+    return Furo.parse(text, ankan)
 }
 
 /**

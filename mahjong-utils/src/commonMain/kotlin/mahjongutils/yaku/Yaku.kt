@@ -7,6 +7,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import mahjongutils.hora.HoraHandPattern
+import mahjongutils.hora.HoraOptions
 
 /**
  * 用于检测和了手牌是否具有役种
@@ -23,7 +24,6 @@ internal fun interface YakuChecker {
 /**
  * 役种
  */
-@Serializable(with = YakuSerializer::class)
 class Yaku internal constructor(
     /**
      * 役种名
@@ -52,9 +52,31 @@ class Yaku internal constructor(
     override fun toString(): String {
         return name
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Yaku) return false
+
+        if (name != other.name) return false
+        if (han != other.han) return false
+        if (furoLoss != other.furoLoss) return false
+        if (isYakuman != other.isYakuman) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + han
+        result = 31 * result + furoLoss
+        result = 31 * result + isYakuman.hashCode()
+        return result
+    }
+
+
 }
 
-private class YakuSerializer : KSerializer<Yaku> {
+class YakuSerializer(val yakus: Yakus) : KSerializer<Yaku> {
     override val descriptor = PrimitiveSerialDescriptor("Yaku", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Yaku) {
@@ -63,6 +85,8 @@ private class YakuSerializer : KSerializer<Yaku> {
 
     override fun deserialize(decoder: Decoder): Yaku {
         val text = decoder.decodeString()
-        return Yakus.getYaku(text)
+        return yakus.getYaku(text)
     }
 }
+
+object DefaultYakuSerializer : KSerializer<Yaku> by YakuSerializer(Yakus)

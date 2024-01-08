@@ -7,19 +7,7 @@ import mahjongutils.models.Tile
 import mahjongutils.hora.KokushiHoraHandPattern
 import mahjongutils.models.hand.RegularHandPattern
 import mahjongutils.hora.RegularHoraHandPattern
-import mahjongutils.yaku.Yakus.Chinroto
-import mahjongutils.yaku.Yakus.Churen
-import mahjongutils.yaku.Yakus.ChurenNineWaiting
-import mahjongutils.yaku.Yakus.Daisangen
-import mahjongutils.yaku.Yakus.Daisushi
-import mahjongutils.yaku.Yakus.Kokushi
-import mahjongutils.yaku.Yakus.KokushiThirteenWaiting
-import mahjongutils.yaku.Yakus.Lyuiso
-import mahjongutils.yaku.Yakus.Shousushi
-import mahjongutils.yaku.Yakus.Suanko
-import mahjongutils.yaku.Yakus.SuankoTanki
-import mahjongutils.yaku.Yakus.Sukantsu
-import mahjongutils.yaku.Yakus.Tsuiso
+import mahjongutils.yaku.Yakus
 import kotlin.test.Test
 
 internal class TestYakuman {
@@ -31,7 +19,7 @@ internal class TestYakuman {
             tsumo = true
         )
 
-        tester(pattern, setOf(Kokushi))
+        tester(pattern, setOf(Yakus.Kokushi))
     }
 
     @Test
@@ -42,7 +30,7 @@ internal class TestYakuman {
             tsumo = true
         )
 
-        tester(pattern, setOf(KokushiThirteenWaiting))
+        tester(pattern, setOf(Yakus.KokushiThirteenWaiting))
     }
 
     @Test
@@ -61,7 +49,7 @@ internal class TestYakuman {
             tsumo = false
         )
 
-        tester(pattern, setOf(SuankoTanki, Lyuiso))
+        tester(pattern, setOf(Yakus.SuankoTanki, Yakus.Lyuiso))
     }
 
     @Test
@@ -80,7 +68,7 @@ internal class TestYakuman {
             tsumo = true
         )
 
-        tester(pattern, setOf(Suanko, Lyuiso))
+        tester(pattern, setOf(Yakus.Suanko, Yakus.Lyuiso))
     }
 
     @Test
@@ -99,7 +87,7 @@ internal class TestYakuman {
             tsumo = true
         )
 
-        tester(pattern, setOf(SuankoTanki, Sukantsu))
+        tester(pattern, setOf(Yakus.SuankoTanki, Yakus.Sukantsu))
     }
 
     @Test
@@ -118,7 +106,7 @@ internal class TestYakuman {
             tsumo = false
         )
 
-        tester(pattern, setOf(Churen))
+        tester(pattern, setOf(Yakus.Churen))
     }
 
     @Test
@@ -137,7 +125,7 @@ internal class TestYakuman {
             tsumo = false
         )
 
-        tester(pattern, setOf(ChurenNineWaiting))
+        tester(pattern, setOf(Yakus.ChurenNineWaiting))
     }
 
     @Test
@@ -156,7 +144,7 @@ internal class TestYakuman {
             tsumo = false
         )
 
-        tester(pattern, setOf(Daisushi, Tsuiso))
+        tester(pattern, setOf(Yakus.Daisushi, Yakus.Tsuiso))
     }
 
     @Test
@@ -175,7 +163,7 @@ internal class TestYakuman {
             tsumo = false
         )
 
-        tester(pattern, setOf(Daisangen))
+        tester(pattern, setOf(Yakus.Daisangen))
     }
 
     @Test
@@ -194,7 +182,7 @@ internal class TestYakuman {
             tsumo = false
         )
 
-        tester(pattern, setOf(Shousushi))
+        tester(pattern, setOf(Yakus.Shousushi))
     }
 
     @Test
@@ -216,6 +204,6 @@ internal class TestYakuman {
             tsumo = false
         )
 
-        tester(pattern, setOf(Chinroto, Sukantsu))
+        tester(pattern, setOf(Yakus.Chinroto, Yakus.Sukantsu))
     }
 }
