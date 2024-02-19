@@ -225,7 +225,7 @@ internal fun sushiSeriesCheckerFactory(windKotsuCount: Int, windJyantou: Boolean
  */
 internal fun churenSeriesCheckerFactory(nineWaiting: Boolean): YakuChecker {
     return YakuChecker { pattern ->
-        if (pattern !is RegularHoraHandPattern) {
+        if (pattern !is RegularHoraHandPattern || pattern.furo.isNotEmpty()) {
             return@YakuChecker false
         }
 

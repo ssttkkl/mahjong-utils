@@ -1,14 +1,11 @@
 package mahjongutils.yaku
 
-import mahjongutils.models.Furo
-import mahjongutils.models.Mentsu
-import mahjongutils.models.Tatsu
-import mahjongutils.models.Tile
 import mahjongutils.hora.KokushiHoraHandPattern
 import mahjongutils.models.hand.RegularHandPattern
 import mahjongutils.hora.RegularHoraHandPattern
-import mahjongutils.yaku.Yakus
+import mahjongutils.models.*
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 internal class TestYakuman {
     @Test
@@ -126,6 +123,46 @@ internal class TestYakuman {
         )
 
         tester(pattern, setOf(Yakus.ChurenNineWaiting))
+    }
+
+    @Test
+    fun testChurenShouldFails() {
+        val pattern = RegularHoraHandPattern(
+            RegularHandPattern(
+                k = 4,
+                jyantou = Tile.get("8s"),
+                menzenMentsu = listOf(Mentsu("111s"), Mentsu("234s"), Mentsu("567s")),
+                furo = listOf(Furo("0990s")),
+                tatsu = emptyList(),
+                remaining = emptyList()
+            ),
+            agari = Tile.get("8s"),
+            agariTatsu = null,
+            tsumo = false
+        )
+        val pattern2 = RegularHoraHandPattern(
+            RegularHandPattern(
+                k = 4,
+                jyantou = Tile.get("8s"),
+                menzenMentsu = listOf(Mentsu("111s"), Mentsu("234s"), Mentsu("567s")),
+                furo = listOf(Furo("0990s")),
+                tatsu = emptyList(),
+                remaining = emptyList()
+            ),
+            agari = Tile.get("7s"),
+            agariTatsu = Tatsu("56s"),
+            tsumo = false
+        )
+
+        assertFails {
+            tester(pattern, setOf(Yakus.Churen))
+            tester(pattern, setOf(Yakus.ChurenNineWaiting))
+        }
+
+        assertFails {
+            tester(pattern2, setOf(Yakus.Churen))
+            tester(pattern2, setOf(Yakus.ChurenNineWaiting))
+        }
     }
 
     @Test
