@@ -2,7 +2,6 @@ package mahjongutils.shanten
 
 import kotlinx.serialization.Serializable
 import mahjongutils.ErrorInfo
-import mahjongutils.ValidationError
 import mahjongutils.ValidationException
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
@@ -30,60 +29,33 @@ enum class CommonShantenArgsErrorInfo(override val message: String) : ErrorInfo 
     tooManyFuro("you have too many furo"),
     tooManyTiles("you have too many tiles"),
     anyTileMoreThan4("you cannot have any tile more than 4"),
-    tilesDividedInto3("you should have 3n+1 or 3n+2 tiles for shanten calculation")
+    tilesNumIllegal("you should have 3n+1 or 3n+2 tiles for shanten calculation")
 }
-
-typealias CommonShantenArgsValidationError = ValidationError<CommonShantenArgsErrorInfo>
 
 class CommonShantenArgsValidationException(
     val args: CommonShantenArgs,
-    errors: Collection<ValidationError<CommonShantenArgsErrorInfo>>
+    errors: Collection<CommonShantenArgsErrorInfo>
 ) : ValidationException(errors)
 
-fun CommonShantenArgs.validate(): Collection<CommonShantenArgsValidationError> = buildList {
+fun CommonShantenArgs.validate(): Collection<CommonShantenArgsErrorInfo> = buildList {
     if (tiles.isEmpty()) {
-        add(
-            CommonShantenArgsValidationError(
-                this@validate::tiles.name,
-                CommonShantenArgsErrorInfo.tilesIsEmpty
-            )
-        )
+        add(CommonShantenArgsErrorInfo.tilesIsEmpty)
     }
 
     if (furo.size > 4) {
-        add(
-            CommonShantenArgsValidationError(
-                this@validate::tiles.name,
-                CommonShantenArgsErrorInfo.tooManyFuro
-            )
-        )
+        add(CommonShantenArgsErrorInfo.tooManyFuro)
     }
 
     if (tiles.size + furo.size * 3 > 14) {
-        add(
-            CommonShantenArgsValidationError(
-                this@validate::tiles.name,
-                CommonShantenArgsErrorInfo.tooManyTiles
-            )
-        )
+        add(CommonShantenArgsErrorInfo.tooManyTiles)
     }
 
     if ((tiles + furo.flatMap { it.tiles }).countAsCodeArray().any { it > 4 }) {
-        add(
-            CommonShantenArgsValidationError(
-                this@validate::tiles.name,
-                CommonShantenArgsErrorInfo.anyTileMoreThan4
-            )
-        )
+        add(CommonShantenArgsErrorInfo.anyTileMoreThan4)
     }
 
     if (tiles.size % 3 == 0) {
-        add(
-            CommonShantenArgsValidationError(
-                this@validate::tiles.name,
-                CommonShantenArgsErrorInfo.tilesDividedInto3
-            )
-        )
+        add(CommonShantenArgsErrorInfo.tilesNumIllegal)
     }
 }
 

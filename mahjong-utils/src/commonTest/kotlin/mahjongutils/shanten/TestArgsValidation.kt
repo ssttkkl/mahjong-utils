@@ -20,7 +20,7 @@ class TestArgsValidation {
             CommonShantenArgs(
                 emptyList()
             ).validate().any {
-                it.field == "tiles" && it.errorInfo == CommonShantenArgsErrorInfo.tilesIsEmpty
+                it == CommonShantenArgsErrorInfo.tilesIsEmpty
             }
         }
 
@@ -30,7 +30,7 @@ class TestArgsValidation {
                 Tile.parseTiles("11z"),
                 listOf(Furo("111m"), Furo("222m"), Furo("333m"), Furo("444m"), Furo("555m"))
             ).validate().any {
-                it.field == "tiles" && it.errorInfo == CommonShantenArgsErrorInfo.tooManyFuro
+                it == CommonShantenArgsErrorInfo.tooManyFuro
             }
         }
 
@@ -40,7 +40,7 @@ class TestArgsValidation {
                 Tile.parseTiles("112233z"),
                 listOf(Furo("111m"), Furo("222m"), Furo("333m"), Furo("444m"))
             ).validate().any {
-                it.field == "tiles" && it.errorInfo == CommonShantenArgsErrorInfo.tooManyTiles
+                it == CommonShantenArgsErrorInfo.tooManyTiles
             }
         }
 
@@ -50,17 +50,67 @@ class TestArgsValidation {
                 Tile.parseTiles("11z"),
                 listOf(Furo("111m"), Furo("123m"), Furo("123m"), Furo("234m"))
             ).validate().any {
-                it.field == "tiles" && it.errorInfo == CommonShantenArgsErrorInfo.anyTileMoreThan4
+                it == CommonShantenArgsErrorInfo.anyTileMoreThan4
             }
         }
 
-        // tilesDividedInto3
+        // tilesNumIllegal
         assertTrue {
             CommonShantenArgs(
                 Tile.parseTiles("112233z"),
                 listOf(Furo("111m"), Furo("123m"))
             ).validate().any {
-                it.field == "tiles" && it.errorInfo == CommonShantenArgsErrorInfo.tilesDividedInto3
+                it == CommonShantenArgsErrorInfo.tilesNumIllegal
+            }
+        }
+    }
+    
+    @Test
+    fun testFuroChanceShantenArgsValidation() {
+        assertTrue {
+            FuroChanceShantenArgs(
+                Tile.parseTiles("1123456789m"),
+                Tile["3m"]
+            ).validate().isEmpty()
+        }
+
+        // tilesIsEmpty
+        assertTrue {
+            FuroChanceShantenArgs(
+                emptyList(),
+                Tile["3m"]
+            ).validate().any {
+                it == FuroChanceShantenArgsErrorInfo.tilesIsEmpty
+            }
+        }
+
+        // tooManyTiles
+        assertTrue {
+            FuroChanceShantenArgs(
+                Tile.parseTiles("1112345678999m111z"),
+                Tile["3m"]
+            ).validate().any {
+                it == FuroChanceShantenArgsErrorInfo.tooManyTiles
+            }
+        }
+
+        // anyTileMoreThan4
+        assertTrue {
+            FuroChanceShantenArgs(
+                Tile.parseTiles("3333456m"),
+                Tile["3m"]
+            ).validate().any {
+                it == FuroChanceShantenArgsErrorInfo.anyTileMoreThan4
+            }
+        }
+
+        // tilesNumIllegal
+        assertTrue {
+            FuroChanceShantenArgs(
+                Tile.parseTiles("334455m"),
+                Tile["3m"]
+            ).validate().any {
+                it == FuroChanceShantenArgsErrorInfo.tilesNumIllegal
             }
         }
     }

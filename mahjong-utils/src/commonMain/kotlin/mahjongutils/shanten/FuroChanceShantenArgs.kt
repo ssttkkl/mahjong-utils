@@ -1,9 +1,9 @@
 package mahjongutils.shanten
 
 import mahjongutils.ErrorInfo
-import mahjongutils.ValidationError
 import mahjongutils.ValidationException
 import mahjongutils.models.Tile
+import mahjongutils.models.countAsCodeArray
 
 /**
  * 副露判断向听分析参数
@@ -21,17 +21,36 @@ data class FuroChanceShantenArgs(
     val allowKuikae: Boolean = false
 )
 
-enum class FuroChanceShantenArgsErrorInfo(override val message: String) : ErrorInfo
-
-typealias FuroChanceShantenArgsValidationError = ValidationError<FuroChanceShantenArgsErrorInfo>
+enum class FuroChanceShantenArgsErrorInfo(override val message: String) : ErrorInfo {
+    tilesIsEmpty("tiles is empty"),
+    tooManyTiles("you have too many tiles"),
+    anyTileMoreThan4("you cannot have any tile more than 4"),
+    tilesNumIllegal("you should have 3n+1 tiles for furo chance shanten calculation")
+}
 
 class FuroChanceShantenArgsValidationException(
     val args: FuroChanceShantenArgs,
-    errors: Collection<ValidationError<FuroChanceShantenArgsErrorInfo>>
+    errors: Collection<FuroChanceShantenArgsErrorInfo>
 ) : ValidationException(errors)
 
 
-fun FuroChanceShantenArgs.validate(): Collection<FuroChanceShantenArgsValidationError> = emptyList()
+fun FuroChanceShantenArgs.validate(): Collection<FuroChanceShantenArgsErrorInfo> = buildList {
+    if (tiles.isEmpty()) {
+        add(FuroChanceShantenArgsErrorInfo.tilesIsEmpty)
+    }
+
+    if (tiles.size > 14) {
+        add(FuroChanceShantenArgsErrorInfo.tooManyTiles)
+    }
+
+    if ((tiles + chanceTile).countAsCodeArray().any { it > 4 }) {
+        add(FuroChanceShantenArgsErrorInfo.anyTileMoreThan4)
+    }
+
+    if (tiles.size % 3 == 0 || tiles.size % 3 == 2) {
+        add(FuroChanceShantenArgsErrorInfo.tilesNumIllegal)
+    }
+}
 
 fun FuroChanceShantenArgs.throwOnValidationError() {
     val errors = validate()
