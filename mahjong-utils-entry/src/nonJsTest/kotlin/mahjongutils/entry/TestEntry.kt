@@ -3,13 +3,12 @@ package mahjongutils.entry
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mahjongutils.entry.models.HanHu
-import mahjongutils.entry.models.HoraArgs
-import mahjongutils.entry.models.ShantenArgs
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hanhu.getChildPointByHanHu
 import mahjongutils.hanhu.getParentPointByHanHu
 import mahjongutils.hora.Hora
+import mahjongutils.hora.HoraArgs
 import mahjongutils.hora.hora
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
@@ -196,7 +195,7 @@ class TestEntry {
         assertEquals(200, actualResult.code)
 
         val exceptResult = hora(
-            args.tiles!!, args.furo!!, args.agari,
+            args.tiles!!, args.furo, args.agari,
             args.tsumo, args.dora, args.selfWind, args.roundWind, args.extraYaku
         )
         assertEquals(exceptResult, actualResult.data)

@@ -22,3 +22,6 @@ common
 | allowChi | 是否允许吃 |
 | bestShantenOnly | 仅计算最优向听数的打法（不计算退向打法） |
 | allowKuikae | 是否允许食替 |
+
+[common]\
+fun [furoChanceShanten](furo-chance-shanten.md)(args: [FuroChanceShantenArgs](-furo-chance-shanten-args/index.md)): [FuroChanceShantenResult](-furo-chance-shanten-result/index.md)

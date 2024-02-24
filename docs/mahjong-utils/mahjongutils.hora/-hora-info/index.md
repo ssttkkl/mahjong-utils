@@ -10,8 +10,8 @@ interface [HoraInfo](index.md)
 
 | |
 |---|
-| [Hora](../-hora/index.md) |
 | [HoraHandPattern](../-hora-hand-pattern/index.md) |
+| [Hora](../-hora/index.md) |
 
 ## Properties
 

@@ -6,10 +6,42 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import mahjongutils.models.Furo
 import mahjongutils.models.Tatsu
 import mahjongutils.models.Tile
 import mahjongutils.models.hand.*
 
+/**
+ * 向听分析参数
+ * @param tiles 门前的牌
+ * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @param mode 向听分析模式
+ *
+ * @see [ShantenMode]
+ */
+@Serializable
+data class ShantenArgs(
+    val tiles: List<Tile>,
+    val furo: List<Furo> = emptyList(),
+    val bestShantenOnly: Boolean = false
+)
+
+/**
+ * 副露判断向听分析参数
+ * @param tiles 门前的牌
+ * @param chanceTile 副露机会牌（能够吃、碰的牌）
+ * @param allowChi 是否允许吃
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @param allowKuikae 是否允许食替
+ */
+data class FuroChanceShantenArgs(
+    val tiles: List<Tile>,
+    val chanceTile: Tile,
+    val allowChi: Boolean = true,
+    val bestShantenOnly: Boolean = false,
+    val allowKuikae: Boolean = false
+)
 
 /**
  * 向听信息

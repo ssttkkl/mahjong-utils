@@ -1,0 +1,22 @@
+//[mahjong-utils](../../../index.md)/[mahjongutils.hora](../index.md)/[HoraArgs](index.md)/[HoraArgs](-hora-args.md)
+
+# HoraArgs
+
+[common]\
+constructor(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;? = null, furo: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Furo](../../mahjongutils.models/-furo/index.md)&gt; = DEFAULT_FURO, shantenResult: [CommonShantenResult](../../mahjongutils.shanten/-common-shanten-result/index.md)&lt;*&gt;? = null, agari: [Tile](../../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), dora: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = DEFAULT_DORA, selfWind: [Wind](../../mahjongutils.models/-wind/index.md)? = DEFAULT_SELF_WIND, roundWind: [Wind](../../mahjongutils.models/-wind/index.md)? = DEFAULT_ROUND_WIND, extraYaku: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;@Serializable(with = [DefaultYakuSerializer::class](../../mahjongutils.yaku/-default-yaku-serializer/index.md))[Yaku](../../mahjongutils.yaku/-yaku/index.md)&gt; = DEFAULT_EXTRA_YAKU, options: [HoraOptions](../-hora-options/index.md) = DEFAULT_OPTIONS)
+
+#### Parameters
+
+common
+
+| | |
+|---|---|
+| tiles | 门前的牌 |
+| furo | 副露 |
+| shantenResult | 向听分析结果 |
+| agari | 和牌张 |
+| tsumo | 是否自摸 |
+| dora | 宝牌数目 |
+| selfWind | 自风 |
+| roundWind | 场风 |
+| extraYaku | 额外役种（不会对役种合法性进行检查） |

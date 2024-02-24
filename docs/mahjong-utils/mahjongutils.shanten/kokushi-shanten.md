@@ -19,3 +19,20 @@ common
 |---|---|
 | tiles | 门前的牌 |
 | bestShantenOnly | 仅计算最优向听数的打法（不计算退向打法） |
+
+[common]\
+fun [kokushiShanten](kokushi-shanten.md)(args: [ShantenArgs](-shanten-args/index.md)): [KokushiShantenResult](-kokushi-shanten-result/index.md)
+
+国士无双向听分析
+
+#### Return
+
+向听分析结果
+
+#### Parameters
+
+common
+
+| | |
+|---|---|
+| args | 向听分析参数 |
