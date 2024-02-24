@@ -7,8 +7,8 @@ import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.KokushiHandPattern
 import mahjongutils.models.isYaochu
 import mahjongutils.shanten.helpers.calcShanten
-import mahjongutils.shanten.helpers.ensureLegalTiles
 import mahjongutils.shanten.helpers.fillNum
+import mahjongutils.shanten.helpers.normalizeTiles
 import mahjongutils.shanten.helpers.selectBestPatterns
 
 /**
@@ -48,7 +48,7 @@ internal fun CalcContext.kokushiShanten(
     args: InternalShantenArgs
 ): KokushiShantenResult = memo(Pair("kokushiShanten", args)) {
     with(args) {
-        val tiles = ensureLegalTiles(tiles)
+        val tiles = normalizeTiles(tiles)
 
         var (shantenInfo, patterns) = if (tiles.size == 13) {
             handleKokushiShantenWithoutGot(tiles)

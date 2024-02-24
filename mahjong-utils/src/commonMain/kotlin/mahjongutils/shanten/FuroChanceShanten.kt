@@ -2,7 +2,7 @@ package mahjongutils.shanten
 
 import mahjongutils.CalcContext
 import mahjongutils.models.*
-import mahjongutils.shanten.helpers.ensureLegalTiles
+import mahjongutils.shanten.helpers.normalizeTiles
 import kotlin.math.min
 
 internal data class InternalFuroChanceShantenArgs(
@@ -62,15 +62,13 @@ internal fun CalcContext.furoChanceShanten(
     args: InternalFuroChanceShantenArgs
 ): FuroChanceShantenResult = memo(Pair("furoChanceShanten", args)) {
     with(args) {
-        val tiles = ensureLegalTiles(tiles, allowWithGot = false)
+        val tiles = normalizeTiles(tiles)
         val tilesCount = tiles.countAsCodeArray()
-
-        if (tilesCount[chanceTile.code] == 4) {
-            throw IllegalArgumentException("invalid num of tile: ${chanceTile}")
-        }
 
         val passShanten = regularShanten(InternalShantenArgs(tiles))
         val pass = passShanten.shantenInfo.asWithoutGot
+
+        val canRon = pass.shantenNum == 0 && chanceTile in pass.advance
 
         // 碰
         val pon = if (tilesCount[chanceTile.code] >= 2) {
@@ -162,15 +160,20 @@ internal fun CalcContext.furoChanceShanten(
             null
         }
 
-        var shantenNum = pass.shantenNum
-        chi.minOfOrNull { it.value.shantenNum }?.let {
-            shantenNum = min(shantenNum, it)
-        }
-        pon?.shantenNum?.let {
-            shantenNum = min(shantenNum, it)
-        }
-        minkan?.shantenNum?.let {
-            shantenNum = min(shantenNum, it)
+        var shantenNum: Int
+        if (canRon) {
+            shantenNum = -1
+        } else {
+            shantenNum = pass.shantenNum
+            chi.minOfOrNull { it.value.shantenNum }?.let {
+                shantenNum = min(shantenNum, it)
+            }
+            pon?.shantenNum?.let {
+                shantenNum = min(shantenNum, it)
+            }
+            minkan?.shantenNum?.let {
+                shantenNum = min(shantenNum, it)
+            }
         }
 
         return if (bestShantenOnly) {

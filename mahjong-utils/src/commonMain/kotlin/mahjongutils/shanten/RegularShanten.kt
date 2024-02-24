@@ -48,7 +48,7 @@ internal fun CalcContext.regularShanten(
     args: InternalShantenArgs
 ): RegularShantenResult = memo(Pair("regularShanten", args)) {
     with(args) {
-        val tiles = ensureLegalTiles(tiles)
+        val tiles = normalizeTiles(tiles)
 
         val withGot = tiles.size % 3 == 2
         var (shantenInfo, bestPatterns) = if (!withGot) {
