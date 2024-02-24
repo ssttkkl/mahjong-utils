@@ -122,8 +122,6 @@ data class Shuntsu(
         if (discard == tile) {
             if (discard.num == 7)
                 return Penchan(discard.advance(1))
-            else if (discard.num == 3)
-                return Penchan(discard.advance(-2))
             else
                 return Ryanmen(discard.advance(1))
         } else if (discard == tile.advance(1))

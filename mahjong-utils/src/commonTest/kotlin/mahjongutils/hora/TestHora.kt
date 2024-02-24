@@ -286,6 +286,16 @@ class TestHora {
         assertEquals(ParentPoint(ParentPoint.Yakuman.ron, 0uL), hora.parentPoint)
         assertEquals(ChildPoint(ChildPoint.Yakuman.ron, 0uL, 0uL), hora.childPoint)
     }
+
+    @Test
+    fun test14() {
+        val hora = hora(
+            tiles = Tile.parseTiles("567m567p4455677s"),
+            agari = Tile.get("3s"),
+            tsumo = true,
+        )
+        assertEquals(hora.yaku, setOf(Yakus.Tsumo, Yakus.Pinhu, Yakus.Tanyao))
+    }
 }
 
 class TestHoraWithCustomOptions {
