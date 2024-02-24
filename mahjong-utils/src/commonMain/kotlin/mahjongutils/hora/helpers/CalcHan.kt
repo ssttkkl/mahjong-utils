@@ -11,22 +11,25 @@ fun calcHan(
     dora: Int
 ): Int {
     val hasYakuman: Boolean = yaku.any { it.isYakuman }
-    var ans = if (hasYakuman && !options.hasComplexYakuman) {
-        if (pattern.menzen) {
+
+    var ans = 0
+
+    if (hasYakuman && !options.aotenjou && !options.hasComplexYakuman) {
+        ans = if (pattern.menzen) {
             yaku.maxOf { it.han }
         } else {
             yaku.maxOf { it.han - it.furoLoss }
         }
     } else {
-        if (pattern.menzen) {
+        ans = if (pattern.menzen) {
             yaku.sumOf { it.han }
         } else {
             yaku.sumOf { it.han - it.furoLoss }
         }
-    }
 
-    if (ans > 0 && !hasYakuman) {
-        ans += dora
+        if (options.aotenjou || !hasYakuman && ans > 0) {
+            ans += dora
+        }
     }
 
     return ans
