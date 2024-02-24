@@ -27,7 +27,7 @@ fun calcHan(
             yaku.sumOf { it.han - it.furoLoss }
         }
 
-        if (ans > 0) {
+        if (options.aotenjou || !hasYakuman && ans > 0) {
             ans += dora
         }
     }

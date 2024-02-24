@@ -412,5 +412,83 @@ class TestHoraWithCustomOptions {
         )
         assertEquals(setOf(Yakus.Kokushi).map { it.name }.toSet(), hora4.yaku.map { it.name }.toSet())
         assertEquals(15728700uL, hora4.childPoint.ron)
+
+        // 四暗刻不复合三暗刻对对和
+        val hora5 = hora(
+            Tile.parseTiles("333444z333444m55s"),
+            agari = Tile["4z"],
+            tsumo = true,
+            selfWind = Wind.South,
+            roundWind = Wind.East,
+            dora = 0,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(setOf(Yakus.Suanko, Yakus.Tsumo).map { it.name }.toSet(), hora5.yaku.map { it.name }.toSet())
+
+        val hora6 = hora(
+            Tile.parseTiles("333444z333444m55s"),
+            agari = Tile["5s"],
+            tsumo = false,
+            selfWind = Wind.South,
+            roundWind = Wind.East,
+            dora = 0,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(setOf(Yakus.SuankoTanki).map { it.name }.toSet(), hora6.yaku.map { it.name }.toSet())
+
+        // 四杠子不复合三杠子对对和
+        val hora7 = hora(
+            Tile.parseTiles("55s"),
+            listOf(Furo("1111s"), Furo("2222s"), Furo("1111p"), Furo("2222z")),
+            agari = Tile["5s"],
+            tsumo = true,
+            selfWind = Wind.South,
+            roundWind = Wind.East,
+            dora = 0,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(
+            setOf(Yakus.Sukantsu, Yakus.SelfWind).map { it.name }.toSet(),
+            hora7.yaku.map { it.name }.toSet()
+        )
+        // 字一色不复合混老头混全
+        val hora8 = hora(
+            Tile.parseTiles("11444555z"),
+            listOf(Furo("222z"), Furo("333z")),
+            agari = Tile["5z"],
+            tsumo = true,
+            dora = 0,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(
+            setOf(Yakus.Tsuiso, Yakus.Shousushi, Yakus.Haku, Yakus.Toitoi).map { it.name }.toSet(),
+            hora8.yaku.map { it.name }.toSet()
+        )
+        // 清老头不复合混老头混全
+        val hora9 = hora(
+            Tile.parseTiles("111s111p99m"),
+            listOf(Furo("999p"), Furo("999s")),
+            agari = Tile["1s"],
+            tsumo = true,
+            dora = 0,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(
+            setOf(Yakus.Chinroto, Yakus.Toitoi).map { it.name }.toSet(),
+            hora9.yaku.map { it.name }.toSet()
+        )
+        // 大四喜不复合对对和
+        val hora10 = hora(
+            Tile.parseTiles("111222333z77p"),
+            listOf(Furo("444z")),
+            agari = Tile["1z"],
+            tsumo = true,
+            dora = 0,
+            options = HoraOptions.Default.copy(aotenjou = true)
+        )
+        assertEquals(
+            setOf(Yakus.Daisushi, Yakus.Sananko, Yakus.Honitsu).map { it.name }.toSet(),
+            hora10.yaku.map { it.name }.toSet()
+        )
     }
 }

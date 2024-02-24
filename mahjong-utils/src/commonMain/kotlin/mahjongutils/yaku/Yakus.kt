@@ -1,6 +1,9 @@
 package mahjongutils.yaku
 
-import mahjongutils.hora.*
+import mahjongutils.hora.ChitoiHoraHandPattern
+import mahjongutils.hora.HoraOptions
+import mahjongutils.hora.KokushiHoraHandPattern
+import mahjongutils.hora.RegularHoraHandPattern
 import mahjongutils.hora.helpers.calcHu
 import mahjongutils.models.*
 
@@ -148,7 +151,9 @@ open class Yakus(val options: HoraOptions) {
         if (pattern.mentsu.count { it is Shuntsu } != 0) {
             false
         } else {
-            !pattern.menzen || (pattern.agariTatsu is Toitsu && !pattern.tsumo) // 非四暗刻的情况
+            !Suanko.check(pattern) && !SuankoTanki.check(pattern) // 非四暗刻的情况
+                    && !Sukantsu.check(pattern) // 非四杠子的情况
+                    && !Daisushi.check(pattern)  // 非大四喜的情况
         }
     }
 
@@ -160,7 +165,9 @@ open class Yakus(val options: HoraOptions) {
     /**
      * 混老头
      */
-    val Honroto = Yaku("Honroto", 2, checker = yaochuSeriesCheckerFactory(shuntsu = false, z = true))
+    val Honroto = Yaku("Honroto", 2) { pattern ->
+        yaochuSeriesCheckerFactory(shuntsu = false, z = true).check(pattern) && !Tsuiso.check(pattern)
+    }
 
     /**
      * 三色同刻
