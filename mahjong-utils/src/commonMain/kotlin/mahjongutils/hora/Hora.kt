@@ -76,7 +76,8 @@ fun hora(
     extraYaku: Set<Yaku> = DEFAULT_EXTRA_YAKU,
     options: HoraOptions = DEFAULT_OPTIONS,
 ): Hora {
-    return hora(
+    val context = CalcContext()
+    return context.hora(
         HoraArgs(
             shantenResult = shantenResult,
             agari = agari,

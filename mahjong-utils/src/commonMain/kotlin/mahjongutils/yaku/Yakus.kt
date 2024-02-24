@@ -24,7 +24,7 @@ open class Yakus(val options: HoraOptions) {
         if (pattern !is RegularHoraHandPattern || !pattern.menzen)
             return@Yaku false
 
-        val hu = pattern.calcHu()
+        val hu = calcHu(pattern)
         if (pattern.tsumo)
             hu == 20
         else
