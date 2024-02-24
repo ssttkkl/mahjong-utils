@@ -42,6 +42,8 @@ $dokka.location:mahjongutils.hora////PointingToDeclaration/mahjong-utils/mahjon
 $dokka.location:mahjongutils.hora//hora/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.collections.List[mahjongutils.models.Furo]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Int#mahjongutils.models.Wind?#mahjongutils.models.Wind?#kotlin.collections.Set[mahjongutils.yaku.Yaku]#mahjongutils.hora.HoraOptions/PointingToDeclaration/mahjong-utils/mahjongutils.hora/hora.md
 $dokka.location:mahjongutils.hora//hora/#mahjongutils.hora.HoraArgs/PointingToDeclaration/mahjong-utils/mahjongutils.hora/hora.md
 $dokka.location:mahjongutils.hora//hora/#mahjongutils.shanten.CommonShantenResult[*]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Int#mahjongutils.models.Wind?#mahjongutils.models.Wind?#kotlin.collections.Set[mahjongutils.yaku.Yaku]#mahjongutils.hora.HoraOptions/PointingToDeclaration/mahjong-utils/mahjongutils.hora/hora.md
+$dokka.location:mahjongutils.hora//throwOnValidationError/mahjongutils.hora.HoraArgs#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/throw-on-validation-error.md
+$dokka.location:mahjongutils.hora//validate/mahjongutils.hora.HoraArgs#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/validate.md
 $dokka.location:mahjongutils.hora/ChitoiHoraHandPattern///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-chitoi-hora-hand-pattern/index.md
 $dokka.location:mahjongutils.hora/ChitoiHoraHandPattern/ChitoiHoraHandPattern/#kotlin.collections.Set[mahjongutils.models.Tile]#mahjongutils.models.Tile#kotlin.Boolean#mahjongutils.models.Wind?#mahjongutils.models.Wind?/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-chitoi-hora-hand-pattern/-chitoi-hora-hand-pattern.md
 $dokka.location:mahjongutils.hora/ChitoiHoraHandPattern/agari/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-chitoi-hora-hand-pattern/agari.md
@@ -74,6 +76,22 @@ $dokka.location:mahjongutils.hora/HoraArgs/selfWind/#/PointingToDeclaration/mah
 $dokka.location:mahjongutils.hora/HoraArgs/shantenResult/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/shanten-result.md
 $dokka.location:mahjongutils.hora/HoraArgs/tiles/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/tiles.md
 $dokka.location:mahjongutils.hora/HoraArgs/tsumo/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/tsumo.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo.agariNotInTiles///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.hora/-hora-args-error-info/agari-not-in-tiles/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo.anyTileMoreThan4///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.hora/-hora-args-error-info/any-tile-more-than4/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo.bothTilesAndShantenResultAreNull///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.hora/-hora-args-error-info/both-tiles-and-shanten-result-are-null/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo.shantenNotHora///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.hora/-hora-args-error-info/shanten-not-hora/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo.shantenNotWithGot///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.hora/-hora-args-error-info/shanten-not-with-got/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo.tilesIsEmpty///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.hora/-hora-args-error-info/tiles-is-empty/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo.tilesNumIllegal///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.hora/-hora-args-error-info/tiles-num-illegal/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo.tooManyFuro///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mahjong-utils/mahjongutils.hora/-hora-args-error-info/too-many-furo/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args-error-info/index.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo/entries/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args-error-info/entries.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo/message/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args-error-info/message.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo/valueOf/#kotlin.String/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args-error-info/value-of.md
+$dokka.location:mahjongutils.hora/HoraArgsErrorInfo/values/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args-error-info/values.md
+$dokka.location:mahjongutils.hora/HoraArgsValidationException///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args-validation-exception/index.md
+$dokka.location:mahjongutils.hora/HoraArgsValidationException/HoraArgsValidationException/#mahjongutils.hora.HoraArgs#kotlin.collections.Collection[mahjongutils.hora.HoraArgsErrorInfo]/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args-validation-exception/-hora-args-validation-exception.md
+$dokka.location:mahjongutils.hora/HoraArgsValidationException/args/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args-validation-exception/args.md
 $dokka.location:mahjongutils.hora/HoraHandPattern.Companion///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-hand-pattern/-companion/index.md
 $dokka.location:mahjongutils.hora/HoraHandPattern.Companion/build/#mahjongutils.models.hand.CommonHandPattern#mahjongutils.models.Tile#kotlin.Boolean#mahjongutils.models.Wind?#mahjongutils.models.Wind?/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-hand-pattern/-companion/build.md
 $dokka.location:mahjongutils.hora/HoraHandPattern///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-hand-pattern/index.md
@@ -482,6 +500,7 @@ $dokka.location:mahjongutils/ErrorInfo/message/#/PointingToDeclaration/mahjong-
 $dokka.location:mahjongutils/ValidationException///PointingToDeclaration/mahjong-utils/mahjongutils/-validation-exception/index.md
 $dokka.location:mahjongutils/ValidationException/ValidationException/#kotlin.collections.Collection[mahjongutils.ErrorInfo]/PointingToDeclaration/mahjong-utils/mahjongutils/-validation-exception/-validation-exception.md
 $dokka.location:mahjongutils/ValidationException/errors/#/PointingToDeclaration/mahjong-utils/mahjongutils/-validation-exception/errors.md
+$dokka.location:mahjongutils/ValidationException/message/#/PointingToDeclaration/mahjong-utils/mahjongutils/-validation-exception/message.md
 mahjongutils
 mahjongutils.hanhu
 mahjongutils.hora

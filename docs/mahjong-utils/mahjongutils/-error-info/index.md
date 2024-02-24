@@ -8,6 +8,7 @@ interface [ErrorInfo](index.md)
 
 | |
 |---|
+| [HoraArgsErrorInfo](../../mahjongutils.hora/-hora-args-error-info/index.md) |
 | [CommonShantenArgsErrorInfo](../../mahjongutils.shanten/-common-shanten-args-error-info/index.md) |
 | [FuroChanceShantenArgsErrorInfo](../../mahjongutils.shanten/-furo-chance-shanten-args-error-info/index.md) |
 
