@@ -1,5 +1,6 @@
-package mahjongutils.hora
+package mahjongutils.hora.helpers
 
+import mahjongutils.hora.RegularHoraHandPattern
 import mahjongutils.models.*
 
 /**

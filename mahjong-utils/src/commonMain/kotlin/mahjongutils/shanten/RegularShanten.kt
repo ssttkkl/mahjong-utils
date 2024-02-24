@@ -1,5 +1,6 @@
 package mahjongutils.shanten
 
+import mahjongutils.CalcContext
 import mahjongutils.common.*
 import mahjongutils.models.Furo
 import mahjongutils.models.Kan
@@ -7,6 +8,79 @@ import mahjongutils.models.Tile
 import mahjongutils.models.TileType
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.RegularHandPattern
+
+/**
+ * 标准形向听分析（只考虑4面子+1雀头和牌的形状）
+ * @param tiles 门前的牌
+ * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @return 向听分析结果
+ */
+fun regularShanten(
+    tiles: List<Tile>,
+    furo: List<Furo> = listOf(),
+    bestShantenOnly: Boolean = false,
+): RegularShantenResult {
+    return regularShanten(
+        ShantenArgs(
+            tiles = tiles,
+            furo = furo,
+            bestShantenOnly = bestShantenOnly,
+        )
+    )
+}
+
+/**
+ * 标准形向听分析（只考虑4面子+1雀头和牌的形状）
+ * @param args 向听分析参数
+ * @return 向听分析结果
+ */
+fun regularShanten(
+    args: ShantenArgs
+): RegularShantenResult {
+    val internalShantenArgs = InternalShantenArgs(
+        tiles = args.tiles,
+        furo = args.furo,
+        bestShantenOnly = args.bestShantenOnly
+    )
+
+    val context = CalcContext()
+    return context.regularShanten(internalShantenArgs)
+}
+
+internal fun CalcContext.regularShanten(
+    args: InternalShantenArgs
+): RegularShantenResult = memo(Pair("regularShanten", args)) {
+    with(args) {
+        val tiles = ensureLegalTiles(tiles)
+
+        val withGot = tiles.size % 3 == 2
+        var (shantenInfo, bestPatterns) = if (!withGot) {
+            handleRegularShantenWithoutGot(
+                tiles, furo,
+                calcGoodShapeAdvance = calcGoodShapeAdvance,
+                calcImprovement = calcImprovement
+            )
+        } else {
+            handleRegularShantenWithGot(
+                tiles,
+                furo,
+                calcGoodShapeAdvance = calcGoodShapeAdvance,
+                bestShantenOnly = bestShantenOnly,
+                allowAnkan = allowAnkan,
+                calcImprovement = calcImprovement
+            )
+        }
+
+        if (calcAdvanceNum) {
+            val tilesCount = getTileCount(tiles, furo)
+            shantenInfo = shantenInfo.fillNum(tilesCount)
+        }
+
+        val hand = Hand(tiles = tiles, furo = furo, patterns = bestPatterns)
+        return RegularShantenResult(hand = hand, shantenInfo = shantenInfo)
+    }
+}
 
 private fun bestRegularHandPatternSearch(tiles: List<Tile>, furo: List<Furo>): Pair<Int, List<RegularHandPattern>> {
     val selector = BestHandPatternsSelector(RegularHandPattern::calcShanten)
@@ -266,61 +340,4 @@ private fun handleRegularShantenWithGot(
         ankanToAdvance = ankanToAdvance ?: emptyMap()
     )
     return Pair(shantenInfo, bestPatterns)
-}
-
-/**
- * 标准形向听分析
- * @param tiles 门前的牌
- * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
- * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
- * @return 向听分析结果
- */
-fun regularShanten(
-    tiles: List<Tile>, furo: List<Furo> = listOf(),
-    bestShantenOnly: Boolean = false,
-): RegularShantenResult = regularShanten(tiles, furo, true, true, bestShantenOnly, true, true)
-
-/**
- * 标准形向听分析
- * @param tiles 门前的牌
- * @param furo 副露（对向听分析本身无用，但若需要将结果用于和了分析则需要传入）
- * @param calcAdvanceNum 是否计算进张数
- * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
- * @return 向听分析结果
- */
-internal fun regularShanten(
-    tiles: List<Tile>, furo: List<Furo> = listOf(),
-    calcAdvanceNum: Boolean = true,
-    calcGoodShapeAdvance: Boolean = true,
-    bestShantenOnly: Boolean = false,
-    allowAnkan: Boolean = true,
-    calcImprovement: Boolean = true,
-): RegularShantenResult {
-    val tiles = ensureLegalTiles(tiles)
-
-    val withGot = tiles.size % 3 == 2
-    var (shantenInfo, bestPatterns) = if (!withGot) {
-        handleRegularShantenWithoutGot(
-            tiles, furo,
-            calcGoodShapeAdvance = calcGoodShapeAdvance,
-            calcImprovement = calcImprovement
-        )
-    } else {
-        handleRegularShantenWithGot(
-            tiles,
-            furo,
-            calcGoodShapeAdvance = calcGoodShapeAdvance,
-            bestShantenOnly = bestShantenOnly,
-            allowAnkan = allowAnkan,
-            calcImprovement = calcImprovement
-        )
-    }
-
-    if (calcAdvanceNum) {
-        val tilesCount = getTileCount(tiles, furo)
-        shantenInfo = shantenInfo.fillNum(tilesCount)
-    }
-
-    val hand = Hand(tiles = tiles, furo = furo, patterns = bestPatterns)
-    return RegularShantenResult(hand = hand, shantenInfo = shantenInfo)
 }

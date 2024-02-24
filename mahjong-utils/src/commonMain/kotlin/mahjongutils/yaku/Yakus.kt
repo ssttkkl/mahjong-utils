@@ -1,6 +1,7 @@
 package mahjongutils.yaku
 
 import mahjongutils.hora.*
+import mahjongutils.hora.helpers.calcHu
 import mahjongutils.models.*
 
 /**

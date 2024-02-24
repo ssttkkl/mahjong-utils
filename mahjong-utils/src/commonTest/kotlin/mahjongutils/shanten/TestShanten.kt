@@ -7,29 +7,23 @@ import kotlin.test.assertEquals
 class TestShanten {
     private fun tester(
         tiles: String, expected: Shanten,
-        calcAdvanceNum: Boolean = true,
         bestShantenOnly: Boolean = false,
-        calcImprovement: Boolean = true,
     ) {
         val result = shanten(
             Tile.parseTiles(tiles),
             emptyList(),
-            calcAdvanceNum = calcAdvanceNum,
             bestShantenOnly = bestShantenOnly,
-            calcImprovement = calcImprovement
         )
         assertEquals(expected, result.shantenInfo)
     }
 
     private fun regularTester(
         tiles: String, expected: Shanten,
-        calcAdvanceNum: Boolean = true,
         bestShantenOnly: Boolean = false,
     ) {
         val result = regularShanten(
             Tile.parseTiles(tiles),
             emptyList(),
-            calcAdvanceNum = calcAdvanceNum,
             bestShantenOnly = bestShantenOnly
         )
         assertEquals(expected, result.shantenInfo)
@@ -37,19 +31,17 @@ class TestShanten {
 
     private fun chitoiTester(
         tiles: String, expected: Shanten,
-        calcAdvanceNum: Boolean = true,
         bestShantenOnly: Boolean = false,
     ) {
-        val result = chitoiShanten(Tile.parseTiles(tiles), calcAdvanceNum, bestShantenOnly)
+        val result = chitoiShanten(Tile.parseTiles(tiles), bestShantenOnly)
         assertEquals(expected, result.shantenInfo)
     }
 
     private fun kokushiTester(
         tiles: String, expected: Shanten,
-        calcAdvanceNum: Boolean = true,
         bestShantenOnly: Boolean = false,
     ) {
-        val result = kokushiShanten(Tile.parseTiles(tiles), calcAdvanceNum, bestShantenOnly)
+        val result = kokushiShanten(Tile.parseTiles(tiles), bestShantenOnly)
         assertEquals(expected, result.shantenInfo)
     }
 
@@ -760,91 +752,91 @@ class TestShanten {
                 )
             )
         )
-        tester(
-            "1112345678999s1z", ShantenWithGot(
-                shantenNum = 0, discardToAdvance = mapOf(
-                    Tile.get("2s") to ShantenWithoutGot(
-                        shantenNum = 0,
-                        advance = Tile.parseTiles("1z").toSet(),
-                        advanceNum = 3,
-                        improvement = null,
-                        improvementNum = null,
-                        goodShapeImprovement = null,
-                        goodShapeImprovementNum = null
-                    ),
-                    Tile.get("5s") to ShantenWithoutGot(
-                        shantenNum = 0,
-                        advance = Tile.parseTiles("1z").toSet(),
-                        advanceNum = 3,
-                        improvement = null,
-                        improvementNum = null,
-                        goodShapeImprovement = null,
-                        goodShapeImprovementNum = null
-                    ),
-                    Tile.get("8s") to ShantenWithoutGot(
-                        shantenNum = 0,
-                        advance = Tile.parseTiles("1z").toSet(),
-                        advanceNum = 3,
-                        improvement = null,
-                        improvementNum = null,
-                        goodShapeImprovement = null,
-                        goodShapeImprovementNum = null
-                    ),
-                    Tile.get("1z") to ShantenWithoutGot(
-                        shantenNum = 0,
-                        advance = Tile.parseTiles("123456789s").toSet(),
-                        advanceNum = 23,
-                        improvement = null,
-                        improvementNum = null,
-                        goodShapeImprovement = null,
-                        goodShapeImprovementNum = null
-                    ),
-                    Tile.get("1s") to ShantenWithoutGot(
-                        shantenNum = 1,
-                        advance = Tile.parseTiles("123456789s1z").toSet(),
-                        advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("1234679s1z").toSet(),
-                        goodShapeAdvanceNum = 20
-                    ),
-                    Tile.get("3s") to ShantenWithoutGot(
-                        shantenNum = 1,
-                        advance = Tile.parseTiles("123456789s1z").toSet(),
-                        advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("2369s1z").toSet(),
-                        goodShapeAdvanceNum = 13
-                    ),
-                    Tile.get("4s") to ShantenWithoutGot(
-                        shantenNum = 1,
-                        advance = Tile.parseTiles("123456789s1z").toSet(),
-                        advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("1456789s1z").toSet(),
-                        goodShapeAdvanceNum = 20
-                    ),
-                    Tile.get("6s") to ShantenWithoutGot(
-                        shantenNum = 1,
-                        advance = Tile.parseTiles("123456789s1z").toSet(),
-                        advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("1234569s1z").toSet(),
-                        goodShapeAdvanceNum = 20
-                    ),
-                    Tile.get("7s") to ShantenWithoutGot(
-                        shantenNum = 1,
-                        advance = Tile.parseTiles("123456789s1z").toSet(),
-                        advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("1478s1z").toSet(),
-                        goodShapeAdvanceNum = 13
-                    ),
-                    Tile.get("9s") to ShantenWithoutGot(
-                        shantenNum = 1,
-                        advance = Tile.parseTiles("123456789s1z").toSet(),
-                        advanceNum = 26,
-                        goodShapeAdvance = Tile.parseTiles("1346789s1z").toSet(),
-                        goodShapeAdvanceNum = 20
-                    ),
-                )
-            ),
-            calcImprovement = false
-        )
+//        tester(
+//            "1112345678999s1z", ShantenWithGot(
+//                shantenNum = 0, discardToAdvance = mapOf(
+//                    Tile.get("2s") to ShantenWithoutGot(
+//                        shantenNum = 0,
+//                        advance = Tile.parseTiles("1z").toSet(),
+//                        advanceNum = 3,
+//                        improvement = null,
+//                        improvementNum = null,
+//                        goodShapeImprovement = null,
+//                        goodShapeImprovementNum = null
+//                    ),
+//                    Tile.get("5s") to ShantenWithoutGot(
+//                        shantenNum = 0,
+//                        advance = Tile.parseTiles("1z").toSet(),
+//                        advanceNum = 3,
+//                        improvement = null,
+//                        improvementNum = null,
+//                        goodShapeImprovement = null,
+//                        goodShapeImprovementNum = null
+//                    ),
+//                    Tile.get("8s") to ShantenWithoutGot(
+//                        shantenNum = 0,
+//                        advance = Tile.parseTiles("1z").toSet(),
+//                        advanceNum = 3,
+//                        improvement = null,
+//                        improvementNum = null,
+//                        goodShapeImprovement = null,
+//                        goodShapeImprovementNum = null
+//                    ),
+//                    Tile.get("1z") to ShantenWithoutGot(
+//                        shantenNum = 0,
+//                        advance = Tile.parseTiles("123456789s").toSet(),
+//                        advanceNum = 23,
+//                        improvement = null,
+//                        improvementNum = null,
+//                        goodShapeImprovement = null,
+//                        goodShapeImprovementNum = null
+//                    ),
+//                    Tile.get("1s") to ShantenWithoutGot(
+//                        shantenNum = 1,
+//                        advance = Tile.parseTiles("123456789s1z").toSet(),
+//                        advanceNum = 26,
+//                        goodShapeAdvance = Tile.parseTiles("1234679s1z").toSet(),
+//                        goodShapeAdvanceNum = 20
+//                    ),
+//                    Tile.get("3s") to ShantenWithoutGot(
+//                        shantenNum = 1,
+//                        advance = Tile.parseTiles("123456789s1z").toSet(),
+//                        advanceNum = 26,
+//                        goodShapeAdvance = Tile.parseTiles("2369s1z").toSet(),
+//                        goodShapeAdvanceNum = 13
+//                    ),
+//                    Tile.get("4s") to ShantenWithoutGot(
+//                        shantenNum = 1,
+//                        advance = Tile.parseTiles("123456789s1z").toSet(),
+//                        advanceNum = 26,
+//                        goodShapeAdvance = Tile.parseTiles("1456789s1z").toSet(),
+//                        goodShapeAdvanceNum = 20
+//                    ),
+//                    Tile.get("6s") to ShantenWithoutGot(
+//                        shantenNum = 1,
+//                        advance = Tile.parseTiles("123456789s1z").toSet(),
+//                        advanceNum = 26,
+//                        goodShapeAdvance = Tile.parseTiles("1234569s1z").toSet(),
+//                        goodShapeAdvanceNum = 20
+//                    ),
+//                    Tile.get("7s") to ShantenWithoutGot(
+//                        shantenNum = 1,
+//                        advance = Tile.parseTiles("123456789s1z").toSet(),
+//                        advanceNum = 26,
+//                        goodShapeAdvance = Tile.parseTiles("1478s1z").toSet(),
+//                        goodShapeAdvanceNum = 13
+//                    ),
+//                    Tile.get("9s") to ShantenWithoutGot(
+//                        shantenNum = 1,
+//                        advance = Tile.parseTiles("123456789s1z").toSet(),
+//                        advanceNum = 26,
+//                        goodShapeAdvance = Tile.parseTiles("1346789s1z").toSet(),
+//                        goodShapeAdvanceNum = 20
+//                    ),
+//                )
+//            ),
+//            calcImprovement = false
+//        )
         tester(
             "11123456789999p", ShantenWithGot(
                 shantenNum = -1,
@@ -966,52 +958,52 @@ class TestShanten {
                 )
             )
         )
-        tester(
-            "111456678p12233s",
-            ShantenWithGot(
-                shantenNum = 0,
-                discardToAdvance = mapOf(
-                    Tile.get("1p") to ShantenWithoutGot(
-                        shantenNum = 0,
-                        advance = Tile.parseTiles("14s").toSet(),
-                        advanceNum = 7,
-                        improvement = null,
-                        improvementNum = null,
-                        goodShapeImprovement = null,
-                        goodShapeImprovementNum = null
-                    ),
-                    Tile.get("1s") to ShantenWithoutGot(
-                        shantenNum = 0,
-                        advance = Tile.parseTiles("23s").toSet(),
-                        advanceNum = 4,
-                        improvement = null,
-                        improvementNum = null,
-                        goodShapeImprovement = null,
-                        goodShapeImprovementNum = null
-                    ),
-                    Tile.get("2s") to ShantenWithoutGot(
-                        shantenNum = 0,
-                        advance = Tile.parseTiles("3s").toSet(),
-                        advanceNum = 2,
-                        improvement = null,
-                        improvementNum = null,
-                        goodShapeImprovement = null,
-                        goodShapeImprovementNum = null
-                    ),
-                    Tile.get("3s") to ShantenWithoutGot(
-                        shantenNum = 0,
-                        advance = Tile.parseTiles("2s").toSet(),
-                        advanceNum = 2,
-                        improvement = null,
-                        improvementNum = null,
-                        goodShapeImprovement = null,
-                        goodShapeImprovementNum = null
-                    )
-                )
-            ),
-            bestShantenOnly = true,
-            calcImprovement = false
-        )
+//        tester(
+//            "111456678p12233s",
+//            ShantenWithGot(
+//                shantenNum = 0,
+//                discardToAdvance = mapOf(
+//                    Tile.get("1p") to ShantenWithoutGot(
+//                        shantenNum = 0,
+//                        advance = Tile.parseTiles("14s").toSet(),
+//                        advanceNum = 7,
+//                        improvement = null,
+//                        improvementNum = null,
+//                        goodShapeImprovement = null,
+//                        goodShapeImprovementNum = null
+//                    ),
+//                    Tile.get("1s") to ShantenWithoutGot(
+//                        shantenNum = 0,
+//                        advance = Tile.parseTiles("23s").toSet(),
+//                        advanceNum = 4,
+//                        improvement = null,
+//                        improvementNum = null,
+//                        goodShapeImprovement = null,
+//                        goodShapeImprovementNum = null
+//                    ),
+//                    Tile.get("2s") to ShantenWithoutGot(
+//                        shantenNum = 0,
+//                        advance = Tile.parseTiles("3s").toSet(),
+//                        advanceNum = 2,
+//                        improvement = null,
+//                        improvementNum = null,
+//                        goodShapeImprovement = null,
+//                        goodShapeImprovementNum = null
+//                    ),
+//                    Tile.get("3s") to ShantenWithoutGot(
+//                        shantenNum = 0,
+//                        advance = Tile.parseTiles("2s").toSet(),
+//                        advanceNum = 2,
+//                        improvement = null,
+//                        improvementNum = null,
+//                        goodShapeImprovement = null,
+//                        goodShapeImprovementNum = null
+//                    )
+//                )
+//            ),
+//            bestShantenOnly = true,
+//            calcImprovement = false
+//        )
         tester(
             "4456m3334556p345s", ShantenWithGot(
                 shantenNum = 0,

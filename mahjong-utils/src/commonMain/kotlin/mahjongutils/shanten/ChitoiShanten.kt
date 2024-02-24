@@ -1,9 +1,68 @@
 package mahjongutils.shanten
 
+import mahjongutils.CalcContext
 import mahjongutils.models.Tile
 import mahjongutils.models.countAsMap
 import mahjongutils.models.hand.ChitoiHandPattern
 import mahjongutils.models.hand.Hand
+
+/**
+ * 七对子向听分析
+ * @param tiles 门前的牌
+ * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
+ * @return 向听分析结果
+ */
+fun chitoiShanten(
+    tiles: List<Tile>,
+    bestShantenOnly: Boolean = false,
+): ChitoiShantenResult {
+    return chitoiShanten(
+        ShantenArgs(
+            tiles = tiles,
+            bestShantenOnly = bestShantenOnly,
+        )
+    )
+}
+
+/**
+ * 七对子向听分析
+ * @param args 向听分析参数
+ * @return 向听分析结果
+ */
+fun chitoiShanten(
+    args: ShantenArgs
+): ChitoiShantenResult {
+    val internalShantenArgs = InternalShantenArgs(
+        tiles = args.tiles,
+        furo = args.furo,
+        bestShantenOnly = args.bestShantenOnly
+    )
+
+    val context = CalcContext()
+    return context.chitoiShanten(internalShantenArgs)
+}
+
+internal fun CalcContext.chitoiShanten(
+    args: InternalShantenArgs
+): ChitoiShantenResult = memo(Pair("chitoiShanten", args)) {
+    with(args) {
+        val tiles = ensureLegalTiles(tiles)
+
+        var (shantenInfo, pattern) = if (tiles.size == 13) {
+            handleChitoiShantenWithoutGot(tiles)
+        } else {
+            handleChitoiShantenWithGot(tiles, bestShantenOnly)
+        }
+
+        if (calcAdvanceNum) {
+            shantenInfo = shantenInfo.fillNum(getTileCount(tiles))
+        }
+
+        val hand = Hand(tiles = tiles, furo = emptyList(), patterns = listOf(pattern))
+        return ChitoiShantenResult(hand = hand, shantenInfo = shantenInfo)
+    }
+}
+
 
 private fun buildChitoiPattern(tiles: List<Tile>): ChitoiHandPattern {
     val cnt = tiles.countAsMap()
@@ -83,43 +142,4 @@ private fun handleChitoiShantenWithGot(
         discardToAdvance = discardToAdvance
     )
     return Pair(shantenInfo, pattern)
-}
-
-/**
- * 七对子向听分析
- * @param tiles 门前的牌
- * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
- * @return 向听分析结果
- */
-fun chitoiShanten(
-    tiles: List<Tile>,
-    bestShantenOnly: Boolean = false,
-): ChitoiShantenResult = chitoiShanten(tiles, true, bestShantenOnly)
-
-/**
- * 七对子向听分析
- * @param tiles 门前的牌
- * @param calcAdvanceNum 是否计算进张数
- * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
- * @return 向听分析结果
- */
-internal fun chitoiShanten(
-    tiles: List<Tile>,
-    calcAdvanceNum: Boolean = true,
-    bestShantenOnly: Boolean = false,
-): ChitoiShantenResult {
-    val tiles = ensureLegalTiles(tiles)
-
-    var (shantenInfo, pattern) = if (tiles.size == 13) {
-        handleChitoiShantenWithoutGot(tiles)
-    } else {
-        handleChitoiShantenWithGot(tiles, bestShantenOnly)
-    }
-
-    if (calcAdvanceNum) {
-        shantenInfo = shantenInfo.fillNum(getTileCount(tiles))
-    }
-
-    val hand = Hand(tiles = tiles, furo = emptyList(), patterns = listOf(pattern))
-    return ChitoiShantenResult(hand = hand, shantenInfo = shantenInfo)
 }
