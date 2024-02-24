@@ -20,16 +20,16 @@ internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
     resultEncoder: ResultEncoder<RAW_RESULT>
 ): Entry<RAW_PARAMS, RAW_RESULT> {
     return Entry(paramsDecoder, resultEncoder).apply {
-        register<ShantenArgs, UnionShantenResult>("shanten") { args ->
+        register<CommonShantenArgs, UnionShantenResult>("shanten") { args ->
             shanten(args)
         }
-        register<ShantenArgs, RegularShantenResult>("regularShanten") { args ->
+        register<CommonShantenArgs, RegularShantenResult>("regularShanten") { args ->
             regularShanten(args)
         }
-        register<ShantenArgs, ChitoiShantenResult>("chitoiShanten") { args ->
+        register<CommonShantenArgs, ChitoiShantenResult>("chitoiShanten") { args ->
             chitoiShanten(args)
         }
-        register<ShantenArgs, KokushiShantenResult>("kokushiShanten") { args ->
+        register<CommonShantenArgs, KokushiShantenResult>("kokushiShanten") { args ->
             kokushiShanten(args)
         }
         register<FuroChanceShantenArgs, FuroChanceShantenResult>("furoChanceShanten") { args ->

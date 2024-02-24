@@ -71,7 +71,7 @@ class TestEntry {
 
     @Test
     fun testShanten() {
-        val args = ShantenArgs(
+        val args = CommonShantenArgs(
             Tile.parseTiles("11112345678s"),
             listOf(Furo("999s")),
             bestShantenOnly = true
@@ -90,7 +90,7 @@ class TestEntry {
 
     @Test
     fun testRegularShanten() {
-        val args = ShantenArgs(
+        val args = CommonShantenArgs(
             Tile.parseTiles("11112345678s"),
             listOf(Furo("999s")),
             bestShantenOnly = true
@@ -110,7 +110,7 @@ class TestEntry {
 
     @Test
     fun testChitoiShanten() {
-        val args = ShantenArgs(
+        val args = CommonShantenArgs(
             Tile.parseTiles("11223344z556789p"),
             bestShantenOnly = true
         )
@@ -128,7 +128,7 @@ class TestEntry {
 
     @Test
     fun testKokushiShanten() {
-        val args = ShantenArgs(
+        val args = CommonShantenArgs(
             Tile.parseTiles("11223344556677z"),
             bestShantenOnly = true
         )

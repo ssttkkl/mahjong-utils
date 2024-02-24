@@ -19,13 +19,7 @@ fun chitoiShanten(
     tiles: List<Tile>,
     bestShantenOnly: Boolean = false,
 ): ChitoiShantenResult {
-    val internalShantenArgs = InternalShantenArgs(
-        tiles = tiles,
-        bestShantenOnly = bestShantenOnly
-    )
-
-    val context = CalcContext()
-    return context.chitoiShanten(internalShantenArgs)
+    return chitoiShanten(CommonShantenArgs(tiles = tiles, bestShantenOnly = bestShantenOnly))
 }
 
 /**
@@ -34,8 +28,10 @@ fun chitoiShanten(
  * @return 向听分析结果
  */
 fun chitoiShanten(
-    args: ShantenArgs
+    args: CommonShantenArgs
 ): ChitoiShantenResult {
+    args.throwOnValidationError()
+
     val internalShantenArgs = InternalShantenArgs(
         tiles = args.tiles,
         furo = args.furo,
