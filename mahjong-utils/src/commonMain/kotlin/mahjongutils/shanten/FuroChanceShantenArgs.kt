@@ -52,6 +52,7 @@ fun FuroChanceShantenArgs.validate(): Collection<FuroChanceShantenArgsErrorInfo>
     }
 }
 
+@Throws(FuroChanceShantenArgsValidationException::class)
 fun FuroChanceShantenArgs.throwOnValidationError() {
     val errors = validate()
     if (errors.isNotEmpty()) {

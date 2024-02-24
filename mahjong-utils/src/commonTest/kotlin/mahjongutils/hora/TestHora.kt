@@ -173,7 +173,7 @@ class TestHora {
 
     @Test
     fun test11() {
-        assertFailsWith<IllegalArgumentException>("invalid length of tiles") {
+        assertFailsWith<HoraArgsValidationException> {
             hora(
                 tiles = Tile.parseTiles("234p11z"),
                 furo = listOf(Furo("0110s"), Furo("0990m")),
@@ -184,7 +184,7 @@ class TestHora {
             )
         }
 
-        assertFailsWith<IllegalArgumentException>("agari not in tiles") {
+        assertFailsWith<HoraArgsValidationException> {
             hora(
                 tiles = Tile.parseTiles("234p11z"),
                 furo = listOf(Furo("0110s"), Furo("0990m")),
@@ -195,7 +195,7 @@ class TestHora {
             )
         }
 
-        assertFailsWith<IllegalArgumentException>("invalid length of tiles") {
+        assertFailsWith<HoraArgsValidationException> {
             val shantenResult = shanten(
                 tiles = Tile.parseTiles("234p11z"),
                 furo = listOf(Furo("0110s"), Furo("0990m"))
@@ -209,7 +209,7 @@ class TestHora {
             )
         }
 
-        assertFailsWith<IllegalArgumentException>("agari not in tiles") {
+        assertFailsWith<HoraArgsValidationException> {
             val shantenResult = shanten(
                 tiles = Tile.parseTiles("234p11z"),
                 furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m"))
@@ -223,7 +223,7 @@ class TestHora {
             )
         }
 
-        assertFailsWith<IllegalArgumentException>("shantenResult is not hora yet") {
+        assertFailsWith<HoraArgsValidationException>{
             val shantenResult = shanten(
                 tiles = Tile.parseTiles("235p11z"),
                 furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m"))
@@ -237,7 +237,7 @@ class TestHora {
             )
         }
 
-        assertFailsWith<IllegalArgumentException>("shantenResult is not with got") {
+        assertFailsWith<HoraArgsValidationException> {
             val shantenResult = shanten(
                 tiles = Tile.parseTiles("235p1z"),
                 furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m"))

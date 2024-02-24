@@ -59,6 +59,7 @@ fun CommonShantenArgs.validate(): Collection<CommonShantenArgsErrorInfo> = build
     }
 }
 
+@Throws(CommonShantenArgsValidationException::class)
 fun CommonShantenArgs.throwOnValidationError() {
     val errors = validate()
     if (errors.isNotEmpty()) {
