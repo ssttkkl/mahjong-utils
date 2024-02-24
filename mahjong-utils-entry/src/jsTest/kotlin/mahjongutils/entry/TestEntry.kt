@@ -8,7 +8,6 @@ import kotlinx.serialization.json.decodeFromDynamic
 import kotlinx.serialization.json.encodeToDynamic
 import mahjongutils.entry.models.HanHu
 import mahjongutils.entry.models.HoraArgs
-import mahjongutils.entry.models.ShantenArgs
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hanhu.getChildPointByHanHu
@@ -67,7 +66,7 @@ class TestEntry {
 
     @Test
     fun testShanten() {
-        val args = ShantenArgs(
+        val args = CommonShantenArgs(
             Tile.parseTiles("11112345678s"),
             listOf(Furo("999s")),
             bestShantenOnly = true
@@ -86,7 +85,7 @@ class TestEntry {
 
     @Test
     fun testRegularShanten() {
-        val args = ShantenArgs(
+        val args = CommonShantenArgs(
             Tile.parseTiles("11112345678s"),
             listOf(Furo("999s")),
             bestShantenOnly = true
@@ -106,7 +105,7 @@ class TestEntry {
 
     @Test
     fun testChitoiShanten() {
-        val args = ShantenArgs(
+        val args = CommonShantenArgs(
             Tile.parseTiles("11223344z556789p"),
             bestShantenOnly = true
         )
@@ -124,7 +123,7 @@ class TestEntry {
 
     @Test
     fun testKokushiShanten() {
-        val args = ShantenArgs(
+        val args = CommonShantenArgs(
             Tile.parseTiles("11223344556677z"),
             bestShantenOnly = true
         )

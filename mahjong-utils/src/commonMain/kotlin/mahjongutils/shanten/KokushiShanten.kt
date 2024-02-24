@@ -1,12 +1,12 @@
 package mahjongutils.shanten
 
 import mahjongutils.CalcContext
-import mahjongutils.shanten.helpers.calcShanten
 import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.KokushiHandPattern
 import mahjongutils.models.isYaochu
+import mahjongutils.shanten.helpers.calcShanten
 import mahjongutils.shanten.helpers.ensureLegalTiles
 import mahjongutils.shanten.helpers.fillNum
 import mahjongutils.shanten.helpers.selectBestPatterns
@@ -21,13 +21,7 @@ fun kokushiShanten(
     tiles: List<Tile>,
     bestShantenOnly: Boolean = false,
 ): KokushiShantenResult {
-    val internalShantenArgs = InternalShantenArgs(
-        tiles = tiles,
-        bestShantenOnly = bestShantenOnly
-    )
-
-    val context = CalcContext()
-    return context.kokushiShanten(internalShantenArgs)
+    return kokushiShanten(CommonShantenArgs(tiles = tiles, bestShantenOnly = bestShantenOnly))
 }
 
 /**
@@ -36,8 +30,10 @@ fun kokushiShanten(
  * @return 向听分析结果
  */
 fun kokushiShanten(
-    args: ShantenArgs
+    args: CommonShantenArgs
 ): KokushiShantenResult {
+    args.throwOnValidationError()
+
     val internalShantenArgs = InternalShantenArgs(
         tiles = args.tiles,
         furo = args.furo,

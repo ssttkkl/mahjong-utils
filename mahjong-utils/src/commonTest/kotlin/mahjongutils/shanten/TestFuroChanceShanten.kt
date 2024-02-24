@@ -58,7 +58,7 @@ class TestFuroChanceShanten {
 
     @Test
     fun test2() {
-        assertFailsWith(IllegalArgumentException::class) {
+        assertFailsWith(FuroChanceShantenArgsValidationException::class) {
             furoChanceShanten(Tile.parseTiles("9999m"), Tile.get("9m"))
         }
     }

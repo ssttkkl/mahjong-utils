@@ -94,6 +94,7 @@ fun hora(
 fun hora(
     args: HoraArgs
 ): Hora {
+    args.throwOnValidationError()
     val context = CalcContext()
     return context.hora(args)
 }
@@ -106,7 +107,7 @@ internal fun CalcContext.hora(
     } else if (args.shantenResult != null) {
         return horaWithShantenResult(args)
     } else {
-        throw IllegalArgumentException("either shantenResult or tiles/furo muse be set")
+        error("unexpected error")
     }
 }
 
@@ -114,14 +115,12 @@ internal fun CalcContext.horaWithTiles(
     args: HoraArgs
 ): Hora {
     with(args) {
-        val tiles = if (tiles!!.size + furo.size * 3 == 13) {
+        checkNotNull(tiles)
+        val tiles = if (tiles.size + furo.size * 3 == 13) {
             tiles + agari
         } else {
             tiles
         }
-
-        require(tiles.size + furo.size * 3 == 14) { "invalid length of tiles" }
-        require(agari in tiles) { "agari not in tiles" }
 
         val shantenResult = shanten(
             InternalShantenArgs(
@@ -150,12 +149,9 @@ internal fun CalcContext.horaWithTiles(
 internal fun CalcContext.horaWithShantenResult(
     args: HoraArgs
 ): Hora {
+    args.throwOnValidationError()
     with(args) {
-        require(shantenResult!!.shantenInfo is ShantenWithGot) { "shantenResult is not with got" }
-        require(shantenResult.shantenInfo.shantenNum == -1) { "shantenResult is not hora yet" }
-        require(agari in shantenResult.hand.tiles) { "agari not in tiles" }
-        require(shantenResult.hand.tiles.size + shantenResult.hand.furo.size * 3 == 14) { "invalid length of tiles" }
-
+        checkNotNull(shantenResult)
         val patterns = buildList {
             when (shantenResult) {
                 is UnionShantenResult -> {

@@ -45,14 +45,7 @@ fun shanten(
     furo: List<Furo> = emptyList(),
     bestShantenOnly: Boolean = false,
 ): UnionShantenResult {
-    val internalShantenArgs = InternalShantenArgs(
-        tiles = tiles,
-        furo = furo,
-        bestShantenOnly = bestShantenOnly
-    )
-
-    val context = CalcContext()
-    return context.shanten(internalShantenArgs)
+    return shanten(CommonShantenArgs(tiles = tiles, furo = furo, bestShantenOnly = bestShantenOnly))
 }
 
 /**
@@ -61,8 +54,10 @@ fun shanten(
  * @return 向听分析结果
  */
 fun shanten(
-    args: ShantenArgs
+    args: CommonShantenArgs
 ): UnionShantenResult {
+    args.throwOnValidationError()
+
     val internalShantenArgs = InternalShantenArgs(
         tiles = args.tiles,
         furo = args.furo,

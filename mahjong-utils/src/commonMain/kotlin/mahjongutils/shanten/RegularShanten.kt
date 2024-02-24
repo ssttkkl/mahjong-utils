@@ -8,14 +8,6 @@ import mahjongutils.models.TileType
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.RegularHandPattern
 import mahjongutils.shanten.helpers.*
-import mahjongutils.shanten.helpers.BestHandPatternsSelector
-import mahjongutils.shanten.helpers.TILE_CLING
-import mahjongutils.shanten.helpers.calcAdvance
-import mahjongutils.shanten.helpers.calcShanten
-import mahjongutils.shanten.helpers.ensureLegalTiles
-import mahjongutils.shanten.helpers.getRemainingFromTileCount
-import mahjongutils.shanten.helpers.getTileCount
-import mahjongutils.shanten.helpers.regularHandPatternSearch
 
 /**
  * 标准形向听分析（只考虑4面子+1雀头和牌的形状）
@@ -29,14 +21,7 @@ fun regularShanten(
     furo: List<Furo> = listOf(),
     bestShantenOnly: Boolean = false,
 ): RegularShantenResult {
-    val internalShantenArgs = InternalShantenArgs(
-        tiles = tiles,
-        furo = furo,
-        bestShantenOnly = bestShantenOnly
-    )
-
-    val context = CalcContext()
-    return context.regularShanten(internalShantenArgs)
+    return regularShanten(CommonShantenArgs(tiles = tiles, furo = furo, bestShantenOnly = bestShantenOnly))
 }
 
 /**
@@ -45,8 +30,10 @@ fun regularShanten(
  * @return 向听分析结果
  */
 fun regularShanten(
-    args: ShantenArgs
+    args: CommonShantenArgs
 ): RegularShantenResult {
+    args.throwOnValidationError()
+
     val internalShantenArgs = InternalShantenArgs(
         tiles = args.tiles,
         furo = args.furo,

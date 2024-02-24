@@ -21,7 +21,7 @@ common
 | bestShantenOnly | 仅计算最优向听数的打法（不计算退向打法） |
 
 [common]\
-fun [chitoiShanten](chitoi-shanten.md)(args: [ShantenArgs](-shanten-args/index.md)): [ChitoiShantenResult](-chitoi-shanten-result/index.md)
+fun [chitoiShanten](chitoi-shanten.md)(args: [CommonShantenArgs](-common-shanten-args/index.md)): [ChitoiShantenResult](-chitoi-shanten-result/index.md)
 
 七对子向听分析
 

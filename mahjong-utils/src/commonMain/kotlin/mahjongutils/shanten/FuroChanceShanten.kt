@@ -30,21 +30,22 @@ fun furoChanceShanten(
     bestShantenOnly: Boolean = false,
     allowKuikae: Boolean = false
 ): FuroChanceShantenResult {
-    val internalShantenArgs = InternalFuroChanceShantenArgs(
-        tiles = tiles,
-        chanceTile = chanceTile,
-        allowChi = allowChi,
-        bestShantenOnly = bestShantenOnly,
-        allowKuikae = allowKuikae,
+    return furoChanceShanten(
+        FuroChanceShantenArgs(
+            tiles = tiles,
+            chanceTile = chanceTile,
+            allowChi = allowChi,
+            bestShantenOnly = bestShantenOnly,
+            allowKuikae = allowKuikae
+        )
     )
-
-    val context = CalcContext()
-    return context.furoChanceShanten(internalShantenArgs)
 }
 
 fun furoChanceShanten(
     args: FuroChanceShantenArgs
 ): FuroChanceShantenResult {
+    args.throwOnValidationError()
+
     val internalShantenArgs = InternalFuroChanceShantenArgs(
         tiles = args.tiles,
         chanceTile = args.chanceTile,
