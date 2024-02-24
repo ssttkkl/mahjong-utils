@@ -1,4 +1,4 @@
-//[mahjong-utils](../../../index.md)/[mahjongutils.shanten](../index.md)/[ShantenArgs](index.md)/[furo](furo.md)
+//[mahjong-utils](../../../index.md)/[mahjongutils.shanten](../index.md)/[CommonShantenArgs](index.md)/[furo](furo.md)
 
 # furo
 

@@ -22,7 +22,7 @@ common
 | bestShantenOnly | 仅计算最优向听数的打法（不计算退向打法） |
 
 [common]\
-fun [regularShanten](regular-shanten.md)(args: [ShantenArgs](-shanten-args/index.md)): [RegularShantenResult](-regular-shanten-result/index.md)
+fun [regularShanten](regular-shanten.md)(args: [CommonShantenArgs](-common-shanten-args/index.md)): [RegularShantenResult](-regular-shanten-result/index.md)
 
 标准形向听分析（只考虑4面子+1雀头和牌的形状）
 

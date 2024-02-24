@@ -27,8 +27,8 @@ enum [TileType](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/
 | Name | Summary |
 |---|---|
 | [entries](entries.md) | [common]<br>val [entries](entries.md): [EnumEntries](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.enums/-enum-entries/index.html)&lt;[TileType](index.md)&gt;<br>Returns a representation of an immutable list of all enum entries, in the order they're declared. |
-| [name](../-wind/-north/index.md#-372974862%2FProperties%2F1581026887) | [common]<br>val [name](../-wind/-north/index.md#-372974862%2FProperties%2F1581026887): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [ordinal](../-wind/-north/index.md#-739389684%2FProperties%2F1581026887) | [common]<br>val [ordinal](../-wind/-north/index.md#-739389684%2FProperties%2F1581026887): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [name](../../mahjongutils.shanten/-furo-chance-shanten-args-error-info/index.md#-372974862%2FProperties%2F1581026887) | [common]<br>val [name](../../mahjongutils.shanten/-furo-chance-shanten-args-error-info/index.md#-372974862%2FProperties%2F1581026887): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [ordinal](../../mahjongutils.shanten/-furo-chance-shanten-args-error-info/index.md#-739389684%2FProperties%2F1581026887) | [common]<br>val [ordinal](../../mahjongutils.shanten/-furo-chance-shanten-args-error-info/index.md#-739389684%2FProperties%2F1581026887): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 
 ## Functions
 

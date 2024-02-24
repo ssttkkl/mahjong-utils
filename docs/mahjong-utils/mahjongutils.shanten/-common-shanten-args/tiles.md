@@ -1,4 +1,4 @@
-//[mahjong-utils](../../../index.md)/[mahjongutils.shanten](../index.md)/[ShantenArgs](index.md)/[tiles](tiles.md)
+//[mahjong-utils](../../../index.md)/[mahjongutils.shanten](../index.md)/[CommonShantenArgs](index.md)/[tiles](tiles.md)
 
 # tiles
 

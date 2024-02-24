@@ -1,4 +1,4 @@
-//[mahjong-utils](../../../index.md)/[mahjongutils.shanten](../index.md)/[ShantenArgs](index.md)/[bestShantenOnly](best-shanten-only.md)
+//[mahjong-utils](../../../index.md)/[mahjongutils.shanten](../index.md)/[CommonShantenArgs](index.md)/[bestShantenOnly](best-shanten-only.md)
 
 # bestShantenOnly
 

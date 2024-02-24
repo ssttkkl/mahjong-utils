@@ -25,7 +25,7 @@ common
 | bestShantenOnly | 仅计算最优向听数的打法（不计算退向打法） |
 
 [common]\
-fun [shanten](shanten.md)(args: [ShantenArgs](-shanten-args/index.md)): [UnionShantenResult](-union-shanten-result/index.md)
+fun [shanten](shanten.md)(args: [CommonShantenArgs](-common-shanten-args/index.md)): [UnionShantenResult](-union-shanten-result/index.md)
 
 向听分析
 
