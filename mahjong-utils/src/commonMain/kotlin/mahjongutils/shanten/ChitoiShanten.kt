@@ -16,12 +16,13 @@ fun chitoiShanten(
     tiles: List<Tile>,
     bestShantenOnly: Boolean = false,
 ): ChitoiShantenResult {
-    return chitoiShanten(
-        ShantenArgs(
-            tiles = tiles,
-            bestShantenOnly = bestShantenOnly,
-        )
+    val internalShantenArgs = InternalShantenArgs(
+        tiles = tiles,
+        bestShantenOnly = bestShantenOnly
     )
+
+    val context = CalcContext()
+    return context.chitoiShanten(internalShantenArgs)
 }
 
 /**

@@ -28,15 +28,18 @@ fun furoChanceShanten(
     allowChi: Boolean = true,
     bestShantenOnly: Boolean = false,
     allowKuikae: Boolean = false
-): FuroChanceShantenResult = furoChanceShanten(
-    FuroChanceShantenArgs(
+): FuroChanceShantenResult {
+    val internalShantenArgs = InternalFuroChanceShantenArgs(
         tiles = tiles,
         chanceTile = chanceTile,
         allowChi = allowChi,
         bestShantenOnly = bestShantenOnly,
-        allowKuikae = allowKuikae
+        allowKuikae = allowKuikae,
     )
-)
+
+    val context = CalcContext()
+    return context.furoChanceShanten(internalShantenArgs)
+}
 
 fun furoChanceShanten(
     args: FuroChanceShantenArgs
@@ -64,7 +67,7 @@ internal fun CalcContext.furoChanceShanten(
             throw IllegalArgumentException("invalid num of tile: ${chanceTile}")
         }
 
-        val passShanten = regularShanten(tiles)
+        val passShanten = regularShanten(InternalShantenArgs(tiles))
         val pass = passShanten.shantenInfo.asWithoutGot
 
         // 碰

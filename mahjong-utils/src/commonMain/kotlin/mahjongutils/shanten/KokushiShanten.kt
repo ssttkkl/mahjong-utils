@@ -18,12 +18,13 @@ fun kokushiShanten(
     tiles: List<Tile>,
     bestShantenOnly: Boolean = false,
 ): KokushiShantenResult {
-    return kokushiShanten(
-        ShantenArgs(
-            tiles = tiles,
-            bestShantenOnly = bestShantenOnly,
-        )
+    val internalShantenArgs = InternalShantenArgs(
+        tiles = tiles,
+        bestShantenOnly = bestShantenOnly
     )
+
+    val context = CalcContext()
+    return context.kokushiShanten(internalShantenArgs)
 }
 
 /**

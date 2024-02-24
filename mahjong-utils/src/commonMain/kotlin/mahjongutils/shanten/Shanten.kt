@@ -43,13 +43,14 @@ fun shanten(
     furo: List<Furo> = emptyList(),
     bestShantenOnly: Boolean = false,
 ): UnionShantenResult {
-    return shanten(
-        ShantenArgs(
-            tiles = tiles,
-            furo = furo,
-            bestShantenOnly = bestShantenOnly,
-        )
+    val internalShantenArgs = InternalShantenArgs(
+        tiles = tiles,
+        furo = furo,
+        bestShantenOnly = bestShantenOnly
     )
+
+    val context = CalcContext()
+    return context.shanten(internalShantenArgs)
 }
 
 /**

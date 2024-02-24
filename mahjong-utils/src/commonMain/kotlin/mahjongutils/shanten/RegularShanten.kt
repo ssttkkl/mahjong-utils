@@ -21,13 +21,14 @@ fun regularShanten(
     furo: List<Furo> = listOf(),
     bestShantenOnly: Boolean = false,
 ): RegularShantenResult {
-    return regularShanten(
-        ShantenArgs(
-            tiles = tiles,
-            furo = furo,
-            bestShantenOnly = bestShantenOnly,
-        )
+    val internalShantenArgs = InternalShantenArgs(
+        tiles = tiles,
+        furo = furo,
+        bestShantenOnly = bestShantenOnly
     )
+
+    val context = CalcContext()
+    return context.regularShanten(internalShantenArgs)
 }
 
 /**
