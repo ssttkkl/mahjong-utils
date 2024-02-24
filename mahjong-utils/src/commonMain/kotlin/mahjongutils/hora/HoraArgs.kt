@@ -27,7 +27,7 @@ import mahjongutils.yaku.Yaku
  * @param extraYaku 额外役种（不会对役种合法性进行检查）
  */
 @Serializable
-data class HoraArgs(
+data class HoraArgs internal constructor(
     val tiles: List<Tile>? = null,
     val furo: List<Furo> = DEFAULT_FURO,
     val shantenResult: CommonShantenResult<*>? = null,
@@ -39,6 +39,51 @@ data class HoraArgs(
     val extraYaku: Set<@Serializable(DefaultYakuSerializer::class) Yaku> = DEFAULT_EXTRA_YAKU,
     val options: HoraOptions = DEFAULT_OPTIONS,
 ) {
+    constructor(
+        tiles: List<Tile>,
+        furo: List<Furo> = DEFAULT_FURO,
+        agari: Tile,
+        tsumo: Boolean,
+        dora: Int = DEFAULT_DORA,
+        selfWind: Wind? = DEFAULT_SELF_WIND,
+        roundWind: Wind? = DEFAULT_ROUND_WIND,
+        extraYaku: Set<@Serializable(DefaultYakuSerializer::class) Yaku> = DEFAULT_EXTRA_YAKU,
+        options: HoraOptions = DEFAULT_OPTIONS
+    ) : this(
+        tiles = tiles,
+        furo = furo,
+        shantenResult = null,
+        agari = agari,
+        tsumo = tsumo,
+        dora = dora,
+        selfWind = selfWind,
+        roundWind = roundWind,
+        extraYaku = extraYaku,
+        options = options
+    )
+
+    constructor(
+        shantenResult: CommonShantenResult<*>,
+        agari: Tile,
+        tsumo: Boolean,
+        dora: Int = DEFAULT_DORA,
+        selfWind: Wind? = DEFAULT_SELF_WIND,
+        roundWind: Wind? = DEFAULT_ROUND_WIND,
+        extraYaku: Set<@Serializable(DefaultYakuSerializer::class) Yaku> = DEFAULT_EXTRA_YAKU,
+        options: HoraOptions = DEFAULT_OPTIONS
+    ) : this(
+        tiles = null,
+        furo = DEFAULT_FURO,
+        shantenResult = shantenResult,
+        agari = agari,
+        tsumo = tsumo,
+        dora = dora,
+        selfWind = selfWind,
+        roundWind = roundWind,
+        extraYaku = extraYaku,
+        options = options
+    )
+
     companion object {
         internal val DEFAULT_FURO: List<Furo> = emptyList()
         internal val DEFAULT_DORA: Int = 0
