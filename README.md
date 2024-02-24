@@ -1,8 +1,6 @@
 mahjong-utils
 ========
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils)
-
 日麻小工具
 
 已实现功能：
@@ -13,7 +11,7 @@ mahjong-utils
 - [x] 鸣牌分析
 - [x] 和了分析（役种、番数、符数）
 
-DEMO：https://mahjong-utils-taro.vercel.app/
+基于该库开发的App：https://github.com/ssttkkl/mahjong-utils-app
 
 ## 平台支持
 
@@ -26,6 +24,8 @@ DEMO：https://mahjong-utils-taro.vercel.app/
 对于JavaScript/TypeScript：我们提供了绑定方便JS/TS侧调用，具体请看 https://github.com/ssttkkl/mahjong-utils/tree/js
 
 ## 使用（Kotlin/Java）
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils)
 
 ### 引用
 
