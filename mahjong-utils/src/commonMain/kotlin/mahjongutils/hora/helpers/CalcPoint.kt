@@ -7,12 +7,12 @@ internal fun calcParentPoint(
     hu: Int,
     options: HanHuOptions,
     tsumo: Boolean,
-    yakumanOnly: Boolean
+    hasYakuman: Boolean
 ): ParentPoint {
     return if (han == 0) {
         ParentPoint(0uL, 0uL)
     } else {
-        val raw = if (yakumanOnly) {
+        val raw = if (hasYakuman && !options.aotenjou) {
             val oneTimeYakuman = getParentPointByHanHu(13, hu, options)
             val times = (han / 13).toULong()
             ParentPoint(oneTimeYakuman.ron * times, oneTimeYakuman.tsumo * times)
@@ -35,12 +35,12 @@ internal fun calcChildPoint(
     hu: Int,
     options: HanHuOptions,
     tsumo: Boolean,
-    yakumanOnly: Boolean
+    hasYakuman: Boolean
 ): ChildPoint {
     return if (han == 0) {
         ChildPoint(0uL, 0uL, 0uL)
     } else {
-        val raw = if (yakumanOnly) {
+        val raw = if (hasYakuman && !options.aotenjou) {
             val oneTimeYakuman = getChildPointByHanHu(13, hu, options)
             val times = (han / 13).toULong()
             ChildPoint(

@@ -223,7 +223,7 @@ class TestHora {
             )
         }
 
-        assertFailsWith<HoraArgsValidationException>{
+        assertFailsWith<HoraArgsValidationException> {
             val shantenResult = shanten(
                 tiles = Tile.parseTiles("235p11z"),
                 furo = listOf(Furo("0110s"), Furo("0110m"), Furo("0990m"))
@@ -398,18 +398,19 @@ class TestHoraWithCustomOptions {
             dora = 0,
             options = HoraOptions.Default.copy(aotenjou = true)
         )
-        assertEquals(1966100uL, hora3.parentPoint.tsumo)
+        assertEquals(setOf(Yakus.Kokushi, Yakus.Tsumo).map { it.name }.toSet(), hora3.yaku.map { it.name }.toSet())
+        assertEquals(3932200uL, hora3.parentPoint.tsumo)
 
         val hora4 = hora(
             Tile.parseTiles("19m19p19s12345677z"),
             agari = Tile["6z"],
-            tsumo = true,
+            tsumo = false,
             selfWind = Wind.South,
             roundWind = Wind.East,
-            dora = 0,
+            dora = 2,
             options = HoraOptions.Default.copy(aotenjou = true)
         )
-        assertEquals(1966100uL, hora4.childPoint.tsumoParent)
-        assertEquals(983100uL, hora4.childPoint.tsumoChild)
+        assertEquals(setOf(Yakus.Kokushi).map { it.name }.toSet(), hora4.yaku.map { it.name }.toSet())
+        assertEquals(15728700uL, hora4.childPoint.ron)
     }
 }

@@ -18,8 +18,9 @@ internal fun calcYaku(
     }
     addAll(extraYaku.filter { it.isYakuman })
 
-    if (isEmpty()) {
-        // 非役满情况才判断其他役种
+    // 青天井规则：役满可以和非役满复合
+    // 普通规则：非役满情况才判断其他役种
+    if (options.aotenjou || isEmpty()) {
         if (pattern.menzen) {
             addAll(yakus.allCommonYaku.filter { it.check(pattern) })
         } else {
