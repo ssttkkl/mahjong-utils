@@ -36,8 +36,11 @@ $dokka.location:mahjongutils.hanhu/ParentPoint/tsumoTotal/#/PointingToDeclaratio
 $dokka.location:mahjongutils.hanhu/Point///PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-point/index.md
 $dokka.location:mahjongutils.hanhu/Point/ron/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-point/ron.md
 $dokka.location:mahjongutils.hanhu/Point/tsumoTotal/#/PointingToDeclaration/mahjong-utils/mahjongutils.hanhu/-point/tsumo-total.md
+$dokka.location:mahjongutils.hora.helpers////PointingToDeclaration/mahjong-utils/mahjongutils.hora.helpers/index.md
+$dokka.location:mahjongutils.hora.helpers//calcHan/#mahjongutils.hora.HoraHandPattern#mahjongutils.hora.HoraOptions#kotlin.collections.Set[mahjongutils.yaku.Yaku]#kotlin.Int/PointingToDeclaration/mahjong-utils/mahjongutils.hora.helpers/calc-han.md
 $dokka.location:mahjongutils.hora////PointingToDeclaration/mahjong-utils/mahjongutils.hora/index.md
 $dokka.location:mahjongutils.hora//hora/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.collections.List[mahjongutils.models.Furo]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Int#mahjongutils.models.Wind?#mahjongutils.models.Wind?#kotlin.collections.Set[mahjongutils.yaku.Yaku]#mahjongutils.hora.HoraOptions/PointingToDeclaration/mahjong-utils/mahjongutils.hora/hora.md
+$dokka.location:mahjongutils.hora//hora/#mahjongutils.hora.HoraArgs/PointingToDeclaration/mahjong-utils/mahjongutils.hora/hora.md
 $dokka.location:mahjongutils.hora//hora/#mahjongutils.shanten.CommonShantenResult[*]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Int#mahjongutils.models.Wind?#mahjongutils.models.Wind?#kotlin.collections.Set[mahjongutils.yaku.Yaku]#mahjongutils.hora.HoraOptions/PointingToDeclaration/mahjong-utils/mahjongutils.hora/hora.md
 $dokka.location:mahjongutils.hora/ChitoiHoraHandPattern///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-chitoi-hora-hand-pattern/index.md
 $dokka.location:mahjongutils.hora/ChitoiHoraHandPattern/ChitoiHoraHandPattern/#kotlin.collections.Set[mahjongutils.models.Tile]#mahjongutils.models.Tile#kotlin.Boolean#mahjongutils.models.Wind?#mahjongutils.models.Wind?/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-chitoi-hora-hand-pattern/-chitoi-hora-hand-pattern.md
@@ -58,6 +61,19 @@ $dokka.location:mahjongutils.hora/Hora/options/#/PointingToDeclaration/mahjong-
 $dokka.location:mahjongutils.hora/Hora/parentPoint/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora/parent-point.md
 $dokka.location:mahjongutils.hora/Hora/pattern/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora/pattern.md
 $dokka.location:mahjongutils.hora/Hora/yaku/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora/yaku.md
+$dokka.location:mahjongutils.hora/HoraArgs.Companion///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/-companion/index.md
+$dokka.location:mahjongutils.hora/HoraArgs///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/index.md
+$dokka.location:mahjongutils.hora/HoraArgs/HoraArgs/#kotlin.collections.List[mahjongutils.models.Tile]?#kotlin.collections.List[mahjongutils.models.Furo]#mahjongutils.shanten.CommonShantenResult[*]?#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Int#mahjongutils.models.Wind?#mahjongutils.models.Wind?#kotlin.collections.Set[mahjongutils.yaku.Yaku]#mahjongutils.hora.HoraOptions/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/-hora-args.md
+$dokka.location:mahjongutils.hora/HoraArgs/agari/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/agari.md
+$dokka.location:mahjongutils.hora/HoraArgs/dora/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/dora.md
+$dokka.location:mahjongutils.hora/HoraArgs/extraYaku/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/extra-yaku.md
+$dokka.location:mahjongutils.hora/HoraArgs/furo/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/furo.md
+$dokka.location:mahjongutils.hora/HoraArgs/options/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/options.md
+$dokka.location:mahjongutils.hora/HoraArgs/roundWind/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/round-wind.md
+$dokka.location:mahjongutils.hora/HoraArgs/selfWind/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/self-wind.md
+$dokka.location:mahjongutils.hora/HoraArgs/shantenResult/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/shanten-result.md
+$dokka.location:mahjongutils.hora/HoraArgs/tiles/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/tiles.md
+$dokka.location:mahjongutils.hora/HoraArgs/tsumo/#/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-args/tsumo.md
 $dokka.location:mahjongutils.hora/HoraHandPattern.Companion///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-hand-pattern/-companion/index.md
 $dokka.location:mahjongutils.hora/HoraHandPattern.Companion/build/#mahjongutils.models.hand.CommonHandPattern#mahjongutils.models.Tile#kotlin.Boolean#mahjongutils.models.Wind?#mahjongutils.models.Wind?/PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-hand-pattern/-companion/build.md
 $dokka.location:mahjongutils.hora/HoraHandPattern///PointingToDeclaration/mahjong-utils/mahjongutils.hora/-hora-hand-pattern/index.md
@@ -277,16 +293,28 @@ $dokka.location:mahjongutils.shanten////PointingToDeclaration/mahjong-utils/mah
 $dokka.location:mahjongutils.shanten//asWithGot/mahjongutils.shanten.CommonShanten#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/as-with-got.md
 $dokka.location:mahjongutils.shanten//asWithoutGot/mahjongutils.shanten.CommonShanten#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/as-without-got.md
 $dokka.location:mahjongutils.shanten//chitoiShanten/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/chitoi-shanten.md
+$dokka.location:mahjongutils.shanten//chitoiShanten/#mahjongutils.shanten.ShantenArgs/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/chitoi-shanten.md
 $dokka.location:mahjongutils.shanten//furoChanceShanten/#kotlin.collections.List[mahjongutils.models.Tile]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/furo-chance-shanten.md
+$dokka.location:mahjongutils.shanten//furoChanceShanten/#mahjongutils.shanten.FuroChanceShantenArgs/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/furo-chance-shanten.md
 $dokka.location:mahjongutils.shanten//kokushiShanten/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/kokushi-shanten.md
+$dokka.location:mahjongutils.shanten//kokushiShanten/#mahjongutils.shanten.ShantenArgs/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/kokushi-shanten.md
 $dokka.location:mahjongutils.shanten//regularShanten/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.collections.List[mahjongutils.models.Furo]#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/regular-shanten.md
+$dokka.location:mahjongutils.shanten//regularShanten/#mahjongutils.shanten.ShantenArgs/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/regular-shanten.md
 $dokka.location:mahjongutils.shanten//shanten/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.collections.List[mahjongutils.models.Furo]#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/shanten.md
+$dokka.location:mahjongutils.shanten//shanten/#mahjongutils.shanten.ShantenArgs/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/shanten.md
 $dokka.location:mahjongutils.shanten/ChitoiShantenResult///PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-chitoi-shanten-result/index.md
 $dokka.location:mahjongutils.shanten/ChitoiShantenResult/ChitoiShantenResult/#mahjongutils.models.hand.Hand[mahjongutils.models.hand.ChitoiHandPattern]#mahjongutils.shanten.CommonShanten/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-chitoi-shanten-result/-chitoi-shanten-result.md
 $dokka.location:mahjongutils.shanten/ChitoiShantenResult/hand/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-chitoi-shanten-result/hand.md
 $dokka.location:mahjongutils.shanten/ChitoiShantenResult/shantenInfo/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-chitoi-shanten-result/shanten-info.md
 $dokka.location:mahjongutils.shanten/CommonShanten///PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-common-shanten/index.md
 $dokka.location:mahjongutils.shanten/CommonShantenResult///PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-common-shanten-result/index.md
+$dokka.location:mahjongutils.shanten/FuroChanceShantenArgs///PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-args/index.md
+$dokka.location:mahjongutils.shanten/FuroChanceShantenArgs/FuroChanceShantenArgs/#kotlin.collections.List[mahjongutils.models.Tile]#mahjongutils.models.Tile#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-args/-furo-chance-shanten-args.md
+$dokka.location:mahjongutils.shanten/FuroChanceShantenArgs/allowChi/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-args/allow-chi.md
+$dokka.location:mahjongutils.shanten/FuroChanceShantenArgs/allowKuikae/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-args/allow-kuikae.md
+$dokka.location:mahjongutils.shanten/FuroChanceShantenArgs/bestShantenOnly/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-args/best-shanten-only.md
+$dokka.location:mahjongutils.shanten/FuroChanceShantenArgs/chanceTile/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-args/chance-tile.md
+$dokka.location:mahjongutils.shanten/FuroChanceShantenArgs/tiles/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-args/tiles.md
 $dokka.location:mahjongutils.shanten/FuroChanceShantenResult///PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-result/index.md
 $dokka.location:mahjongutils.shanten/FuroChanceShantenResult/FuroChanceShantenResult/#mahjongutils.models.hand.Hand[mahjongutils.models.hand.RegularHandPattern]#mahjongutils.shanten.ShantenWithFuroChance/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-result/-furo-chance-shanten-result.md
 $dokka.location:mahjongutils.shanten/FuroChanceShantenResult/hand/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-furo-chance-shanten-result/hand.md
@@ -306,6 +334,11 @@ $dokka.location:mahjongutils.shanten/RegularShantenResult/hand/#/PointingToDecla
 $dokka.location:mahjongutils.shanten/RegularShantenResult/shantenInfo/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-regular-shanten-result/shanten-info.md
 $dokka.location:mahjongutils.shanten/Shanten///PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten/index.md
 $dokka.location:mahjongutils.shanten/Shanten/shantenNum/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten/shanten-num.md
+$dokka.location:mahjongutils.shanten/ShantenArgs///PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten-args/index.md
+$dokka.location:mahjongutils.shanten/ShantenArgs/ShantenArgs/#kotlin.collections.List[mahjongutils.models.Tile]#kotlin.collections.List[mahjongutils.models.Furo]#kotlin.Boolean/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten-args/-shanten-args.md
+$dokka.location:mahjongutils.shanten/ShantenArgs/bestShantenOnly/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten-args/best-shanten-only.md
+$dokka.location:mahjongutils.shanten/ShantenArgs/furo/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten-args/furo.md
+$dokka.location:mahjongutils.shanten/ShantenArgs/tiles/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten-args/tiles.md
 $dokka.location:mahjongutils.shanten/ShantenResult///PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten-result/index.md
 $dokka.location:mahjongutils.shanten/ShantenResult/hand/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten-result/hand.md
 $dokka.location:mahjongutils.shanten/ShantenResult/shantenInfo/#/PointingToDeclaration/mahjong-utils/mahjongutils.shanten/-shanten-result/shanten-info.md
@@ -411,8 +444,14 @@ $dokka.location:mahjongutils.yaku/Yakus/allYaku/#/PointingToDeclaration/mahjong
 $dokka.location:mahjongutils.yaku/Yakus/allYakuman/#/PointingToDeclaration/mahjong-utils/mahjongutils.yaku/-yakus/all-yakuman.md
 $dokka.location:mahjongutils.yaku/Yakus/getYaku/#kotlin.String/PointingToDeclaration/mahjong-utils/mahjongutils.yaku/-yakus/get-yaku.md
 $dokka.location:mahjongutils.yaku/Yakus/options/#/PointingToDeclaration/mahjong-utils/mahjongutils.yaku/-yakus/options.md
+$dokka.location:mahjongutils////PointingToDeclaration/mahjong-utils/mahjongutils/index.md
+$dokka.location:mahjongutils/CalcContext///PointingToDeclaration/mahjong-utils/mahjongutils/-calc-context/index.md
+$dokka.location:mahjongutils/CalcContext/CalcContext/#/PointingToDeclaration/mahjong-utils/mahjongutils/-calc-context/-calc-context.md
+$dokka.location:mahjongutils/CalcContext/memo/#kotlin.Any?#kotlin.Function0[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mahjong-utils/mahjongutils/-calc-context/memo.md
+mahjongutils
 mahjongutils.hanhu
 mahjongutils.hora
+mahjongutils.hora.helpers
 mahjongutils.models
 mahjongutils.models.hand
 mahjongutils.shanten
