@@ -184,12 +184,12 @@ internal fun CalcContext.furoChanceShanten(
 
             FuroChanceShantenResult(
                 hand = passShanten.hand,
-                shantenInfo = ShantenWithFuroChance(shantenNum, pass_, chi_, pon_, minkan_)
+                shantenInfo = ShantenWithFuroChance(shantenNum, canRon, pass_, chi_, pon_, minkan_)
             )
         } else {
             FuroChanceShantenResult(
                 hand = passShanten.hand,
-                shantenInfo = ShantenWithFuroChance(shantenNum, pass, chi, pon, minkan)
+                shantenInfo = ShantenWithFuroChance(shantenNum, canRon, pass, chi, pon, minkan)
             )
         }
     }
