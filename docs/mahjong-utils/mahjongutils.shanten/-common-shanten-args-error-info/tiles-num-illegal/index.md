@@ -1,9 +1,9 @@
-//[mahjong-utils](../../../../index.md)/[mahjongutils.shanten](../../index.md)/[CommonShantenArgsErrorInfo](../index.md)/[tooManyFuro](index.md)
+//[mahjong-utils](../../../../index.md)/[mahjongutils.shanten](../../index.md)/[CommonShantenArgsErrorInfo](../index.md)/[tilesNumIllegal](index.md)
 
-# tooManyFuro
+# tilesNumIllegal
 
 [common]\
-[tooManyFuro](index.md)
+[tilesNumIllegal](index.md)
 
 ## Properties
 

@@ -13,7 +13,7 @@ enum [CommonShantenArgsErrorInfo](index.md) : [Enum](https://kotlinlang.org/api/
 | [tooManyFuro](too-many-furo/index.md) | [common]<br>[tooManyFuro](too-many-furo/index.md) |
 | [tooManyTiles](too-many-tiles/index.md) | [common]<br>[tooManyTiles](too-many-tiles/index.md) |
 | [anyTileMoreThan4](any-tile-more-than4/index.md) | [common]<br>[anyTileMoreThan4](any-tile-more-than4/index.md) |
-| [tilesDividedInto3](tiles-divided-into3/index.md) | [common]<br>[tilesDividedInto3](tiles-divided-into3/index.md) |
+| [tilesNumIllegal](tiles-num-illegal/index.md) | [common]<br>[tilesNumIllegal](tiles-num-illegal/index.md) |
 
 ## Properties
 
@@ -21,8 +21,8 @@ enum [CommonShantenArgsErrorInfo](index.md) : [Enum](https://kotlinlang.org/api/
 |---|---|
 | [entries](entries.md) | [common]<br>val [entries](entries.md): [EnumEntries](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.enums/-enum-entries/index.html)&lt;[CommonShantenArgsErrorInfo](index.md)&gt;<br>Returns a representation of an immutable list of all enum entries, in the order they're declared. |
 | [message](message.md) | [common]<br>open override val [message](message.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [name](../-furo-chance-shanten-args-error-info/index.md#-372974862%2FProperties%2F1581026887) | [common]<br>val [name](../-furo-chance-shanten-args-error-info/index.md#-372974862%2FProperties%2F1581026887): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [ordinal](../-furo-chance-shanten-args-error-info/index.md#-739389684%2FProperties%2F1581026887) | [common]<br>val [ordinal](../-furo-chance-shanten-args-error-info/index.md#-739389684%2FProperties%2F1581026887): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [name](../-furo-chance-shanten-args-error-info/tiles-num-illegal/index.md#-372974862%2FProperties%2F1581026887) | [common]<br>val [name](../-furo-chance-shanten-args-error-info/tiles-num-illegal/index.md#-372974862%2FProperties%2F1581026887): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [ordinal](../-furo-chance-shanten-args-error-info/tiles-num-illegal/index.md#-739389684%2FProperties%2F1581026887) | [common]<br>val [ordinal](../-furo-chance-shanten-args-error-info/tiles-num-illegal/index.md#-739389684%2FProperties%2F1581026887): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 
 ## Functions
 

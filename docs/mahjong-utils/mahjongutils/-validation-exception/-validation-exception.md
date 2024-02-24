@@ -3,4 +3,4 @@
 # ValidationException
 
 [common]\
-constructor(errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ValidationError](../-validation-error/index.md)&lt;*&gt;&gt;)
+constructor(errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;)

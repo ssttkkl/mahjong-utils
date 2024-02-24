@@ -39,4 +39,4 @@ common
 | Name | Summary |
 |---|---|
 | [throwOnValidationError](../throw-on-validation-error.md) | [common]<br>fun [FuroChanceShantenArgs](index.md).[throwOnValidationError](../throw-on-validation-error.md)() |
-| [validate](../validate.md) | [common]<br>fun [FuroChanceShantenArgs](index.md).[validate](../validate.md)(): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[FuroChanceShantenArgsValidationError](../-furo-chance-shanten-args-validation-error/index.md)&gt; |
+| [validate](../validate.md) | [common]<br>fun [FuroChanceShantenArgs](index.md).[validate](../validate.md)(): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[FuroChanceShantenArgsErrorInfo](../-furo-chance-shanten-args-error-info/index.md)&gt; |

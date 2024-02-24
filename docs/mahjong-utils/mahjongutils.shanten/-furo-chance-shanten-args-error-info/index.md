@@ -5,14 +5,23 @@
 [common]\
 enum [FuroChanceShantenArgsErrorInfo](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;[FuroChanceShantenArgsErrorInfo](index.md)&gt; , [ErrorInfo](../../mahjongutils/-error-info/index.md)
 
+## Entries
+
+| | |
+|---|---|
+| [tilesIsEmpty](tiles-is-empty/index.md) | [common]<br>[tilesIsEmpty](tiles-is-empty/index.md) |
+| [tooManyTiles](too-many-tiles/index.md) | [common]<br>[tooManyTiles](too-many-tiles/index.md) |
+| [anyTileMoreThan4](any-tile-more-than4/index.md) | [common]<br>[anyTileMoreThan4](any-tile-more-than4/index.md) |
+| [tilesNumIllegal](tiles-num-illegal/index.md) | [common]<br>[tilesNumIllegal](tiles-num-illegal/index.md) |
+
 ## Properties
 
 | Name | Summary |
 |---|---|
 | [entries](entries.md) | [common]<br>val [entries](entries.md): [EnumEntries](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.enums/-enum-entries/index.html)&lt;[FuroChanceShantenArgsErrorInfo](index.md)&gt;<br>Returns a representation of an immutable list of all enum entries, in the order they're declared. |
 | [message](message.md) | [common]<br>open override val [message](message.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [name](index.md#-372974862%2FProperties%2F1581026887) | [common]<br>val [name](index.md#-372974862%2FProperties%2F1581026887): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [ordinal](index.md#-739389684%2FProperties%2F1581026887) | [common]<br>val [ordinal](index.md#-739389684%2FProperties%2F1581026887): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [name](tiles-num-illegal/index.md#-372974862%2FProperties%2F1581026887) | [common]<br>val [name](tiles-num-illegal/index.md#-372974862%2FProperties%2F1581026887): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [ordinal](tiles-num-illegal/index.md#-739389684%2FProperties%2F1581026887) | [common]<br>val [ordinal](tiles-num-illegal/index.md#-739389684%2FProperties%2F1581026887): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 
 ## Functions
 

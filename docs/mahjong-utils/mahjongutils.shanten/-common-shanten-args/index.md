@@ -44,4 +44,4 @@ common
 | Name | Summary |
 |---|---|
 | [throwOnValidationError](../throw-on-validation-error.md) | [common]<br>fun [CommonShantenArgs](index.md).[throwOnValidationError](../throw-on-validation-error.md)() |
-| [validate](../validate.md) | [common]<br>fun [CommonShantenArgs](index.md).[validate](../validate.md)(): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[CommonShantenArgsValidationError](../-common-shanten-args-validation-error/index.md)&gt; |
+| [validate](../validate.md) | [common]<br>fun [CommonShantenArgs](index.md).[validate](../validate.md)(): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[CommonShantenArgsErrorInfo](../-common-shanten-args-error-info/index.md)&gt; |

@@ -3,4 +3,4 @@
 # CommonShantenArgsValidationException
 
 [common]\
-constructor(args: [CommonShantenArgs](../-common-shanten-args/index.md), errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ValidationError](../../mahjongutils/-validation-error/index.md)&lt;[CommonShantenArgsErrorInfo](../-common-shanten-args-error-info/index.md)&gt;&gt;)
+constructor(args: [CommonShantenArgs](../-common-shanten-args/index.md), errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[CommonShantenArgsErrorInfo](../-common-shanten-args-error-info/index.md)&gt;)
