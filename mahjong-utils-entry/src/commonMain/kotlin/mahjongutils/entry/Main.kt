@@ -4,15 +4,13 @@ package mahjongutils.entry
 
 import mahjongutils.entry.coder.ParamsDecoder
 import mahjongutils.entry.coder.ResultEncoder
-import mahjongutils.entry.models.FuroChanceShantenArgs
 import mahjongutils.entry.models.HanHu
-import mahjongutils.entry.models.HoraArgs
-import mahjongutils.entry.models.ShantenArgs
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hanhu.getChildPointByHanHu
 import mahjongutils.hanhu.getParentPointByHanHu
 import mahjongutils.hora.Hora
+import mahjongutils.hora.HoraArgs
 import mahjongutils.hora.hora
 import mahjongutils.shanten.*
 import kotlin.jvm.JvmName
@@ -23,25 +21,19 @@ internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
 ): Entry<RAW_PARAMS, RAW_RESULT> {
     return Entry(paramsDecoder, resultEncoder).apply {
         register<ShantenArgs, UnionShantenResult>("shanten") { args ->
-            shanten(args.tiles, args.furo, args.bestShantenOnly)
+            shanten(args)
         }
         register<ShantenArgs, RegularShantenResult>("regularShanten") { args ->
-            regularShanten(args.tiles, args.furo, args.bestShantenOnly)
+            regularShanten(args)
         }
         register<ShantenArgs, ChitoiShantenResult>("chitoiShanten") { args ->
-            chitoiShanten(args.tiles, args.bestShantenOnly)
+            chitoiShanten(args)
         }
         register<ShantenArgs, KokushiShantenResult>("kokushiShanten") { args ->
-            kokushiShanten(args.tiles, args.bestShantenOnly)
+            kokushiShanten(args)
         }
         register<FuroChanceShantenArgs, FuroChanceShantenResult>("furoChanceShanten") { args ->
-            furoChanceShanten(
-                args.tiles,
-                args.chanceTile,
-                args.allowChi,
-                args.bestShantenOnly,
-                args.allowKuikae
-            )
+            furoChanceShanten(args)
         }
 
         register<HanHu, ParentPoint>("getParentPointByHanHu") { args ->
@@ -52,21 +44,7 @@ internal fun <RAW_PARAMS : Any, RAW_RESULT : Any> buildEntry(
         }
 
         register<HoraArgs, Hora>("hora") { args ->
-            if (args.shantenResult != null) {
-                hora(
-                    args.shantenResult, args.agari, args.tsumo,
-                    args.dora, args.selfWind, args.roundWind, args.extraYaku,
-                    args.options
-                )
-            } else if (args.tiles != null) {
-                hora(
-                    args.tiles, args.furo ?: emptyList(), args.agari, args.tsumo,
-                    args.dora, args.selfWind, args.roundWind, args.extraYaku,
-                    args.options
-                )
-            } else {
-                throw IllegalArgumentException("either shantenResult or tiles/furo muse be set")
-            }
+            hora(args)
         }
     }
 }

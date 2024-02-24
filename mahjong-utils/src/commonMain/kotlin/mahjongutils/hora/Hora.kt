@@ -39,7 +39,7 @@ fun hora(
 ): Hora {
     val context = CalcContext()
     return context.hora(
-        HoraArgsWithTiles(
+        HoraArgs(
             tiles = tiles,
             furo = furo,
             agari = agari,
@@ -76,9 +76,8 @@ fun hora(
     extraYaku: Set<Yaku> = DEFAULT_EXTRA_YAKU,
     options: HoraOptions = DEFAULT_OPTIONS,
 ): Hora {
-    val context = CalcContext()
-    return context.hora(
-        HoraArgsWithShantenResult(
+    return hora(
+        HoraArgs(
             shantenResult = shantenResult,
             agari = agari,
             tsumo = tsumo,
@@ -91,11 +90,30 @@ fun hora(
     )
 }
 
+fun hora(
+    args: HoraArgs
+): Hora {
+    val context = CalcContext()
+    return context.hora(args)
+}
+
 internal fun CalcContext.hora(
-    args: HoraArgsWithTiles
+    args: HoraArgs
 ): Hora = memo(Pair("hora", args)) {
+    if (args.tiles != null) {
+        return horaWithTiles(args)
+    } else if (args.shantenResult != null) {
+        return horaWithShantenResult(args)
+    } else {
+        throw IllegalArgumentException("either shantenResult or tiles/furo muse be set")
+    }
+}
+
+internal fun CalcContext.horaWithTiles(
+    args: HoraArgs
+): Hora {
     with(args) {
-        val tiles = if (tiles.size + furo.size * 3 == 13) {
+        val tiles = if (tiles!!.size + furo.size * 3 == 13) {
             tiles + agari
         } else {
             tiles
@@ -113,8 +131,8 @@ internal fun CalcContext.hora(
                 allowAnkan = false
             )
         )
-        return hora(
-            HoraArgsWithShantenResult(
+        return horaWithShantenResult(
+            HoraArgs(
                 shantenResult = shantenResult,
                 agari = agari,
                 tsumo = tsumo,
@@ -128,11 +146,11 @@ internal fun CalcContext.hora(
     }
 }
 
-internal fun CalcContext.hora(
-    args: HoraArgsWithShantenResult
-): Hora = memo(Pair("hora", args)) {
+internal fun CalcContext.horaWithShantenResult(
+    args: HoraArgs
+): Hora {
     with(args) {
-        require(shantenResult.shantenInfo is ShantenWithGot) { "shantenResult is not with got" }
+        require(shantenResult!!.shantenInfo is ShantenWithGot) { "shantenResult is not with got" }
         require(shantenResult.shantenInfo.shantenNum == -1) { "shantenResult is not hora yet" }
         require(agari in shantenResult.hand.tiles) { "agari not in tiles" }
         require(shantenResult.hand.tiles.size + shantenResult.hand.furo.size * 3 == 14) { "invalid length of tiles" }
