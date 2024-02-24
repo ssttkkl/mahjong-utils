@@ -2,6 +2,7 @@ package mahjongutils.shanten
 
 import mahjongutils.CalcContext
 import mahjongutils.models.*
+import mahjongutils.shanten.helpers.ensureLegalTiles
 import kotlin.math.min
 
 internal data class InternalFuroChanceShantenArgs(

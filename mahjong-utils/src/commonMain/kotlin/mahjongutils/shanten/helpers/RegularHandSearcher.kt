@@ -1,4 +1,4 @@
-package mahjongutils.common
+package mahjongutils.shanten.helpers
 
 import mahjongutils.models.*
 import mahjongutils.models.hand.RegularHandPattern

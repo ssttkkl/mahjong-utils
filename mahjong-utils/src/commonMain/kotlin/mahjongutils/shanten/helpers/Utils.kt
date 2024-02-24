@@ -1,10 +1,12 @@
-package mahjongutils.shanten
+package mahjongutils.shanten.helpers
 
-import mahjongutils.common.BestHandPatternsSelector
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.HandPattern
+import mahjongutils.shanten.CommonShanten
+import mahjongutils.shanten.ShantenWithGot
+import mahjongutils.shanten.ShantenWithoutGot
 
 
 internal fun ensureLegalTiles(

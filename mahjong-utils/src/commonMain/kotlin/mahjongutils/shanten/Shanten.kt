@@ -6,6 +6,8 @@ import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.CommonHandPattern
 import mahjongutils.models.hand.Hand
+import mahjongutils.shanten.helpers.ensureLegalTiles
+import mahjongutils.shanten.helpers.fillNum
 import kotlin.jvm.JvmOverloads
 import kotlin.math.min
 

@@ -1,13 +1,21 @@
 package mahjongutils.shanten
 
 import mahjongutils.CalcContext
-import mahjongutils.common.*
 import mahjongutils.models.Furo
 import mahjongutils.models.Kan
 import mahjongutils.models.Tile
 import mahjongutils.models.TileType
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.RegularHandPattern
+import mahjongutils.shanten.helpers.*
+import mahjongutils.shanten.helpers.BestHandPatternsSelector
+import mahjongutils.shanten.helpers.TILE_CLING
+import mahjongutils.shanten.helpers.calcAdvance
+import mahjongutils.shanten.helpers.calcShanten
+import mahjongutils.shanten.helpers.ensureLegalTiles
+import mahjongutils.shanten.helpers.getRemainingFromTileCount
+import mahjongutils.shanten.helpers.getTileCount
+import mahjongutils.shanten.helpers.regularHandPatternSearch
 
 /**
  * 标准形向听分析（只考虑4面子+1雀头和牌的形状）

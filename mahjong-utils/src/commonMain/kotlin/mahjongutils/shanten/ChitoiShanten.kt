@@ -5,6 +5,9 @@ import mahjongutils.models.Tile
 import mahjongutils.models.countAsMap
 import mahjongutils.models.hand.ChitoiHandPattern
 import mahjongutils.models.hand.Hand
+import mahjongutils.shanten.helpers.ensureLegalTiles
+import mahjongutils.shanten.helpers.fillNum
+import mahjongutils.shanten.helpers.getTileCount
 
 /**
  * 七对子向听分析

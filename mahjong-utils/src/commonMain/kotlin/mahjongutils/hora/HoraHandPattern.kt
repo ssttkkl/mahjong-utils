@@ -6,7 +6,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import mahjongutils.common.afterDiscardForHoraHand
+import mahjongutils.shanten.helpers.afterDiscardForHoraHand
 import mahjongutils.models.*
 import mahjongutils.models.hand.*
 

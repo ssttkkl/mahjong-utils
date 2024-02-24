@@ -1,12 +1,15 @@
 package mahjongutils.shanten
 
 import mahjongutils.CalcContext
-import mahjongutils.common.calcShanten
+import mahjongutils.shanten.helpers.calcShanten
 import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.Hand
 import mahjongutils.models.hand.KokushiHandPattern
 import mahjongutils.models.isYaochu
+import mahjongutils.shanten.helpers.ensureLegalTiles
+import mahjongutils.shanten.helpers.fillNum
+import mahjongutils.shanten.helpers.selectBestPatterns
 
 /**
  * 国士无双向听分析
