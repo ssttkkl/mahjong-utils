@@ -6,8 +6,8 @@ import mahjongutils.models.Tile
 import mahjongutils.models.countAsCodeArray
 import mahjongutils.models.hand.CommonHandPattern
 import mahjongutils.models.hand.Hand
-import mahjongutils.shanten.helpers.ensureLegalTiles
 import mahjongutils.shanten.helpers.fillNum
+import mahjongutils.shanten.helpers.normalizeTiles
 import kotlin.jvm.JvmOverloads
 import kotlin.math.min
 
@@ -73,7 +73,7 @@ internal fun CalcContext.shanten(
     args: InternalShantenArgs
 ): UnionShantenResult = memo(Pair("shanten", args)) {
     with(args) {
-        val tiles = ensureLegalTiles(tiles)
+        val tiles = normalizeTiles(tiles)
 
         val withGot = tiles.size % 3 == 2
         val k = tiles.size / 3

@@ -5,6 +5,7 @@ import mahjongutils.models.Tile
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class TestFuroChanceShanten {
     @Test
@@ -73,5 +74,12 @@ class TestFuroChanceShanten {
     fun test4() {
         val result = furoChanceShanten(Tile.parseTiles("3467m119p"), Tile.get("5m"))
         assertEquals(7, result.shantenInfo.chi[Tatsu.parse("67m")]!!.discardToAdvance[Tile.get("9p")]!!.advanceNum)
+    }
+
+    @Test
+    fun test5() {
+        val result = furoChanceShanten(Tile.parseTiles("1112345678999m"), Tile["9m"])
+        assertTrue { result.shantenInfo.canRon }
+        assertEquals(-1, result.shantenInfo.shantenNum)
     }
 }

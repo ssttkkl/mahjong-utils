@@ -14,6 +14,10 @@ import mahjongutils.models.hand.RegularHandPattern
 data class ShantenWithFuroChance(
     override val shantenNum: Int,
     /**
+     * 是否能荣和机会牌
+     */
+    val canRon: Boolean,
+    /**
      * Pass后的向听信息
      */
     val pass: ShantenWithoutGot?,

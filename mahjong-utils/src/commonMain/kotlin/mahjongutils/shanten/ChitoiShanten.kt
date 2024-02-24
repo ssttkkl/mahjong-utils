@@ -5,9 +5,9 @@ import mahjongutils.models.Tile
 import mahjongutils.models.countAsMap
 import mahjongutils.models.hand.ChitoiHandPattern
 import mahjongutils.models.hand.Hand
-import mahjongutils.shanten.helpers.ensureLegalTiles
 import mahjongutils.shanten.helpers.fillNum
 import mahjongutils.shanten.helpers.getTileCount
+import mahjongutils.shanten.helpers.normalizeTiles
 
 /**
  * 七对子向听分析
@@ -46,7 +46,7 @@ internal fun CalcContext.chitoiShanten(
     args: InternalShantenArgs
 ): ChitoiShantenResult = memo(Pair("chitoiShanten", args)) {
     with(args) {
-        val tiles = ensureLegalTiles(tiles)
+        val tiles = normalizeTiles(tiles)
 
         var (shantenInfo, pattern) = if (tiles.size == 13) {
             handleChitoiShantenWithoutGot(tiles)

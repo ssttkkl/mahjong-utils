@@ -9,31 +9,10 @@ import mahjongutils.shanten.ShantenWithGot
 import mahjongutils.shanten.ShantenWithoutGot
 
 
-internal fun ensureLegalTiles(
-    tiles: List<Tile>,
-    allowAnyK: Boolean = true,
-    allowWithGot: Boolean = true,
-    allowWithoutGot: Boolean = true
+internal fun normalizeTiles(
+    tiles: List<Tile>
 ): List<Tile> {
-    if (!allowAnyK && tiles.size / 3 != 4 ||
-        tiles.size !in 1..14 ||
-        tiles.size % 3 == 0 ||
-        !allowWithGot && tiles.size % 3 == 2 ||
-        !allowWithoutGot && tiles.size % 3 == 1
-    ) {
-        throw IllegalArgumentException("invalid length of hand: ${tiles.size}")
-    }
-
     val tiles = tiles.map { if (it.num == 0) Tile.get(it.type, 5) else it }
-
-    val cnt = IntArray(Tile.MAX_TILE_CODE + 1)
-    for (t in tiles) {
-        cnt[t.code] += 1
-        if (cnt[t.code] > 4) {
-            throw IllegalArgumentException("invalid num of tile: $t")
-        }
-    }
-
     return tiles
 }
 
