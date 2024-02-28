@@ -1,3 +1,4 @@
+import org.apache.commons.io.FileUtils
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -137,27 +138,39 @@ afterEvaluate {
     val currentOsTargetName = when {
         hostOs == "Mac OS X" -> {
             if (isAarch64) {
-                "MacosArm64"
+                "macosArm64"
             } else {
-                "MacosX64"
+                "macosX64"
             }
         }
 
         hostOs == "Linux" -> {
             if (isAarch64) {
-                "LinuxArm64"
+                "linuxArm64"
             } else {
-                "LinuxX64"
+                "linuxX64"
             }
         }
 
-        isMingwX64 -> "MingwX64"
+        isMingwX64 -> "mingwX64"
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
     tasks.create("linkDebugSharedForCurrentOs").apply {
-        dependsOn("linkDebugShared" + currentOsTargetName)
+        val inputDir = buildDir.resolve("bin/${currentOsTargetName}/debugShared")
+        val outputDir = buildDir.resolve("bin/currentOs/debugShared")
+
+        dependsOn("linkDebugShared" + currentOsTargetName.capitalize())
+        doLast {
+            FileUtils.copyDirectory(inputDir, outputDir)
+        }
     }
     tasks.create("linkReleaseSharedForCurrentOs").apply {
-        dependsOn("linkReleaseShared" + currentOsTargetName)
+        val inputDir = buildDir.resolve("bin/${currentOsTargetName}/releaseShared")
+        val outputDir = buildDir.resolve("bin/currentOs/releaseShared")
+
+        dependsOn("linkReleaseShared" + currentOsTargetName.capitalize())
+        doLast {
+            FileUtils.copyDirectory(inputDir, outputDir)
+        }
     }
 }
