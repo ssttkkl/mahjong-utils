@@ -11,7 +11,6 @@ typedef unsigned int libmahjongutils_KUInt;
 typedef unsigned long long libmahjongutils_KULong;
 typedef float libmahjongutils_KFloat;
 typedef double libmahjongutils_KDouble;
-// typedef float __attribute__ ((__vector_size__ (16))) libmahjongutils_KVector128;
 typedef void* libmahjongutils_KNativePtr;
 struct libmahjongutils_KType;
 typedef struct libmahjongutils_KType libmahjongutils_KType;

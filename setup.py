@@ -54,7 +54,7 @@ class build_kt(Command):
         subproject = build_info.get("subproject", None)
         if subproject is not None:
             build_dir = build_dir / subproject
-        build_dir = build_dir / "build" / "bin" / "native" / "releaseShared"
+        build_dir = build_dir / "build" / "bin" / "currentOs" / "releaseShared"
         return build_dir
 
     def build_sharedlib(self):
@@ -70,7 +70,7 @@ class build_kt(Command):
             subproject = build_info.get("subproject", None)
             if subproject is not None:
                 task += f":{subproject}:"
-            task += "linkReleaseSharedNative"
+            task += "linkReleaseSharedForCurrentOs"
 
             run_gradle_task(root, task)
 

@@ -3,7 +3,7 @@ from typing import Optional, Set, List
 from stringcase import pascalcase
 
 from mahjong_utils.bridge import bridge_mahjongutils
-from mahjong_utils.hora.models import Hora
+from mahjong_utils.hora.models import Hora, HoraOptions
 from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.tile import Tile
 from mahjong_utils.models.wind import Wind
@@ -16,7 +16,8 @@ def build_hora(
         tsumo: bool,
         *, dora: int = 0,
         self_wind: Optional[Wind] = None, round_wind: Optional[Wind] = None,
-        extra_yaku: Optional[Set[Yaku]] = None
+        extra_yaku: Optional[Set[Yaku]] = None,
+        options: Optional[HoraOptions] = None
 ) -> Hora:
     """
     和牌分析
@@ -31,16 +32,25 @@ def build_hora(
     :param extra_yaku: 额外役
     :return: 和牌分析结果
     """
-    result = bridge_mahjongutils.call("hora", {
+    args = {
         "tiles": [str(t) for t in tiles],
-        "furo": [fr.__encode__() for fr in furo] if furo is not None else [],
         "agari": str(agari),
         "tsumo": tsumo,
         "dora": dora,
-        "selfWind": pascalcase(self_wind.name) if self_wind is not None else None,
-        "roundWind": pascalcase(round_wind.name) if round_wind is not None else None,
-        "extraYaku": [pascalcase(yk.name) for yk in extra_yaku] if extra_yaku is not None else []
-    })
+    }
+    if furo is not None:
+        args["furo"] = [fr.__encode__() for fr in furo]
+    if self_wind is not None:
+        args["selfWind"] = pascalcase(self_wind.name)
+    if round_wind is not None:
+        args["roundWind"] = pascalcase(round_wind.name)
+    if furo is not None:
+        args["furo"] = [fr.__encode__() for fr in furo]
+    if extra_yaku is not None:
+        args["extraYaku"] = [pascalcase(yk.name) for yk in extra_yaku]
+    if options is not None:
+        args["options"] = options.__encode__()
+    result = bridge_mahjongutils.call("hora", args)
 
     return Hora.__decode__(result)
 
@@ -51,7 +61,8 @@ def build_hora_from_shanten_result(
         tsumo: bool,
         *, dora: int = 0,
         self_wind: Optional[Wind] = None, round_wind: Optional[Wind] = None,
-        extra_yaku: Optional[Set[Yaku]] = None
+        extra_yaku: Optional[Set[Yaku]] = None,
+        options: Optional[HoraOptions] = None
 ) -> Hora:
     """
     和牌分析（根据向听分析结果）
@@ -65,15 +76,21 @@ def build_hora_from_shanten_result(
     :param extra_yaku: 额外役
     :return: 和牌分析结果
     """
-    result = bridge_mahjongutils.call("hora", {
+    args = {
         "shantenResult": shanten_result.__encode__(),
         "agari": str(agari),
         "tsumo": tsumo,
         "dora": dora,
-        "selfWind": pascalcase(self_wind.name) if self_wind is not None else None,
-        "roundWind": pascalcase(round_wind.name) if round_wind is not None else None,
-        "extraYaku": [pascalcase(yk.name) for yk in extra_yaku] if extra_yaku is not None else []
-    })
+    }
+    if self_wind is not None:
+        args["selfWind"] = pascalcase(self_wind.name)
+    if round_wind is not None:
+        args["roundWind"] = pascalcase(round_wind.name)
+    if extra_yaku is not None:
+        args["extraYaku"] = [pascalcase(yk.name) for yk in extra_yaku]
+    if options is not None:
+        args["options"] = options.__encode__()
+    result = bridge_mahjongutils.call("hora", args)
 
     return Hora.__decode__(result)
 
