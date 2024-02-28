@@ -4,6 +4,7 @@ from typing import Set
 
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic.dataclasses import dataclass
 from stringcase import pascalcase, snakecase
 
 from mahjong_utils.models.hand_pattern import RegularHandPattern, HandPattern, _BaseRegularHandPattern, \
@@ -15,10 +16,48 @@ from mahjong_utils.point_by_han_hu.models import ParentPoint, ChildPoint
 from mahjong_utils.yaku import Yaku, get_yaku
 
 
+@dataclass(frozen=True)
+class HoraOptions:
+    aotenjou: bool = False
+    """是否为青天井规则"""
+    allow_kuitan: bool = True
+    """是否允许食断"""
+    has_renpuu_jyantou_hu: bool = True
+    """连风雀头是否记4符（true则记4符，false则记2符）"""
+    has_kiriage_mangan: bool = False
+    """是否有切上满贯"""
+    has_kazoe_yakuman: bool = True
+    """是否有累计役满"""
+    has_multiple_yakuman: bool = True
+    """是否有多倍役满"""
+    has_complex_yakuman: bool = True
+    """是否有复合役满"""
+
+    def __encode__(self) -> dict:
+        return dict(aotenjou=self.aotenjou,
+                    allowKuitan=self.allow_kuitan,
+                    hasRenpuuJyantouHu=self.has_renpuu_jyantou_hu,
+                    hasKiriageMangan=self.has_kiriage_mangan,
+                    hasKazoeYakuman=self.has_kazoe_yakuman,
+                    hasMultipleYakuman=self.has_multiple_yakuman,
+                    hasComplexYakuman=self.has_complex_yakuman)
+
+    @classmethod
+    def __decode__(cls, data: dict) -> "HoraOptions":
+        return HoraOptions(
+            aotenjou=data["aotenjou"],
+            allow_kuitan=data["allowKuitan"],
+            has_renpuu_jyantou_hu=data["hasRenpuuJyantouHu"],
+            has_kiriage_mangan=data["hasKiriageMangan"],
+            has_kazoe_yakuman=data["hasKazoeYakuman"],
+            has_multiple_yakuman=data["hasMultipleYakuman"],
+            has_complex_yakuman=data["hasComplexYakuman"],
+        )
+
+
 class HoraHandPattern(HandPattern, ABC):
     agari: Tile
     tsumo: bool
-    hu: int
     self_wind: Optional[Wind]
     round_wind: Optional[Wind]
 
@@ -61,7 +100,6 @@ class RegularHoraHandPattern(HoraHandPattern, _BaseRegularHandPattern):
             self_wind=Wind[snakecase(data["selfWind"])] if data["selfWind"] is not None else None,
             round_wind=Wind[snakecase(data["roundWind"])] if data["roundWind"] is not None else None,
             agari_tatsu=Tatsu.__decode__(data["agariTatsu"]) if data["agariTatsu"] is not None else None,
-            hu=data["hu"],
             **RegularHandPattern.__decode__(data["pattern"]).dict()
         )
 
@@ -125,6 +163,7 @@ class KokushiHoraHandPattern(HoraHandPattern, _BaseKokushiHandPattern):
 class Hora(BaseModel):
     pattern: HoraHandPattern
     han: int
+    hu: int
     dora: int
     yaku: Set[Yaku]
     extra_yaku: Set[Yaku]
@@ -137,6 +176,7 @@ class Hora(BaseModel):
         return Hora(
             pattern=HoraHandPattern.__decode__(data["pattern"]),
             han=data["han"],
+            hu=data["hu"],
             dora=data["dora"],
             yaku=set(get_yaku(snakecase(yk)) for yk in data["yaku"]),
             extra_yaku=set(get_yaku(snakecase(yk)) for yk in data["extraYaku"]),
@@ -144,10 +184,6 @@ class Hora(BaseModel):
             parent_point=ParentPoint.__decode__(data["parentPoint"]),
             child_point=ChildPoint.__decode__(data["childPoint"]),
         )
-
-    @property
-    def hu(self) -> int:
-        return self.pattern.hu
 
     @property
     def tsumo(self) -> bool:

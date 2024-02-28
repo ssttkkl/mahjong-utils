@@ -1,6 +1,6 @@
 import pytest
 
-from mahjong_utils.point_by_han_hu import get_parent_point_by_han_hu, get_child_point_by_han_hu
+from mahjong_utils.point_by_han_hu import get_parent_point_by_han_hu, get_child_point_by_han_hu, HanHuOptions
 
 
 def test_get_parent_point_by_han_hu():
@@ -18,6 +18,8 @@ def test_get_parent_point_by_han_hu():
     with pytest.raises(ValueError):
         get_parent_point_by_han_hu(114, 514)
 
+    assert get_parent_point_by_han_hu(4, 30, HanHuOptions(has_kiriage_mangan=True)) == (12000, 4000)
+
 
 def test_get_child_point_by_han_hu():
     assert get_child_point_by_han_hu(2, 30) == (2000, 1000, 500)
@@ -33,3 +35,5 @@ def test_get_child_point_by_han_hu():
 
     with pytest.raises(ValueError):
         get_child_point_by_han_hu(114, 514)
+
+    assert get_child_point_by_han_hu(4, 30, HanHuOptions(has_kiriage_mangan=True)) == (8000, 4000, 2000)

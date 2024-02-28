@@ -1,4 +1,4 @@
-from mahjong_utils.hora import build_hora, build_hora_from_shanten_result
+from mahjong_utils.hora import build_hora, build_hora_from_shanten_result, HoraOptions
 from mahjong_utils.models.furo import Furo
 from mahjong_utils.models.tile import Tile, parse_tiles
 from mahjong_utils.models.wind import Wind
@@ -8,7 +8,7 @@ from mahjong_utils.yaku.common import ittsu, chinitsu, ipe, tsumo, pinhu, honits
     round_wind, haku, chitoi
 from mahjong_utils.yaku.extra import richi, tenhou, ippatsu
 from mahjong_utils.yaku.yakuman import churen, tsuiso, daisushi, suanko_tanki, sukantsu, lyuiso, \
-    kokushi_thirteen_waiting
+    kokushi_thirteen_waiting, churen_nine_waiting
 
 
 def test_build_hora():
@@ -111,12 +111,11 @@ def test_build_hora_10():
     hora = build_hora(parse_tiles("19s19p19m12345677z"),
                       [],
                       Tile.by_text("7z"),
-                      True)
+                      True,
+                      options=HoraOptions(aotenjou=True))
 
-    assert hora.yaku == {kokushi_thirteen_waiting}
-    assert hora.han == 13 * 2
-    assert hora.parent_point == ParentPoint(0, 16000 * 2)
-    assert hora.child_point == ChildPoint(0, 16000 * 2, 8000 * 2)
+    assert hora.yaku == {kokushi_thirteen_waiting, tsumo}
+    assert hora.han == 27
 
 
 def test_build_hora_11():
@@ -136,6 +135,16 @@ def test_build_hora_from_shanten_result():
     hora = build_hora_from_shanten_result(shanten_result, Tile.by_text("9m"), True)
 
     assert hora.yaku == {churen}
+    assert hora.han == 13
+    assert hora.parent_point == ParentPoint(0, 16000)
+    assert hora.child_point == ChildPoint(0, 16000, 8000)
+
+
+def test_build_hora_from_shanten_result_with_options():
+    shanten_result = shanten(parse_tiles("11112345678999m"))
+    hora = build_hora_from_shanten_result(shanten_result, Tile.by_text("1m"), True, options=HoraOptions(has_multiple_yakuman=False))
+
+    assert hora.yaku == {churen_nine_waiting}
     assert hora.han == 13
     assert hora.parent_point == ParentPoint(0, 16000)
     assert hora.child_point == ChildPoint(0, 16000, 8000)

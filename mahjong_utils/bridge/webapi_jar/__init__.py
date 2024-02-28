@@ -12,8 +12,8 @@ from typing import Optional
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from ..protocol import MahjongUtilsBridge
 from .path import mahjongutils_webapi_jar_path
+from ..protocol import MahjongUtilsBridge
 
 
 def _java_executable() -> Path:
@@ -34,6 +34,7 @@ def _java_executable() -> Path:
             return Path(java_executable)
         else:
             raise RuntimeError("Cannot find java executable in your PATH environment variable. ")
+
 
 def _is_port_occupied(port: int):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -112,3 +113,6 @@ class WebApiJarMahjongUtils(MahjongUtilsBridge):
     def close(self):
         current: Optional[Popen] = getattr(self._process, "value", None)
         current.terminate()
+
+
+__all__ = ("WebApiJarMahjongUtils",)
