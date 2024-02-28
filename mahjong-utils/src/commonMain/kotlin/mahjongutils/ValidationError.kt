@@ -7,6 +7,6 @@ interface ErrorInfo {
 
 open class ValidationException(
     val errors: Collection<ErrorInfo>
-) : RuntimeException() {
+) : IllegalArgumentException() {
     override val message: String = errors.joinToString("; ") { it.message }
 }

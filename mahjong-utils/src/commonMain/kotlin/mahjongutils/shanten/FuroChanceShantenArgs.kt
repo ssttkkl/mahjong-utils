@@ -1,5 +1,6 @@
 package mahjongutils.shanten
 
+import kotlinx.serialization.Serializable
 import mahjongutils.ErrorInfo
 import mahjongutils.ValidationException
 import mahjongutils.models.Tile
@@ -13,6 +14,7 @@ import mahjongutils.models.countAsCodeArray
  * @param bestShantenOnly 仅计算最优向听数的打法（不计算退向打法）
  * @param allowKuikae 是否允许食替
  */
+@Serializable
 data class FuroChanceShantenArgs(
     val tiles: List<Tile>,
     val chanceTile: Tile,
