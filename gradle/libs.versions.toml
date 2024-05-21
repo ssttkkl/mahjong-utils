@@ -1,8 +1,8 @@
 [versions]
-kotlin = "1.9.21"
-kotlinx-coroutines = "1.8.0-RC"
-kotlinx-serialization = "1.6.2"
-ktor = "2.3.6"
+kotlin = "2.0.0"
+kotlinx-coroutines = "1.8.1"
+kotlinx-serialization = "1.7.0-RC"
+ktor = "2.3.11"
 buildlogic = "0.0.1"
 
 [libraries]
