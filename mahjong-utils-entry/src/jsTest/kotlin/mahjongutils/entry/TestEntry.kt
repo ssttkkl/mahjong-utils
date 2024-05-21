@@ -7,12 +7,12 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromDynamic
 import kotlinx.serialization.json.encodeToDynamic
 import mahjongutils.entry.models.HanHu
-import mahjongutils.entry.models.HoraArgs
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint
 import mahjongutils.hanhu.getChildPointByHanHu
 import mahjongutils.hanhu.getParentPointByHanHu
 import mahjongutils.hora.Hora
+import mahjongutils.hora.HoraArgs
 import mahjongutils.hora.hora
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile

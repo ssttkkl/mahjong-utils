@@ -2,6 +2,8 @@
 
 # FuroChanceShantenArgs
 
+@Serializable
+
 data class [FuroChanceShantenArgs](index.md)(val tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;, val chanceTile: [Tile](../../mahjongutils.models/-tile/index.md), val allowChi: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true, val bestShantenOnly: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, val allowKuikae: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false)
 
 副露判断向听分析参数
