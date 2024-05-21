@@ -2,7 +2,7 @@
 
 # ValidationException
 
-open class [ValidationException](index.md)(val errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;) : [RuntimeException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-runtime-exception/index.html)
+open class [ValidationException](index.md)(val errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;) : [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html)
 
 #### Inheritors
 
