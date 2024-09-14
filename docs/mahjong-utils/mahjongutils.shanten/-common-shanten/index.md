@@ -4,7 +4,7 @@
 
 @Serializable
 
-interface [CommonShanten](index.md) : [Shanten](../-shanten/index.md)
+sealed interface [CommonShanten](index.md) : [Shanten](../-shanten/index.md)
 
 #### Inheritors
 
