@@ -42,22 +42,11 @@ class KmpLibConventionPlugin : Plugin<Project> {
             iosX64()
             iosSimulatorArm64()
 
-            val hostOs = System.getProperty("os.name")
-            val isMingwX64 = hostOs.startsWith("Windows")
-            when {
-                hostOs == "Mac OS X" -> {
-                    macosArm64()
-                    macosX64()
-                }
-
-                hostOs == "Linux" -> {
-                    linuxArm64()
-                    linuxX64()
-                }
-
-                isMingwX64 -> mingwX64()
-                else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-            }
+            macosArm64()
+            macosX64()
+            linuxArm64()
+            linuxX64()
+            mingwX64()
 
             sourceSets {
                 val commonTest by getting {
