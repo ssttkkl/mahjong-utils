@@ -44,22 +44,15 @@ class KmpLibConventionPlugin : Plugin<Project> {
 
             val hostOs = System.getProperty("os.name")
             val isMingwX64 = hostOs.startsWith("Windows")
-            val isAarch64 = System.getProperty("os.arch") == "aarch64"
             when {
                 hostOs == "Mac OS X" -> {
-                    if (isAarch64) {
-                        macosArm64()
-                    } else {
-                        macosX64()
-                    }
+                    macosArm64()
+                    macosX64()
                 }
 
                 hostOs == "Linux" -> {
-                    if (isAarch64) {
-                        linuxArm64()
-                    } else {
-                        linuxX64()
-                    }
+                    linuxArm64()
+                    linuxX64()
                 }
 
                 isMingwX64 -> mingwX64()
