@@ -4,7 +4,7 @@
 
 @Serializable
 
-interface [Shanten](index.md)
+sealed interface [Shanten](index.md)
 
 向听信息
 

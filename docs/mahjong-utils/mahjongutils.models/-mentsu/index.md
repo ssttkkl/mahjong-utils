@@ -4,7 +4,7 @@
 
 @Serializable(with = MentsuSerializer::class)
 
-interface [Mentsu](index.md)
+sealed interface [Mentsu](index.md)
 
 面子
 

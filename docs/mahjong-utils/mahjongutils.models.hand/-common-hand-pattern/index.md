@@ -4,7 +4,7 @@
 
 @Serializable
 
-interface [CommonHandPattern](index.md) : [HandPattern](../-hand-pattern/index.md)
+sealed interface [CommonHandPattern](index.md) : [HandPattern](../-hand-pattern/index.md)
 
 #### Inheritors
 

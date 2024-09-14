@@ -4,7 +4,7 @@
 
 @Serializable(with = TatsuSerializer::class)
 
-interface [Tatsu](index.md)
+sealed interface [Tatsu](index.md)
 
 搭子
 
