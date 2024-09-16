@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.kotlin.jvm) apply false
@@ -18,14 +15,6 @@ tasks.wrapper {
     gradleVersion = "8.4"
     distributionType = Wrapper.DistributionType.ALL
 }
-
-
-//rootProject.plugins.withType<NodeJsRootPlugin> {
-//    rootProject.the<NodeJsRootExtension>().apply {
-//        nodeVersion = "21.0.0-v8-canary20231019bd785be450"
-//        nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
-//    }
-//}
 
 dependencies {
     kover(project(":mahjong-utils"))

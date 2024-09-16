@@ -1,3 +1,6 @@
+import mahjongutils.buildlogic.enableJs
+import mahjongutils.buildlogic.enableNative
+import mahjongutils.buildlogic.enableWasm
 import org.apache.commons.io.FileUtils
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
@@ -8,14 +11,16 @@ plugins {
 }
 
 kotlin {
-    js(IR) {
-        browser {
-            binaries.library()
-            useCommonJs()
-        }
-        nodejs {
-            binaries.library()
-            useCommonJs()
+    if (enableJs) {
+        js(IR) {
+            browser {
+                binaries.library()
+                useCommonJs()
+            }
+            nodejs {
+                binaries.library()
+                useCommonJs()
+            }
         }
     }
 //    wasmJs {
@@ -74,41 +79,49 @@ kotlin {
         val jvmTest by getting {
             dependsOn(nonJsTest)
         }
-        val nativeMain by getting {
-            dependsOn(nonJsMain)
+        if (enableNative) {
+            val nativeMain by getting {
+                dependsOn(nonJsMain)
+            }
+            val nativeTest by getting {
+                dependsOn(nonJsTest)
+            }
         }
-        val nativeTest by getting {
-            dependsOn(nonJsTest)
-        }
-        val wasmJsMain by getting {
-            dependsOn(nonJsMain)
-        }
-        val wasmJsTest by getting {
-            dependsOn(nonJsTest)
+        if (enableWasm) {
+            val wasmJsMain by getting {
+                dependsOn(nonJsMain)
+            }
+            val wasmJsTest by getting {
+                dependsOn(nonJsTest)
+            }
         }
     }
 }
 
 npmPublish {
     packages {
-        get("js").apply {
-            packageJson {
-                name = "mahjong-utils-entry"
-                author {
-                    name = "ssttkkl"
-                    email = "huang.wen.long@hotmail.com"
+        if (enableJs) {
+            get("js").apply {
+                packageJson {
+                    name = "mahjong-utils-entry"
+                    author {
+                        name = "ssttkkl"
+                        email = "huang.wen.long@hotmail.com"
+                    }
+                    license = "MIT"
                 }
-                license = "MIT"
             }
         }
-        get("wasmJs").apply {
-            packageJson {
-                name = "mahjong-utils-entry-wasm"
-                author {
-                    name = "ssttkkl"
-                    email = "huang.wen.long@hotmail.com"
+        if (enableWasm) {
+            get("wasmJs").apply {
+                packageJson {
+                    name = "mahjong-utils-entry-wasm"
+                    author {
+                        name = "ssttkkl"
+                        email = "huang.wen.long@hotmail.com"
+                    }
+                    license = "MIT"
                 }
-                license = "MIT"
             }
         }
     }
@@ -131,46 +144,48 @@ publishing {
     }
 }
 
-afterEvaluate {
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val isAarch64 = System.getProperty("os.arch") == "aarch64"
-    val currentOsTargetName = when {
-        hostOs == "Mac OS X" -> {
-            if (isAarch64) {
-                "macosArm64"
-            } else {
-                "macosX64"
+if (enableNative) {
+    afterEvaluate {
+        val hostOs = System.getProperty("os.name")
+        val isMingwX64 = hostOs.startsWith("Windows")
+        val isAarch64 = System.getProperty("os.arch") == "aarch64"
+        val currentOsTargetName = when {
+            hostOs == "Mac OS X" -> {
+                if (isAarch64) {
+                    "macosArm64"
+                } else {
+                    "macosX64"
+                }
+            }
+
+            hostOs == "Linux" -> {
+                if (isAarch64) {
+                    "linuxArm64"
+                } else {
+                    "linuxX64"
+                }
+            }
+
+            isMingwX64 -> "mingwX64"
+            else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+        }
+        tasks.create("linkDebugSharedForCurrentOs").apply {
+            val inputDir = buildDir.resolve("bin/${currentOsTargetName}/debugShared")
+            val outputDir = buildDir.resolve("bin/currentOs/debugShared")
+
+            dependsOn("linkDebugShared" + currentOsTargetName.capitalize())
+            doLast {
+                FileUtils.copyDirectory(inputDir, outputDir)
             }
         }
+        tasks.create("linkReleaseSharedForCurrentOs").apply {
+            val inputDir = buildDir.resolve("bin/${currentOsTargetName}/releaseShared")
+            val outputDir = buildDir.resolve("bin/currentOs/releaseShared")
 
-        hostOs == "Linux" -> {
-            if (isAarch64) {
-                "linuxArm64"
-            } else {
-                "linuxX64"
+            dependsOn("linkReleaseShared" + currentOsTargetName.capitalize())
+            doLast {
+                FileUtils.copyDirectory(inputDir, outputDir)
             }
-        }
-
-        isMingwX64 -> "mingwX64"
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
-    tasks.create("linkDebugSharedForCurrentOs").apply {
-        val inputDir = buildDir.resolve("bin/${currentOsTargetName}/debugShared")
-        val outputDir = buildDir.resolve("bin/currentOs/debugShared")
-
-        dependsOn("linkDebugShared" + currentOsTargetName.capitalize())
-        doLast {
-            FileUtils.copyDirectory(inputDir, outputDir)
-        }
-    }
-    tasks.create("linkReleaseSharedForCurrentOs").apply {
-        val inputDir = buildDir.resolve("bin/${currentOsTargetName}/releaseShared")
-        val outputDir = buildDir.resolve("bin/currentOs/releaseShared")
-
-        dependsOn("linkReleaseShared" + currentOsTargetName.capitalize())
-        doLast {
-            FileUtils.copyDirectory(inputDir, outputDir)
         }
     }
 }
