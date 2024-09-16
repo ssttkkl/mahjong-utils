@@ -4,7 +4,7 @@
 
 @Serializable
 
-interface [CommonShantenResult](index.md)&lt;out [P](index.md) : [CommonHandPattern](../../mahjongutils.models.hand/-common-hand-pattern/index.md)&gt; : [ShantenResult](../-shanten-result/index.md)&lt;[CommonShanten](../-common-shanten/index.md), [P](index.md)&gt; 
+sealed interface [CommonShantenResult](index.md)&lt;out [P](index.md) : [CommonHandPattern](../../mahjongutils.models.hand/-common-hand-pattern/index.md)&gt; : [ShantenResult](../-shanten-result/index.md)&lt;[CommonShanten](../-common-shanten/index.md), [P](index.md)&gt; 
 
 #### Inheritors
 

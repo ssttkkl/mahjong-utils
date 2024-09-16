@@ -4,7 +4,7 @@
 
 @Serializable
 
-interface [HoraHandPattern](index.md) : [HoraInfo](../-hora-info/index.md), [HandPattern](../../mahjongutils.models.hand/-hand-pattern/index.md)
+sealed interface [HoraHandPattern](index.md) : [HoraInfo](../-hora-info/index.md), [HandPattern](../../mahjongutils.models.hand/-hand-pattern/index.md)
 
 和牌手牌
 

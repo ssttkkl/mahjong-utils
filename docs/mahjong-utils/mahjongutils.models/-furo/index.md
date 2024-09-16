@@ -4,7 +4,7 @@
 
 @Serializable
 
-interface [Furo](index.md)
+sealed interface [Furo](index.md)
 
 副露
 
