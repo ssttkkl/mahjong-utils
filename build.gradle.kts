@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.kotlin.jvm) apply false
@@ -19,4 +21,16 @@ tasks.wrapper {
 dependencies {
     kover(project(":mahjong-utils"))
     kover(project(":mahjong-utils-entry"))
+}
+
+val envPropFile = file("env.properties")
+if (envPropFile.exists()) {
+    val props = Properties().apply {
+        envPropFile.reader().use { rd ->
+            load(rd)
+        }
+    }
+    props.forEach { (k, v) ->
+        extra.set(k.toString(), v)
+    }
 }

@@ -17,19 +17,19 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 private fun ExtraPropertiesExtension.getBoolean(name: String, default: Boolean = true): Boolean {
     return if (has(name))
-        get(name)?.toString()?.lowercase()?.toBooleanStrictOrNull() ?: default
+        get(name).toString().lowercase().toBooleanStrict()
     else
         default
 }
 
 val Project.enableNative
-    get() = rootProject.extra.getBoolean("enable_native")
+    get() = rootProject.extra.getBoolean("ENABLE_NATIVE")
 
 val Project.enableJs
-    get() = rootProject.extra.getBoolean("enable_js")
+    get() = rootProject.extra.getBoolean("ENABLE_JS")
 
 val Project.enableWasm
-    get() = rootProject.extra.getBoolean("enable_wasm")
+    get() = rootProject.extra.getBoolean("ENABLE_WASM")
 
 
 class KmpLibConventionPlugin : Plugin<Project> {
