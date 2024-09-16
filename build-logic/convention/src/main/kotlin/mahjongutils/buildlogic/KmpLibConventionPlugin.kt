@@ -2,7 +2,9 @@ package mahjongutils.buildlogic
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.getting
@@ -12,14 +14,22 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
-val enableNative = System.getenv("enable_native")
-    ?.equals("true", ignoreCase = true) != false
 
-val enableJs = System.getenv("enable_js")
-    ?.equals("true", ignoreCase = true) != false
+private fun ExtraPropertiesExtension.getBoolean(name: String, default: Boolean = true): Boolean {
+    return if (has(name))
+        get(name)?.toString()?.lowercase()?.toBooleanStrictOrNull() ?: default
+    else
+        default
+}
 
-val enableWasm = System.getenv("enable_wasm")
-    ?.equals("true", ignoreCase = true) != false
+val Project.enableNative
+    get() = rootProject.extra.getBoolean("enable_native")
+
+val Project.enableJs
+    get() = rootProject.extra.getBoolean("enable_js")
+
+val Project.enableWasm
+    get() = rootProject.extra.getBoolean("enable_wasm")
 
 
 class KmpLibConventionPlugin : Plugin<Project> {

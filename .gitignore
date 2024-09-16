@@ -143,3 +143,4 @@ dmypy.json
 
 local.properties
 secret_ring.gpg
+env.properties
