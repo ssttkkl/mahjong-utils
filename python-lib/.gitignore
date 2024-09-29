@@ -10,6 +10,8 @@ __pycache__/
 
 # C extensions
 *.so
+*.dll
+*.dylib
 
 # Distribution / packaging
 .Python
@@ -138,10 +140,6 @@ dmypy.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
-.idea/
-.gradle/
-.kotlin
-
-local.properties
-secret_ring.gpg
-env.properties
+/.idea/
+*.whl
+/kt

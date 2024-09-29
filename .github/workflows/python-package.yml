@@ -1,0 +1,136 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python Distribution Package
+
+on:
+  push:
+    branches: [ "py" ]
+  pull_request:
+    branches: [ "py" ]
+  release:
+    types: [published]
+
+permissions:
+  id-token: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout my repository
+      uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.11'
+    - name: Setup Java JDK
+      if: ${{ matrix.os != 'ubuntu-latest' }}
+      uses: actions/setup-java@v3.6.0
+      with:
+        java-version: 11
+        distribution: temurin
+        cache: 'gradle'
+    - name: Cache Kotlin/Native compiler
+      id: cache-konan
+      uses: actions/cache@v3
+      with:
+        path: ~/.konan
+        key: ${{ runner.os }}-konan
+    - name: Install dependencies
+      working-directory: python-lib
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install build
+    - name: Build dist
+      if: ${{ matrix.os != 'ubuntu-latest' }}
+      working-directory: python-lib
+      run: |
+        python3 -m build --sdist --wheel --outdir dist/
+    - name: Build dist (for Linux)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      uses: RalfG/python-wheels-manylinux-build@v0.6.0-manylinux_2_28_x86_64
+      with:
+        system-packages: java-11-openjdk
+        python-versions: cp310-cp310
+        package-path: python-lib
+    - name: Upload the Build Artifact
+      if: ${{ matrix.os != 'ubuntu-latest' }}
+      uses: actions/upload-artifact@v3.1.1
+      with:
+          name: distribution
+          path: dist/*
+    - name: Upload the Build Artifact (for Linux)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      uses: actions/upload-artifact@v3.1.1
+      with:
+          name: distribution
+          path: dist/*-manylinux*.whl
+  test:
+    needs: build
+    strategy:
+      matrix:
+        py: [ "3.8", "3.9", "3.10", "3.11", "3.12" ]
+        os: [ windows-latest, ubuntu-latest ]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    env:
+      # https://github.com/actions/setup-python/issues/469
+      SYSTEM_VERSION_COMPAT: 0
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Download the Build Artifact
+      uses: actions/download-artifact@v3.0.1
+      with:
+        name: distribution
+        path: dist
+    - name: Set up Python ${{ matrix.py }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.py }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pytest
+        python -m pip install -r requirements.txt
+    - name: Install package (for Linux)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        python -m pip install dist/*-manylinux*.whl
+    - name: Install package (for MacOS)
+      if: ${{ matrix.os == 'macos-latest' }}
+      run: |
+        python -m pip install dist/*-macosx*.whl
+    - name: Install package (for Windows)
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: |
+        Get-ChildItem "dist/*-win*.whl" | Foreach-Object { python -m pip install $_.FullName }
+    - name: Test
+      run: |
+        mv mahjong_utils _mahjong_utils  # to avoid importing from workspace
+        python -m pytest
+  publish:
+    if: ${{ github.event_name == 'release' }}
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.1
+      with:
+        name: distribution
+        path: dist
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+    - name: Upload Build Artifact to releases
+      uses: fnkr/github-action-ghr@v1.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GHR_PATH: dist/
