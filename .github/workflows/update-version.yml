@@ -1,0 +1,24 @@
+name: Update Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string 
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4.2.0
+    - uses: actions/setup-python@v5.2.0
+    - run: python3 update-version.py "${{ github.event.inputs.version }}"
+
+    - name: Commit Version
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "New version: ${{ github.event.inputs.version }}"

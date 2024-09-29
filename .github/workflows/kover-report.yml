@@ -1,4 +1,4 @@
-name: Kover Report
+name: Test and Build Kover Report
 
 on:
   pull_request:
@@ -27,7 +27,9 @@ jobs:
           key: ${{ runner.os }}-konan
 
       - name: Generate Kover Report
-        run: ./gradlew koverXmlReport
+        run: |
+          ./gradlew allTests
+          ./gradlew koverXmlReport
 
       - name: Add coverage report to PR
         id: kover
