@@ -2,6 +2,7 @@ import json
 import os
 import socket
 import sys
+from os import PathLike
 from pathlib import Path
 from random import randint
 from shutil import which
@@ -12,7 +13,6 @@ from typing import Optional
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from .path import mahjongutils_webapi_jar_path
 from ..protocol import MahjongUtilsBridge
 
 
@@ -50,10 +50,11 @@ class WebApiJarMahjongUtils(MahjongUtilsBridge):
     _process: Optional[Popen]
     _port: Optional[int]
 
-    def __init__(self):
+    def __init__(self, webapi_jar_path: PathLike):
         self._process = None
         self._port = None
         self._init_lock = Lock()
+        self.webapi_jar_path = webapi_jar_path
         self.verbose = os.getenv("VERBOSE")
 
         if self.verbose is None:
@@ -78,7 +79,7 @@ class WebApiJarMahjongUtils(MahjongUtilsBridge):
             with self._init_lock:
                 if self._process is None or self._process.poll() is not None:
                     port = self._choose_port()
-                    self._process = Popen([_java_executable(), "-jar", mahjongutils_webapi_jar_path()],
+                    self._process = Popen([_java_executable(), "-jar", self.webapi_jar_path],
                                           stdout=sys.stdout if self.verbose else DEVNULL,
                                           stderr=sys.stderr,
                                           env={"PORT": str(port)})

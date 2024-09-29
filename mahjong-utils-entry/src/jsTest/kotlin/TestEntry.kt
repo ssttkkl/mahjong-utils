@@ -1,11 +1,10 @@
 @file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 
-package mahjongutils.entry
-
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromDynamic
 import kotlinx.serialization.json.encodeToDynamic
+import mahjongutils.entry.Result
 import mahjongutils.entry.models.HanHu
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint

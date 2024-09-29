@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalJsExport::class)
 
-package mahjongutils.entry
+import mahjongutils.entry.buildEntry
 
 
 internal val ENTRY = buildEntry(DynamicParamsDecoder, DynamicResultEncoder)
