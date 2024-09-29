@@ -9,7 +9,6 @@ from distutils import log
 from distutils.command.clean import clean as origin_clean
 from distutils.errors import DistutilsExecError
 from distutils.file_util import copy_file
-from distutils.util import get_platform
 from setuptools import Command, setup
 from setuptools.command.build_py import build_py as origin_build_py
 from setuptools.command.sdist import sdist as origin_sdist
@@ -31,7 +30,7 @@ def run_gradle_task(root, task):
 
 
 def copy_kt_src():
-    ignores = [".git", ".venv", ".kotlin", "build"]
+    ignores = [".git", ".idea", ".github", "docs", ".venv", ".kotlin", "build", "js-lib"]
 
     source_dir = Path(os.getcwd()).parent.absolute()
     target_dir = Path("kt").absolute()
@@ -77,12 +76,12 @@ class build_kt(Command):
     user_options = [
         ('build-lib=', 'd', "directory to \"build\" (copy) to"),
         ('kt-libraries=', None, ''),
-        ('shared-location=', None, ""),
+        ('ktjs-location=', None, ""),
     ]
 
     def initialize_options(self) -> None:
         self.build_lib = None
-        self.shared_location = None
+        self.ktjs_location = None
         self.kt_libraries = None
 
     def finalize_options(self) -> None:
@@ -94,15 +93,14 @@ class build_kt(Command):
         subproject = build_info.get("subproject", None)
         if subproject is not None:
             build_dir = build_dir / subproject
-        build_dir = build_dir / "build" / "bin" / "currentOs" / "releaseShared"
         return build_dir
 
-    def build_sharedlib(self):
-        out_dir = Path(self.build_lib) / self.shared_location
+    def build_ktjs(self):
+        out_dir = Path(self.build_lib) / self.ktjs_location
         out_dir.mkdir(exist_ok=True, parents=True)
 
         for (lib_name, build_info) in self.kt_libraries:
-            log.info("building '%s' Kotlin/Native Shared Library", lib_name)
+            log.info("building '%s' Kotlin/JS Library", lib_name)
 
             root = Path(build_info.get("root")).absolute()
 
@@ -110,22 +108,17 @@ class build_kt(Command):
             subproject = build_info.get("subproject", None)
             if subproject is not None:
                 task += f":{subproject}:"
-            task += "linkReleaseSharedForCurrentOs"
+            task += "jsBrowserProductionWebpack"
 
             run_gradle_task(root, task)
 
-            build_dir = self.get_kt_build_dir(build_info)
+            build_dir = self.get_kt_build_dir(build_info) / "build" / "kotlin-webpack" / "js" / "productionExecutable"
 
             for file in build_dir.iterdir():
-                if sys.platform == 'win32' and file.name.endswith(".dll"):  # windows
-                    copy_file(str(file), str(out_dir))
-                elif sys.platform == 'darwin' and file.name.endswith(".dylib"):  # macOS
-                    copy_file(str(file), str(out_dir))
-                elif file.name.endswith(".so"):  # unix/linux
-                    copy_file(str(file), str(out_dir))
+                copy_file(str(file), str(out_dir))
 
     def run(self):
-        self.build_sharedlib()
+        self.build_ktjs()
 
 
 class clean(origin_clean):
@@ -149,7 +142,7 @@ setup(
     long_description_content_type="text/markdown",
     install_requires=[
         "pydantic>=1.9.0,<2.0.0",
-        "cffi>=1.15.1",
+        "mini-racer>=0.12.4",
         "stringcase>=1.2.0"
     ],
     packages=[
@@ -174,10 +167,7 @@ setup(
                      "subproject": "mahjong-utils-entry"
                  })
             ],
-            "shared_location": "mahjong_utils/bridge/lib"
-        },
-        "bdist_wheel": {
-            "plat_name": get_platform()
+            "ktjs_location": "mahjong_utils/bridge/js"
         }
     },
     cmdclass={"build_kt": build_kt, "build_py": build_py, "sdist": sdist, "clean": clean}

@@ -35,15 +35,15 @@ class RouterMahjongUtils(MahjongUtilsBridge):
                 port = int(os.getenv(ENV_MAHJONG_UTILS_HTTP_PORT) or "8080")
                 scheme = os.getenv(ENV_MAHJONG_UTILS_HTTP_SCHEME) or "http"
                 self._delegate = HttpMahjongUtils(host, port, scheme)
-            elif bridgeType == "js":
-                self._delegate = JsMahjongUtils()
-            else:
+            elif bridgeType == "lib":
                 lib_search_path = os.getenv(ENV_MAHJONG_UTILS_LIB_SEARCH_PATH)
                 if lib_search_path:
                     lib_search_path = [Path(p) for p in lib_search_path.split(":")]
                 else:
                     lib_search_path = []
                 self._delegate = LibMahjongUtils(lib_search_path)
+            else:
+                self._delegate = JsMahjongUtils()
         return self._delegate
 
     def call(self, name: str, params: dict) -> dict:
