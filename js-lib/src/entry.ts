@@ -1,3 +1,4 @@
+// @ts-ignore
 import { mahjongutils } from 'mahjong-utils-entry'
 
 export const ENTRY = { call: mahjongutils.entry.call }
