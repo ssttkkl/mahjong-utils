@@ -94,6 +94,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/setup-node@v4
+        name: Set up Node.js
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
       - name: Setup Java JDK
         uses: actions/setup-java@v3
         with:
