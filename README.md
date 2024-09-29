@@ -19,9 +19,9 @@ mahjong-utils
 
 对于Kotlin、Java：请直接往下阅读
 
-对于Python：我们提供了绑定方便Python侧调用，具体请看 https://github.com/ssttkkl/mahjong-utils/tree/py
+对于Python：我们提供了绑定方便Python侧调用，具体请看 [python-lib/README.md](python-lib/README.md)
 
-对于JavaScript/TypeScript：我们提供了绑定方便JS/TS侧调用，具体请看 https://github.com/ssttkkl/mahjong-utils/tree/js
+对于JavaScript/TypeScript：我们提供了绑定方便JS/TS侧调用，具体请看 [js-lib/README.md](js-lib/README.md)
 
 ## 使用（Kotlin/Java）
 

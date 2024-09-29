@@ -11,12 +11,6 @@ mahjong-utils-py
 pip install mahjong-utils
 ```
 
-或通过源码安装（本机必须配置JDK环境用于编译）：
-
-```shell
-pip install git+https://github.com/ssttkkl/mahjong-utils.git@py
-```
-
 ## 使用
 
 ### 获取番符对应和牌点数
