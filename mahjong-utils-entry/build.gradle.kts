@@ -15,6 +15,13 @@ kotlin {
         js(IR) {
             browser {
                 binaries.library()
+
+                // 给浏览器 or 其他运行时直接使用
+                binaries.executable()
+                webpackTask {
+                    output.library = "MahjongUtilsEntry"
+                    output.libraryTarget = "var"
+                }
             }
             nodejs {
                 binaries.library()
