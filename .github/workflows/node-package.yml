@@ -38,5 +38,5 @@ jobs:
       - run: yarn publish
         working-directory: js-lib
         if: ${{ github.event_name == 'release' }}
-        with:
+        env:
           npm-auth-token: ${{ secrets.NPM_TOKEN }}
