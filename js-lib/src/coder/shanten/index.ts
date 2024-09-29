@@ -1,2 +1,2 @@
-export * from './shanten-info'
-export * from './shanten-result'
+export * from './shanten-info.js'
+export * from './shanten-result.js'

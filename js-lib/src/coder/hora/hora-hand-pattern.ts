@@ -1,15 +1,15 @@
-import { type Decoder } from '../../models/types'
+import { type Decoder } from '../../models/types.js'
 import {
   type AbstractHoraHandPattern,
   type ChitoiHoraHandPattern,
   type KokushiHoraHandPattern,
   type RegularHoraHandPattern
-} from '../../hora'
-import { InvalidTypeException } from '../errors'
-import { decodeFuro } from '../models/furo'
-import { decodeMentsu } from '../models/mentsu'
-import { decodeTatsu } from '../models/tatsu'
-import { decodeTile } from '../models/tile'
+} from '../../hora/index.js'
+import { InvalidTypeException } from '../errors.js'
+import { decodeFuro } from '../models/furo.js'
+import { decodeMentsu } from '../models/mentsu.js'
+import { decodeTatsu } from '../models/tatsu.js'
+import { decodeTile } from '../models/tile.js'
 
 export const decodeRegularHoraHandPattern: Decoder<RegularHoraHandPattern> = (raw) => {
   return {

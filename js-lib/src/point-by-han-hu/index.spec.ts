@@ -1,4 +1,4 @@
-import { getChildPointByHanHu, getParentPointByHanHu } from './index'
+import { getChildPointByHanHu, getParentPointByHanHu } from './index.js'
 
 test('test-parent-point-by-han-hu', () => {
   expect(

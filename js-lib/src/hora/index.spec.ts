@@ -1,5 +1,5 @@
-import { buildHora } from './index'
-import { Tile } from '../models'
+import { buildHora } from './index.js'
+import { Tile } from '../models/index.js'
 
 test('hora', () => {
   const result = buildHora({

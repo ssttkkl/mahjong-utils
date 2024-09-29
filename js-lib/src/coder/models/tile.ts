@@ -1,5 +1,5 @@
-import { type Decoder, type Encoder } from '../../models/types'
-import { Tile, TileType } from '../../models'
+import { type Decoder, type Encoder } from '../../models/types.js'
+import { Tile, TileType } from '../../models/index.js'
 
 export const encodeTile: Encoder<Tile, string> = (data) => {
   return `${data.num}${TileType[data.type]}`

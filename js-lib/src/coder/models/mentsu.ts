@@ -1,5 +1,5 @@
-import { type Decoder, type Encoder } from '../../models/types'
-import { Mentsu } from '../../models'
+import { type Decoder, type Encoder } from '../../models/types.js'
+import { Mentsu } from '../../models/index.js'
 
 export const encodeMentsu: Encoder<Mentsu, string> = (data) => {
   return data.toString()

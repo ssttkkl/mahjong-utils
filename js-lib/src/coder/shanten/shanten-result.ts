@@ -1,6 +1,6 @@
-import { type ChitoiShantenResult, type FuroChanceShantenResult, type KokushiShantenResult, type RegularShantenResult, type UnionShantenResult } from 'shanten'
-import { decodeHand } from '../models/hand'
-import { decodeCommonShantenInfo, decodeShantenWithFuroChance } from './shanten-info'
+import { type ChitoiShantenResult, type FuroChanceShantenResult, type KokushiShantenResult, type RegularShantenResult, type UnionShantenResult } from 'shanten/index.js'
+import { decodeHand } from '../models/hand/index.js'
+import { decodeCommonShantenInfo, decodeShantenWithFuroChance } from './shanten-info.js'
 
 export function decodeRegularShantenResult (raw: any): RegularShantenResult {
   return {

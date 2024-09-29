@@ -1,7 +1,7 @@
-import { type AbstractHandPattern, type Hand } from '../../../models'
-import { decodeHandPattern } from './hand-pattern'
-import { decodeFuro } from '../furo'
-import { decodeTile } from '../tile'
+import { type AbstractHandPattern, type Hand } from '../../../models/index.js'
+import { decodeHandPattern } from './hand-pattern.js'
+import { decodeFuro } from '../furo.js'
+import { decodeTile } from '../tile.js'
 
 export function decodeHand<T extends AbstractHandPattern['type']> (
   raw: any,

@@ -1,5 +1,5 @@
-import { Mentsu, MentsuType } from './Mentsu'
-import { Tile, TileType } from './Tile'
+import { Mentsu, MentsuType } from './Mentsu.js'
+import { Tile, TileType } from './Tile.js'
 
 export enum FuroType {
   Chi = 'Chi',

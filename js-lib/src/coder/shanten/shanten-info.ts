@@ -1,4 +1,4 @@
-import { type Decoder, type Encoder } from '../../models/types'
+import { type Decoder, type Encoder } from '../../models/types.js'
 import {
   type Improvement,
   type AbstractCommonShantenInfo,
@@ -6,11 +6,11 @@ import {
   type ShantenWithFuroChance,
   type ShantenWithGot,
   type ShantenWithoutGot
-} from '../../shanten'
-import { mapToObj, objToMap } from '../utils/obj-map'
-import { InvalidTypeException } from '../errors'
-import { decodeTatsu, encodeTatsu } from '../models/tatsu'
-import { decodeTile, encodeTile } from '../models/tile'
+} from '../../shanten/index.js'
+import { mapToObj, objToMap } from '../utils/obj-map.js'
+import { InvalidTypeException } from '../errors.js'
+import { decodeTatsu, encodeTatsu } from '../models/tatsu.js'
+import { decodeTile, encodeTile } from '../models/tile.js'
 
 export const decodeImprovement: Decoder<Improvement> = (raw) => {
   return {

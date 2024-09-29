@@ -1,7 +1,7 @@
-import { type Furo } from '../Furo'
-import { type Tatsu } from '../Tatsu'
-import { type Mentsu } from '../Mentsu'
-import { type Tile } from '../Tile'
+import { type Furo } from '../Furo.js'
+import { type Tatsu } from '../Tatsu.js'
+import { type Mentsu } from '../Mentsu.js'
+import { type Tile } from '../Tile.js'
 
 export interface RegularHandPattern {
   k: number

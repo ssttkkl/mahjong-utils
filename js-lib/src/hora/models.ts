@@ -1,6 +1,6 @@
-import { type ChildPoint, type ParentPoint } from 'point-by-han-hu/models'
-import { type RegularHandPattern, type Tile, type Wind } from '../models'
-import { type ExtraYaku, type Yaku } from './yaku'
+import { type ChildPoint, type ParentPoint } from 'point-by-han-hu/models.js'
+import { type RegularHandPattern, type Tile, type Wind } from '../models/index.js'
+import { type ExtraYaku, type Yaku } from './yaku.js'
 
 interface _HoraHandPattern {
   agari: Tile

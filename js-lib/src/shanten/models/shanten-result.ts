@@ -1,18 +1,16 @@
-import { type ChitoiHandPattern, type Hand, type KokushiHandPattern, type RegularHandPattern, type HandPattern, type AbstractHandPattern } from '../../models'
+import { type ChitoiHandPattern, type Hand, type KokushiHandPattern, type RegularHandPattern, type HandPattern, type AbstractHandPattern } from '../../models/index.js'
 import {
   type ShantenInfo,
   type ShantenWithFuroChance,
   type AbstractCommonShantenInfo
-} from './shanten-info'
+} from './shanten-info.js'
 
 interface _ShantenResult<S extends ShantenInfo, P extends HandPattern> {
   hand: Hand<P>
   shantenInfo: S
 }
 
-interface _CommonShantenResult<P extends HandPattern> extends _ShantenResult<AbstractCommonShantenInfo, P> {
-
-}
+type _CommonShantenResult<P extends HandPattern> = _ShantenResult<AbstractCommonShantenInfo, P>
 
 export type RegularShantenResult = _CommonShantenResult<RegularHandPattern>
 export type ChitoiShantenResult = _CommonShantenResult<ChitoiHandPattern>

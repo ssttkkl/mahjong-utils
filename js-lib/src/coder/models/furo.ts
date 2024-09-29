@@ -1,6 +1,6 @@
-import { type Decoder, type Encoder } from '../../models/types'
-import { Furo, FuroType } from '../../models'
-import { decodeTile, encodeTile } from './tile'
+import { type Decoder, type Encoder } from '../../models/types.js'
+import { Furo, FuroType } from '../../models/index.js'
+import { decodeTile, encodeTile } from './tile.js'
 
 export const encodeFuro: Encoder<Furo> = (data) => {
   const raw: any = {

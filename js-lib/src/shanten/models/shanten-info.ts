@@ -1,4 +1,4 @@
-import { type Tile, type Tatsu } from '../../models'
+import { type Tile, type Tatsu } from '../../models/index.js'
 
 interface _ShantenInfo {
   shantenNum: number

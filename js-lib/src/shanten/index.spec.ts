@@ -6,8 +6,8 @@ import {
   shanten,
   type ShantenWithGot,
   type ShantenWithoutGot
-} from './index'
-import { Tile } from '../models'
+} from './index.js'
+import { Tile } from '../models/index.js'
 
 function checkShantenWithoutGot (match: ShantenWithoutGot, actual: ShantenWithoutGot): void {
   expect(actual).toMatchObject({

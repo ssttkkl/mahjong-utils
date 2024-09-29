@@ -1,7 +1,12 @@
-// @ts-ignore
-import { mahjongutils } from 'mahjong-utils-entry'
+// @ts-expect-error aaa
+import { mahjongutils } from 'mahjong-utils-entry-wasm'
 
-export const ENTRY = { call: mahjongutils.entry.call }
+export const ENTRY = {
+  call<T>(name: string, params: any): Result<T> {
+    const res = mahjongutils.entry.call(name, JSON.stringify(params))
+    return JSON.parse(res)
+  }
+}
 
 export interface Result<T> {
   data?: T

@@ -1,5 +1,5 @@
-import { type AbstractHoraHandPattern, type Hora } from 'hora'
-import { decodeHoraHandPattern } from './hora-hand-pattern'
+import { type AbstractHoraHandPattern, type Hora } from 'hora/index.js'
+import { decodeHoraHandPattern } from './hora-hand-pattern.js'
 
 export function decodeHora<T extends AbstractHoraHandPattern['type']> (
   raw: any,

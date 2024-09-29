@@ -1,2 +1,2 @@
-export * from './Hand'
-export * from './HandPattern'
+export * from './Hand.js'
+export * from './HandPattern.js'

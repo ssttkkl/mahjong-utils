@@ -1,4 +1,4 @@
-import { Tile, TileType } from './Tile'
+import { Tile, TileType } from './Tile.js'
 
 test('tile-byTypeAndNum', () => {
   for (let i = 0; i <= 3; i++) {

@@ -1,15 +1,15 @@
-import { type Decoder } from '../../../models/types'
+import { type Decoder } from '../../../models/types.js'
 import {
   type AbstractHandPattern,
   type ChitoiHandPattern,
   type KokushiHandPattern,
   type RegularHandPattern
-} from '../../../models'
-import { InvalidTypeException } from '../../errors'
-import { decodeFuro } from '../furo'
-import { decodeMentsu } from '../mentsu'
-import { decodeTatsu } from '../tatsu'
-import { decodeTile } from '../tile'
+} from '../../../models/index.js'
+import { InvalidTypeException } from '../../errors.js'
+import { decodeFuro } from '../furo.js'
+import { decodeMentsu } from '../mentsu.js'
+import { decodeTatsu } from '../tatsu.js'
+import { decodeTile } from '../tile.js'
 
 export const decodeRegularHandPattern: Decoder<RegularHandPattern> = (raw) => {
   return {
