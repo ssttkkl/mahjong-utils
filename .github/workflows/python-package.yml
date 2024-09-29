@@ -5,9 +5,9 @@ name: Python Distribution Package
 
 on:
   push:
-    branches: [ "py" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "py" ]
+    branches: [ "main" ]
   release:
     types: [published]
 
