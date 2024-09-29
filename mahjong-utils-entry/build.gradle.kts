@@ -31,7 +31,7 @@ kotlin {
         }
         useCommonJs()
         compilations["main"].packageJson {
-            name = "mahjong-utils-entry-wasm-js"
+            name = "mahjong-utils-entry-wasm"
             customField(
                 "author", mapOf(
                     "name" to "ssttkkl",
@@ -46,18 +46,6 @@ kotlin {
     wasmWasi {
         nodejs {
             binaries.library()
-        }
-        compilations["main"].packageJson {
-            name = "mahjong-utils-entry-wasm-wasi"
-            customField(
-                "author", mapOf(
-                    "name" to "ssttkkl",
-                    "email" to "huang.wen.long@hotmail.com"
-                )
-            )
-            customField(
-                "license", "MIT"
-            )
         }
     }
 
@@ -131,17 +119,7 @@ npmPublish {
         if (enableWasm) {
             get("wasmJs").apply {
                 packageJson {
-                    name = "mahjong-utils-entry-wasm-js"
-                    author {
-                        name = "ssttkkl"
-                        email = "huang.wen.long@hotmail.com"
-                    }
-                    license = "MIT"
-                }
-            }
-            get("wasmWasi").apply {
-                packageJson {
-                    name = "mahjong-utils-entry-wasm-wasi"
+                    name = "mahjong-utils-entry-wasm"
                     author {
                         name = "ssttkkl"
                         email = "huang.wen.long@hotmail.com"

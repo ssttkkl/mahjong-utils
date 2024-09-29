@@ -67,6 +67,10 @@ class KmpLibConventionPlugin : Plugin<Project> {
                     nodejs()
                 }
                 println("${project.name} target: wasmJs")
+                wasmWasi {
+                    nodejs()
+                }
+                println("${project.name} target: wasmWasi")
             }
 
             if (enableNative) {

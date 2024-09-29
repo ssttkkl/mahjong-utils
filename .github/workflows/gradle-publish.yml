@@ -118,7 +118,6 @@ jobs:
         run: |
           ./gradlew publishJsPackageToNpmjsRegistry
           ./gradlew publishWasmJsPackageToNpmjsRegistry
-          ./gradlew publishWasmWasiPackageToNpmjsRegistry
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
