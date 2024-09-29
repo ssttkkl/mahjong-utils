@@ -3,11 +3,13 @@ import sys
 import threading
 from collections.abc import Sequence
 from importlib import resources
-from os import PathLike
 from pathlib import Path
 from typing import Optional, Mapping, Any
 
-import cffi
+try:
+    import cffi
+except ImportError:
+    raise RuntimeError("Please \"pip install cffi\"")
 
 from ..protocol import MahjongUtilsBridge
 
