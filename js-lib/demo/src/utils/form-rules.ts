@@ -9,7 +9,7 @@ export function tilesRule (opts: {
 } = {}): FormRule {
   return {
     validateTrigger: opts.validateTrigger ?? 'onSubmit',
-    validator: async (rule, value) => {
+    validator: async (_rule, value) => {
       const tiles = Tile.parseTiles(value)
       if (tiles === undefined) {
         throw new Error('请填入合法的牌代码！')
@@ -28,7 +28,7 @@ export function tilesRule (opts: {
 }
 
 export const tileRule: FormRule = {
-  validator: async (rule, value) => {
+  validator: async (_rule, value) => {
     const tile = Tile.byText(value)
     if (tile === undefined) {
       throw new Error('请填入合法的牌代码！')

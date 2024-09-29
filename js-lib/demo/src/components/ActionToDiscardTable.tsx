@@ -10,9 +10,9 @@ export interface ActionToDiscard {
   action: Array<string | Tile> | string
   advance: Tile[]
   advanceNum: number
-  goodShapeAdvance?: Tile[]
-  goodShapeAdvanceNum?: number
-  goodShapeRate?: number
+  goodShapeAdvance: Tile[] | null
+  goodShapeAdvanceNum: number | null
+  goodShapeRate: number | null
 }
 
 export type ActionToDiscardTableProps = TableProps<ActionToDiscard> & {

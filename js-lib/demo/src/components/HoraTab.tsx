@@ -103,14 +103,14 @@ const HoraForm: React.FC<FormProps<HoraFormValues>> = (props) => {
                   </Form.Item>
                   <MinusCircleOutlined onClick={() => {
                     remove(name)
-                  }}/>
+                  }} onPointerEnterCapture={null} onPointerLeaveCapture={null}/>
                 </Space>
               ))}
               {fields.length < 4
                 ? <Form.Item>
                   <Button type="dashed" onClick={() => {
                     add()
-                  }} block icon={<PlusOutlined/>}>
+                  }} block icon={<PlusOutlined onPointerEnterCapture={null} onPointerLeaveCapture={null}/>}>
                     添加
                   </Button>
                 </Form.Item>
@@ -290,7 +290,7 @@ const HoraView: React.FC<{
       r.ron *= timesOfYakuman
       r.tsumo *= timesOfYakuman
     } else if (hora.han > 0) {
-      r = getParentPointByHanHu(hora.han, hora.pattern.hu)
+      r = getParentPointByHanHu(hora.han, hora.hu)
     }
     point = {
       ron: r.ron,
@@ -304,7 +304,7 @@ const HoraView: React.FC<{
       point.tsumoParent *= timesOfYakuman
       point.tsumoChild *= timesOfYakuman
     } else if (hora.han > 0) {
-      point = getChildPointByHanHu(hora.han, hora.pattern.hu)
+      point = getChildPointByHanHu(hora.han, hora.hu)
     }
   }
 
@@ -317,7 +317,7 @@ const HoraView: React.FC<{
             : (hora.han >= 13 ? `累计役满（${hora.han}番）` : `${hora.han}番`)}
         </Descriptions.Item>
         <Descriptions.Item label="符数">
-          {hora.pattern.hu}
+          {hora.hu}
         </Descriptions.Item>
         <Descriptions.Item label="役种">
           <Space wrap>

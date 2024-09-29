@@ -1,4 +1,3 @@
-import React from 'react'
 import { Tabs, type TabsProps } from 'antd'
 import ShantenTab from './components/ShantenTab'
 import PointByHanHuTab from './components/PointByHanHuTab'

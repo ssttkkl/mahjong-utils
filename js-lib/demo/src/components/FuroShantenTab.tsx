@@ -115,21 +115,21 @@ const ShantenWithFuroChanceView: React.FC<{
   } = shantenInfo
   const grouped = new Map<number, Map<['pass'] | ['minkan'] | ['pon', Tile] | ['chi', Tatsu, Tile], ShantenWithoutGot>>()
 
-  if (pass !== undefined) {
+  if (pass !== null) {
     if (!grouped.has(pass.shantenNum)) {
       grouped.set(pass.shantenNum, new Map())
     }
     grouped.get(pass.shantenNum)?.set(['pass'], pass)
   }
 
-  if (minkan !== undefined) {
+  if (minkan !== null) {
     if (!grouped.has(minkan.shantenNum)) {
       grouped.set(minkan.shantenNum, new Map())
     }
     grouped.get(minkan.shantenNum)?.set(['minkan'], minkan)
   }
 
-  if (pon !== undefined) {
+  if (pon !== null) {
     pon.discardToAdvance.forEach((shantenAfterPonDiscard, discard) => {
       if (!grouped.has(shantenAfterPonDiscard.shantenNum)) {
         grouped.set(shantenAfterPonDiscard.shantenNum, new Map())
@@ -172,7 +172,7 @@ const ShantenWithFuroChanceView: React.FC<{
         curGroup.sort((a, b) => {
           if (a[1].advanceNum !== b[1].advanceNum) {
             return a[1].advanceNum - b[1].advanceNum
-          } else if (a[1].goodShapeAdvanceNum !== undefined && b[1].goodShapeAdvanceNum !== undefined) {
+          } else if (a[1].goodShapeAdvanceNum !== null && b[1].goodShapeAdvanceNum !== null) {
             return a[1].goodShapeAdvanceNum - b[1].goodShapeAdvanceNum
           } else {
             return 0
@@ -201,9 +201,9 @@ const ShantenWithFuroChanceView: React.FC<{
             advanceNum: shantenAfterAction.advanceNum,
             goodShapeAdvance: shantenAfterAction.goodShapeAdvance,
             goodShapeAdvanceNum: shantenAfterAction.goodShapeAdvanceNum,
-            goodShapeRate: shantenAfterAction.goodShapeAdvanceNum !== undefined
+            goodShapeRate: shantenAfterAction.goodShapeAdvanceNum !== null
               ? shantenAfterAction.goodShapeAdvanceNum / shantenAfterAction.advanceNum
-              : undefined
+              : null
           }
         })
 

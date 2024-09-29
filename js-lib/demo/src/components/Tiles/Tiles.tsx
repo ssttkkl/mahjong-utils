@@ -17,7 +17,7 @@ const Tiles: React.FC<{
     <>
       {tiles_.map(x => {
         const text = x.toString()
-        return <img src={`${process.env.PUBLIC_URL}/assets/images/tiles/${text.toLowerCase()}.png`}
+        return <img src={`/assets/images/tiles/${text.toLowerCase()}.png`}
                     alt={text} key={text} className={`tile-${props.size ?? 'normal'}`}/>
       })}
     </>

@@ -87,7 +87,7 @@ const ShantenWithoutGotView: React.FC<{
           <span>（{shantenInfo.advanceNum}张）</span>
         </div>
       </Descriptions.Item>
-      {shantenInfo.goodShapeAdvance !== undefined && shantenInfo.goodShapeAdvanceNum !== undefined
+      {shantenInfo.goodShapeAdvance !== null && shantenInfo.goodShapeAdvanceNum !== null
         ? <>
           <Descriptions.Item label="好型进张">
             <Tiles
@@ -95,7 +95,7 @@ const ShantenWithoutGotView: React.FC<{
             <span>（{shantenInfo.goodShapeAdvanceNum}张）</span>
           </Descriptions.Item>
           <Descriptions.Item label="好型率">
-            {(shantenInfo.goodShapeAdvanceNum / shantenInfo.advanceNum * 100).toFixed(2)}%
+            {((shantenInfo.goodShapeAdvanceNum ?? 0) / shantenInfo.advanceNum * 100).toFixed(2)}%
           </Descriptions.Item>
         </>
         : null}
@@ -160,7 +160,7 @@ const ShantenWithGotView: React.FC<{
         curGroup.sort((a, b) => {
           if (a[1].advanceNum !== b[1].advanceNum) {
             return a[1].advanceNum - b[1].advanceNum
-          } else if (a[1].goodShapeAdvanceNum !== undefined && b[1].goodShapeAdvanceNum !== undefined) {
+          } else if (a[1].goodShapeAdvanceNum !== null && b[1].goodShapeAdvanceNum !== null) {
             return a[1].goodShapeAdvanceNum - b[1].goodShapeAdvanceNum
           } else {
             return 0
@@ -174,9 +174,9 @@ const ShantenWithGotView: React.FC<{
             advanceNum: shantenAfterAction.advanceNum,
             goodShapeAdvance: shantenAfterAction.goodShapeAdvance,
             goodShapeAdvanceNum: shantenAfterAction.goodShapeAdvanceNum,
-            goodShapeRate: shantenAfterAction.goodShapeAdvanceNum !== undefined
+            goodShapeRate: shantenAfterAction.goodShapeAdvanceNum !== null
               ? shantenAfterAction.goodShapeAdvanceNum / shantenAfterAction.advanceNum
-              : undefined
+              : null
           }
         })
 
