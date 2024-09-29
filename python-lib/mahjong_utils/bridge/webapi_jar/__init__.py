@@ -10,9 +10,7 @@ from subprocess import Popen, DEVNULL
 from threading import Lock
 from time import sleep
 from typing import Optional
-from urllib.error import HTTPError
-from urllib.request import Request, urlopen
-
+from ..http import HttpMahjongUtils
 from ..protocol import MahjongUtilsBridge
 
 
@@ -49,10 +47,12 @@ def _is_port_occupied(port: int):
 class WebApiJarMahjongUtils(MahjongUtilsBridge):
     _process: Optional[Popen]
     _port: Optional[int]
+    _http: Optional[HttpMahjongUtils]
 
     def __init__(self, webapi_jar_path: PathLike):
         self._process = None
         self._port = None
+        self._http = None
         self._init_lock = Lock()
         self.webapi_jar_path = webapi_jar_path
         self.verbose = os.getenv("VERBOSE")
@@ -87,6 +87,7 @@ class WebApiJarMahjongUtils(MahjongUtilsBridge):
                     handshake_retry = 10
                     while self._process.poll() is None and handshake_retry > 0:
                         if _is_port_occupied(port):
+                            _http = HttpMahjongUtils("127.0.0.1", port)
                             return
                         sleep(0.2)
                         handshake_retry -= 1
@@ -96,20 +97,7 @@ class WebApiJarMahjongUtils(MahjongUtilsBridge):
                     raise RuntimeError(f"Failed to connect with local server at port {port}")
 
     def call(self, name: str, params: dict) -> dict:
-        body = json.dumps(params).encode("utf-8")
-        req = Request(f'http://127.0.0.1:{self._port}/{name}', data=body, method="POST")
-        try:
-            resp = urlopen(req)
-            result = resp.read().decode('utf-8')
-            result = json.loads(result)
-            return result
-        except HTTPError as e:
-            if e.code == 404 or e.code == 400:
-                msg = e.read().decode('utf-8')
-                raise ValueError(msg)
-            else:
-                msg = e.read().decode('utf-8')
-                raise RuntimeError(msg)
+        return self._http.call(name, params)
 
     def close(self):
         current: Optional[Popen] = getattr(self._process, "value", None)

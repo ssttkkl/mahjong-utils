@@ -1,7 +1,10 @@
 import json
 import sys
 import threading
+from collections.abc import Sequence
 from importlib import resources
+from os import PathLike
+from pathlib import Path
 from typing import Optional, Mapping, Any
 
 import cffi
@@ -10,8 +13,9 @@ from ..protocol import MahjongUtilsBridge
 
 
 class LibMahjongUtils(MahjongUtilsBridge):
-    def __init__(self) -> None:
+    def __init__(self, lib_search_path: Optional[Sequence[str]] = None) -> None:
         self.ffi = cffi.FFI()
+        self.lib = None
 
         with resources.open_text(__name__, "libmahjongutils_api.i") as f:
             h = f.read()
@@ -24,8 +28,15 @@ class LibMahjongUtils(MahjongUtilsBridge):
         else:
             libname = "libmahjongutils.so"  # unix/linux
 
-        with resources.path(__name__, libname) as libpath:
-            self.lib = self.ffi.dlopen(str(libpath))
+        if lib_search_path:
+            for search_path in lib_search_path:
+                lib_path = Path(search_path) / libname
+                if lib_path.exists():
+                    self.lib = self.ffi.dlopen(str(lib_path))
+                    break
+
+        if self.lib is None:
+            self.lib = self.ffi.dlopen(libname)
 
         self._lib_sy = threading.local()
 
