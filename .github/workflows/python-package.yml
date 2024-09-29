@@ -64,13 +64,13 @@ jobs:
       uses: actions/upload-artifact@v3.1.1
       with:
           name: distribution
-          path: dist/*
+          path: python-lib/dist/*
     - name: Upload the Build Artifact (for Linux)
       if: ${{ matrix.os == 'ubuntu-latest' }}
       uses: actions/upload-artifact@v3.1.1
       with:
           name: distribution
-          path: dist/*-manylinux*.whl
+          path: python-lib/dist/*-manylinux*.whl
   test:
     needs: build
     strategy:
