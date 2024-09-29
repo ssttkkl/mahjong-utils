@@ -28,4 +28,5 @@ jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "jetbrains-dokka" 
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 
 buildlogic-kmplib = { id = "mahjongutils.buildlogic.kmplib", version.ref = "buildlogic" }
+buildlogic-kmpexe = { id = "mahjongutils.buildlogic.kmpexe", version.ref = "buildlogic" }
 buildlogic-mavenpublish = { id = "mahjongutils.buildlogic.mavenpublish", version.ref = "buildlogic" }
