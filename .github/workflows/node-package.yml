@@ -27,12 +27,16 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: yarn install --immutable
+        working-directory: js-lib
 
       - run: yarn build
+        working-directory: js-lib
 
       - run: yarn test
+        working-directory: js-lib
 
-      - uses: simenandre/publish-with-yarn@v1
+      - run: yarn publish
+        working-directory: js-lib
         if: ${{ github.event_name == 'release' }}
         with:
           npm-auth-token: ${{ secrets.NPM_TOKEN }}
