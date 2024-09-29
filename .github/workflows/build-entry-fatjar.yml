@@ -27,3 +27,10 @@ jobs:
       with:
           name: distribution
           path: mahjong-utils-webapi/build/libs/*-all.jar
+
+    - name: Upload Release Assets
+      if: ${{ github.event_name == 'release' }}
+      uses: AButler/upload-release-assets@v3.0
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        files: mahjong-utils-webapi/build/libs/*-all.jar

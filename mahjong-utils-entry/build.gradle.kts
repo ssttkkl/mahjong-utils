@@ -15,41 +15,51 @@ kotlin {
         js(IR) {
             browser {
                 binaries.library()
-                useCommonJs()
             }
             nodejs {
                 binaries.library()
-                useCommonJs()
             }
+            useCommonJs()
         }
     }
-//    wasmJs {
-//        browser {
-//            binaries.library()
-//            useCommonJs()
-//        }
-//        nodejs {
-//            binaries.library()
-//            useCommonJs()
-//        }
-//        applyBinaryen()
-//        compilations["main"].packageJson {
-//            name = "mahjong-utils-entry-wasm"
-//            customField(
-//                "author", mapOf(
-//                    "name" to "ssttkkl",
-//                    "email" to "huang.wen.long@hotmail.com"
-//                )
-//            )
-//            customField(
-//                "license", "MIT"
-//            )
-//        }
-//    }
-
-//    afterEvaluate {
-//        tasks.getByName("assembleWasmJsPackage").dependsOn("compileProductionLibraryKotlinWasmJsOptimize")
-//    }
+    wasmJs {
+        browser {
+            binaries.library()
+        }
+        nodejs {
+            binaries.library()
+        }
+        useCommonJs()
+        compilations["main"].packageJson {
+            name = "mahjong-utils-entry-wasm-js"
+            customField(
+                "author", mapOf(
+                    "name" to "ssttkkl",
+                    "email" to "huang.wen.long@hotmail.com"
+                )
+            )
+            customField(
+                "license", "MIT"
+            )
+        }
+    }
+    wasmWasi {
+        nodejs {
+            binaries.library()
+        }
+        compilations["main"].packageJson {
+            name = "mahjong-utils-entry-wasm-wasi"
+            customField(
+                "author", mapOf(
+                    "name" to "ssttkkl",
+                    "email" to "huang.wen.long@hotmail.com"
+                )
+            )
+            customField(
+                "license", "MIT"
+            )
+        }
+    }
 
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
@@ -94,6 +104,12 @@ kotlin {
             val wasmJsTest by getting {
                 dependsOn(nonJsTest)
             }
+            val wasmWasiMain by getting {
+                dependsOn(nonJsMain)
+            }
+            val wasmWasiTest by getting {
+                dependsOn(nonJsTest)
+            }
         }
     }
 }
@@ -115,7 +131,17 @@ npmPublish {
         if (enableWasm) {
             get("wasmJs").apply {
                 packageJson {
-                    name = "mahjong-utils-entry-wasm"
+                    name = "mahjong-utils-entry-wasm-js"
+                    author {
+                        name = "ssttkkl"
+                        email = "huang.wen.long@hotmail.com"
+                    }
+                    license = "MIT"
+                }
+            }
+            get("wasmWasi").apply {
+                packageJson {
+                    name = "mahjong-utils-entry-wasm-wasi"
                     author {
                         name = "ssttkkl"
                         email = "huang.wen.long@hotmail.com"
