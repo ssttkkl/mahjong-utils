@@ -1,0 +1,41 @@
+{
+  "name": "mahjong-utils",
+  "author": {
+    "name": "ssttkkl",
+    "email": "huang.wen.long@hotmail.com"
+  },
+  "version": "0.7.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rimraf ./dist && tsc",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts --fix",
+    "format": "prettier-eslint \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@types/jest": "^29.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^8.2.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "jest": "^29.4.1",
+    "prettier": "^3.3.3",
+    "prettier-eslint": "^16.3.0",
+    "prettier-eslint-cli": "^8.0.1",
+    "rimraf": "^5.0.1",
+    "ts-jest": "^29.0.5",
+    "ts-loader": "^9.4.2",
+    "typescript": "*"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "dependencies": {
+    "mahjong-utils-entry": "^0.7.1"
+  }
+}
