@@ -6,6 +6,7 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlin.jvm.JvmInline
 
 /**
  * 麻将牌的种类（万、筒、索、字）
@@ -47,22 +48,25 @@ enum class TileType {
 /**
  * 麻将牌
  */
+@JvmInline
 @Serializable(with = TileSerializer::class)
-data class Tile private constructor(
+value class Tile private constructor(
+    val code: Int
+) : Comparable<Tile> {
+
     /**
      * 种类
      */
-    val type: TileType,
+    val type: TileType
+        get() = TileType.valueOf(code / 10)
+
     /**
      * 数字
      */
     val num: Int
-) : Comparable<Tile> {
-    /**
-     * 编号
-     */
-    val code: Int
-        get() = type.ordinal * 10 + num
+        get() = code % 10
+
+    constructor(type: TileType, num: Int) : this(type.ordinal * 10 + num)
 
     /**
      * 真正数字。当num为0时（该牌为红宝牌），realNum为5。其余情况下与num相等。
@@ -148,8 +152,12 @@ data class Tile private constructor(
          * 根据编号获取牌
          */
         operator fun get(code: Int): Tile {
-            if (code !in pool.indices || code == 30) {
-                throw IllegalArgumentException("invalid code: $code")
+            return getOrNull(code) ?: throw IllegalArgumentException("invalid code: $code")
+        }
+
+        fun getOrNull(code: Int): Tile? {
+            if (code !in pool.indices) {
+                return null
             }
             return pool[code]!!
         }
@@ -161,12 +169,20 @@ data class Tile private constructor(
             return get(type.ordinal * 10 + num)
         }
 
+        fun getOrNull(type: TileType, num: Int): Tile? {
+            return getOrNull(type.ordinal * 10 + num)
+        }
+
         /**
          * 根据文本获取牌
          */
         operator fun get(text: String): Tile {
+            return getOrNull(text) ?: throw IllegalArgumentException("invalid tile text: $text")
+        }
+
+        fun getOrNull(text: String): Tile? {
             if (text.length != 2) {
-                throw IllegalArgumentException("invalid tile text: $text")
+                return null
             }
 
             val type = when (text[1].lowercaseChar()) {
@@ -174,12 +190,12 @@ data class Tile private constructor(
                 'p' -> TileType.P
                 's' -> TileType.S
                 'z' -> TileType.Z
-                else -> throw IllegalArgumentException("invalid tile text: $text")
+                else -> return null
             }
 
-            val num = text[0].digitToIntOrNull() ?: throw IllegalArgumentException("invalid tile text: $text")
+            val num = text[0].digitToIntOrNull() ?: return null
 
-            return get(type, num)
+            return getOrNull(type, num)
         }
 
         /**

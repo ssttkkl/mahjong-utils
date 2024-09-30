@@ -1,27 +1,78 @@
 package mahjongutils.models
 
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlin.jvm.JvmInline
+
+enum class MentsuType {
+    Shuntsu, Kotsu
+}
 
 /**
  * 面子
  */
+@JvmInline
 @Serializable(with = MentsuSerializer::class)
-sealed interface Mentsu {
+value class Mentsu private constructor(private val value: Int) {
+    val type: MentsuType
+        get() = MentsuType.entries[value / 100]
+
+    val tile: Tile
+        get() = Tile[value % 100]
+
+    constructor(type: MentsuType, tile: Tile) : this(type.ordinal * 100 + tile.code)
+
     /**
      * 所含的牌
      */
     val tiles: Iterable<Tile>
+        get() = when (type) {
+            MentsuType.Shuntsu -> listOf(tile, tile.advance(1), tile.advance(2))
+            MentsuType.Kotsu -> listOf(tile, tile, tile)
+        }
 
     /**
      * 舍牌后形成的搭子
      */
-    fun afterDiscard(discard: Tile): Tatsu
+    fun afterDiscard(discard: Tile): Tatsu {
+        return when (type) {
+            MentsuType.Shuntsu -> {
+                if (discard == tile) {
+                    if (discard.num == 7)
+                        return Penchan(discard.advance(1))
+                    else
+                        return Ryanmen(discard.advance(1))
+                } else if (discard == tile.advance(1))
+                    return Kanchan(tile)
+                else if (discard == tile.advance(2)) {
+                    if (tile.num == 1)
+                        return Penchan(tile)
+                    else
+                        return Ryanmen(tile)
+                }
+                throw IllegalArgumentException("invalid discard: $discard")
+            }
+
+            MentsuType.Kotsu -> {
+                if (discard == tile) {
+                    return Toitsu(discard)
+                }
+                throw IllegalArgumentException("invalid discard: $discard")
+
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return when (type) {
+            MentsuType.Shuntsu -> "${tile.num}${tile.realNum + 1}${tile.realNum + 2}${tile.type.name.lowercase()}"
+            MentsuType.Kotsu -> "${tile.num}${tile.num}${tile.num}${tile.type.name.lowercase()}"
+        }
+    }
 
     companion object {
         /**
@@ -61,10 +112,6 @@ sealed interface Mentsu {
     }
 }
 
-fun Mentsu(vararg tiles: Tile): Mentsu {
-    return Mentsu.parse(tiles.toList())
-}
-
 fun Mentsu(tiles: List<Tile>): Mentsu {
     return Mentsu.parse(tiles)
 }
@@ -73,72 +120,9 @@ fun Mentsu(text: String): Mentsu {
     return Mentsu.parse(text)
 }
 
-/**
- * 刻子
- */
-@Serializable
-@SerialName("Kotsu")
-data class Kotsu(
-    /**
-     * 顺子的第一张牌（如789m，tile应为7m）
-     */
-    val tile: Tile
-) : Mentsu {
-    override val tiles: Iterable<Tile>
-        get() = listOf(tile, tile, tile)
+fun Shuntsu(tile: Tile) = Mentsu(MentsuType.Shuntsu, tile)
 
-    override fun afterDiscard(discard: Tile): Tatsu {
-        if (discard == tile) {
-            return Toitsu(discard)
-        }
-        throw IllegalArgumentException("invalid discard: $discard")
-    }
-
-    override fun toString(): String {
-        return "${tile.num}${tile.num}${tile.num}${tile.type.name.lowercase()}"
-    }
-}
-
-/**
- * 顺子
- */
-@Serializable
-@SerialName("Shuntsu")
-data class Shuntsu(
-    /**
-     * 刻子的牌（如777s，tile应为7s）
-     */
-    val tile: Tile
-) : Mentsu {
-    init {
-        require(tile.num in 1..7)
-        require(tile.type != TileType.Z)
-    }
-
-    override val tiles: Iterable<Tile>
-        get() = listOf(tile, tile.advance(1), tile.advance(2))
-
-    override fun afterDiscard(discard: Tile): Tatsu {
-        if (discard == tile) {
-            if (discard.num == 7)
-                return Penchan(discard.advance(1))
-            else
-                return Ryanmen(discard.advance(1))
-        } else if (discard == tile.advance(1))
-            return Kanchan(tile)
-        else if (discard == tile.advance(2)) {
-            if (tile.num == 1)
-                return Penchan(tile)
-            else
-                return Ryanmen(tile)
-        }
-        throw IllegalArgumentException("invalid discard: $discard")
-    }
-
-    override fun toString(): String {
-        return "${tile.num}${tile.num + 1}${tile.num + 2}${tile.type.name.lowercase()}"
-    }
-}
+fun Kotsu(tile: Tile) = Mentsu(MentsuType.Kotsu, tile)
 
 internal class MentsuSerializer : KSerializer<Mentsu> {
     override val descriptor = PrimitiveSerialDescriptor("Mentsu", PrimitiveKind.STRING)

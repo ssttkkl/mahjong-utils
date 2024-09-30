@@ -5,7 +5,10 @@ import mahjongutils.hora.HoraOptions
 import mahjongutils.hora.KokushiHoraHandPattern
 import mahjongutils.hora.RegularHoraHandPattern
 import mahjongutils.hora.helpers.calcHu
-import mahjongutils.models.*
+import mahjongutils.models.MentsuType
+import mahjongutils.models.Tile
+import mahjongutils.models.TileType
+import mahjongutils.models.isYaochu
 
 /**
  * 包含所有役种
@@ -78,7 +81,7 @@ open class Yakus(val options: HoraOptions) {
         if (pattern !is RegularHoraHandPattern)
             return@Yaku false
 
-        val shuntsu = pattern.mentsu.filterIsInstance<Shuntsu>()
+        val shuntsu = pattern.mentsu.filter { it.type == MentsuType.Shuntsu }
         for (i in shuntsu.indices) {
             for (j in i + 1 until shuntsu.size) {
                 for (k in j + 1 until shuntsu.size) {
@@ -108,7 +111,7 @@ open class Yakus(val options: HoraOptions) {
         if (pattern !is RegularHoraHandPattern)
             return@Yaku false
 
-        val shuntsu = pattern.mentsu.filterIsInstance<Shuntsu>()
+        val shuntsu = pattern.mentsu.filter { it.type == MentsuType.Shuntsu }
         for (i in shuntsu.indices) {
             for (j in i + 1 until shuntsu.size) {
                 for (k in j + 1 until shuntsu.size) {
@@ -148,7 +151,7 @@ open class Yakus(val options: HoraOptions) {
         if (pattern !is RegularHoraHandPattern)
             return@Yaku false
 
-        if (pattern.mentsu.count { it is Shuntsu } != 0) {
+        if (pattern.mentsu.count { it.type == MentsuType.Shuntsu } != 0) {
             false
         } else {
             !Suanko.check(pattern) && !SuankoTanki.check(pattern) // 非四暗刻的情况
@@ -176,7 +179,7 @@ open class Yakus(val options: HoraOptions) {
         if (pattern !is RegularHoraHandPattern)
             return@Yaku false
 
-        val kotsu = pattern.mentsu.filterIsInstance<Kotsu>()
+        val kotsu = pattern.mentsu.filter { it.type == MentsuType.Kotsu }
         for (i in kotsu.indices) {
             for (j in i + 1 until kotsu.size) {
                 for (k in j + 1 until kotsu.size) {
