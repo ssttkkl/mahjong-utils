@@ -3,11 +3,19 @@
 # Tile
 
 [common]\
+@[JvmInline](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html)
+
 @Serializable(with = TileSerializer::class)
 
-data class [Tile](index.md) : [Comparable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html)&lt;[Tile](index.md)&gt; 
+value class [Tile](index.md) : [Comparable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html)&lt;[Tile](index.md)&gt; 
 
 麻将牌
+
+## Constructors
+
+| | |
+|---|---|
+| [Tile](-tile.md) | [common]<br>constructor(type: [TileType](../-tile-type/index.md), num: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)) |
 
 ## Types
 
@@ -19,7 +27,7 @@ data class [Tile](index.md) : [Comparable](https://kotlinlang.org/api/latest/jvm
 
 | Name | Summary |
 |---|---|
-| [code](code.md) | [common]<br>val [code](code.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>编号 |
+| [code](code.md) | [common]<br>val [code](code.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 | [isSangen](../is-sangen.md) | [common]<br>val [Tile](index.md).[isSangen](../is-sangen.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>是否为三元牌 |
 | [isWind](../is-wind.md) | [common]<br>val [Tile](index.md).[isWind](../is-wind.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>是否为风牌 |
 | [isYaochu](../is-yaochu.md) | [common]<br>val [Tile](index.md).[isYaochu](../is-yaochu.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>是否为幺九牌 |

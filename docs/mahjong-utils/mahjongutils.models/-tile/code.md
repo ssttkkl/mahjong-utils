@@ -4,5 +4,3 @@
 
 [common]\
 val [code](code.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
-
-编号
