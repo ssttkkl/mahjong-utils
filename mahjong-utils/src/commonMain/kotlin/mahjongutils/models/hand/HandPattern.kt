@@ -75,9 +75,9 @@ interface IRegularHandPattern : HandPattern {
     /**
      * 暗刻
      */
-    val anko: List<Kotsu>
-        get() = menzenMentsu.filterIsInstance<Kotsu>() +
-                furo.filterIsInstance<Kan>().filter { it.ankan }.map { it.asMentsu() }
+    val anko: List<Mentsu>
+        get() = menzenMentsu.filter { it.type == MentsuType.Kotsu } +
+                furo.filter { it.type == FuroType.Ankan }.map { it.asMentsu() }
 }
 
 /**

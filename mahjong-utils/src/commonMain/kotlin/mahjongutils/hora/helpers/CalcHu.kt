@@ -25,38 +25,36 @@ internal fun calcHuForRegular(regularPattern: RegularHoraHandPattern, hasRenpuuJ
         var ans = 20
 
         // 单骑、边张、坎张听牌
-        if (agariTatsu == null || agariTatsu is Penchan || agariTatsu is Kanchan) {
+        if (agariTatsu == null || agariTatsu.type == TatsuType.Penchan || agariTatsu.type == TatsuType.Kanchan) {
             ans += 2
         }
 
         // 明刻、杠
         furo.forEach { fr ->
-            if (fr is Pon) {
+            if (fr.type == FuroType.Pon) {
                 if (fr.tile.isYaochu) {
                     ans += 4
                 } else {
                     ans += 2
                 }
-            } else if (fr is Kan) {
-                if (!fr.ankan) {
-                    if (fr.tile.isYaochu) {
-                        ans += 16
-                    } else {
-                        ans += 8
-                    }
+            } else if (fr.type == FuroType.Ankan) {
+                if (fr.tile.isYaochu) {
+                    ans += 32
                 } else {
-                    if (fr.tile.isYaochu) {
-                        ans += 32
-                    } else {
-                        ans += 16
-                    }
+                    ans += 16
+                }
+            } else if (fr.type == FuroType.Kan) {
+                if (fr.tile.isYaochu) {
+                    ans += 16
+                } else {
+                    ans += 8
                 }
             }
         }
 
         // 暗刻（不含暗杠）
         menzenMentsu.forEach { mt ->
-            if (mt is Kotsu) {
+            if (mt.type == MentsuType.Kotsu) {
                 if (mt.tile.isYaochu) {
                     ans += 8
                 } else {
@@ -66,7 +64,7 @@ internal fun calcHuForRegular(regularPattern: RegularHoraHandPattern, hasRenpuuJ
         }
 
         // 对碰荣和时该刻子计为明刻
-        if (agariTatsu is Toitsu && !tsumo) {
+        if (agariTatsu?.type == TatsuType.Toitsu && !tsumo) {
             ans -= 2
         }
 

@@ -1,7 +1,16 @@
 package mahjongutils.shanten
 
 import mahjongutils.CalcContext
-import mahjongutils.models.*
+import mahjongutils.models.Chi
+import mahjongutils.models.Kan
+import mahjongutils.models.Kanchan
+import mahjongutils.models.Penchan
+import mahjongutils.models.Pon
+import mahjongutils.models.Ryanmen
+import mahjongutils.models.TatsuType
+import mahjongutils.models.Tile
+import mahjongutils.models.TileType
+import mahjongutils.models.countAsCodeArray
 import mahjongutils.shanten.helpers.normalizeTiles
 import kotlin.math.min
 
@@ -117,7 +126,7 @@ internal fun CalcContext.furoChanceShanten(
                 val shantenAfterChi = regularShanten(
                     InternalShantenArgs(
                         tilesAfterChi,
-                        listOf(Chi((tt.withWaiting(chanceTile) as Shuntsu).tile)),
+                        listOf(Chi((tt.withWaiting(chanceTile)).tile)),
                         calcAdvanceNum = calcAdvanceNum,
                         bestShantenOnly = bestShantenOnly,
                         allowAnkan = false
@@ -126,9 +135,9 @@ internal fun CalcContext.furoChanceShanten(
                 val shantenInfo = shantenAfterChi.shantenInfo.asWithGot
                 if (!allowKuikae) {
                     val discardToAdvance = shantenInfo.discardToAdvance.filterKeys {
-                        it !== chanceTile && (tt !is Ryanmen || (
-                                chanceTile > tt.second && it !== tt.first.advance(-1)
-                                        || chanceTile < tt.second && it !== tt.second.advance(1))
+                        it != chanceTile && (tt.type != TatsuType.Ryanmen || (
+                                chanceTile > tt.second && it != tt.first.advance(-1)
+                                        || chanceTile < tt.second && it != tt.second.advance(1))
                                 )
                     }
                     shantenInfo.copy(
