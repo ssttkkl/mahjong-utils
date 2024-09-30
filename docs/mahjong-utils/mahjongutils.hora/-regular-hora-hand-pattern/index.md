@@ -23,7 +23,7 @@ data class [RegularHoraHandPattern](index.md) : [HoraHandPattern](../-hora-hand-
 |---|---|
 | [agari](agari.md) | [common]<br>open override val [agari](agari.md): [Tile](../../mahjongutils.models/-tile/index.md)<br>和牌张 |
 | [agariTatsu](agari-tatsu.md) | [common]<br>val [agariTatsu](agari-tatsu.md): [Tatsu](../../mahjongutils.models/-tatsu/index.md)?<br>和牌搭子（为空表示单骑和牌） |
-| [anko](../../mahjongutils.models.hand/-i-regular-hand-pattern/anko.md) | [common]<br>open override val [anko](../../mahjongutils.models.hand/-i-regular-hand-pattern/anko.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Kotsu](../../mahjongutils.models/-kotsu/index.md)&gt;<br>暗刻 |
+| [anko](../../mahjongutils.models.hand/-i-regular-hand-pattern/anko.md) | [common]<br>open override val [anko](../../mahjongutils.models.hand/-i-regular-hand-pattern/anko.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Mentsu](../../mahjongutils.models/-mentsu/index.md)&gt;<br>暗刻 |
 | [furo](../../mahjongutils.models.hand/-i-has-furo/furo.md) | [common]<br>open override val [furo](../../mahjongutils.models.hand/-i-has-furo/furo.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Furo](../../mahjongutils.models/-furo/index.md)&gt;<br>副露 |
 | [jyantou](jyantou.md) | [common]<br>open override val [jyantou](jyantou.md): [Tile](../../mahjongutils.models/-tile/index.md)<br>雀头 |
 | [k](../../mahjongutils.models.hand/-i-regular-hand-pattern/k.md) | [common]<br>open override val [k](../../mahjongutils.models.hand/-i-regular-hand-pattern/k.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>目标面子组数（=手牌数/4） |

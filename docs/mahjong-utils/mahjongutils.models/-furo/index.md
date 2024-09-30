@@ -2,19 +2,18 @@
 
 # Furo
 
-@Serializable
+[common]\
+@[JvmInline](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html)
 
-sealed interface [Furo](index.md)
+@Serializable(with = [FuroSerializer::class](../-furo-serializer/index.md))
 
-副露
+value class [Furo](index.md)
 
-#### Inheritors
+## Constructors
 
-| |
-|---|
-| [Chi](../-chi/index.md) |
-| [Pon](../-pon/index.md) |
-| [Kan](../-kan/index.md) |
+| | |
+|---|---|
+| [Furo](-furo.md) | [common]<br>constructor(type: [FuroType](../-furo-type/index.md), tile: [Tile](../-tile/index.md)) |
 
 ## Types
 
@@ -26,10 +25,13 @@ sealed interface [Furo](index.md)
 
 | Name | Summary |
 |---|---|
-| [tiles](tiles.md) | [common]<br>abstract val [tiles](tiles.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../-tile/index.md)&gt; |
+| [tile](tile.md) | [common]<br>val [tile](tile.md): [Tile](../-tile/index.md) |
+| [tiles](tiles.md) | [common]<br>val [tiles](tiles.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../-tile/index.md)&gt; |
+| [type](type.md) | [common]<br>val [type](type.md): [FuroType](../-furo-type/index.md) |
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [asMentsu](as-mentsu.md) | [common]<br>abstract fun [asMentsu](as-mentsu.md)(): [Mentsu](../-mentsu/index.md)<br>获取副露的面子 |
+| [asMentsu](as-mentsu.md) | [common]<br>fun [asMentsu](as-mentsu.md)(): [Mentsu](../-mentsu/index.md)<br>获取副露的面子 |
+| [toString](to-string.md) | [common]<br>open override fun [toString](to-string.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

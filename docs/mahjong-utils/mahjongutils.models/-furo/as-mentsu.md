@@ -3,6 +3,6 @@
 # asMentsu
 
 [common]\
-abstract fun [asMentsu](as-mentsu.md)(): [Mentsu](../-mentsu/index.md)
+fun [asMentsu](as-mentsu.md)(): [Mentsu](../-mentsu/index.md)
 
 获取副露的面子
