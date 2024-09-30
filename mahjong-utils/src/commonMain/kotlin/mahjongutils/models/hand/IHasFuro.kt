@@ -1,7 +1,7 @@
 package mahjongutils.models.hand
 
 import mahjongutils.models.Furo
-import mahjongutils.models.Kan
+import mahjongutils.models.FuroType
 
 interface IHasFuro {
     /**
@@ -13,5 +13,5 @@ interface IHasFuro {
      * 是否门清
      */
     val menzen: Boolean
-        get() = furo.all { it is Kan && it.ankan }
+        get() = furo.all { it.type == FuroType.Ankan }
 }

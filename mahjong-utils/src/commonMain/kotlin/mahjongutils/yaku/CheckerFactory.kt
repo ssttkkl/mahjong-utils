@@ -19,7 +19,7 @@ internal fun yakuhaiCheckerFactory(
         }
 
         (tile ?: tileFunc?.invoke(pattern))?.let { tile_ ->
-            pattern.mentsu.filterIsInstance<Kotsu>().any { it.tile == tile_ }
+            pattern.mentsu.filter { it.type == MentsuType.Kotsu }.any { it.tile == tile_ }
         } ?: false
     }
 }
@@ -44,15 +44,15 @@ internal fun yaochuSeriesCheckerFactory(shuntsu: Boolean, z: Boolean): YakuCheck
                 var hasZ = pattern.jyantou.type == TileType.Z
 
                 for (mt in pattern.mentsu) {
-                    when (mt) {
-                        is Shuntsu -> {
+                    when (mt.type) {
+                        MentsuType.Shuntsu -> {
                             if (mt.tile.num != 1 && mt.tile.num != 7) {
                                 return@YakuChecker false
                             }
                             shuntsuCnt += 1
                         }
 
-                        is Kotsu -> {
+                        MentsuType.Kotsu -> {
                             if (!mt.tile.isYaochu) {
                                 return@YakuChecker false
                             }
@@ -124,7 +124,7 @@ internal fun pekoSeriesCheckerFactory(pekoCount: Int): YakuChecker {
         }
 
         var cnt = 0
-        val shuntsu = pattern.menzenMentsu.filterIsInstance<Shuntsu>()
+        val shuntsu = pattern.menzenMentsu.filter { it.type == MentsuType.Shuntsu }
         for (i in shuntsu.indices) {
             for (j in i + 1 until shuntsu.size) {
                 if (shuntsu[i] == shuntsu[j]) {
@@ -152,7 +152,7 @@ internal fun ankoSeriesCheckerFactory(ankoCount: Int, tanki: Boolean? = null): Y
 
         var anko = pattern.anko.count()
         // 双碰听牌荣和，算一个明刻
-        if (pattern.agariTatsu is Toitsu && !pattern.tsumo) {
+        if (pattern.agariTatsu?.type == TatsuType.Toitsu && !pattern.tsumo) {
             anko -= 1
         }
 
@@ -176,7 +176,7 @@ internal fun kantsuSeriesCheckerFactory(kanCount: Int): YakuChecker {
             return@YakuChecker false
         }
 
-        val kan = pattern.furo.count { it is Kan }
+        val kan = pattern.furo.count { it.type == FuroType.Kan || it.type == FuroType.Ankan }
         kan == kanCount
     }
 }
@@ -194,7 +194,7 @@ internal fun sangenSeriesCheckerFactory(sangenKotsuCount: Int, sangenJyantou: Bo
             return@YakuChecker false
         }
 
-        val sangenKotsu = pattern.mentsu.count { it is Kotsu && it.tile.isSangen }
+        val sangenKotsu = pattern.mentsu.count { it.type == MentsuType.Kotsu && it.tile.isSangen }
         sangenKotsu == sangenKotsuCount && (sangenJyantou && pattern.jyantou.isSangen || !sangenJyantou && !pattern.jyantou.isSangen)
     }
 }
@@ -212,7 +212,7 @@ internal fun sushiSeriesCheckerFactory(windKotsuCount: Int, windJyantou: Boolean
             return@YakuChecker false
         }
 
-        val sangenKotsu = pattern.mentsu.count { it is Kotsu && it.tile.isWind }
+        val sangenKotsu = pattern.mentsu.count { it.type == MentsuType.Kotsu && it.tile.isWind }
         sangenKotsu == windKotsuCount && (windJyantou && pattern.jyantou.isWind || !windJyantou && !pattern.jyantou.isWind)
     }
 }

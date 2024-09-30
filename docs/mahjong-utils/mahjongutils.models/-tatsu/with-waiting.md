@@ -3,6 +3,6 @@
 # withWaiting
 
 [common]\
-abstract fun [withWaiting](with-waiting.md)(tile: [Tile](../-tile/index.md)): [Mentsu](../-mentsu/index.md)
+fun [withWaiting](with-waiting.md)(tile: [Tile](../-tile/index.md)): [Mentsu](../-mentsu/index.md)
 
 进张后形成的面子

@@ -1,23 +1,53 @@
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package mahjongutils.models
 
-import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerialName
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlin.jvm.JvmInline
 
-/**
- * 副露
- */
-@Serializable
-sealed interface Furo {
+enum class FuroType {
+    Chi, Pon, Kan, Ankan
+}
+
+@JvmInline
+@Serializable(FuroSerializer::class)
+value class Furo private constructor(private val value: Int) {
+    constructor(type: FuroType, tile: Tile) : this(type.ordinal * 100 + tile.code)
+
+    val type: FuroType
+        get() = FuroType.entries[value / 100]
+
+    val tile: Tile
+        get() = Tile[value % 100]
+
     /**
      * 获取副露的面子
      */
-    fun asMentsu(): Mentsu
+    fun asMentsu(): Mentsu {
+        return when (type) {
+            FuroType.Chi -> Shuntsu(tile)
+            FuroType.Pon, FuroType.Kan, FuroType.Ankan -> Kotsu(tile)
+        }
+    }
 
     val tiles: List<Tile>
+        get() = when (type) {
+            FuroType.Chi -> listOf(tile, tile.advance(1), tile.advance(2))
+            FuroType.Pon -> listOf(tile, tile, tile)
+            FuroType.Kan, FuroType.Ankan -> listOf(tile, tile, tile, tile)
+        }
+
+    override fun toString(): String {
+        return when (type) {
+            FuroType.Chi -> "${tile.num}${tile.realNum + 1}${tile.realNum + 2}${tile.type.name.lowercase()}"
+            FuroType.Pon -> "${tile.num}${tile.num}${tile.num}${tile.type.name.lowercase()}"
+            FuroType.Kan -> "${tile.num}${tile.num}${tile.num}${tile.num}${tile.type.name.lowercase()}"
+            FuroType.Ankan -> "0${tile.num}${tile.num}0${tile.type.name.lowercase()}"
+        }
+    }
 
     companion object {
         /**
@@ -44,7 +74,11 @@ sealed interface Furo {
                 }
             } else if (tiles.size == 4) {
                 if (tiles[0] == tiles[1] && tiles[1] == tiles[2] && tiles[2] == tiles[3]) {
-                    return Kan(tiles[0], ankan)
+                    if (!ankan) {
+                        return Kan(tiles[0])
+                    } else {
+                        return Ankan(tiles[0])
+                    }
                 }
             }
 
@@ -72,10 +106,6 @@ sealed interface Furo {
     }
 }
 
-fun Furo(vararg tiles: Tile, ankan: Boolean = false): Furo {
-    return Furo.parse(tiles.toList(), ankan)
-}
-
 fun Furo(tiles: List<Tile>, ankan: Boolean = false): Furo {
     return Furo.parse(tiles, ankan)
 }
@@ -84,63 +114,20 @@ fun Furo(text: String, ankan: Boolean = false): Furo {
     return Furo.parse(text, ankan)
 }
 
-/**
- * 吃
- */
-@Serializable
-@SerialName("Chi")
-data class Chi(
-    /**
-     * 吃成的顺子的第一张牌（如789m，tile应为7m）
-     */
-    val tile: Tile
-) : Furo {
-    override fun asMentsu(): Shuntsu {
-        return Shuntsu(tile)
+fun Chi(tile: Tile) = Furo(FuroType.Chi, tile)
+fun Pon(tile: Tile) = Furo(FuroType.Pon, tile)
+fun Kan(tile: Tile) = Furo(FuroType.Kan, tile)
+fun Ankan(tile: Tile) = Furo(FuroType.Ankan, tile)
+
+object FuroSerializer : KSerializer<Furo> {
+    override val descriptor = PrimitiveSerialDescriptor("Furo", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: Furo) {
+        encoder.encodeString(value.toString())
     }
 
-    override val tiles: List<Tile>
-        get() = listOf(tile, tile.advance(1), tile.advance(2))
-}
-
-/**
- * 碰
- */
-@Serializable
-@SerialName("Pon")
-data class Pon(
-    /**
-     * 碰成的刻子的牌（如777s，tile应为7s）
-     */
-    val tile: Tile
-) : Furo {
-    override fun asMentsu(): Kotsu {
-        return Kotsu(tile)
+    override fun deserialize(decoder: Decoder): Furo {
+        val text = decoder.decodeString()
+        return Furo(text)
     }
-
-    override val tiles: List<Tile>
-        get() = listOf(tile, tile, tile)
-}
-
-/**
- * 杠
- */
-@Serializable
-@SerialName("Kan")
-data class Kan(
-    /**
-     * 杠成的刻子的牌（如7777s，tile应为7s）
-     */
-    val tile: Tile,
-    /**
-     * 是否为暗杠
-     */
-    @EncodeDefault val ankan: Boolean = false
-) : Furo {
-    override fun asMentsu(): Kotsu {
-        return Kotsu(tile)
-    }
-
-    override val tiles: List<Tile>
-        get() = listOf(tile, tile, tile, tile)
 }

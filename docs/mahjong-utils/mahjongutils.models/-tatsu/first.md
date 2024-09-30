@@ -3,6 +3,6 @@
 # first
 
 [common]\
-abstract val [first](first.md): [Tile](../-tile/index.md)
+val [first](first.md): [Tile](../-tile/index.md)
 
 第一张牌

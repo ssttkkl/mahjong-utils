@@ -1,6 +1,7 @@
 package mahjongutils.shanten
 
 import mahjongutils.CalcContext
+import mahjongutils.models.Ankan
 import mahjongutils.models.Furo
 import mahjongutils.models.Kan
 import mahjongutils.models.Tile
@@ -316,7 +317,7 @@ private fun handleRegularShantenWithGot(
                 val count = tilesCount[t.code]
                 if (count == 4) {
                     val tilesAfterAnkan = tiles - t - t - t - t
-                    val furoAfterAnkan = furo + Kan(t, true)
+                    val furoAfterAnkan = furo + Ankan(t)
                     this[t] = handleRegularShantenWithoutGot(
                         tilesAfterAnkan, furoAfterAnkan,
                         calcGoodShapeAdvance, calcImprovement

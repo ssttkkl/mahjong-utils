@@ -3,6 +3,6 @@
 # second
 
 [common]\
-abstract val [second](second.md): [Tile](../-tile/index.md)
+val [second](second.md): [Tile](../-tile/index.md)
 
 第二张牌

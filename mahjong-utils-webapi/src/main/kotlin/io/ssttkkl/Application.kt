@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.*
 import mahjongutils.entry.MethodExecutionException
-import mahjongutils.entry.callReceivingData
+import callReceivingData
 
 fun main() {
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
