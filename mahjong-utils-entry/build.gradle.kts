@@ -86,23 +86,17 @@ kotlin {
             }
         }
         if (enableWasm) {
-            val wasmMain by creating {
-                dependsOn(commonMain)
-            }
-            val wasmTest by creating {
-                dependsOn(commonTest)
-            }
             val wasmJsMain by getting {
-                dependsOn(wasmMain)
+                dependsOn(nonJsMain)
             }
             val wasmJsTest by getting {
-                dependsOn(wasmTest)
+                dependsOn(nonJsTest)
             }
             val wasmWasiMain by getting {
-                dependsOn(wasmMain)
+                dependsOn(nonJsMain)
             }
             val wasmWasiTest by getting {
-                dependsOn(wasmTest)
+                dependsOn(nonJsTest)
             }
         }
     }

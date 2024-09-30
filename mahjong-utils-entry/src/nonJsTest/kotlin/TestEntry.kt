@@ -12,15 +12,7 @@ import mahjongutils.hora.hora
 import mahjongutils.models.Furo
 import mahjongutils.models.Tile
 import mahjongutils.models.Wind
-import mahjongutils.shanten.ChitoiShantenResult
-import mahjongutils.shanten.CommonShantenArgs
-import mahjongutils.shanten.KokushiShantenResult
-import mahjongutils.shanten.RegularShantenResult
-import mahjongutils.shanten.UnionShantenResult
-import mahjongutils.shanten.chitoiShanten
-import mahjongutils.shanten.kokushiShanten
-import mahjongutils.shanten.regularShanten
-import mahjongutils.shanten.shanten
+import mahjongutils.shanten.*
 import mahjongutils.yaku.Yakus
 import kotlin.test.Test
 import kotlin.test.assertEquals
