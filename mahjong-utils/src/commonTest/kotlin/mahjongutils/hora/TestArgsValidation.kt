@@ -116,7 +116,7 @@ class TestArgsValidation {
     }
 
     @Test
-    fun testWithShantenResult() {
+    fun testWithShantenResult1() {
         assertTrue {
             HoraArgs(
                 shantenResult = shanten(
@@ -126,7 +126,10 @@ class TestArgsValidation {
                 tsumo = false
             ).validate().isEmpty()
         }
+    }
 
+    @Test
+    fun testWithShantenResult2() {
         assertTrue {
             HoraArgs(
                 shantenResult = shanten(
@@ -137,7 +140,10 @@ class TestArgsValidation {
                 tsumo = false
             ).validate().isEmpty()
         }
+    }
 
+    @Test
+    fun testWithShantenResult3() {
         assertTrue {
             HoraArgs(
                 shantenResult = shanten(
@@ -149,7 +155,10 @@ class TestArgsValidation {
                 HoraArgsErrorInfo.shantenNotHora
             )
         }
+    }
 
+    @Test
+    fun testWithShantenResult4() {
         assertTrue {
             HoraArgs(
                 shantenResult = shanten(
@@ -161,7 +170,10 @@ class TestArgsValidation {
                 HoraArgsErrorInfo.agariNotInTiles
             )
         }
+    }
 
+    @Test
+    fun testWithShantenResult5() {
         assertTrue {
             HoraArgs(
                 shantenResult = shanten(
