@@ -13,20 +13,12 @@ class Furo(Mentsu, ABC):
     副露
     """
 
-    def __encode__(self) -> dict:
-        return dict(type=type(self).__name__, tile=self.tile.__encode__())
+    def __encode__(self) -> str:
+        return str(self)
 
     @classmethod
-    def __decode__(cls, data: dict) -> "Furo":
-        t = Tile.__decode__(data['tile'])
-        if data['type'] == 'Chi':
-            return Chi(t)
-        elif data['type'] == 'Pon':
-            return Pon(t)
-        elif data['type'] == 'Kan':
-            return Kan(t, data['ankan'])
-        else:
-            raise ValueError("invalid type: " + data['type'])
+    def __decode__(cls, data: str) -> "Furo":
+        return Furo.parse(data)
 
     @staticmethod
     def parse(t: Union[Sequence[Tile], str], ankan: bool = False) -> "Furo":
