@@ -74,11 +74,6 @@ class Kan(Kotsu, Furo):
 
     ankan: bool
 
-    def __encode__(self) -> dict:
-        x = Furo.__encode__(self)
-        x["ankan"] = self.ankan
-        return x
-
     def __repr__(self):
         if self.ankan:
             return f"0{self.tile.num}{self.tile.num}0{self.tile.tile_type.lower()}"
