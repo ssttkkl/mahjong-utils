@@ -1,6 +1,5 @@
 import { type Decoder, type Encoder } from '../../models/types'
-import { Furo, FuroType } from '../../models'
-import { decodeTile, encodeTile } from './tile'
+import { Furo } from '../../models'
 
 export const encodeFuro: Encoder<Furo> = (data) => {
   return data.toString()
