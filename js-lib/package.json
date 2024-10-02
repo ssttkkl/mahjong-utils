@@ -4,7 +4,7 @@
     "name": "ssttkkl",
     "email": "huang.wen.long@hotmail.com"
   },
-  "version": "0.7.3",
+  "version": "0.7.4",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
