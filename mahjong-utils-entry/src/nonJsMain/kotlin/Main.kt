@@ -9,7 +9,6 @@ import kotlin.js.JsExport
 
 internal val ENTRY = buildEntry(JsonParamsDecoder, JsonResultEncoder)
 
-
 @JsExport
 fun call(name: String, rawParams: String): String {
     return ENTRY.call(name, rawParams)
