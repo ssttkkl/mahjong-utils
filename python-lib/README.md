@@ -148,9 +148,9 @@ hora = build_hora(
 
 默认情况下，py版本内部通过py-mini-racer调用mahjong-utils-entry的Kotlin/JS产物，其计算耗时约为JVM产物的2.1倍。
 
-（为什么不是Kotlin/Native产物，因为实测下来Kotlin/Native产物的计算耗时约为JVM产物的7.6倍）
+（为什么不是Kotlin/Native产物，因为实测下来Native产物的计算耗时约为JVM产物的7.6倍）
 
-如果希望提速，可以选择切换绑定方式为调用mahjong-utils-webapi提供的HTTP接口，具体步骤如下：
+如果希望能够达到JVM产物的计算速度，可以选择切换绑定方式为调用mahjong-utils-webapi提供的HTTP接口，具体步骤如下：
 
 1. 确保已经安装Java (>= 11)
 2. 从Release页下载与python库版本相对应的mahjong-utils-webapi-all.jar

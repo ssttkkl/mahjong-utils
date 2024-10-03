@@ -150,7 +150,6 @@ setup(
         "mahjong_utils.bridge",
         "mahjong_utils.bridge.http",
         "mahjong_utils.bridge.js",
-        "mahjong_utils.bridge.lib",
         "mahjong_utils.bridge.webapi_jar",
         "mahjong_utils.hora",
         "mahjong_utils.models",
