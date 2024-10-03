@@ -31,6 +31,10 @@ gradlePlugin {
             id = "mahjongutils.buildlogic.kmplib"
             implementationClass = "mahjongutils.buildlogic.KmpLibConventionPlugin"
         }
+        register("kmpexe") {
+            id = "mahjongutils.buildlogic.kmpexe"
+            implementationClass = "mahjongutils.buildlogic.KmpExeConventionPlugin"
+        }
         register("maven-publish") {
             id = "mahjongutils.buildlogic.mavenpublish"
             implementationClass = "mahjongutils.buildlogic.MavenPublishConventionPlugin"

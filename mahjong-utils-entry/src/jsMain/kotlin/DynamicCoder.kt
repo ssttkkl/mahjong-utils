@@ -1,12 +1,11 @@
 @file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 
-package mahjongutils.entry
-
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromDynamic
 import kotlinx.serialization.json.encodeToDynamic
 import kotlinx.serialization.serializer
+import mahjongutils.entry.Result
 import mahjongutils.entry.coder.ParamsDecoder
 import mahjongutils.entry.coder.ResultEncoder
 import kotlin.reflect.KType

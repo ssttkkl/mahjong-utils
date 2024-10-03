@@ -15,6 +15,13 @@ kotlin {
         js(IR) {
             browser {
                 binaries.library()
+
+                // 给浏览器 or 其他运行时直接使用
+                binaries.executable()
+                webpackTask {
+                    output.library = "MahjongUtilsEntry"
+                    output.libraryTarget = "var"
+                }
             }
             nodejs {
                 binaries.library()
@@ -22,38 +29,43 @@ kotlin {
             useCommonJs()
         }
     }
-    wasmJs {
-        browser {
-            binaries.library()
-        }
-        nodejs {
-            binaries.library()
-        }
-        useCommonJs()
-        compilations["main"].packageJson {
-            name = "mahjong-utils-entry-wasm"
-            customField(
-                "author", mapOf(
-                    "name" to "ssttkkl",
-                    "email" to "huang.wen.long@hotmail.com"
+
+    if (enableWasm) {
+        wasmJs {
+            browser {
+                binaries.library()
+            }
+            nodejs {
+                binaries.library()
+            }
+            useCommonJs()
+            compilations["main"].packageJson {
+                name = "mahjong-utils-entry-wasm"
+                customField(
+                    "author", mapOf(
+                        "name" to "ssttkkl",
+                        "email" to "huang.wen.long@hotmail.com"
+                    )
                 )
-            )
-            customField(
-                "license", "MIT"
-            )
+                customField(
+                    "license", "MIT"
+                )
+            }
         }
-    }
-    wasmWasi {
-        nodejs {
-            binaries.library()
+        wasmWasi {
+            nodejs {
+                binaries.library()
+            }
         }
     }
 
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    targets.withType<KotlinNativeTarget>().configureEach {
-        binaries.sharedLib {
-            baseName = if (isMingwX64) "libmahjongutils" else "mahjongutils"
+    if (enableNative) {
+        val hostOs = System.getProperty("os.name")
+        val isMingwX64 = hostOs.startsWith("Windows")
+        targets.withType<KotlinNativeTarget>().configureEach {
+            binaries.sharedLib {
+                baseName = if (isMingwX64) "libmahjongutils" else "mahjongutils"
+            }
         }
     }
 
@@ -86,17 +98,23 @@ kotlin {
             }
         }
         if (enableWasm) {
+            val wasmMain by creating {
+                dependsOn(commonMain)
+            }
+            val wasmTest by creating {
+                dependsOn(commonTest)
+            }
             val wasmJsMain by getting {
-                dependsOn(nonJsMain)
+                dependsOn(wasmMain)
             }
             val wasmJsTest by getting {
-                dependsOn(nonJsTest)
+                dependsOn(wasmTest)
             }
             val wasmWasiMain by getting {
-                dependsOn(nonJsMain)
+                dependsOn(wasmMain)
             }
             val wasmWasiTest by getting {
-                dependsOn(nonJsTest)
+                dependsOn(wasmTest)
             }
         }
     }
