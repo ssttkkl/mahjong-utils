@@ -143,3 +143,16 @@ hora = build_hora(
 # hora.parent_point == (18000, 6000)
 # hora.child_point == (12000, 6000, 3000)
 ```
+
+## 指定绑定方式
+
+默认情况下，py版本内部通过py-mini-racer调用mahjong-utils-entry的Kotlin/JS产物，其计算耗时约为JVM产物的2.1倍。
+
+（为什么不是Kotlin/Native产物，因为实测下来Kotlin/Native产物的计算耗时约为JVM产物的7.6倍）
+
+如果希望提速，可以选择切换绑定方式为调用mahjong-utils-webapi提供的HTTP接口，具体步骤如下：
+
+1. 确保已经安装Java (>= 11)
+2. 从Release页下载与python库版本相对应的mahjong-utils-webapi-all.jar
+3. 运行命令 `java -jar mahjong-utils-webapi-all.jar`（如果需要指定端口：`PORT=10021 java -jar mahjong-utils-webapi-all.jar`）
+4. 启动python解释器前设置环境变量`ENV_MAHJONG_UTILS_BRIDGE=http`（如果需要指定端口与地址：`ENV_MAHJONG_UTILS_HTTP_PORT=10021;ENV_MAHJONG_UTILS_HTTP_HOST=127.0.0.1`）
