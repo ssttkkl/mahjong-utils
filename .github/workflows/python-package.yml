@@ -106,8 +106,3 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_API_TOKEN }}
-    - name: Upload Release Assets
-      uses: AButler/upload-release-assets@v3.0
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        files: dist/*.*
