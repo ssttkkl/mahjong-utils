@@ -146,12 +146,6 @@ hora = build_hora(
 
 ## 指定绑定方式
 
-默认情况下，py版本内部通过py-mini-racer调用mahjong-utils-entry的Kotlin/JS产物，其计算耗时约为JVM产物的2倍。
-
-（为什么不是Kotlin/Native产物，因为实测下来Kotlin/Native产物的计算耗时约为JVM产物的）
-
-## 指定绑定方式
-
 默认情况下，py版本内部通过[py-mini-racer](https://github.com/bpcreech/PyMiniRacer)调用mahjong-utils-entry的Kotlin/JS产物，其计算耗时约为JVM产物的2.1倍。
 
 （为什么不是Kotlin/Native产物，因为实测下来Native产物的计算耗时约为JVM产物的7.6倍）
