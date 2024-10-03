@@ -1,7 +1,6 @@
-package mahjongutils.entry
-
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import mahjongutils.entry.Result
 import mahjongutils.entry.models.HanHu
 import mahjongutils.hanhu.ChildPoint
 import mahjongutils.hanhu.ParentPoint
