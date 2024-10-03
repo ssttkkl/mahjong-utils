@@ -76,13 +76,11 @@ class build_kt(Command):
     user_options = [
         ('build-lib=', 'd', "directory to \"build\" (copy) to"),
         ('kt-libraries=', None, ''),
-        ('shared-location=', None, ""),
         ('ktjs-location=', None, ""),
     ]
 
     def initialize_options(self) -> None:
         self.build_lib = None
-        self.shared_location = None
         self.ktjs_location = None
         self.kt_libraries = None
 
@@ -119,37 +117,8 @@ class build_kt(Command):
             for file in build_dir.iterdir():
                 copy_file(str(file), str(out_dir))
 
-    def build_sharedlib(self):
-        out_dir = Path(self.build_lib) / self.shared_location
-        out_dir.mkdir(exist_ok=True, parents=True)
-
-        for (lib_name, build_info) in self.kt_libraries:
-            log.info("building '%s' Kotlin/Native Shared Library", lib_name)
-
-            root = Path(build_info.get("root")).absolute()
-
-            task = ""
-            subproject = build_info.get("subproject", None)
-            if subproject is not None:
-                task += f":{subproject}:"
-            task += "linkReleaseSharedForCurrentOs"
-
-            run_gradle_task(root, task)
-
-            build_dir = self.get_kt_build_dir(build_info) / "build" / "bin" / "currentOs" / "releaseShared"
-
-            for file in build_dir.iterdir():
-                if sys.platform == 'win32' and file.name.endswith(".dll"):  # windows
-                    copy_file(str(file), str(out_dir))
-                elif sys.platform == 'darwin' and file.name.endswith(".dylib"):  # macOS
-                    copy_file(str(file), str(out_dir))
-                elif file.name.endswith(".so"):  # unix/linux
-                    copy_file(str(file), str(out_dir))
-                copy_file(str(file), str(out_dir))
-
     def run(self):
         self.build_ktjs()
-        self.build_sharedlib()
 
 
 class clean(origin_clean):

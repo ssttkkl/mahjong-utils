@@ -1,3 +1,4 @@
 pydantic>=1.9.0,<2.0.0
-mini-racer>=0.12.4
+cffi~=1.17.1
 stringcase>=1.2.0
+importlib_resources>=6.4.5

@@ -3,10 +3,7 @@ import threading
 from pathlib import Path
 from typing import Optional, Mapping, Any
 
-try:
-    from py_mini_racer import MiniRacer
-except ImportError:
-    raise RuntimeError("To use mahjong-utils JS Bridge, please \"pip install mini_racer\" first")
+from py_mini_racer import MiniRacer
 
 from ..protocol import MahjongUtilsBridge
 
