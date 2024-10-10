@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.buildlogic.kmplib)
     alias(libs.plugins.buildlogic.mavenpublish)
+    alias(libs.plugins.kotest.multiplatform)
 }
 
 
@@ -13,8 +14,13 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
+                implementation(kotlin("reflect"))
                 implementation(platform("org.junit:junit-bom:5.10.0"))
                 implementation("org.junit.jupiter:junit-jupiter")
+                implementation(libs.kotest.framework.engine)
+                implementation(libs.kotest.framework.datatest)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(project(":test-cases"))
             }
         }
     }
