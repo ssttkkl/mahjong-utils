@@ -43,7 +43,7 @@ jobs:
         python3 -m build --sdist --wheel --outdir dist/
     - name: Upload the Build Artifact
       if: ${{ matrix.os != 'ubuntu-latest' }}
-      uses: actions/upload-artifact@v3.1.1
+      uses: actions/upload-artifact@v4.6.1
       with:
           name: distribution
           path: python-lib/dist/*
