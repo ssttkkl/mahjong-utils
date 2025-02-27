@@ -36,6 +36,6 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "mahjong-utils-entry": "^0.7.1"
+    "mahjong-utils-entry": "^0.7.6"
   }
 }

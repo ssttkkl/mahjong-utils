@@ -79,13 +79,13 @@ export class Furo {
   toString (): string {
     switch (this.type) {
       case FuroType.Chi:
-        return `${this.tile.num}${this.tile.num + 1}${this.tile.num + 2}${FuroType[this.type]}`.toLowerCase()
+        return `${this.tile.num}${this.tile.num + 1}${this.tile.num + 2}${TileType[this.tile.type]}`.toLowerCase()
       case FuroType.Pon:
-        return `${this.tile.num}${this.tile.num}${this.tile.num}${FuroType[this.type]}`.toLowerCase()
+        return `${this.tile.num}${this.tile.num}${this.tile.num}${TileType[this.tile.type]}`.toLowerCase()
       case FuroType.Minkan:
-        return `${this.tile.num}${this.tile.num}${this.tile.num}${this.tile.num}${FuroType[this.type]}`.toLowerCase()
+        return `${this.tile.num}${this.tile.num}${this.tile.num}${this.tile.num}${TileType[this.tile.type]}`.toLowerCase()
       case FuroType.Ankan:
-        return `0${this.tile.num}${this.tile.num}0${FuroType[this.type]}`.toLowerCase()
+        return `0${this.tile.num}${this.tile.num}0${TileType[this.tile.type]}`.toLowerCase()
     }
   }
 
