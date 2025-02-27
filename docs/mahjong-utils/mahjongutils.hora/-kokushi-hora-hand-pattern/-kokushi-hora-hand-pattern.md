@@ -3,4 +3,4 @@
 # KokushiHoraHandPattern
 
 [common]\
-constructor(repeated: [Tile](../../mahjongutils.models/-tile/index.md), agari: [Tile](../../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), selfWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null, roundWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null)
+constructor(repeated: [Tile](../../mahjongutils.models/-tile/index.md), agari: [Tile](../../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html), selfWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null, roundWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null)

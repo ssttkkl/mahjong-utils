@@ -3,4 +3,4 @@
 # errors
 
 [common]\
-val [errors](errors.md): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;
+val [errors](errors.md): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;

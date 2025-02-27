@@ -3,6 +3,6 @@
 # canRon
 
 [common]\
-val [canRon](can-ron.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+val [canRon](can-ron.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 是否能荣和机会牌

@@ -3,7 +3,7 @@
 # kokushiShanten
 
 [common]\
-fun [kokushiShanten](kokushi-shanten.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../mahjongutils.models/-tile/index.md)&gt;, bestShantenOnly: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [KokushiShantenResult](-kokushi-shanten-result/index.md)
+fun [kokushiShanten](kokushi-shanten.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../mahjongutils.models/-tile/index.md)&gt;, bestShantenOnly: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = false): [KokushiShantenResult](-kokushi-shanten-result/index.md)
 
 国士无双向听分析
 

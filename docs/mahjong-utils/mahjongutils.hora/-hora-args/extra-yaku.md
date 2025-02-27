@@ -3,7 +3,7 @@
 # extraYaku
 
 [common]\
-val [extraYaku](extra-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;@Serializable(with = [DefaultYakuSerializer::class](../../mahjongutils.yaku/-default-yaku-serializer/index.md))[Yaku](../../mahjongutils.yaku/-yaku/index.md)&gt;
+val [extraYaku](extra-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;@Serializable(with = [DefaultYakuSerializer::class](../../mahjongutils.yaku/-default-yaku-serializer/index.md))[Yaku](../../mahjongutils.yaku/-yaku/index.md)&gt;
 
 #### Parameters
 

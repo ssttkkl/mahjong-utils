@@ -3,4 +3,4 @@
 # FuroChanceShantenArgsValidationException
 
 [common]\
-constructor(args: [FuroChanceShantenArgs](../-furo-chance-shanten-args/index.md), errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[FuroChanceShantenArgsErrorInfo](../-furo-chance-shanten-args-error-info/index.md)&gt;)
+constructor(args: [FuroChanceShantenArgs](../-furo-chance-shanten-args/index.md), errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[FuroChanceShantenArgsErrorInfo](../-furo-chance-shanten-args-error-info/index.md)&gt;)

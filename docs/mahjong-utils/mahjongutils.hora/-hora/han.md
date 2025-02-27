@@ -6,6 +6,6 @@
 
 @EncodeDefault
 
-val [han](han.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+val [han](han.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
 
 番

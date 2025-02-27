@@ -3,6 +3,6 @@
 # waiting
 
 [common]\
-val [waiting](waiting.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../-tile/index.md)&gt;
+val [waiting](waiting.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../-tile/index.md)&gt;
 
 进张

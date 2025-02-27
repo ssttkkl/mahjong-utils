@@ -3,6 +3,6 @@
 # isYakuman
 
 [common]\
-val [isYakuman](is-yakuman.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false
+val [isYakuman](is-yakuman.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = false
 
 是否为役满役种

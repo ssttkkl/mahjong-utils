@@ -3,7 +3,7 @@
 # parse
 
 [common]\
-fun [parse](parse.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../-tile/index.md)&gt;, ankan: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [Furo](../index.md)
+fun [parse](parse.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../../-tile/index.md)&gt;, ankan: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = false): [Furo](../index.md)
 
 根据给定牌构造副露
 
@@ -21,7 +21,7 @@ common
 | ankan | 是否为暗杠 |
 
 [common]\
-fun [parse](parse.md)(text: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), ankan: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [Furo](../index.md)
+fun [parse](parse.md)(text: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), ankan: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = false): [Furo](../index.md)
 
 根据给定牌构造副露
 

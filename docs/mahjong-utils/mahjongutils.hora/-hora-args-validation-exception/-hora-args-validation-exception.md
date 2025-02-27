@@ -3,4 +3,4 @@
 # HoraArgsValidationException
 
 [common]\
-constructor(args: [HoraArgs](../-hora-args/index.md), errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[HoraArgsErrorInfo](../-hora-args-error-info/index.md)&gt;)
+constructor(args: [HoraArgs](../-hora-args/index.md), errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[HoraArgsErrorInfo](../-hora-args-error-info/index.md)&gt;)
