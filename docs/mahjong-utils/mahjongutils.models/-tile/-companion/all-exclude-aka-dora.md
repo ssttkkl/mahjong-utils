@@ -3,6 +3,6 @@
 # allExcludeAkaDora
 
 [common]\
-val [allExcludeAkaDora](all-exclude-aka-dora.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../index.md)&gt;
+val [allExcludeAkaDora](all-exclude-aka-dora.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../index.md)&gt;
 
 所有牌

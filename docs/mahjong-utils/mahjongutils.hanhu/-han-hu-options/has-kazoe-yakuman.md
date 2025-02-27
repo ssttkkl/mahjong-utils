@@ -3,6 +3,6 @@
 # hasKazoeYakuman
 
 [common]\
-val [hasKazoeYakuman](has-kazoe-yakuman.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true
+val [hasKazoeYakuman](has-kazoe-yakuman.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = true
 
 是否有累计役满

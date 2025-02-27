@@ -3,7 +3,7 @@
 # build
 
 [common]\
-fun [build](build.md)(pattern: [RegularHandPattern](../../../mahjongutils.models.hand/-regular-hand-pattern/index.md), agari: [Tile](../../../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), selfWind: [Wind](../../../mahjongutils.models/-wind/index.md)? = null, roundWind: [Wind](../../../mahjongutils.models/-wind/index.md)? = null): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[RegularHoraHandPattern](../index.md)&gt;
+fun [build](build.md)(pattern: [RegularHandPattern](../../../mahjongutils.models.hand/-regular-hand-pattern/index.md), agari: [Tile](../../../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html), selfWind: [Wind](../../../mahjongutils.models/-wind/index.md)? = null, roundWind: [Wind](../../../mahjongutils.models/-wind/index.md)? = null): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[RegularHoraHandPattern](../index.md)&gt;
 
 构建标准形和牌手牌
 

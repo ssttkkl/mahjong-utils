@@ -3,6 +3,6 @@
 # tsumoParent
 
 [common]\
-val [tsumoParent](tsumo-parent.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)
+val [tsumoParent](tsumo-parent.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-u-long/index.html)
 
 自摸亲家（庄家）点数

@@ -3,6 +3,6 @@
 # tsumoChild
 
 [common]\
-val [tsumoChild](tsumo-child.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-u-long/index.html)
+val [tsumoChild](tsumo-child.md): [ULong](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-u-long/index.html)
 
 自摸子家（闲家）点数

@@ -3,7 +3,7 @@
 # advance
 
 [common]\
-fun [advance](advance.md)(step: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [Tile](index.md)
+fun [advance](advance.md)(step: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [Tile](index.md)
 
 该牌数字加上指定数字后得到的牌
 

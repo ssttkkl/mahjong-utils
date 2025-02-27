@@ -3,7 +3,7 @@
 # getYaku
 
 [common]\
-fun [getYaku](get-yaku.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Yaku](../-yaku/index.md)
+fun [getYaku](get-yaku.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [Yaku](../-yaku/index.md)
 
 根据役种名获取役种
 

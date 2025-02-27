@@ -3,7 +3,7 @@
 # regularShanten
 
 [common]\
-fun [regularShanten](regular-shanten.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../mahjongutils.models/-tile/index.md)&gt;, furo: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Furo](../mahjongutils.models/-furo/index.md)&gt; = listOf(), bestShantenOnly: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [RegularShantenResult](-regular-shanten-result/index.md)
+fun [regularShanten](regular-shanten.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../mahjongutils.models/-tile/index.md)&gt;, furo: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[Furo](../mahjongutils.models/-furo/index.md)&gt; = listOf(), bestShantenOnly: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = false): [RegularShantenResult](-regular-shanten-result/index.md)
 
 标准形向听分析（只考虑4面子+1雀头和牌的形状）
 

@@ -3,6 +3,6 @@
 # aotenjou
 
 [common]\
-val [aotenjou](aotenjou.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+val [aotenjou](aotenjou.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 是否为青天井规则

@@ -9,11 +9,11 @@ object [Default](index.md) : [Yakus](../index.md)
 
 | Name | Summary |
 |---|---|
-| [allCommonYaku](../all-common-yaku.md) | [common]<br>val [allCommonYaku](../all-common-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有通常役种 |
-| [allExtraYaku](../all-extra-yaku.md) | [common]<br>val [allExtraYaku](../all-extra-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有额外役种（与手牌无关的役种） |
-| [allExtraYakuman](../all-extra-yakuman.md) | [common]<br>val [allExtraYakuman](../all-extra-yakuman.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有额外役满（与手牌无关的役种） |
-| [allYaku](../all-yaku.md) | [common]<br>val [allYaku](../all-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有役种 |
-| [allYakuman](../all-yakuman.md) | [common]<br>val [allYakuman](../all-yakuman.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有役满役种 |
+| [allCommonYaku](../all-common-yaku.md) | [common]<br>val [allCommonYaku](../all-common-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有通常役种 |
+| [allExtraYaku](../all-extra-yaku.md) | [common]<br>val [allExtraYaku](../all-extra-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有额外役种（与手牌无关的役种） |
+| [allExtraYakuman](../all-extra-yakuman.md) | [common]<br>val [allExtraYakuman](../all-extra-yakuman.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有额外役满（与手牌无关的役种） |
+| [allYaku](../all-yaku.md) | [common]<br>val [allYaku](../all-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有役种 |
+| [allYakuman](../all-yakuman.md) | [common]<br>val [allYakuman](../all-yakuman.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../../-yaku/index.md)&gt;<br>所有役满役种 |
 | [Chankan](../-chankan.md) | [common]<br>val [Chankan](../-chankan.md): [Yaku](../../-yaku/index.md)<br>枪杠 |
 | [Chanta](../-chanta.md) | [common]<br>val [Chanta](../-chanta.md): [Yaku](../../-yaku/index.md)<br>混全带幺九 |
 | [Chihou](../-chihou.md) | [common]<br>val [Chihou](../-chihou.md): [Yaku](../../-yaku/index.md)<br>地和 |
@@ -65,4 +65,4 @@ object [Default](index.md) : [Yakus](../index.md)
 
 | Name | Summary |
 |---|---|
-| [getYaku](../get-yaku.md) | [common]<br>fun [getYaku](../get-yaku.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Yaku](../../-yaku/index.md)<br>根据役种名获取役种 |
+| [getYaku](../get-yaku.md) | [common]<br>fun [getYaku](../get-yaku.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [Yaku](../../-yaku/index.md)<br>根据役种名获取役种 |

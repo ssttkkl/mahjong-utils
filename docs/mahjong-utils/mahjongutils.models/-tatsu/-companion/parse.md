@@ -21,7 +21,7 @@ common
 | second | 第二张牌 |
 
 [common]\
-fun [parse](parse.md)(text: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Tatsu](../index.md)
+fun [parse](parse.md)(text: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [Tatsu](../index.md)
 
 根据给定牌的文本构造搭子
 

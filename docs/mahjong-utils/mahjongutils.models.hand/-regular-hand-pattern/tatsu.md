@@ -3,6 +3,6 @@
 # tatsu
 
 [common]\
-open override val [tatsu](tatsu.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tatsu](../../mahjongutils.models/-tatsu/index.md)&gt;
+open override val [tatsu](tatsu.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[Tatsu](../../mahjongutils.models/-tatsu/index.md)&gt;
 
 搭子

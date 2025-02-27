@@ -3,6 +3,6 @@
 # thirteenWaiting
 
 [common]\
-val [thirteenWaiting](thirteen-waiting.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+val [thirteenWaiting](thirteen-waiting.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 是否十三面和牌

@@ -3,6 +3,6 @@
 # furoLoss
 
 [common]\
-val [furoLoss](furo-loss.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0
+val [furoLoss](furo-loss.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 0
 
 副露降低多少番数

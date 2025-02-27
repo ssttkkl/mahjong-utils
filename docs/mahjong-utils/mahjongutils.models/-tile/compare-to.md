@@ -3,4 +3,4 @@
 # compareTo
 
 [common]\
-open operator override fun [compareTo](compare-to.md)(other: [Tile](index.md)): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+open operator override fun [compareTo](compare-to.md)(other: [Tile](index.md)): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
