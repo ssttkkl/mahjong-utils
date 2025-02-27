@@ -1,7 +1,7 @@
 // @ts-ignore
-import { mahjongutils } from 'mahjong-utils-entry'
+import { call } from 'mahjong-utils-entry'
 
-export const ENTRY = { call: mahjongutils.entry.call }
+export const ENTRY = { call }
 
 export interface Result<T> {
   data?: T

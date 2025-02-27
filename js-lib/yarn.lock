@@ -3095,10 +3095,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-mahjong-utils-entry@^0.7.1:
-  version "0.7.2"
-  resolved "https://registry.npmjs.org/mahjong-utils-entry/-/mahjong-utils-entry-0.7.2.tgz#faef1cfc2891b47ca4180352b7d34e1c8b3cbcaa"
-  integrity sha512-I0mWXgfzClLMZmikxgHMINec97Akzd1x81Yt/BpGaTtP97ic3cee5z5u69vG7P2Al1t5HkzZnpb9wcDHGZQs6g==
+mahjong-utils-entry@^0.7.6:
+  version "0.7.6"
+  resolved "https://registry.npmjs.org/mahjong-utils-entry/-/mahjong-utils-entry-0.7.6.tgz#59e10bab348d31baf447fd23008df465d26caf5f"
+  integrity sha512-nIBxMiX1MVNewvYdtTRXP61sK2sOK2dWbp9T5Hp1MBBbNiYr1egyJKvTsRg3fNWB41SKurJOfW2jBZdPqHu9tQ==
   dependencies:
     format-util "^1.0.5"
 
