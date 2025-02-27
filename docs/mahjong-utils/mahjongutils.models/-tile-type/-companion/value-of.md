@@ -3,4 +3,4 @@
 # valueOf
 
 [common]\
-fun [valueOf](value-of.md)(ordinal: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [TileType](../index.md)
+fun [valueOf](value-of.md)(ordinal: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [TileType](../index.md)

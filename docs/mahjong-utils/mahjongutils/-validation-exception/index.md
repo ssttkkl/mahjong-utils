@@ -2,7 +2,7 @@
 
 # ValidationException
 
-open class [ValidationException](index.md)(val errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;) : [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html)
+open class [ValidationException](index.md)(val errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;) : [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html)
 
 #### Inheritors
 
@@ -16,12 +16,12 @@ open class [ValidationException](index.md)(val errors: [Collection](https://kotl
 
 | | |
 |---|---|
-| [ValidationException](-validation-exception.md) | [common]<br>constructor(errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;) |
+| [ValidationException](-validation-exception.md) | [common]<br>constructor(errors: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt;) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [cause](../../mahjongutils.shanten/-furo-chance-shanten-args-validation-exception/index.md#-654012527%2FProperties%2F1581026887) | [common]<br>open val [cause](../../mahjongutils.shanten/-furo-chance-shanten-args-validation-exception/index.md#-654012527%2FProperties%2F1581026887): [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)? |
-| [errors](errors.md) | [common]<br>val [errors](errors.md): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt; |
-| [message](message.md) | [common]<br>open override val [message](message.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [cause](../../mahjongutils.shanten/-furo-chance-shanten-args-validation-exception/index.md#-654012527%2FProperties%2F1581026887) | [common]<br>open val [cause](../../mahjongutils.shanten/-furo-chance-shanten-args-validation-exception/index.md#-654012527%2FProperties%2F1581026887): [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-throwable/index.html)? |
+| [errors](errors.md) | [common]<br>val [errors](errors.md): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[ErrorInfo](../-error-info/index.md)&gt; |
+| [message](message.md) | [common]<br>open override val [message](message.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |

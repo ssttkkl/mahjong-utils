@@ -9,4 +9,4 @@ object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [valueOf](value-of.md) | [common]<br>fun [valueOf](value-of.md)(ordinal: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [TileType](../index.md) |
+| [valueOf](value-of.md) | [common]<br>fun [valueOf](value-of.md)(ordinal: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [TileType](../index.md) |

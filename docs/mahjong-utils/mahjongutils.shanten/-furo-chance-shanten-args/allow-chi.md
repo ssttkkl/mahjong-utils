@@ -3,7 +3,7 @@
 # allowChi
 
 [common]\
-val [allowChi](allow-chi.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true
+val [allowChi](allow-chi.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = true
 
 #### Parameters
 

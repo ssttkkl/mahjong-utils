@@ -3,6 +3,6 @@
 # allYaku
 
 [common]\
-val [allYaku](all-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../-yaku/index.md)&gt;
+val [allYaku](all-yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Yaku](../-yaku/index.md)&gt;
 
 所有役种

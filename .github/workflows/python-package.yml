@@ -43,7 +43,7 @@ jobs:
         python3 -m build --sdist --wheel --outdir dist/
     - name: Upload the Build Artifact
       if: ${{ matrix.os != 'ubuntu-latest' }}
-      uses: actions/upload-artifact@v3.1.1
+      uses: actions/upload-artifact@v4.6.1
       with:
           name: distribution
           path: python-lib/dist/*
@@ -62,7 +62,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Download the Build Artifact
-      uses: actions/download-artifact@v3.0.1
+      uses: actions/download-artifact@v4.1.9
       with:
         name: distribution
         path: dist
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download a Build Artifact
-      uses: actions/download-artifact@v3.0.1
+      uses: actions/download-artifact@v4.1.9
       with:
         name: distribution
         path: dist

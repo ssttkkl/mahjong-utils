@@ -3,6 +3,6 @@
 # menzenOnly
 
 [common]\
-val [menzenOnly](menzen-only.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+val [menzenOnly](menzen-only.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 是否为门清限定

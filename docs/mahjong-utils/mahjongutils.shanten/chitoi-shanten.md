@@ -3,7 +3,7 @@
 # chitoiShanten
 
 [common]\
-fun [chitoiShanten](chitoi-shanten.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../mahjongutils.models/-tile/index.md)&gt;, bestShantenOnly: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [ChitoiShantenResult](-chitoi-shanten-result/index.md)
+fun [chitoiShanten](chitoi-shanten.md)(tiles: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[Tile](../mahjongutils.models/-tile/index.md)&gt;, bestShantenOnly: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = false): [ChitoiShantenResult](-chitoi-shanten-result/index.md)
 
 七对子向听分析
 

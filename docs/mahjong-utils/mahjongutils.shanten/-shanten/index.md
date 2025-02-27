@@ -19,4 +19,4 @@ sealed interface [Shanten](index.md)
 
 | Name | Summary |
 |---|---|
-| [shantenNum](shanten-num.md) | [common]<br>abstract val [shantenNum](shanten-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>向听数 |
+| [shantenNum](shanten-num.md) | [common]<br>abstract val [shantenNum](shanten-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)<br>向听数 |

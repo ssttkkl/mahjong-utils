@@ -3,7 +3,7 @@
 # distance
 
 [common]\
-fun [distance](distance.md)(that: [Tile](index.md)): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+fun [distance](distance.md)(that: [Tile](index.md)): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
 
 计算这张牌与另一张牌的数字之差
 

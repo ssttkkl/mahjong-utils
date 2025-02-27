@@ -3,6 +3,6 @@
 # allYaochu
 
 [common]\
-val [allYaochu](all-yaochu.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../index.md)&gt;
+val [allYaochu](all-yaochu.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../index.md)&gt;
 
 所有幺九牌

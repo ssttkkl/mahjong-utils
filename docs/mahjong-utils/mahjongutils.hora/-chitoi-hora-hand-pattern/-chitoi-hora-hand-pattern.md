@@ -3,4 +3,4 @@
 # ChitoiHoraHandPattern
 
 [common]\
-constructor(pairs: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;, agari: [Tile](../../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), selfWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null, roundWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null)
+constructor(pairs: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Tile](../../mahjongutils.models/-tile/index.md)&gt;, agari: [Tile](../../mahjongutils.models/-tile/index.md), tsumo: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html), selfWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null, roundWind: [Wind](../../mahjongutils.models/-wind/index.md)? = null)

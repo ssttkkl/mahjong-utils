@@ -3,7 +3,7 @@
 # dora
 
 [common]\
-val [dora](dora.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+val [dora](dora.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
 
 #### Parameters
 

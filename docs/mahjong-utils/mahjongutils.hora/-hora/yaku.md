@@ -6,6 +6,6 @@
 
 @EncodeDefault
 
-val [yaku](yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;@Serializable(with = [DefaultYakuSerializer::class](../../mahjongutils.yaku/-default-yaku-serializer/index.md))[Yaku](../../mahjongutils.yaku/-yaku/index.md)&gt;
+val [yaku](yaku.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;@Serializable(with = [DefaultYakuSerializer::class](../../mahjongutils.yaku/-default-yaku-serializer/index.md))[Yaku](../../mahjongutils.yaku/-yaku/index.md)&gt;
 
 役种

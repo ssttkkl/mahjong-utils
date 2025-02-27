@@ -3,7 +3,7 @@
 # bestShantenOnly
 
 [common]\
-val [bestShantenOnly](best-shanten-only.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false
+val [bestShantenOnly](best-shanten-only.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) = false
 
 #### Parameters
 
