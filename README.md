@@ -13,6 +13,14 @@ mahjong-utils
 
 基于该库开发的App：https://github.com/ssttkkl/mahjong-utils-app
 
+## DeepWiki
+
+~~好消息!好消息!本组件正式与DeepWiki成功达成合作关系,今后大家有什么不懂的可以直接问AI,不用在Issue里提问浪费时间啦!~~
+
+文档：https://deepwiki.com/ssttkkl/mahjong-utils
+
+提问例：[How to calculate all yaku in a winning hand?](https://deepwiki.com/search/how-to-calculate-all-yaku-in-a_305e1f5e-acf7-4cc8-9d92-dd0c874b4434)
+
 ## 平台支持
 
 本项目使用Kotlin/Multiplatform编写，支持多平台调用
