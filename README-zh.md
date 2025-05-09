@@ -1,45 +1,43 @@
 mahjong-utils
 ========
 
-[中文](README-zh.md)
+日麻小工具
 
-Japanese Mahjong Utilities
+已实现功能：
 
-Implemented Features:
+- [x] 获取番符对应和牌点数
+- [x] 手牌向听数、进张分析
+- [x] 摸牌何切分析
+- [x] 鸣牌分析
+- [x] 和了分析（役种、番数、符数）
 
-- [x] Calculate winning points based on han and fu
-- [x] Shanten analysis and waiting tile evaluation
-- [x] Tile discard analysis after drawing
-- [x] Call (meld) analysis
-- [x] Winning hand analysis (yaku types, han count, fu count)
-
-App developed based on this library: https://github.com/ssttkkl/mahjong-utils-app
+基于该库开发的App：https://github.com/ssttkkl/mahjong-utils-app
 
 ## DeepWiki
 
-~~Good news! This component has officially partnered with DeepWiki. Now you can ask AI directly instead of wasting time posting Issues!~~
+~~好消息!好消息!本组件正式与DeepWiki成功达成合作关系,今后大家有什么不懂的可以直接问AI,不用在Issue里提问浪费时间啦!~~
 
-Documentation: https://deepwiki.com/ssttkkl/mahjong-utils
+文档：https://deepwiki.com/ssttkkl/mahjong-utils
 
-Example question: [How to calculate all yaku in a winning hand?](https://deepwiki.com/search/how-to-calculate-all-yaku-in-a_305e1f5e-acf7-4cc8-9d92-dd0c874b4434)
+提问例：[How to calculate all yaku in a winning hand?](https://deepwiki.com/search/how-to-calculate-all-yaku-in-a_305e1f5e-acf7-4cc8-9d92-dd0c874b4434)
 
-## Platform Support
+## 平台支持
 
-This project uses Kotlin/Multiplatform and supports multiple platforms:
+本项目使用Kotlin/Multiplatform编写，支持多平台调用
 
-For Kotlin/Java: Continue reading below
+对于Kotlin、Java：请直接往下阅读
 
-For Python: We provide Python bindings - see [python-lib/README.md](python-lib/README.md)
+对于Python：我们提供了绑定方便Python侧调用，具体请看 [python-lib/README.md](python-lib/README.md)
 
-For JavaScript/TypeScript: We provide JS/TS bindings - see [js-lib/README.md](js-lib/README.md)
+对于JavaScript/TypeScript：我们提供了绑定方便JS/TS侧调用，具体请看 [js-lib/README.md](js-lib/README.md)
 
-## Usage (Kotlin/Java)
+## 使用（Kotlin/Java）
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils)
 
-### Dependency
+### 引用
 
-Maven:
+Maven：
 
 ```xml
 <dependency>
@@ -55,15 +53,15 @@ Gradle：
 implementation "io.github.ssttkkl:mahjong-utils:{mahjongUtilsVersion}"
 ```
 
-### Shanten analysis
+### 向听分析/牌理
 
-- Shanten analysis: [shanten](docs/mahjong-utils/mahjongutils.shanten/shanten.md)
-- Regular pattern shanten analysis: [regularShanten](docs/mahjong-utils/mahjongutils.shanten/regular-shanten.md)
-- Seven Pairs shanten analysis: [chitoiShanten](docs/mahjong-utils/mahjongutils.shanten/chitoi-shanten.md)
-- Kokushi Musou shanten analysis: [kokushiShanten](docs/mahjong-utils/mahjongutils.shanten/kokushi-shanten.md)
-- Call opportunity shanten analysis: [furoChanceShanten](docs/mahjong-utils/mahjongutils.shanten/furo-chance-shanten.md)
+- 向听分析：[shanten](docs/mahjong-utils/mahjongutils.shanten/shanten.md)
+- 标准形向听分析：[regularShanten](docs/mahjong-utils/mahjongutils.shanten/regular-shanten.md)
+- 七对子向听分析：[chitoiShanten](docs/mahjong-utils/mahjongutils.shanten/chitoi-shanten.md)
+- 国士无双向听分析：[kokushiShanten](docs/mahjong-utils/mahjongutils.shanten/kokushi-shanten.md)
+- 副露判断向听分析：[furoChanceShanten](docs/mahjong-utils/mahjongutils.shanten/furo-chance-shanten.md)
 
-Without drawn tile:
+未摸牌：
 
 ```kotlin
 val result = shanten(Tile.parseTiles("34568m235p68s"))
@@ -72,7 +70,7 @@ print(shantenInfo.shantenNum)  // 2
 print(shantenInfo.advance)  // [7m, 1p, 4p, 5p, 6s, 8s, 7s, 2p, 3p, 6m, 8m, 3m]
 ```
 
-With drawn tile:
+已摸牌：
 
 ```kotlin
 val result = shanten(Tile.parseTiles("112233p44556s127z"))
@@ -92,9 +90,9 @@ print(shantenInfo.discardToAdvance)
 */
 ```
 
-### Winning Hand Analysis
+### 和牌分析
 
-- Winning Hand Analysis: [hora](docs/mahjong-utils/mahjongutils.hora/hora.md)
+- 和牌分析：[hora](docs/mahjong-utils/mahjongutils.hora/hora.md)
 
 ```kotlin
 val result = hora(
@@ -114,19 +112,20 @@ print(result.parentPoint)  // ParentPoint(ron=18000, tsumo=6000)
 print(result.childPoint)  // ChildPoint(ron=12000, tsumoParent=6000, tsumoChild=3000)
 ```
 
-### Calculate Points from Han/Fu
+### 根据番符获取和牌点数
 
-- Get non-dealer points: [getChildPointByHanHu](docs/mahjong-utils/mahjongutils.hanhu/get-child-point-by-han-hu.md)
-- Get dealer points: [getParentPointByHanHu](docs/mahjong-utils/mahjongutils.hanhu/get-parent-point-by-han-hu.md)
+- 获取子家（闲家）和牌点数：[getChildPointByHanHu](docs/mahjong-utils/mahjongutils.hanhu/get-child-point-by-han-hu.md)
+- 获取亲家（庄家）和牌点数：[getParentPointByHanHu](docs/mahjong-utils/mahjongutils.hanhu/get-parent-point-by-han-hu.md)
+
 
 ```kotlin
-// Dealer points for 3 han 40 fu
+// 获取亲家X番Y符的点数
 val parentPoint = getParentPointByHanHu(3, 40)
 print(parentPoint.ron)  // 7700
 print(parentPoint.tsumo)  // 2600
 print(parentPoint.tsumoTotal) // 7800
 
-// Non-dealer points for 3 han 40 fu
+// 获取子家X番Y符的点数
 val childPoint = getChildPointByHanHu(3, 40)
 print(childPoint.ron)  // 5200
 print(childPoint.tsumoParent)  // 2600
@@ -134,25 +133,28 @@ print(childPoint.tsumoChild)  // 1300
 print(childPoint.tsumoTotal) // 5200
 ```
 
-### API Documentation
+### API文档
 
-[API Documentation](docs/index.md)
+[API文档](docs/index.md)
 
-## Dynamic Library Usage
+## 使用（动态库）
 
-For cross-language integration, mahjong-utils-entry exposes a unified `call` method with JSON-formatted parameters and responses.
+为方便其他语言以动态库的形式调用，mahjong-utils-entry项目将mahjong-utils的功能封装，并暴露一个统一入口 `call` 方法供外部调用。
+其参数与返回值均为JSON编码的字符串。
 
-### Build
+### 构建
 
-Ensure JDK11+ is installed. Clone the project and run:
+确保本地安装了JDK11或更高版本，克隆本项目后，执行：
 
 ```shell
 ./gradlew :mahjong-utils-entry:linkReleaseSharedNative
 ```
 
-Output files will be in mahjong-utils-entry/build/bin/native/releaseShared.
+会在mahjong-utils-entry/build/bin/native/releaseShared目录下得到动态库产物与头文件。
 
-### Usage Example (C)
+### 使用
+
+以C语言为例：
 
 ```c
 #include <stdio.h>
@@ -169,10 +171,12 @@ int main(int argc, char** argv) {
 }
 ```
 
-Output contains three fields: code (status code), msg (error message), and data (result payload).
+输出：
 
 ```
 {"data":{"hand":{"tiles":["1s","1s","1s","2s","3s","4s","5s","6s","7s","8s"],"furo":[],"patterns":[{"type":"RegularHandPattern","k":3,"jyantou":null,"menzenMentsu":["111s","234s","567s"],"furo":[],"tatsu":[],"remaining":["8s"]},{"type":"RegularHandPattern","k":3,"jyantou":null,"menzenMentsu":["111s","234s","678s"],"furo":[],"tatsu":[],"remaining":["5s"]},{"type":"RegularHandPattern","k":3,"jyantou":null,"menzenMentsu":["111s","345s","678s"],"furo":[],"tatsu":[],"remaining":["2s"]},{"type":"RegularHandPattern","k":3,"jyantou":"1s","menzenMentsu":["123s","456s"],"furo":[],"tatsu":["78s"],"remaining":[]},{"type":"RegularHandPattern","k":3,"jyantou":"1s","menzenMentsu":["123s","678s"],"furo":[],"tatsu":["45s"],"remaining":[]},{"type":"RegularHandPattern","k":3,"jyantou":"1s","menzenMentsu":["345s","678s"],"furo":[],"tatsu":["12s"],"remaining":[]}]},"shantenInfo":{"type":"ShantenWithoutGot","shantenNum":0,"advance":["8s","5s","2s","6s","9s","3s"],"advanceNum":19,"goodShapeAdvance":null,"goodShapeAdvanceNum":null,"improvement":{},"improvementNum":0,"goodShapeImprovement":{},"goodShapeImprovementNum":0},"regular":{"hand":{"tiles":["1s","1s","1s","2s","3s","4s","5s","6s","7s","8s"],"furo":[],"patterns":[{"k":3,"jyantou":null,"menzenMentsu":["111s","234s","567s"],"furo":[],"tatsu":[],"remaining":["8s"]},{"k":3,"jyantou":null,"menzenMentsu":["111s","234s","678s"],"furo":[],"tatsu":[],"remaining":["5s"]},{"k":3,"jyantou":null,"menzenMentsu":["111s","345s","678s"],"furo":[],"tatsu":[],"remaining":["2s"]},{"k":3,"jyantou":"1s","menzenMentsu":["123s","456s"],"furo":[],"tatsu":["78s"],"remaining":[]},{"k":3,"jyantou":"1s","menzenMentsu":["123s","678s"],"furo":[],"tatsu":["45s"],"remaining":[]},{"k":3,"jyantou":"1s","menzenMentsu":["345s","678s"],"furo":[],"tatsu":["12s"],"remaining":[]}]},"shantenInfo":{"type":"ShantenWithoutGot","shantenNum":0,"advance":["8s","5s","2s","6s","9s","3s"],"advanceNum":19,"goodShapeAdvance":null,"goodShapeAdvanceNum":null,"improvement":{},"improvementNum":0,"goodShapeImprovement":{},"goodShapeImprovementNum":0}},"chitoi":null,"kokushi":null},"code":200,"msg":""}
 ```
 
-For more about Kotlin/Native dynamic libraries: https://kotlinlang.org/docs/native-dynamic-libraries.html#use-generated-headers-from-c
+返回值有三个字段：`code`、`msg`与`data`。类似一般的WebAPI，其code指明执行是否成功，msg当执行失败时指明错误原因，data则为执行结果。
+
+关于Kotlin作为动态库调用的更多信息可参考官方文档： https://kotlinlang.org/docs/native-dynamic-libraries.html#use-generated-headers-from-c
