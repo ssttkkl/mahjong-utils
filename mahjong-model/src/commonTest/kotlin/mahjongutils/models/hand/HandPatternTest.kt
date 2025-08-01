@@ -1,212 +1,275 @@
 package mahjongutils.models.hand
 
-import mahjongutils.models.Ankan
-import mahjongutils.models.Chi
-import mahjongutils.models.Kotsu
-import mahjongutils.models.MentsuType
-import mahjongutils.models.Ryanmen
-import mahjongutils.models.Shuntsu
-import mahjongutils.models.Tatsu
+import mahjongutils.models.GroupType
+import mahjongutils.models.Melded
+import mahjongutils.models.Pung
+import mahjongutils.models.TwoSide
+import mahjongutils.models.Seq
 import mahjongutils.models.Tile
-import mahjongutils.models.TileType
+import mahjongutils.models.Tri
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class HandPatternTest {
-
     @Test
     fun testRegularHandPattern() {
-        // 测试创建标准形手牌
-        val jyantou = Tile.get(TileType.M, 1)
-        val menzenMentsu = listOf(
-            Shuntsu(Tile.get(TileType.M, 2)),
-            Kotsu(Tile.get(TileType.P, 5))
+        // 测试标准形手牌
+        val pair = Tile["1m"] // 1万雀头
+        val concealedGroups = listOf(
+            Seq(Tile["2m"]), // 234万
+            Tri(Tile["2p"])  // 222筒
         )
-        val furo = listOf(
-            Chi(Tile.get(TileType.S, 3))
+        val meldeds = listOf(
+            Pung(Tile["3s"]) // 333索
         )
-        val tatsu = listOf(
-            Ryanmen(Tile.get(TileType.M, 6))
+        val protoruns = listOf(
+            TwoSide(Tile["4m"]) // 45万两面搭子
         )
-        val remaining = listOf(Tile.get(TileType.Z, 1))
+        val floatings = listOf(Tile["5z"]) // 白浮牌
 
-        val regularHand = RegularHandPattern(
+        val handPattern = RegularHandPattern(
             k = 4,
-            jyantou = jyantou,
-            menzenMentsu = menzenMentsu,
-            furo = furo,
-            tatsu = tatsu,
-            remaining = remaining
+            pair = pair,
+            concealedGroups = concealedGroups,
+            meldeds = meldeds,
+            protoruns = protoruns,
+            floatings = floatings
         )
 
-        // 测试基本属性
-        assertEquals(4, regularHand.k)
-        assertEquals(jyantou, regularHand.jyantou)
-        assertEquals(menzenMentsu, regularHand.menzenMentsu)
-        assertEquals(furo, regularHand.furo)
-        assertEquals(tatsu, regularHand.tatsu)
-        assertEquals(remaining, regularHand.remaining)
+        // 验证基本属性
+        assertEquals(pair, handPattern.pair)
+        assertEquals(concealedGroups, handPattern.concealedGroups)
+        assertEquals(meldeds, handPattern.meldeds)
+        assertEquals(protoruns, handPattern.protoruns)
+        assertEquals(floatings, handPattern.floatings)
 
-        // 测试门前牌
-        val tilesInHand = regularHand.tilesInHand
-        assertEquals(11, tilesInHand.size) // 雀头(2) + 门前面子(6) + 搭子(2) + 浮牌(1)
+        // 验证面子
+        val groups = handPattern.groups
+        assertEquals(3, groups.size)
+        assertTrue(groups.any { it.type == GroupType.Seq && it.tile == Tile["2m"] })
+        assertTrue(groups.any { it.type == GroupType.Tri && it.tile == Tile["2p"] })
+        assertTrue(groups.any { it.type == GroupType.Tri && it.tile == Tile["3s"] })
 
-        // 测试所有面子
-        val allMentsu = regularHand.mentsu
-        assertEquals(3, allMentsu.size) // 门前面子(2) + 副露面子(1)
+        // 验证暗刻
+        val concealedTris = handPattern.concealedTris
+        assertEquals(1, concealedTris.size)
+        assertEquals(Tile["2p"], concealedTris[0].tile)
 
-        // 测试暗刻
-        val anko = regularHand.anko
-        assertEquals(1, anko.size)
-        assertEquals(MentsuType.Kotsu, anko[0].type)
-        assertEquals(Tile.get(TileType.P, 5), anko[0].tile)
+        // 验证是否和了/听牌
+        assertFalse(handPattern.isWinningHand)
+        assertFalse(handPattern.isWaitingHand)
 
-        // 测试门清状态
-        assertFalse(regularHand.menzen)
+        // 验证门前牌
+        val tiles = handPattern.tiles
+        assertEquals(11, tiles.size) // 2张雀头 + 6张门前面子 + 2张搭子 + 1张浮牌
+        assertEquals(2, tiles.count { it == Tile["1m"] }) // 雀头
+        assertEquals(1, tiles.count { it == Tile["2m"] }) // 顺子
+        assertEquals(1, tiles.count { it == Tile["3m"] }) // 顺子
+        assertEquals(2, tiles.count { it == Tile["4m"] }) // 顺子+搭子
+        assertEquals(1, tiles.count { it == Tile["5m"] }) // 搭子
+        assertEquals(3, tiles.count { it == Tile["2p"] }) // 刻子
+        assertEquals(1, tiles.count { it == Tile["5z"] }) // 浮牌
     }
 
     @Test
-    fun testRegularHandPatternWithAnkan() {
-        // 测试创建带暗杠的标准形手牌
-        val jyantou = Tile.get(TileType.M, 1)
-        val menzenMentsu = listOf(
-            Shuntsu(Tile.get(TileType.M, 2)),
-            Kotsu(Tile.get(TileType.P, 5))
-        )
-        val furo = listOf(
-            Ankan(Tile.get(TileType.Z, 1))
-        )
-        val tatsu = listOf<Tatsu>()
-        val remaining = listOf<Tile>()
-
-        val regularHand = RegularHandPattern(
+    fun testRegularHandPatternWinningAndWaiting() {
+        // 测试和了型
+        val winningPattern = RegularHandPattern(
             k = 4,
-            jyantou = jyantou,
-            menzenMentsu = menzenMentsu,
-            furo = furo,
-            tatsu = tatsu,
-            remaining = remaining
+            pair = Tile["1m"],
+            concealedGroups = listOf(
+                Seq(Tile["2m"]),
+                Tri(Tile["2p"]),
+                Seq(Tile["1s"])
+            ),
+            meldeds = listOf(
+                Pung(Tile["3s"])
+            ),
+            protoruns = emptyList(),
+            floatings = emptyList()
         )
+        assertTrue(winningPattern.isWinningHand)
+        assertFalse(winningPattern.isWaitingHand)
 
-        // 测试暗刻（包括暗杠）
-        val anko = regularHand.anko
-        assertEquals(2, anko.size) // 门前刻子(1) + 暗杠(1)
+        // 测试听牌型 - 有搭子无浮牌
+        val waitingPattern1 = RegularHandPattern(
+            k = 4,
+            pair = Tile["1m"],
+            concealedGroups = listOf(
+                Seq(Tile["2m"]),
+                Tri(Tile["2p"])
+            ),
+            meldeds = listOf(
+                Pung(Tile["3s"])
+            ),
+            protoruns = listOf(
+                TwoSide(Tile["4m"])
+            ),
+            floatings = emptyList()
+        )
+        assertFalse(waitingPattern1.isWinningHand)
+        assertTrue(waitingPattern1.isWaitingHand)
 
-        // 测试门清状态（暗杠不影响门清）
-        assertTrue(regularHand.menzen)
+        // 测试听牌型 - 有浮牌无搭子无雀头
+        val waitingPattern2 = RegularHandPattern(
+            k = 4,
+            pair = null,
+            concealedGroups = listOf(
+                Seq(Tile["2m"]),
+                Tri(Tile["2p"]),
+                Seq(Tile["1s"])
+            ),
+            meldeds = listOf(
+                Pung(Tile["3s"])
+            ),
+            protoruns = emptyList(),
+            floatings = listOf(Tile["5z"])
+        )
+        assertFalse(waitingPattern2.isWinningHand)
+        assertTrue(waitingPattern2.isWaitingHand)
     }
 
     @Test
-    fun testChitoiHandPattern() {
-        // 测试创建七对子手牌
+    fun testSevenPairsHandPattern() {
+        // 测试七对子手牌
         val pairs = setOf(
-            Tile.get(TileType.M, 1),
-            Tile.get(TileType.M, 3),
-            Tile.get(TileType.M, 5),
-            Tile.get(TileType.P, 2),
-            Tile.get(TileType.P, 4),
-            Tile.get(TileType.S, 6),
-            Tile.get(TileType.Z, 1)
+            Tile["1m"], // 1万
+            Tile["2p"], // 2筒
+            Tile["3s"], // 3索
+            Tile["5z"], // 白
+            Tile["6z"], // 发
+            Tile["7z"]  // 中
         )
-        val remaining = emptyList<Tile>()
+        val floatings = listOf(Tile["4m"]) // 4万浮牌
 
-        val chitoiHand = ChitoiHandPattern(
+        val handPattern = SevenPairsHandPattern(
             pairs = pairs,
-            remaining = remaining
+            floatings = floatings
         )
 
-        // 测试基本属性
-        assertEquals(pairs, chitoiHand.pairs)
-        assertEquals(remaining, chitoiHand.remaining)
+        // 验证基本属性
+        assertEquals(pairs, handPattern.pairs)
+        assertEquals(floatings, handPattern.floatings)
+        assertEquals(emptyList<Melded>(), handPattern.meldeds)
 
-        // 测试门前牌
-        val tilesInHand = chitoiHand.tilesInHand
-        assertEquals(14, tilesInHand.size) // 7对牌 = 14张
+        // 验证门前牌
+        val tiles = handPattern.tiles
+        assertEquals(13, tiles.size) // 6对牌 + 1张浮牌
+        assertEquals(2, tiles.count { it == Tile["1m"] })
+        assertEquals(2, tiles.count { it == Tile["2p"] })
+        assertEquals(2, tiles.count { it == Tile["3s"] })
+        assertEquals(2, tiles.count { it == Tile["5z"] })
+        assertEquals(2, tiles.count { it == Tile["6z"] })
+        assertEquals(2, tiles.count { it == Tile["7z"] })
+        assertEquals(1, tiles.count { it == Tile["4m"] })
 
-        // 测试副露（七对子不能有副露）
-        val furo = chitoiHand.furo
-        assertEquals(0, furo.size)
-
-        // 测试门清状态（七对子必然门清）
-        assertTrue(chitoiHand.menzen)
+        // 验证是否和了/听牌
+        assertFalse(handPattern.isWinningHand)
+        assertTrue(handPattern.isWaitingHand) // 6对1浮牌，应该是听牌
     }
 
     @Test
-    fun testKokushiHandPattern() {
-        // 测试创建国士无双手牌
-        val yaochu = setOf(
-            Tile.get(TileType.M, 1),
-            Tile.get(TileType.M, 9),
-            Tile.get(TileType.P, 1),
-            Tile.get(TileType.P, 9),
-            Tile.get(TileType.S, 1),
-            Tile.get(TileType.S, 9),
-            Tile.get(TileType.Z, 1),
-            Tile.get(TileType.Z, 2),
-            Tile.get(TileType.Z, 3),
-            Tile.get(TileType.Z, 4),
-            Tile.get(TileType.Z, 5),
-            Tile.get(TileType.Z, 6),
-            Tile.get(TileType.Z, 7)
+    fun testSevenPairsHandPatternWinningAndWaiting() {
+        // 测试和了型
+        val winningPattern = SevenPairsHandPattern(
+            pairs = setOf(
+                Tile["1m"], Tile["2p"], Tile["3s"], Tile["5z"],
+                Tile["6z"], Tile["7z"], Tile["4m"]
+            ),
+            floatings = emptyList()
         )
-        val repeated = Tile.get(TileType.M, 1)
-        val remaining = emptyList<Tile>()
+        assertTrue(winningPattern.isWinningHand)
+        assertFalse(winningPattern.isWaitingHand)
 
-        val kokushiHand = KokushiHandPattern(
-            yaochu = yaochu,
-            repeated = repeated,
-            remaining = remaining
+        // 测试听牌型
+        val waitingPattern = SevenPairsHandPattern(
+            pairs = setOf(
+                Tile["1m"], Tile["2p"], Tile["3s"],
+                Tile["5z"], Tile["6z"], Tile["7z"]
+            ),
+            floatings = listOf(Tile["4m"])
         )
-
-        // 测试基本属性
-        assertEquals(yaochu, kokushiHand.yaochu)
-        assertEquals(repeated, kokushiHand.repeated)
-        assertEquals(remaining, kokushiHand.remaining)
-
-        // 测试门前牌
-        val tilesInHand = kokushiHand.tilesInHand
-        assertEquals(14, tilesInHand.size) // 13种幺九牌 + 1张重复的幺九牌
-
-        // 测试副露（国士无双不能有副露）
-        val furo = kokushiHand.furo
-        assertEquals(0, furo.size)
-
-        // 测试门清状态（国士无双必然门清）
-        assertTrue(kokushiHand.menzen)
+        assertFalse(waitingPattern.isWinningHand)
+        assertTrue(waitingPattern.isWaitingHand)
     }
 
     @Test
-    fun testKokushiHandPatternWithoutRepeated() {
-        // 测试创建没有重复牌的国士无双手牌（听牌状态）
-        val yaochu = setOf(
-            Tile.get(TileType.M, 1),
-            Tile.get(TileType.M, 9),
-            Tile.get(TileType.P, 1),
-            Tile.get(TileType.P, 9),
-            Tile.get(TileType.S, 1),
-            Tile.get(TileType.S, 9),
-            Tile.get(TileType.Z, 1),
-            Tile.get(TileType.Z, 2),
-            Tile.get(TileType.Z, 3),
-            Tile.get(TileType.Z, 4),
-            Tile.get(TileType.Z, 5),
-            Tile.get(TileType.Z, 6),
-            Tile.get(TileType.Z, 7)
+    fun testThirteenOrphansHandPattern() {
+        // 测试国士无双手牌
+        val terminalsAndHonors = setOf(
+            Tile["1m"], Tile["9m"], // 1万、9万
+            Tile["1p"], Tile["9p"], // 1筒、9筒
+            Tile["1s"], Tile["9s"], // 1索、9索
+            Tile["1z"], Tile["2z"], Tile["3z"], Tile["4z"], // 东南西北
+            Tile["5z"], Tile["6z"], Tile["7z"] // 白发中
         )
-        val repeated = null
-        val remaining = emptyList<Tile>()
+        val repeated = Tile["1m"] // 重复的1万
+        val floatings = emptyList<Tile>()
 
-        val kokushiHand = KokushiHandPattern(
-            yaochu = yaochu,
+        val handPattern = ThirteenOrphansHandPattern(
+            terminalsAndHonors = terminalsAndHonors,
             repeated = repeated,
-            remaining = remaining
+            floatings = floatings
         )
 
-        // 测试门前牌
-        val tilesInHand = kokushiHand.tilesInHand
-        assertEquals(13, tilesInHand.size) // 13种幺九牌，没有重复
+        // 验证基本属性
+        assertEquals(terminalsAndHonors, handPattern.terminalsAndHonors)
+        assertEquals(repeated, handPattern.repeated)
+        assertEquals(floatings, handPattern.floatings)
+        assertEquals(emptyList<Melded>(), handPattern.meldeds)
+
+        // 验证门前牌
+        val tiles = handPattern.tiles
+        assertEquals(14, tiles.size) // 13种幺九牌 + 1张重复
+        assertEquals(2, tiles.count { it == Tile["1m"] }) // 重复的1万
+
+        // 验证是否和了/听牌
+        assertTrue(handPattern.isWinningHand)
+        assertFalse(handPattern.isWaitingHand)
+    }
+
+    @Test
+    fun testThirteenOrphansHandPatternWaitingAndWinning() {
+        // 测试和了型
+        val winningPattern = ThirteenOrphansHandPattern(
+            terminalsAndHonors = setOf(
+                Tile["1m"], Tile["9m"], Tile["1p"], Tile["9p"],
+                Tile["1s"], Tile["9s"], Tile["1z"], Tile["2z"],
+                Tile["3z"], Tile["4z"], Tile["5z"], Tile["6z"], Tile["7z"]
+            ),
+            repeated = Tile["1m"],
+            floatings = emptyList()
+        )
+        assertTrue(winningPattern.isWinningHand)
+        assertFalse(winningPattern.isWaitingHand)
+
+        // 测试听牌型 - 13种幺九牌无重复
+        val waitingPattern1 = ThirteenOrphansHandPattern(
+            terminalsAndHonors = setOf(
+                Tile["1m"], Tile["9m"], Tile["1p"], Tile["9p"],
+                Tile["1s"], Tile["9s"], Tile["1z"], Tile["2z"],
+                Tile["3z"], Tile["4z"], Tile["5z"], Tile["6z"], Tile["7z"]
+            ),
+            repeated = null,
+            floatings = emptyList()
+        )
+        assertFalse(waitingPattern1.isWinningHand)
+        assertTrue(waitingPattern1.isWaitingHand)
+
+        // 测试听牌型 - 12种幺九牌有重复
+        val waitingPattern2 = ThirteenOrphansHandPattern(
+            terminalsAndHonors = setOf(
+                Tile["1m"], Tile["9m"], Tile["1p"], Tile["9p"],
+                Tile["1s"], Tile["9s"], Tile["1z"], Tile["2z"],
+                Tile["3z"], Tile["4z"], Tile["5z"], Tile["6z"]
+            ),
+            repeated = Tile["1m"],
+            floatings = emptyList()
+        )
+        assertFalse(waitingPattern2.isWinningHand)
+        assertTrue(waitingPattern2.isWaitingHand)
     }
 }
 

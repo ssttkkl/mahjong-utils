@@ -11,35 +11,45 @@ import kotlin.jvm.JvmInline
 /**
  * 麻将牌的种类（万、筒、索、字）
  */
-enum class TileType {
+enum class TileType(val shortName: String) {
     /**
      * 万
      */
-    M,
+    Character("M"),
 
     /**
      * 筒
      */
-    P,
+    Dot("P"),
 
     /**
-     * 索
+     * 条
      */
-    S,
+    Bamboo("S"),
 
     /**
      * 字
      */
-    Z;
+    Honour("Z");
 
     companion object {
         fun valueOf(ordinal: Int): TileType {
             return when (ordinal) {
-                0 -> M
-                1 -> P
-                2 -> S
-                3 -> Z
+                0 -> Character
+                1 -> Dot
+                2 -> Bamboo
+                3 -> Honour
                 else -> throw IllegalArgumentException("invalid ordinal value: $ordinal")
+            }
+        }
+
+        fun valueOfShortName(shortName: String): TileType {
+            return when (shortName.uppercase()) {
+                "M" -> Character
+                "P" -> Dot
+                "S" -> Bamboo
+                "Z" -> Honour
+                else -> throw IllegalArgumentException("invalid short name: $shortName")
             }
         }
     }
@@ -66,16 +76,7 @@ value class Tile private constructor(
     val num: Int
         get() = code % 10
 
-    constructor(type: TileType, num: Int) : this(type.ordinal * 10 + num)
-
-    /**
-     * 真正数字。当num为0时（该牌为红宝牌），realNum为5。其余情况下与num相等。
-     */
-    val realNum: Int
-        get() = if (type != TileType.Z && num == 0)
-            5
-        else
-            num
+    private constructor(type: TileType, num: Int) : this(type.ordinal * 10 + num)
 
     /**
      * 该牌数字加上指定数字后得到的牌
@@ -100,29 +101,13 @@ value class Tile private constructor(
     }
 
     override fun toString(): String {
-        return "${num}${type.name.lowercase()}"
+        return "${num}${type.shortName.lowercase()}"
     }
 
     override fun compareTo(other: Tile): Int {
         return when {
             type != other.type -> type.ordinal - other.type.ordinal
-            num != 0 && other.num != 0 -> num - other.num
-            num == 0 && other.num == 0 -> 0
-            num == 0 -> {
-                if (other.num > 5) {
-                    -1
-                } else {
-                    1
-                }
-            }
-
-            else -> {
-                if (num <= 5) {
-                    -1
-                } else {
-                    1
-                }
-            }
+            else -> num - other.num
         }
     }
 
@@ -133,18 +118,21 @@ value class Tile private constructor(
         const val MAX_TILE_CODE = 3 * 10 + 7
 
         private val pool = buildList<Tile?> {
-            for (i in 0..9) {
-                add(Tile(TileType.M, i))
+            add(null) // 0M
+            for (i in 1..9) {
+                add(Tile(TileType.Character, i))
             }
-            for (i in 0..9) {
-                add(Tile(TileType.P, i))
+            add(null) // 0P
+            for (i in 1..9) {
+                add(Tile(TileType.Dot, i))
             }
-            for (i in 0..9) {
-                add(Tile(TileType.S, i))
+            add(null) // 0S
+            for (i in 1..9) {
+                add(Tile(TileType.Bamboo, i))
             }
             add(null) // 0Z
             for (i in 1..7) {
-                add(Tile(TileType.Z, i))
+                add(Tile(TileType.Honour, i))
             }
         }.toTypedArray()
 
@@ -159,13 +147,13 @@ value class Tile private constructor(
             if (code !in pool.indices) {
                 return null
             }
-            return pool[code]!!
+            return pool[code]
         }
 
         /**
          * 根据种类和数字获取牌
          */
-        fun get(type: TileType, num: Int): Tile {
+        operator fun get(type: TileType, num: Int): Tile {
             return get(type.ordinal * 10 + num)
         }
 
@@ -186,10 +174,10 @@ value class Tile private constructor(
             }
 
             val type = when (text[1].lowercaseChar()) {
-                'm' -> TileType.M
-                'p' -> TileType.P
-                's' -> TileType.S
-                'z' -> TileType.Z
+                'm' -> TileType.Character
+                'p' -> TileType.Dot
+                's' -> TileType.Bamboo
+                'z' -> TileType.Honour
                 else -> return null
             }
 
@@ -204,16 +192,16 @@ value class Tile private constructor(
          * @return 牌的序列
          */
         fun parseTiles(text: String): List<Tile> {
-            val typeNames = TileType.values().map { it.name }
+            val typeNames = TileType.entries.map { it.shortName }
             return buildList {
                 val pending = ArrayList<Int>()
                 for (c in text) {
                     if (c.uppercase() in typeNames) {
-                        val type = TileType.valueOf(c.uppercase())
+                        val type = TileType.valueOfShortName(c.uppercase())
                         if (pending.isEmpty()) {
                             throw IllegalArgumentException("invalid text: $text")
                         }
-                        addAll(pending.map { Tile.get(type, it) })
+                        addAll(pending.map { Tile[type, it] })
                         pending.clear()
                     } else if (c.isDigit()) {
                         pending.add(c.digitToInt())
@@ -234,21 +222,70 @@ value class Tile private constructor(
         val all = pool.filterNotNull().toSet()
 
         /**
-         * 所有牌
+         * 所有万子
          */
-        val allExcludeAkaDora = all.filter { it.num != 0 }.toSet()
+        val allCharacters = buildSet<Tile> {
+            for (num in 1..9) {
+                add(get(TileType.Character, num))
+            }
+        }
+
+        /**
+         * 所有筒子
+         */
+        val allDots = buildSet<Tile> {
+            for (num in 1..9) {
+                add(get(TileType.Dot, num))
+            }
+        }
+
+        /**
+         * 所有索子
+         */
+        val allBamboos = buildSet<Tile> {
+            for (num in 1..9) {
+                add(get(TileType.Bamboo, num))
+            }
+        }
+
+        /**
+         * 所有字牌
+         */
+        val allHonors = buildSet<Tile> {
+            for (num in 1..7) {
+                add(get(TileType.Honour, num))
+            }
+        }
+
+        /**
+         * 所有风牌
+         */
+        val allWinds = buildSet<Tile> {
+            for (num in 1..4) {
+                add(get(TileType.Honour, num))
+            }
+        }
+
+        /**
+         * 所有箭牌
+         */
+        val allDragons = buildSet<Tile> {
+            for (num in 5..7) {
+                add(get(TileType.Honour, num))
+            }
+        }
 
         /**
          * 所有幺九牌
          */
-        val allYaochu = buildSet<Tile> {
-            for (type in listOf(TileType.M, TileType.P, TileType.S)) {
+        val allTerminalsAndHonors = buildSet<Tile> {
+            for (type in listOf(TileType.Character, TileType.Dot, TileType.Bamboo)) {
                 add(get(type, 1))
                 add(get(type, 9))
             }
 
             for (num in 1..7) {
-                add(get(TileType.Z, num))
+                add(get(TileType.Honour, num))
             }
         }
     }
@@ -265,9 +302,9 @@ fun Iterable<Tile>.toTilesString(lowercase: Boolean = true): String {
         for (t in this@toTilesString) {
             if (prev != null && prev.type != t.type) {
                 if (lowercase) {
-                    append(prev.type.name.lowercase())
+                    append(prev.type.shortName.lowercase())
                 } else {
-                    append(prev.type.name)
+                    append(prev.type.shortName)
                 }
             }
 
@@ -277,9 +314,9 @@ fun Iterable<Tile>.toTilesString(lowercase: Boolean = true): String {
 
         if (prev != null) {
             if (lowercase) {
-                append(prev.type.name.lowercase())
+                append(prev.type.shortName.lowercase())
             } else {
-                append(prev.type.name)
+                append(prev.type.shortName)
             }
         }
     }
@@ -317,14 +354,14 @@ internal class TileSerializer : KSerializer<Tile> {
 /**
  * 是否为幺九牌
  */
-val Tile.isYaochu: Boolean get() = this in Tile.allYaochu
+val Tile.isYaochu: Boolean get() = this in Tile.allTerminalsAndHonors
 
 /**
  * 是否为三元牌
  */
-val Tile.isSangen: Boolean get() = type == TileType.Z && num in 5..7
+val Tile.isSangen: Boolean get() = type == TileType.Honour && num in 5..7
 
 /**
  * 是否为风牌
  */
-val Tile.isWind: Boolean get() = type == TileType.Z && num in 1..4
+val Tile.isWind: Boolean get() = type == TileType.Honour && num in 1..4

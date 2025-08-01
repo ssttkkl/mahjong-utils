@@ -1,7 +1,7 @@
 package mahjongutils.models.hand
 
-import mahjongutils.models.Furo
-import mahjongutils.models.FuroType
+import mahjongutils.models.Melded
+import mahjongutils.models.MeldedType
 import mahjongutils.models.Tile
 
 /**
@@ -9,23 +9,29 @@ import mahjongutils.models.Tile
  */
 interface IHand {
     /**
-     * 门前的牌
+     * 手牌（手里的牌，不包含副露的牌）
      */
-    val tilesInHand: List<Tile>
+    val tiles: List<Tile>
     /**
      * 副露
      */
-    val furo: List<Furo>
+    val meldeds: List<Melded>
 }
+
+/**
+ * 是否已摸牌状态
+ */
+val IHand.isAfterDrawn: Boolean
+    get() = tiles.size % 3 == 2
 
 /**
  * 是否门清
  */
-val IHand.menzen: Boolean
-    get() = furo.all { it.type == FuroType.Ankan }
+val IHand.isClosed: Boolean
+    get() = meldeds.all { it.type == MeldedType.ConcealedKong }
 
 /**
  * 手牌（包括门前与副露）
  */
-val IHand.tiles: List<Tile>
-    get() = tilesInHand + furo.flatMap { it.tiles }
+val IHand.allTiles: List<Tile>
+    get() = tiles + meldeds.flatMap { it.tiles }

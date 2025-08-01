@@ -1,72 +1,89 @@
 package mahjongutils.models.hand
 
-import mahjongutils.models.Ankan
-import mahjongutils.models.Chi
-import mahjongutils.models.Pon
+import mahjongutils.models.ConcealedKong
+import mahjongutils.models.Chow
+import mahjongutils.models.MeldedKong
+import mahjongutils.models.Pung
 import mahjongutils.models.Tile
-import mahjongutils.models.TileType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class HandTest {
-
     @Test
     fun testHandCreation() {
-        // 测试创建空手牌
-        val emptyHand = Hand(emptyList(), emptyList())
-        assertEquals(0, emptyHand.tilesInHand.size)
-        assertEquals(0, emptyHand.furo.size)
-        assertEquals(0, emptyHand.tiles.size)
+        // 测试创建手牌
+        val tiles = listOf(Tile["1m"], Tile["2m"], Tile["3m"], Tile["2p"], Tile["2p"])
+        val meldeds = listOf(Pung(Tile["3s"]))
+        val hand = Hand(tiles, meldeds)
 
-        // 测试创建只有门前牌的手牌
-        val tilesInHand = Tile.parseTiles("123456789m11p")
-        val hand1 = Hand(tilesInHand, emptyList())
-        assertEquals(tilesInHand.size, hand1.tilesInHand.size)
-        assertEquals(0, hand1.furo.size)
-        assertEquals(tilesInHand.size, hand1.tiles.size)
-        assertTrue(hand1.menzen)
-
-        // 测试创建有副露的手牌
-        val furo = listOf(
-            Chi(Tile.get(TileType.M, 1)),
-            Pon(Tile.get(TileType.P, 5))
-        )
-        val hand2 = Hand(tilesInHand, furo)
-        assertEquals(tilesInHand.size, hand2.tilesInHand.size)
-        assertEquals(2, hand2.furo.size)
-        assertEquals(tilesInHand.size + 6, hand2.tiles.size) // 门前牌 + 副露牌(3+3)
-        assertFalse(hand2.menzen)
-
-        // 测试创建只有暗杠的手牌
-        val ankanFuro = listOf(
-            Ankan(Tile.get(TileType.Z, 1))
-        )
-        val hand3 = Hand(tilesInHand, ankanFuro)
-        assertEquals(tilesInHand.size, hand3.tilesInHand.size)
-        assertEquals(1, hand3.furo.size)
-        assertEquals(tilesInHand.size + 4, hand3.tiles.size) // 门前牌 + 暗杠牌(4)
-        assertTrue(hand3.menzen) // 暗杠不影响门清状态
+        assertEquals(tiles, hand.tiles)
+        assertEquals(meldeds, hand.meldeds)
     }
 
     @Test
-    fun testIsWithDraw() {
-        // 测试摸有摸牌的手牌（手牌数为3n+1）
-        val tilesInHand2 = Tile.parseTiles("123456789m1234p")
-        val hand2 = Hand(tilesInHand2, emptyList())
-        assertFalse(hand2.isWithDraw)
+    fun testIsAfterDrawn() {
+        // 测试摸牌后的手牌
+        val tiles1 = listOf(Tile["1m"], Tile["2m"], Tile["3m"], Tile["2p"], Tile["2p"])
+        val hand1 = Hand(tiles1, emptyList())
+        assertTrue(hand1.isAfterDrawn)
 
-        // 测试有副露且没有摸牌的手牌（手牌数为3n+1）
-        val tilesInHand3 = Tile.parseTiles("123456m123p4s")
-        val furo = listOf(Chi(Tile.get(TileType.M, 7)))
-        val hand3 = Hand(tilesInHand3, furo)
-        assertFalse(hand3.isWithDraw)
+        // 测试非摸牌后的手牌
+        val tiles2 = listOf(Tile["1m"], Tile["2m"], Tile["3m"], Tile["2p"])
+        val hand2 = Hand(tiles2, emptyList())
+        assertFalse(hand2.isAfterDrawn)
+    }
 
-        // 测试有副露且有摸牌的手牌（手牌数为3n+2）
-        val tilesInHand4 = Tile.parseTiles("123456m123p44p")
-        val hand4 = Hand(tilesInHand4, furo)
-        assertTrue(hand4.isWithDraw)
+    @Test
+    fun testIsClosed() {
+        // 测试门清手牌
+        val tiles = listOf(Tile["1m"], Tile["2m"], Tile["3m"], Tile["2p"], Tile["2p"])
+        val hand1 = Hand(tiles, emptyList())
+        assertTrue(hand1.isClosed)
+
+        // 测试含暗杠的门清手牌
+        val meldeds1 = listOf(ConcealedKong(Tile["3s"]))
+        val hand2 = Hand(tiles, meldeds1)
+        assertTrue(hand2.isClosed)
+
+        // 测试非门清手牌
+        val meldeds2 = listOf(Pung(Tile["3s"]))
+        val hand3 = Hand(tiles, meldeds2)
+        assertFalse(hand3.isClosed)
+
+        // 测试混合副露的手牌
+        val meldeds3 = listOf(ConcealedKong(Tile["3s"]), Chow(Tile["1m"]))
+        val hand4 = Hand(tiles, meldeds3)
+        assertFalse(hand4.isClosed)
+    }
+
+    @Test
+    fun testAllTiles() {
+        // 测试获取所有牌（包括门前与副露）
+        val tiles = listOf(Tile["1m"], Tile["2m"], Tile["3m"], Tile["2p"], Tile["2p"])
+        val meldeds = listOf(
+            Pung(Tile["3s"]), // 3索刻子
+            MeldedKong(Tile["5z"])  // 白杠子
+        )
+        val hand = Hand(tiles, meldeds)
+
+        val allTiles = hand.allTiles
+        assertEquals(12, allTiles.size) // 5张门前牌 + 3张碰 + 4张杠
+
+        // 验证门前牌
+        assertTrue(Tile["1m"] in allTiles)
+        assertTrue(Tile["2m"] in allTiles)
+        assertTrue(Tile["3m"] in allTiles)
+        assertTrue(Tile["2p"] in allTiles)
+
+        // 验证副露牌
+        assertTrue(Tile["3s"] in allTiles)
+        assertTrue(Tile["5z"] in allTiles)
+
+        // 验证副露牌的数量
+        assertEquals(3, allTiles.count { it == Tile["3s"] })
+        assertEquals(4, allTiles.count { it == Tile["5z"] })
     }
 }
 

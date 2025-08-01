@@ -1,7 +1,7 @@
 package mahjongutils.models.hand
 
 import kotlinx.serialization.Serializable
-import mahjongutils.models.Furo
+import mahjongutils.models.Melded
 import mahjongutils.models.Tile
 
 /**
@@ -9,12 +9,6 @@ import mahjongutils.models.Tile
  */
 @Serializable
 data class Hand(
-    /**
-     * 门前的牌
-     */
-    override val tilesInHand: List<Tile>,
-    override val furo: List<Furo>
+    override val tiles: List<Tile>,
+    override val meldeds: List<Melded>
 ) : IHand
-
-val Hand.isWithDraw: Boolean
-    get() = tilesInHand.size % 3 == 2

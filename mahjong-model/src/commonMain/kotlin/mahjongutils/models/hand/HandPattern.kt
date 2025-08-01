@@ -2,11 +2,11 @@ package mahjongutils.models.hand
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import mahjongutils.models.Furo
-import mahjongutils.models.FuroType
-import mahjongutils.models.Mentsu
-import mahjongutils.models.MentsuType
-import mahjongutils.models.Tatsu
+import mahjongutils.models.Melded
+import mahjongutils.models.MeldedType
+import mahjongutils.models.Group
+import mahjongutils.models.GroupType
+import mahjongutils.models.Protorun
 import mahjongutils.models.Tile
 
 /**
@@ -16,7 +16,17 @@ sealed interface HandPattern : IHand {
     /**
      * 浮牌
      */
-    val remaining: List<Tile>
+    val floatings: List<Tile>
+
+    /**
+     * 是否听牌牌型
+     */
+    val isWaitingHand: Boolean
+
+    /**
+     * 是否和了牌型
+     */
+    val isWinningHand: Boolean
 }
 
 /**
@@ -33,96 +43,116 @@ data class RegularHandPattern(
     /**
      * 雀头
      */
-    val jyantou: Tile?,
+    val pair: Tile?,
 
     /**
      * 门前面子，即从手牌中解析出来的面子（非副露）
      */
-    val menzenMentsu: List<Mentsu>,
-    override val furo: List<Furo>,
+    val concealedGroups: List<Group>,
+    override val meldeds: List<Melded>,
     /**
      * 搭子
      */
-    val tatsu: List<Tatsu>,
-    override val remaining: List<Tile>,
+    val protoruns: List<Protorun>,
+    override val floatings: List<Tile>,
 ) : HandPattern {
-    override val tilesInHand: List<Tile>
+    override val tiles: List<Tile>
         get() = buildList {
-            jyantou?.let {
+            pair?.let {
                 add(it)
                 add(it)
             }
-            for (mt in menzenMentsu) {
+            for (mt in concealedGroups) {
                 addAll(mt.tiles)
             }
-            for (tt in tatsu) {
+            for (tt in protoruns) {
                 add(tt.first)
                 add(tt.second)
             }
-            addAll(remaining)
+            addAll(floatings)
         }
 
     /**
      * 面子（包括门前与副露）
      */
-    val mentsu: List<Mentsu>
-        get() = menzenMentsu + furo.map { it.asMentsu() }
+    val groups: List<Group>
+        get() = concealedGroups + meldeds.map { it.asGroup() }
 
     /**
      * 暗刻
      */
-    val anko: List<Mentsu>
-        get() = menzenMentsu.filter { it.type == MentsuType.Kotsu } +
-                furo.filter { it.type == FuroType.Ankan }.map { it.asMentsu() }
+    val concealedTris: List<Group>
+        get() = concealedGroups.filter { it.type == GroupType.Tri } +
+                meldeds.filter { it.type == MeldedType.ConcealedKong }.map { it.asGroup() }
+
+    override val isWinningHand: Boolean
+        get() = floatings.isEmpty() && protoruns.isEmpty()
+
+    override val isWaitingHand: Boolean
+        get() = floatings.isEmpty() && protoruns.size == 1 && pair != null
+                || floatings.size == 1 && protoruns.isEmpty() && pair == null
 }
 
 /**
  * 以七对子为目标的手牌
  */
 @Serializable
-@SerialName("ChitoiHandPattern")
-data class ChitoiHandPattern(
+@SerialName("SevenPairsHandPattern")
+data class SevenPairsHandPattern(
     /**
      * 已有对子
      */
     val pairs: Set<Tile>,
-    override val remaining: List<Tile>
+    override val floatings: List<Tile>
 ) : HandPattern {
-    override val furo: List<Furo>
+    override val meldeds: List<Melded>
         get() = emptyList()
 
-    override val tilesInHand: List<Tile>
+    override val tiles: List<Tile>
         get() = buildList {
             addAll(pairs)
             addAll(pairs)
-            addAll(remaining)
+            addAll(floatings)
         }
+
+    override val isWinningHand: Boolean
+        get() = floatings.isEmpty() && pairs.size == 7
+
+    override val isWaitingHand: Boolean
+        get() = floatings.size == 1 && pairs.size == 6
 }
 
 /**
  * 以国士无双为目标的手牌
  */
 @Serializable
-@SerialName("KokushiHandPattern")
-data class KokushiHandPattern(
+@SerialName("ThirteenOrphansHandPattern")
+data class ThirteenOrphansHandPattern(
     /**
      * 幺九牌
      */
-    val yaochu: Set<Tile>,
+    val terminalsAndHonors: Set<Tile>,
     /**
      * 重复的幺九牌
      */
     val repeated: Tile?,
-    override val remaining: List<Tile>
+    override val floatings: List<Tile>
 ) : HandPattern {
 
-    override val furo: List<Furo>
+    override val meldeds: List<Melded>
         get() = emptyList()
 
-    override val tilesInHand: List<Tile>
+    override val tiles: List<Tile>
         get() = buildList {
-            addAll(yaochu)
+            addAll(terminalsAndHonors)
             repeated?.let { add(it) }
-            addAll(remaining)
+            addAll(floatings)
         }
+
+    override val isWinningHand: Boolean
+        get() = floatings.isEmpty() && terminalsAndHonors.size == 13 && repeated != null
+
+    override val isWaitingHand: Boolean
+        get() = floatings.isEmpty() && terminalsAndHonors.size == 13 && repeated == null
+                || floatings.isEmpty() && terminalsAndHonors.size == 12 && repeated != null
 }

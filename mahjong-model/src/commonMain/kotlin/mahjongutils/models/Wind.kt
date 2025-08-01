@@ -9,8 +9,8 @@ enum class Wind(
      */
     val tile: Tile
 ) {
-    East(Tile.get(TileType.Z, 1)),
-    South(Tile.get(TileType.Z, 2)),
-    West(Tile.get(TileType.Z, 3)),
-    North(Tile.get(TileType.Z, 4)),
+    East(Tile.get(TileType.Honour, 1)),
+    South(Tile.get(TileType.Honour, 2)),
+    West(Tile.get(TileType.Honour, 3)),
+    North(Tile.get(TileType.Honour, 4)),
 }

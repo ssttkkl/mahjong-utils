@@ -8,8 +8,11 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlin.jvm.JvmInline
 
-enum class TatsuType {
-    Ryanmen, Kanchan, Penchan, Toitsu
+/**
+ * 搭子类型
+ */
+enum class ProtorunType {
+    TwoSide, Edge, Closed, Pair
 }
 
 /**
@@ -17,27 +20,30 @@ enum class TatsuType {
  */
 @JvmInline
 @Serializable(with = TatsuSerializer::class)
-value class Tatsu private constructor(private val value: Int) {
-    val type: TatsuType
-        get() = TatsuType.entries[value / 100]
+value class Protorun private constructor(private val value: Int) {
+    /**
+     * 搭子类型
+     */
+    val type: ProtorunType
+        get() = ProtorunType.entries[value / 100]
 
-    constructor(type: TatsuType, first: Tile) : this(type.ordinal * 100 + first.code)
+    constructor(type: ProtorunType, first: Tile) : this(type.ordinal * 100 + first.code)
 
     /**
-     * 第一张牌
+     * 搭子的第一张牌
      */
     val first: Tile
         get() = Tile[value % 100]
 
     /**
-     * 第二张牌
+     * 搭子的第二张牌
      */
     val second: Tile
         get() = when (type) {
-            TatsuType.Ryanmen -> first.advance(1)
-            TatsuType.Kanchan -> first.advance(2)
-            TatsuType.Penchan -> first.advance(1)
-            TatsuType.Toitsu -> first
+            ProtorunType.TwoSide -> first.advance(1)
+            ProtorunType.Closed -> first.advance(2)
+            ProtorunType.Edge -> first.advance(1)
+            ProtorunType.Pair -> first
         }
 
     /**
@@ -45,49 +51,49 @@ value class Tatsu private constructor(private val value: Int) {
      */
     val waiting: Set<Tile>
         get() = when (type) {
-            TatsuType.Ryanmen -> setOf(first.advance(-1), first.advance(2))
-            TatsuType.Kanchan -> setOf(first.advance(1))
-            TatsuType.Penchan -> if (first.num == 1)
+            ProtorunType.TwoSide -> setOf(first.advance(-1), first.advance(2))
+            ProtorunType.Closed -> setOf(first.advance(1))
+            ProtorunType.Edge -> if (first.num == 1)
                 setOf(first.advance(2))
             else
                 setOf(first.advance(-1))
 
-            TatsuType.Toitsu -> setOf(first)
+            ProtorunType.Pair -> setOf(first)
         }
 
     /**
      * 进张后形成的面子
      */
-    fun withWaiting(tile: Tile): Mentsu {
+    fun withWaiting(tile: Tile): Group {
         when (type) {
-            TatsuType.Ryanmen -> {
+            ProtorunType.TwoSide -> {
                 if (tile == first.advance(-1))
-                    return Shuntsu(tile)
+                    return Seq(tile)
                 else if (tile == second.advance(1))
-                    return Shuntsu(first)
+                    return Seq(first)
                 else
                     throw IllegalArgumentException("tile $tile is not waiting")
             }
 
-            TatsuType.Kanchan -> {
+            ProtorunType.Closed -> {
                 if (tile == first.advance(1))
-                    return Shuntsu(first)
+                    return Seq(first)
                 else
                     throw IllegalArgumentException("tile $tile is not waiting")
             }
 
-            TatsuType.Penchan -> {
+            ProtorunType.Edge -> {
                 if (first.num == 1 && tile == first.advance(2))
-                    return Shuntsu(first)
+                    return Seq(first)
                 if (first.num == 8 && tile == first.advance(-1))
-                    return Shuntsu(tile)
+                    return Seq(tile)
                 else
                     throw IllegalArgumentException("tile $tile is not waiting")
             }
 
-            TatsuType.Toitsu -> {
+            ProtorunType.Pair -> {
                 if (tile == first)
-                    return Kotsu(first)
+                    return Tri(first)
                 else
                     throw IllegalArgumentException("tile $tile is not waiting")
             }
@@ -95,7 +101,7 @@ value class Tatsu private constructor(private val value: Int) {
     }
 
     override fun toString(): String {
-        return "${first.num}${second.num}${first.type.name.lowercase()}"
+        return "${first.num}${second.num}${first.type.shortName.lowercase()}"
     }
 
     companion object {
@@ -105,32 +111,32 @@ value class Tatsu private constructor(private val value: Int) {
          * @param second 第二张牌
          * @return 搭子
          */
-        fun parse(first: Tile, second: Tile): Tatsu {
+        fun parse(first: Tile, second: Tile): Protorun {
             if (first > second)
                 return parse(second, first)
 
             if (first == second) {
-                return Toitsu(first)
+                return Pair(first)
             } else {
-                if (first.type == TileType.Z || second.type == TileType.Z) {
-                    throw IllegalArgumentException("invalid tiles: $first $second")
+                if (first.type == TileType.Honour || second.type == TileType.Honour) {
+                    throw IllegalArgumentException("invalid allTiles: $first $second")
                 }
 
                 when (second.distance(first)) {
                     1 -> {
                         if (first.num == 1 || first.num == 8) {
-                            return Penchan(first)
+                            return Edge(first)
                         } else {
-                            return Ryanmen(first)
+                            return TwoSide(first)
                         }
                     }
 
                     2 -> {
-                        return Kanchan(first)
+                        return Closed(first)
                     }
 
                     else -> {
-                        throw IllegalArgumentException("invalid tiles: $first $second")
+                        throw IllegalArgumentException("invalid allTiles: $first $second")
                     }
                 }
             }
@@ -141,38 +147,38 @@ value class Tatsu private constructor(private val value: Int) {
          * @param text 牌的文本
          * @return 搭子
          */
-        fun parse(text: String): Tatsu {
+        fun parse(text: String): Protorun {
             val tiles = Tile.parseTiles(text)
             if (tiles.size != 2) {
-                throw IllegalArgumentException("invalid tiles: $text")
+                throw IllegalArgumentException("invalid allTiles: $text")
             }
             return parse(tiles[0], tiles[1])
         }
     }
 }
 
-fun Tatsu(first: Tile, second: Tile): Tatsu {
-    return Tatsu.parse(first, second)
+fun Protorun(first: Tile, second: Tile): Protorun {
+    return Protorun.parse(first, second)
 }
 
-fun Tatsu(text: String): Tatsu {
-    return Tatsu.parse(text)
+fun Protorun(text: String): Protorun {
+    return Protorun.parse(text)
 }
 
-fun Ryanmen(tile: Tile) = Tatsu(TatsuType.Ryanmen, tile)
-fun Kanchan(tile: Tile) = Tatsu(TatsuType.Kanchan, tile)
-fun Penchan(tile: Tile) = Tatsu(TatsuType.Penchan, tile)
-fun Toitsu(tile: Tile) = Tatsu(TatsuType.Toitsu, tile)
+fun TwoSide(tile: Tile) = Protorun(ProtorunType.TwoSide, tile)
+fun Closed(tile: Tile) = Protorun(ProtorunType.Closed, tile)
+fun Edge(tile: Tile) = Protorun(ProtorunType.Edge, tile)
+fun Pair(tile: Tile) = Protorun(ProtorunType.Pair, tile)
 
-internal class TatsuSerializer : KSerializer<Tatsu> {
-    override val descriptor = PrimitiveSerialDescriptor("Tatsu", PrimitiveKind.STRING)
+internal class TatsuSerializer : KSerializer<Protorun> {
+    override val descriptor = PrimitiveSerialDescriptor("Protorun", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: Tatsu) {
+    override fun serialize(encoder: Encoder, value: Protorun) {
         encoder.encodeString(value.toString())
     }
 
-    override fun deserialize(decoder: Decoder): Tatsu {
+    override fun deserialize(decoder: Decoder): Protorun {
         val text = decoder.decodeString()
-        return Tatsu(text)
+        return Protorun(text)
     }
 }

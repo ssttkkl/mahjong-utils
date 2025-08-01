@@ -1,199 +1,159 @@
 package mahjongutils.models
 
-
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
-import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class TileTest {
-
     @Test
     fun testTileCreation() {
-        // 测试通过类型和数字创建牌
-        val tile1 = Tile.get(TileType.M, 1)
-        assertEquals(TileType.M, tile1.type)
+        // 测试通过编码获取牌
+        val tile1 = Tile[11]
+        assertEquals(TileType.Dot, tile1.type)
         assertEquals(1, tile1.num)
-        assertEquals(1, tile1.realNum)
 
-        // 测试红宝牌
-        val redDora = Tile.get(TileType.M, 0)
-        assertEquals(TileType.M, redDora.type)
-        assertEquals(0, redDora.num)
-        assertEquals(5, redDora.realNum)
+        // 测试通过类型和数字获取牌
+        val tile2 = Tile[TileType.Dot, 5]
+        assertEquals(TileType.Dot, tile2.type)
+        assertEquals(5, tile2.num)
 
-        // 测试通过文本创建牌
-        val tile2 = Tile.get("1m")
-        assertEquals(TileType.M, tile2.type)
-        assertEquals(1, tile2.num)
+        // 测试通过文本获取牌
+        val tile3 = Tile["7s"]
+        assertEquals(TileType.Bamboo, tile3.type)
+        assertEquals(7, tile3.num)
 
-        // 测试字牌
-        val windTile = Tile.get(TileType.Z, 1)
-        assertEquals(TileType.Z, windTile.type)
-        assertEquals(1, windTile.num)
-        assertTrue(windTile.isWind)
-        assertFalse(windTile.isSangen)
+        // 测试无效编码
+        assertFailsWith<IllegalArgumentException> { Tile[0] }
+        assertFailsWith<IllegalArgumentException> { Tile[38] }
 
-        val sangenTile = Tile.get(TileType.Z, 5)
-        assertTrue(sangenTile.isSangen)
-        assertFalse(sangenTile.isWind)
-    }
-
-    @Test
-    fun testTileComparison() {
-        val tile1 = Tile.get(TileType.M, 1)
-        val tile2 = Tile.get(TileType.M, 2)
-        val tile3 = Tile.get(TileType.P, 1)
-
-        assertTrue(tile1 < tile2)
-        assertTrue(tile2 < tile3)
-        assertTrue(tile1 < tile3)
-
-        // 测试红宝牌比较
-        val redDora = Tile.get(TileType.M, 0)
-        val tile5 = Tile.get(TileType.M, 5)
-        val tile6 = Tile.get(TileType.M, 6)
-
-        assertTrue(redDora > tile1)
-        assertTrue(redDora < tile6)
-        assertNotEquals(redDora, tile5) // 红5和普通5不相等
+        // 测试getOrNull方法
+        assertNull(Tile.getOrNull(0))
+        assertNull(Tile.getOrNull(38))
+        assertNotNull(Tile.getOrNull(11))
     }
 
     @Test
     fun testTileAdvance() {
-        val tile1 = Tile.get(TileType.M, 1)
-        val tile2 = Tile.get(TileType.M, 2)
-        val tile3 = Tile.get(TileType.M, 3)
-
-        assertEquals(tile2, tile1.advance(1))
-        assertEquals(tile3, tile1.advance(2))
-        assertEquals(tile1, tile3.advance(-2))
-
-        // 测试红宝牌的advance
-        val redDora = Tile.get(TileType.M, 0)
-        assertEquals(Tile.get(TileType.M, 6), redDora.advance(1))
-        assertEquals(Tile.get(TileType.M, 4), redDora.advance(-1))
+        val tile = Tile["1p"] // 1筒
+        val advanced = tile.advance(2)
+        assertEquals(13, advanced.code) // 应该是3筒
+        assertEquals(TileType.Dot, advanced.type)
+        assertEquals(3, advanced.num)
     }
 
     @Test
     fun testTileDistance() {
-        val tile1 = Tile.get(TileType.M, 1)
-        val tile3 = Tile.get(TileType.M, 3)
-        val redDora = Tile.get(TileType.M, 0)
+        val tile1 = Tile["1p"] // 1筒
+        val tile2 = Tile["4p"] // 4筒
+        assertEquals(-3, tile1.distance(tile2))
+        assertEquals(3, tile2.distance(tile1))
+    }
 
-        assertEquals(2, tile3.distance(tile1))
-        assertEquals(-2, tile1.distance(tile3))
-        assertEquals(0, tile1.distance(tile1))
+    @Test
+    fun testTileToString() {
+        val tile = Tile["1s"] // 1索
+        assertEquals("1s", tile.toString())
+    }
 
-        // 测试红宝牌的distance
-        assertEquals(0, redDora.distance(Tile.get(TileType.M, 5)))
-        assertEquals(-1, redDora.distance(Tile.get(TileType.M, 6)))
-        assertEquals(1, redDora.distance(Tile.get(TileType.M, 4)))
+    @Test
+    fun testTileComparison() {
+        val tile1 = Tile["1m"] // 1万
+        val tile2 = Tile["1p"] // 1筒
+        val tile3 = Tile["1s"] // 1索
+
+        assertTrue(tile1 < tile2)
+        assertTrue(tile2 < tile3)
     }
 
     @Test
     fun testParseTiles() {
         val tiles = Tile.parseTiles("123m456p789s")
         assertEquals(9, tiles.size)
-        assertEquals(Tile.get(TileType.M, 1), tiles[0])
-        assertEquals(Tile.get(TileType.M, 2), tiles[1])
-        assertEquals(Tile.get(TileType.M, 3), tiles[2])
-        assertEquals(Tile.get(TileType.P, 4), tiles[3])
-        assertEquals(Tile.get(TileType.P, 5), tiles[4])
-        assertEquals(Tile.get(TileType.P, 6), tiles[5])
-        assertEquals(Tile.get(TileType.S, 7), tiles[6])
-        assertEquals(Tile.get(TileType.S, 8), tiles[7])
-        assertEquals(Tile.get(TileType.S, 9), tiles[8])
+        assertEquals(Tile["1m"], tiles[0])
+        assertEquals(Tile["2m"], tiles[1])
+        assertEquals(Tile["3m"], tiles[2])
+        assertEquals(Tile["4p"], tiles[3])
+        assertEquals(Tile["5p"], tiles[4])
+        assertEquals(Tile["6p"], tiles[5])
+        assertEquals(Tile["7s"], tiles[6])
+        assertEquals(Tile["8s"], tiles[7])
+        assertEquals(Tile["9s"], tiles[8])
 
-        // 测试红宝牌
-        val tilesWithRedDora = Tile.parseTiles("0m0p0s")
-        assertEquals(3, tilesWithRedDora.size)
-        assertEquals(Tile.get(TileType.M, 0), tilesWithRedDora[0])
-        assertEquals(Tile.get(TileType.P, 0), tilesWithRedDora[1])
-        assertEquals(Tile.get(TileType.S, 0), tilesWithRedDora[2])
-
-        // 测试字牌
-        val tilesWithZ = Tile.parseTiles("1234567z")
-        assertEquals(7, tilesWithZ.size)
-        for (i in 1..7) {
-            assertEquals(Tile.get(TileType.Z, i), tilesWithZ[i-1])
-        }
+        // 测试无效输入
+        assertFailsWith<IllegalArgumentException> { Tile.parseTiles("123") }
+        assertFailsWith<IllegalArgumentException> { Tile.parseTiles("123x") }
     }
 
     @Test
     fun testToTilesString() {
-        val tiles = listOf(
-            Tile.get(TileType.M, 1),
-            Tile.get(TileType.M, 2),
-            Tile.get(TileType.M, 3),
-            Tile.get(TileType.P, 4),
-            Tile.get(TileType.P, 5),
-            Tile.get(TileType.P, 6),
-            Tile.get(TileType.S, 7),
-            Tile.get(TileType.S, 8),
-            Tile.get(TileType.S, 9)
-        )
-
-        assertEquals("123m456p789s", tiles.toTilesString())
-        assertEquals("123M456P789S", tiles.toTilesString(false))
-
-        // 测试红宝牌
-        val tilesWithRedDora = listOf(
-            Tile.get(TileType.M, 0),
-            Tile.get(TileType.P, 0),
-            Tile.get(TileType.S, 0)
-        )
-
-        assertEquals("0m0p0s", tilesWithRedDora.toTilesString())
+        val tiles = listOf(Tile["1m"], Tile["2m"], Tile["3m"], Tile["4p"], Tile["5p"], Tile["6p"])
+        assertEquals("123M456P", tiles.toTilesString(false))
+        assertEquals("123m456p", tiles.toTilesString())
     }
 
     @Test
     fun testCountAsMap() {
-        val tiles = Tile.parseTiles("11122233m")
+        val tiles = listOf(Tile["1m"], Tile["1m"], Tile["2m"], Tile["3m"], Tile["3m"])
         val countMap = tiles.countAsMap()
-
-        assertEquals(3, countMap.size)
-        assertEquals(3, countMap[Tile.get(TileType.M, 1)])
-        assertEquals(3, countMap[Tile.get(TileType.M, 2)])
-        assertEquals(2, countMap[Tile.get(TileType.M, 3)])
+        assertEquals(2, countMap[Tile["1m"]])
+        assertEquals(1, countMap[Tile["2m"]])
+        assertEquals(2, countMap[Tile["3m"]])
     }
 
     @Test
     fun testCountAsCodeArray() {
-        val tiles = Tile.parseTiles("11122233m")
-        val codeArray = tiles.countAsCodeArray()
-
-        assertEquals(3, codeArray[Tile.get(TileType.M, 1).code])
-        assertEquals(3, codeArray[Tile.get(TileType.M, 2).code])
-        assertEquals(2, codeArray[Tile.get(TileType.M, 3).code])
-        assertEquals(0, codeArray[Tile.get(TileType.M, 4).code])
+        val tiles = listOf(Tile["1m"], Tile["1m"], Tile["2m"], Tile["3m"], Tile["3m"])
+        val countArray = tiles.countAsCodeArray()
+        assertEquals(2, countArray[1])
+        assertEquals(1, countArray[2])
+        assertEquals(2, countArray[3])
     }
 
     @Test
-    fun testInvalidTileCreation() {
-        // 测试无效的牌编号
-        assertFailsWith(IllegalArgumentException::class) {
-            Tile.get(100)
-        }
+    fun testTileProperties() {
+        // 测试幺九牌
+        assertTrue(Tile["1m"].isYaochu) // 1万
+        assertTrue(Tile["9m"].isYaochu) // 9万
+        assertTrue(Tile["1s"].isYaochu) // 1索
+        assertTrue(Tile["7z"].isYaochu) // 7字
+        assertFalse(Tile["5p"].isYaochu) // 5筒
 
-        // 测试无效的牌文本
-        assertFailsWith(IllegalArgumentException::class) {
-            Tile.get("10m")
-        }
+        // 测试三元牌
+        assertTrue(Tile["5z"].isSangen) // 白
+        assertTrue(Tile["6z"].isSangen) // 发
+        assertTrue(Tile["7z"].isSangen) // 中
+        assertFalse(Tile["4z"].isSangen) // 北
 
-        assertFailsWith(IllegalArgumentException::class) {
-            Tile.get("1x")
-        }
+        // 测试风牌
+        assertTrue(Tile["1z"].isWind) // 东
+        assertTrue(Tile["2z"].isWind) // 南
+        assertTrue(Tile["3z"].isWind) // 西
+        assertTrue(Tile["4z"].isWind) // 北
+        assertFalse(Tile["5z"].isWind) // 白
+    }
 
-        // 测试无效的牌解析
-        assertFailsWith(IllegalArgumentException::class) {
-            Tile.parseTiles("123m456x")
-        }
+    @Test
+    fun testToStringAndParse() {
+        // 测试toString得到的字符串拿去parse得到相同的结果
+        val testTiles = listOf(
+            Tile["1m"], Tile["2m"], Tile["3m"], Tile["4m"], Tile["5m"],
+            Tile["6m"], Tile["7m"], Tile["8m"], Tile["9m"],
+            Tile["1p"], Tile["2p"], Tile["3p"], Tile["4p"], Tile["5p"],
+            Tile["6p"], Tile["7p"], Tile["8p"], Tile["9p"],
+            Tile["1s"], Tile["2s"], Tile["3s"], Tile["4s"], Tile["5s"],
+            Tile["6s"], Tile["7s"], Tile["8s"], Tile["9s"],
+            Tile["1z"], Tile["2z"], Tile["3z"], Tile["4z"], Tile["5z"],
+            Tile["6z"], Tile["7z"]
+        )
 
-        assertFailsWith(IllegalArgumentException::class) {
-            Tile.parseTiles("123m456")
+        for (tile in testTiles) {
+            val tileString = tile.toString()
+            val parsedTile = Tile[tileString]
+            assertEquals(tile, parsedTile, "toString和parse往返测试失败: $tile -> $tileString -> $parsedTile")
         }
     }
 }
