@@ -3,7 +3,6 @@ package mahjongutils.shanten
 import mahjongutils.CalcContext
 import mahjongutils.models.Ankan
 import mahjongutils.models.Furo
-import mahjongutils.models.Kan
 import mahjongutils.models.Tile
 import mahjongutils.models.TileType
 import mahjongutils.models.hand.Hand
@@ -74,7 +73,7 @@ internal fun CalcContext.regularShanten(
             shantenInfo = shantenInfo.fillNum(tilesCount)
         }
 
-        val hand = Hand(tiles = tiles, furo = furo, patterns = bestPatterns)
+        val hand = Hand(tilesInHand = tiles, furo = furo, patterns = bestPatterns)
         return RegularShantenResult(hand = hand, shantenInfo = shantenInfo)
     }
 }

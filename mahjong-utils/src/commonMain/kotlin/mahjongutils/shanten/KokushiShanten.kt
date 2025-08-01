@@ -60,7 +60,7 @@ internal fun CalcContext.kokushiShanten(
             shantenInfo = shantenInfo.fillNum(tiles.countAsCodeArray())
         }
 
-        val hand = Hand(tiles = tiles, furo = emptyList(), patterns = patterns)
+        val hand = Hand(tilesInHand = tiles, furo = emptyList(), patterns = patterns)
         return KokushiShantenResult(hand = hand, shantenInfo = shantenInfo)
     }
 }

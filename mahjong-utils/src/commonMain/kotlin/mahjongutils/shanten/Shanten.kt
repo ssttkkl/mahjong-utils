@@ -141,7 +141,7 @@ internal fun CalcContext.shanten(
             shantenInfo = shantenInfo.fillNum(tilesCount)
         }
 
-        val hand = Hand(tiles = tiles, furo = furo, patterns = patterns)
+        val hand = Hand(tilesInHand = tiles, furo = furo, patterns = patterns)
         return UnionShantenResult(
             hand = hand, shantenInfo = shantenInfo,
             regular = regular, chitoi = chitoi, kokushi = kokushi

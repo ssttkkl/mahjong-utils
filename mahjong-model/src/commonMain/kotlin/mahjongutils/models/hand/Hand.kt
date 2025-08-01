@@ -8,14 +8,13 @@ import mahjongutils.models.Tile
  * 手牌
  */
 @Serializable
-data class Hand<out P : CommonHandPattern>(
+data class Hand(
     /**
      * 门前的牌
      */
-    val tiles: List<Tile>,
-    override val furo: List<Furo>,
-    /**
-     * 手牌形
-     */
-    val patterns: Collection<P>
-) : IHasFuro
+    override val tilesInHand: List<Tile>,
+    override val furo: List<Furo>
+) : IHand
+
+val Hand.isWithDraw: Boolean
+    get() = tilesInHand.size % 3 == 2

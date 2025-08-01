@@ -58,7 +58,7 @@ internal fun CalcContext.chitoiShanten(
             shantenInfo = shantenInfo.fillNum(getTileCount(tiles))
         }
 
-        val hand = Hand(tiles = tiles, furo = emptyList(), patterns = listOf(pattern))
+        val hand = Hand(tilesInHand = tiles, furo = emptyList(), patterns = listOf(pattern))
         return ChitoiShantenResult(hand = hand, shantenInfo = shantenInfo)
     }
 }
