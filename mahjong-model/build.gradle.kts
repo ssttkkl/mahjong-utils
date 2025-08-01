@@ -3,13 +3,11 @@ plugins {
     alias(libs.plugins.buildlogic.mavenpublish)
 }
 
-
 kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.serialization.core)
-                api(project(":mahjong-model"))
             }
         }
         val jvmTest by getting {
@@ -24,8 +22,9 @@ kotlin {
 publishing {
     publications.withType<MavenPublication> {
         pom {
-            name.set("Mahjong Utils")
-            description.set("Mahjong Utils (for Japanese Riichi Mahjong)")
+            name.set("Mahjong Utils Model")
+            description.set("Model classes for Mahjong Utils (for Japanese Riichi Mahjong)")
         }
     }
 }
+

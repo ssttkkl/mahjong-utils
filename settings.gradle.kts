@@ -1,5 +1,6 @@
 rootProject.name = "mahjong-utils"
 
+include(":mahjong-model")
 include(":mahjong-utils")
 include(":mahjong-utils-entry")
 include(":mahjong-utils-webapi")
