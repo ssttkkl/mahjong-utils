@@ -1,5 +1,7 @@
 package mahjongutils.models
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -12,28 +14,107 @@ class TileTest {
     @Test
     fun testTileCreation() {
         // 测试通过编码获取牌
-        val tile1 = Tile[11]
-        assertEquals(TileType.Dot, tile1.type)
-        assertEquals(1, tile1.num)
+        for (i in 1..9) {
+            val tile = Tile[i]
+            assertEquals(TileType.Character, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..9) {
+            val tile = Tile[i + 10]
+            assertEquals(TileType.Dot, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..9) {
+            val tile = Tile[i + 20]
+            assertEquals(TileType.Bamboo, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..7) {
+            val tile = Tile[i + 30]
+            assertEquals(TileType.Honour, tile.type)
+            assertEquals(i, tile.num)
+        }
 
         // 测试通过类型和数字获取牌
-        val tile2 = Tile[TileType.Dot, 5]
-        assertEquals(TileType.Dot, tile2.type)
-        assertEquals(5, tile2.num)
+        for (i in 1..9) {
+            val tile = Tile[TileType.Character, i]
+            assertEquals(TileType.Character, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..9) {
+            val tile = Tile[TileType.Dot, i]
+            assertEquals(TileType.Dot, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..9) {
+            val tile = Tile[TileType.Bamboo, i]
+            assertEquals(TileType.Bamboo, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..7) {
+            val tile = Tile[TileType.Honour, i]
+            assertEquals(TileType.Honour, tile.type)
+            assertEquals(i, tile.num)
+        }
 
         // 测试通过文本获取牌
-        val tile3 = Tile["7s"]
-        assertEquals(TileType.Bamboo, tile3.type)
-        assertEquals(7, tile3.num)
+        for (i in 1..9) {
+            val tile = Tile["${i}m"]
+            assertEquals(TileType.Character, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..9) {
+            val tile = Tile["${i}p"]
+            assertEquals(TileType.Dot, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..9) {
+            val tile = Tile["${i}s"]
+            assertEquals(TileType.Bamboo, tile.type)
+            assertEquals(i, tile.num)
+        }
+        for (i in 1..7) {
+            val tile = Tile["${i}z"]
+            assertEquals(TileType.Honour, tile.type)
+            assertEquals(i, tile.num)
+        }
 
         // 测试无效编码
+        assertFailsWith<IllegalArgumentException> { Tile[-1] }
         assertFailsWith<IllegalArgumentException> { Tile[0] }
+        assertFailsWith<IllegalArgumentException> { Tile[10] }
+        assertFailsWith<IllegalArgumentException> { Tile[20] }
+        assertFailsWith<IllegalArgumentException> { Tile[30] }
         assertFailsWith<IllegalArgumentException> { Tile[38] }
 
         // 测试getOrNull方法
+        assertNull(Tile.getOrNull(-1))
         assertNull(Tile.getOrNull(0))
+        assertNull(Tile.getOrNull(10))
+        assertNull(Tile.getOrNull(20))
+        assertNull(Tile.getOrNull(30))
         assertNull(Tile.getOrNull(38))
-        assertNotNull(Tile.getOrNull(11))
+        assertNull(Tile.getOrNull("0m"))
+        assertNull(Tile.getOrNull("0s"))
+        assertNull(Tile.getOrNull("0z"))
+        assertNull(Tile.getOrNull("2x"))
+        assertNull(Tile.getOrNull("23m"))
+        for (i in 1..9) {
+            assertNotNull(Tile.getOrNull(i))
+            assertNotNull(Tile.getOrNull(i + 10))
+            assertNotNull(Tile.getOrNull(i + 20))
+            assertNotNull(Tile.getOrNull("${i}m"))
+            assertNotNull(Tile.getOrNull("${i}p"))
+            assertNotNull(Tile.getOrNull("${i}s"))
+            assertNotNull(Tile.getOrNull(TileType.Character, i))
+            assertNotNull(Tile.getOrNull(TileType.Dot, i))
+            assertNotNull(Tile.getOrNull(TileType.Bamboo, i))
+        }
+        for (i in 1..7) {
+            assertNotNull(Tile.getOrNull(i + 30))
+            assertNotNull(Tile.getOrNull("${i}z"))
+            assertNotNull(Tile.getOrNull(TileType.Honour, i))
+        }
     }
 
     @Test
@@ -86,6 +167,7 @@ class TileTest {
         // 测试无效输入
         assertFailsWith<IllegalArgumentException> { Tile.parseTiles("123") }
         assertFailsWith<IllegalArgumentException> { Tile.parseTiles("123x") }
+        assertFailsWith<IllegalArgumentException> { Tile.parseTiles("m23") }
     }
 
     @Test
@@ -116,17 +198,17 @@ class TileTest {
     @Test
     fun testTileProperties() {
         // 测试幺九牌
-        assertTrue(Tile["1m"].isYaochu) // 1万
-        assertTrue(Tile["9m"].isYaochu) // 9万
-        assertTrue(Tile["1s"].isYaochu) // 1索
-        assertTrue(Tile["7z"].isYaochu) // 7字
-        assertFalse(Tile["5p"].isYaochu) // 5筒
+        assertTrue(Tile["1m"].isTerminalsAndHonors) // 1万
+        assertTrue(Tile["9m"].isTerminalsAndHonors) // 9万
+        assertTrue(Tile["1s"].isTerminalsAndHonors) // 1索
+        assertTrue(Tile["7z"].isTerminalsAndHonors) // 7字
+        assertFalse(Tile["5p"].isTerminalsAndHonors) // 5筒
 
         // 测试三元牌
-        assertTrue(Tile["5z"].isSangen) // 白
-        assertTrue(Tile["6z"].isSangen) // 发
-        assertTrue(Tile["7z"].isSangen) // 中
-        assertFalse(Tile["4z"].isSangen) // 北
+        assertTrue(Tile["5z"].isDragon) // 白
+        assertTrue(Tile["6z"].isDragon) // 发
+        assertTrue(Tile["7z"].isDragon) // 中
+        assertFalse(Tile["4z"].isDragon) // 北
 
         // 测试风牌
         assertTrue(Tile["1z"].isWind) // 东
@@ -138,22 +220,21 @@ class TileTest {
 
     @Test
     fun testToStringAndParse() {
-        // 测试toString得到的字符串拿去parse得到相同的结果
-        val testTiles = listOf(
-            Tile["1m"], Tile["2m"], Tile["3m"], Tile["4m"], Tile["5m"],
-            Tile["6m"], Tile["7m"], Tile["8m"], Tile["9m"],
-            Tile["1p"], Tile["2p"], Tile["3p"], Tile["4p"], Tile["5p"],
-            Tile["6p"], Tile["7p"], Tile["8p"], Tile["9p"],
-            Tile["1s"], Tile["2s"], Tile["3s"], Tile["4s"], Tile["5s"],
-            Tile["6s"], Tile["7s"], Tile["8s"], Tile["9s"],
-            Tile["1z"], Tile["2z"], Tile["3z"], Tile["4z"], Tile["5z"],
-            Tile["6z"], Tile["7z"]
-        )
+        val testTiles = Tile.all
 
         for (tile in testTiles) {
+            // 测试toString得到的字符串拿去parse得到相同的结果
             val tileString = tile.toString()
             val parsedTile = Tile[tileString]
             assertEquals(tile, parsedTile, "toString和parse往返测试失败: $tile -> $tileString -> $parsedTile")
+
+            // 测试序列化得到的字符串与toString得到的字符串相同
+            val serializedTile = Json.encodeToString(tile)
+            assertEquals("\"${tileString}\"", serializedTile, "序列化测试失败: $tile -> $serializedTile")
+
+            // 测试反序列化得到的牌与parse得到的牌相同
+            val deserializedTile = Json.decodeFromString<Tile>(serializedTile)
+            assertEquals(tile, deserializedTile, "反序列化测试失败: $tile -> $serializedTile -> $deserializedTile")
         }
     }
 }

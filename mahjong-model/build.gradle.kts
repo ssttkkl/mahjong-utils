@@ -10,6 +10,11 @@ kotlin {
                 implementation(libs.kotlinx.serialization.core)
             }
         }
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlinx.serialization.json)
+            }
+        }
         val jvmTest by getting {
             dependencies {
                 implementation(platform("org.junit:junit-bom:5.10.0"))

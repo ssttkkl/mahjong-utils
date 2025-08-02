@@ -1,5 +1,7 @@
 package mahjongutils.models
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -8,14 +10,18 @@ class GroupTest {
     @Test
     fun testGroupCreation() {
         // 测试创建顺子
-        val seq = Seq(Tile["1m"]) // 1万顺子
-        assertEquals(GroupType.Seq, seq.type)
-        assertEquals(Tile["1m"], seq.tile)
+        for (tile in Tile.all.filter { i -> i.num in 1..7 && i.type != TileType.Honour }) {
+            val seq = Seq(tile)
+            assertEquals(GroupType.Seq, seq.type)
+            assertEquals(tile, seq.tile)
+        }
 
         // 测试创建刻子
-        val tri = Tri(Tile["2p"]) // 2筒刻子
-        assertEquals(GroupType.Tri, tri.type)
-        assertEquals(Tile["2p"], tri.tile)
+        for (tile in Tile.all) {
+            val tri = Tri(tile)
+            assertEquals(GroupType.Tri, tri.type)
+            assertEquals(tile, tri.tile)
+        }
     }
 
     @Test
@@ -63,6 +69,7 @@ class GroupTest {
         assertFailsWith<IllegalArgumentException> { Group("123") }
         assertFailsWith<IllegalArgumentException> { Group("123z") } // 字牌不能组成顺子
         assertFailsWith<IllegalArgumentException> { Group("124m") } // 不连续的牌不能组成顺子
+        assertFailsWith<IllegalArgumentException> { Group("1234m") } // 多于3张牌不能组成顺子
     }
 
     @Test
@@ -103,6 +110,28 @@ class GroupTest {
         // 测试无效舍牌
         assertFailsWith<IllegalArgumentException> { seq.afterDiscard(Tile["4m"]) }
         assertFailsWith<IllegalArgumentException> { tri.afterDiscard(Tile["3p"]) }
+
+        // 789万顺子舍掉7万的情况
+        val seq7 = Seq(Tile["7m"]) // 7万顺子 (789m)
+        val protorun5 = seq7.afterDiscard(Tile["7m"])
+        assertEquals(ProtorunType.Edge, protorun5.type)
+        assertEquals(Tile["8m"], protorun5.first)
+
+        // 789万顺子舍掉9万的情况
+        val protorun6 = seq7.afterDiscard(Tile["9m"])
+        assertEquals(ProtorunType.TwoSide, protorun6.type)
+        assertEquals(Tile["7m"], protorun6.first)
+
+        // 123万顺子舍掉3万的情况
+        val seq1 = Seq(Tile["1m"]) // 1万顺子 (123m)
+        val protorun7 = seq1.afterDiscard(Tile["3m"])
+        assertEquals(ProtorunType.Edge, protorun7.type)
+        assertEquals(Tile["1m"], protorun7.first)
+
+        // 123万顺子舍掉1万的情况
+        val protorun8 = seq1.afterDiscard(Tile["1m"])
+        assertEquals(ProtorunType.TwoSide, protorun8.type)
+        assertEquals(Tile["2m"], protorun8.first)
     }
 
     @Test
@@ -129,10 +158,40 @@ class GroupTest {
         )
 
         for (group in testGroups) {
+            // 测试toString得到的字符串拿去parse得到相同的结果
             val groupString = group.toString()
             val parsedGroup = Group.parse(groupString)
-            assertEquals(group.type, parsedGroup.type, "toString和parse往返测试失败: $group -> $groupString -> $parsedGroup")
-            assertEquals(group.tile, parsedGroup.tile, "toString和parse往返测试失败: $group -> $groupString -> $parsedGroup")
+            assertEquals(
+                group.type,
+                parsedGroup.type,
+                "toString和parse往返测试失败: $group -> $groupString -> $parsedGroup"
+            )
+            assertEquals(
+                group.tile,
+                parsedGroup.tile,
+                "toString和parse往返测试失败: $group -> $groupString -> $parsedGroup"
+            )
+
+            // 测试序列化得到的字符串与toString得到的字符串相同
+            val serializedGroup = Json.encodeToString(group)
+            assertEquals(
+                "\"${groupString}\"",
+                serializedGroup,
+                "序列化测试失败: $group -> $serializedGroup"
+            )
+
+            // 测试反序列化得到的面子与parse得到的面子相同
+            val deserializedGroup = Json.decodeFromString<Group>(serializedGroup)
+            assertEquals(
+                group.type,
+                deserializedGroup.type,
+                "反序列化测试失败: $group -> $serializedGroup -> $deserializedGroup"
+            )
+            assertEquals(
+                group.tile,
+                deserializedGroup.tile,
+                "反序列化测试失败: $group -> $serializedGroup -> $deserializedGroup"
+            )
         }
     }
 }

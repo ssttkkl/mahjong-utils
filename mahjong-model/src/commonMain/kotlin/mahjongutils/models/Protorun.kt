@@ -19,7 +19,7 @@ enum class ProtorunType {
  * 搭子
  */
 @JvmInline
-@Serializable(with = TatsuSerializer::class)
+@Serializable(with = ProtorunSerializer::class)
 value class Protorun private constructor(private val value: Int) {
     /**
      * 搭子类型
@@ -170,7 +170,7 @@ fun Closed(tile: Tile) = Protorun(ProtorunType.Closed, tile)
 fun Edge(tile: Tile) = Protorun(ProtorunType.Edge, tile)
 fun Pair(tile: Tile) = Protorun(ProtorunType.Pair, tile)
 
-internal class TatsuSerializer : KSerializer<Protorun> {
+internal class ProtorunSerializer : KSerializer<Protorun> {
     override val descriptor = PrimitiveSerialDescriptor("Protorun", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Protorun) {

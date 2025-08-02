@@ -1,5 +1,7 @@
 package mahjongutils.models
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -8,24 +10,32 @@ class MeldedTest {
     @Test
     fun testMeldedCreation() {
         // 测试创建吃
-        val chow = Chow(Tile["1m"]) // 1万吃
-        assertEquals(MeldedType.Chow, chow.type)
-        assertEquals(Tile["1m"], chow.tile)
+        for (tile in Tile.all.filter { i -> i.num in 1..7 && i.type != TileType.Honour }) {
+            val chow = Chow(tile)
+            assertEquals(MeldedType.Chow, chow.type)
+            assertEquals(tile, chow.tile)
+        }
 
         // 测试创建碰
-        val pung = Pung(Tile["2p"]) // 2筒碰
-        assertEquals(MeldedType.Pung, pung.type)
-        assertEquals(Tile["2p"], pung.tile)
+        for (tile in Tile.all) {
+            val pung = Pung(tile)
+            assertEquals(MeldedType.Pung, pung.type)
+            assertEquals(tile, pung.tile)
+        }
 
         // 测试创建明杠
-        val kong = MeldedKong(Tile["3s"]) // 3索明杠
-        assertEquals(MeldedType.MeldedKong, kong.type)
-        assertEquals(Tile["3s"], kong.tile)
+        for (tile in Tile.all) {
+            val kong = MeldedKong(tile)
+            assertEquals(MeldedType.MeldedKong, kong.type)
+            assertEquals(tile, kong.tile)
+        }
 
         // 测试创建暗杠
-        val concealedKong = ConcealedKong(Tile["5z"]) // 白暗杠
-        assertEquals(MeldedType.ConcealedKong, concealedKong.type)
-        assertEquals(Tile["5z"], concealedKong.tile)
+        for (tile in Tile.all) {
+            val concealedKong = ConcealedKong(tile)
+            assertEquals(MeldedType.ConcealedKong, concealedKong.type)
+            assertEquals(tile, concealedKong.tile)
+        }
     }
 
     @Test
@@ -109,6 +119,7 @@ class MeldedTest {
         assertFailsWith<IllegalArgumentException> { Melded("123") }
         assertFailsWith<IllegalArgumentException> { Melded("123z") } // 字牌不能组成顺子
         assertFailsWith<IllegalArgumentException> { Melded("124m") } // 不连续的牌不能组成顺子
+        assertFailsWith<IllegalArgumentException> { Melded("1234m") } // 多于3张牌不能组成顺子
     }
 
     @Test
@@ -194,10 +205,40 @@ class MeldedTest {
         )
 
         for (melded in testMeldeds) {
+            // 测试toString得到的字符串拿去parse得到相同的结果
             val meldedString = melded.toString()
             val parsedMelded = Melded.parse(meldedString)
-            assertEquals(melded.type, parsedMelded.type, "toString和parse往返测试失败: $melded -> $meldedString -> $parsedMelded")
-            assertEquals(melded.tile, parsedMelded.tile, "toString和parse往返测试失败: $melded -> $meldedString -> $parsedMelded")
+            assertEquals(
+                melded.type,
+                parsedMelded.type,
+                "toString和parse往返测试失败: $melded -> $meldedString -> $parsedMelded"
+            )
+            assertEquals(
+                melded.tile,
+                parsedMelded.tile,
+                "toString和parse往返测试失败: $melded -> $meldedString -> $parsedMelded"
+            )
+
+            // 测试序列化得到的字符串与toString得到的字符串相同
+            val serializedMelded = Json.encodeToString(melded)
+            assertEquals(
+                "\"${meldedString}\"",
+                serializedMelded,
+                "序列化测试失败: $melded -> $serializedMelded"
+            )
+
+            // 测试反序列化得到的副露与parse得到的副露相同
+            val deserializedMelded = Json.decodeFromString<Melded>(serializedMelded)
+            assertEquals(
+                melded.type,
+                deserializedMelded.type,
+                "反序列化测试失败: $melded -> $serializedMelded -> $deserializedMelded"
+            )
+            assertEquals(
+                melded.tile,
+                deserializedMelded.tile,
+                "反序列化测试失败: $melded -> $serializedMelded -> $deserializedMelded"
+            )
         }
     }
 }

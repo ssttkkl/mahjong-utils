@@ -83,11 +83,7 @@ value class Tile private constructor(
      * @param step 加减数字
      */
     fun advance(step: Int): Tile {
-        return if (num == 0) {
-            get(code + 5 + step)
-        } else {
-            get(code + step)
-        }
+        return get(code + step)
     }
 
     /**
@@ -95,9 +91,7 @@ value class Tile private constructor(
      * @param that 另一张牌
      */
     fun distance(that: Tile): Int {
-        val this_ = if (this.num == 0) Tile(type, 5) else this
-        val that_ = if (that.num == 0) Tile(that.type, 5) else that
-        return this_.code - that_.code
+        return this.code - that.code
     }
 
     override fun toString(): String {
@@ -210,7 +204,7 @@ value class Tile private constructor(
                     }
                 }
 
-                if (pending.size > 0) {
+                if (pending.isNotEmpty()) {
                     throw IllegalArgumentException("invalid text: $text")
                 }
             }
@@ -354,12 +348,12 @@ internal class TileSerializer : KSerializer<Tile> {
 /**
  * 是否为幺九牌
  */
-val Tile.isYaochu: Boolean get() = this in Tile.allTerminalsAndHonors
+val Tile.isTerminalsAndHonors: Boolean get() = this in Tile.allTerminalsAndHonors
 
 /**
  * 是否为三元牌
  */
-val Tile.isSangen: Boolean get() = type == TileType.Honour && num in 5..7
+val Tile.isDragon: Boolean get() = type == TileType.Honour && num in 5..7
 
 /**
  * 是否为风牌
