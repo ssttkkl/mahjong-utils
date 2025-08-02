@@ -2,11 +2,12 @@ package mahjongutils.models.hand
 
 import mahjongutils.models.GroupType
 import mahjongutils.models.Melded
+import mahjongutils.models.Pair
 import mahjongutils.models.Pung
-import mahjongutils.models.TwoSide
 import mahjongutils.models.Seq
 import mahjongutils.models.Tile
 import mahjongutils.models.Tri
+import mahjongutils.models.TwoSide
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -270,6 +271,120 @@ class HandPatternTest {
         )
         assertFalse(waitingPattern2.isWinningHand)
         assertTrue(waitingPattern2.isWaitingHand)
+    }
+
+    @Test
+    fun testHandPatternsNeitherWinningNorWaiting() {
+        // 测试14张标准形：多个搭子的情况（既不是和了也不是听牌）
+        val regularPatternMultipleProtoruns = RegularHandPattern(
+            k = 4,
+            pair = Tile["1m"],
+            concealedGroups = listOf(
+                Seq(Tile["2m"]), // 234万
+                Tri(Tile["2p"]),  // 222筒
+            ),
+            meldeds = emptyList(),
+            protoruns = listOf(
+                TwoSide(Tile["4m"]), // 45万两面搭子
+                Pair(Tile["6s"])  // 6索对子
+            ),
+            floatings = listOf(Tile["5z"])
+        )
+        assertFalse(regularPatternMultipleProtoruns.isWinningHand)
+        assertFalse(regularPatternMultipleProtoruns.isWaitingHand)
+
+        // 测试13张标准形：既有搭子又有浮牌的情况
+        val regularPatternProtorunAndFloating = RegularHandPattern(
+            k = 4,
+            pair = Tile["1m"],
+            concealedGroups = listOf(
+                Seq(Tile["2m"]), // 234万
+                Tri(Tile["2p"])  // 222筒
+            ),
+            meldeds = emptyList(),
+            protoruns = listOf(
+                TwoSide(Tile["4m"]) // 45万两面搭子
+            ),
+            floatings = listOf(Tile["5s"], Tile["6z"], Tile["7z"]) // 白、发浮牌
+        )
+        assertFalse(regularPatternProtorunAndFloating.isWinningHand)
+        assertFalse(regularPatternProtorunAndFloating.isWaitingHand)
+
+        // 测试14张标准形：多个浮牌无搭子无雀头的情况
+        val regularPatternMultipleFloatings = RegularHandPattern(
+            k = 4,
+            pair = null,
+            concealedGroups = listOf(
+                Seq(Tile["2m"]), // 234万
+                Tri(Tile["2p"]),  // 222筒
+                Seq(Tile["1s"])   // 123索
+            ),
+            meldeds = listOf(
+                Pung(Tile["3s"]) // 333索
+            ),
+            protoruns = emptyList(),
+            floatings = listOf(Tile["5z"], Tile["6z"]) // 白、发浮牌
+        )
+        assertFalse(regularPatternMultipleFloatings.isWinningHand)
+        assertFalse(regularPatternMultipleFloatings.isWaitingHand)
+
+        // 测试13张七对子：对子数量不足且有多个浮牌
+        val sevenPairsPatternFewPairs = SevenPairsHandPattern(
+            pairs = setOf(
+                Tile["1m"], // 1万
+                Tile["2p"], // 2筒
+                Tile["3s"], // 3索
+                Tile["5z"]  // 白
+            ),
+            floatings = listOf(
+                Tile["4m"],
+                Tile["5m"],
+                Tile["4s"],
+                Tile["6z"],
+                Tile["7z"]
+            ) // 4万、5万、4索、中发浮牌
+        )
+        assertFalse(sevenPairsPatternFewPairs.isWinningHand)
+        assertFalse(sevenPairsPatternFewPairs.isWaitingHand)
+
+        // 测试14张七对子：5对4浮牌的情况
+        val sevenPairsPatternTwoFloatings = SevenPairsHandPattern(
+            pairs = setOf(
+                Tile["1m"], Tile["2p"], Tile["3s"],
+                Tile["5z"], Tile["6z"]
+            ),
+            floatings = listOf(Tile["4m"], Tile["6m"], Tile["1z"], Tile["7z"]) // 4万、6万、东中浮牌
+        )
+        assertFalse(sevenPairsPatternTwoFloatings.isWinningHand)
+        assertFalse(sevenPairsPatternTwoFloatings.isWaitingHand)
+
+        // 测试13张国士无双：幺九牌种类不足的情况
+        val thirteenOrphansPatternFewTerminals = ThirteenOrphansHandPattern(
+            terminalsAndHonors = setOf(
+                Tile["1m"], Tile["9m"], // 1万、9万
+                Tile["1p"], Tile["9p"], // 1筒、9筒
+                Tile["1s"], Tile["9s"], // 1索、9索
+                Tile["1z"], Tile["2z"], // 东、南
+                Tile["5z"] // 白
+            ),
+            repeated = null,
+            floatings = listOf(Tile["2m"], Tile["3m"], Tile["3p"], Tile["4s"]) // 非幺九牌浮牌
+        )
+        assertFalse(thirteenOrphansPatternFewTerminals.isWinningHand)
+        assertFalse(thirteenOrphansPatternFewTerminals.isWaitingHand)
+
+        // 测试14张国士无双：10种幺九牌有重复但还有浮牌
+        val thirteenOrphansPatternWithFloatings = ThirteenOrphansHandPattern(
+            terminalsAndHonors = setOf(
+                Tile["1m"], Tile["9m"], Tile["1p"], Tile["9p"],
+                Tile["1s"], Tile["9s"], Tile["1z"], Tile["2z"],
+                Tile["3z"], Tile["4z"]
+            ),
+            repeated = Tile["1m"],
+            floatings = listOf(Tile["2m"], Tile["3m"], Tile["4m"]) // 非幺九牌浮牌
+        )
+        assertFalse(thirteenOrphansPatternWithFloatings.isWinningHand)
+        assertFalse(thirteenOrphansPatternWithFloatings.isWaitingHand)
     }
 }
 
