@@ -11,6 +11,7 @@ fun main(args: Array<String>) {
         println("Usage: mahjong-utils-cli <command> <tiles> [options]")
         println("Commands:")
         println("  shanten <tiles> [--furo <furo>] [--lang <zh|en|ja>]")
+        println("  furo-chance <tiles> <chance-tile> [--no-chi] [--lang <zh|en|ja>]")
         println("  hora <tiles> [--agari <tile>] [--tsumo] [--dora <n>] [--self-wind <E|S|W|N>] [--round-wind <E|S|W|N>] [--furo <furo>] [--lang <zh|en|ja>]")
         println("  point <han> <hu> [--tsumo] [--parent] [--lang <zh|en|ja>]")
         println("Example: mahjong-utils-cli hora 123m456p789s1122z --agari 2z --tsumo --dora 2 --lang en")
@@ -33,6 +34,7 @@ fun main(args: Array<String>) {
     try {
         when (command) {
             "shanten" -> handleShanten(args.drop(1))
+            "furo-chance" -> handleFuroChance(args.drop(1))
             "hora" -> handleHora(args.drop(1))
             "point" -> handlePoint(args.drop(1))
             else -> println("Unknown command: $command")
@@ -70,6 +72,40 @@ fun handleShanten(args: List<String>) {
     println()
     
     Formatter.formatShantenResult(result)
+}
+
+fun handleFuroChance(args: List<String>) {
+    if (args.size < 2) {
+        println("Usage: furo-chance <tiles> <chance-tile> [--no-chi]")
+        return
+    }
+    
+    val tiles = TileCodeParser.parse(args[0])
+    val chanceTile = TileCodeParser.parse(args[1]).firstOrNull() ?: return
+    var allowChi = true
+    
+    var i = 2
+    while (i < args.size) {
+        when (args[i]) {
+            "--no-chi" -> {
+                allowChi = false
+                i++
+            }
+            else -> i++
+        }
+    }
+    
+    val furoArgs = FuroChanceShantenArgs(
+        tiles = tiles,
+        chanceTile = chanceTile,
+        allowChi = allowChi
+    )
+    val result = furoChanceShanten(furoArgs)
+    
+    println(Formatter.formatHand(tiles))
+    println()
+    
+    Formatter.formatFuroChanceResult(result, chanceTile)
 }
 
 fun handleHora(args: List<String>) {

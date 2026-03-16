@@ -101,6 +101,70 @@ object Formatter {
             println("${messages.childRon}: ${result.childPoint.ron}${messages.points}")
         }
     }
+    
+    fun formatFuroChanceResult(result: FuroChanceShantenResult, chanceTile: Tile) {
+        val info = result.shantenInfo
+        
+        val chanceLabel = when (language) {
+            Language.ZH -> "机会牌"
+            Language.EN -> "Chance tile"
+            Language.JA -> "鳴き牌"
+        }
+        println("$chanceLabel: $chanceTile")
+        println()
+        
+        if (info.canRon) {
+            println(messages.agari)
+            return
+        }
+        
+        val passLabel = when (language) {
+            Language.ZH -> "Pass"
+            Language.EN -> "Pass"
+            Language.JA -> "スルー"
+        }
+        val chiLabel = when (language) {
+            Language.ZH -> "吃"
+            Language.EN -> "Chi"
+            Language.JA -> "チー"
+        }
+        val ponLabel = when (language) {
+            Language.ZH -> "碰"
+            Language.EN -> "Pon"
+            Language.JA -> "ポン"
+        }
+        val minkanLabel = when (language) {
+            Language.ZH -> "明杠"
+            Language.EN -> "Minkan"
+            Language.JA -> "明カン"
+        }
+        
+        // Pass
+        info.pass?.let { pass ->
+            println("$passLabel: ${messages.shanten(pass.shantenNum)}")
+        }
+        
+        // Chi
+        if (info.chi.isNotEmpty()) {
+            println()
+            println("$chiLabel:")
+            info.chi.forEach { (tatsu, shanten) ->
+                println("  $tatsu: ${messages.shanten(shanten.shantenNum)}")
+            }
+        }
+        
+        // Pon
+        info.pon?.let { pon ->
+            println()
+            println("$ponLabel: ${messages.shanten(pon.shantenNum)}")
+        }
+        
+        // Minkan
+        info.minkan?.let { minkan ->
+            println()
+            println("$minkanLabel: ${messages.shanten(minkan.shantenNum)}")
+        }
+    }
 }
 
 object TileCodeParser {
