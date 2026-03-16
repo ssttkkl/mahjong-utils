@@ -31,6 +31,17 @@ mahjong-utils
 
 对于JavaScript/TypeScript：我们提供了绑定方便JS/TS侧调用，具体请看 [js-lib/README.md](js-lib/README.md)
 
+对于命令行：我们提供了CLI工具，具体请看 [skills/mahjong-utils-cli/SKILL.md](skills/mahjong-utils-cli/SKILL.md)
+
+## 项目模块
+
+- **mahjong-utils**: 核心库，包含向听数分析、和牌计算、点数计算
+- **mahjong-utils-cli**: 命令行工具，提供简洁的牌代码格式
+- **mahjong-utils-entry**: 动态库入口，用于跨语言集成
+- **mahjong-utils-webapi**: Web API 服务器（Spring Boot）
+- **python-lib**: Python 绑定
+- **js-lib**: JavaScript/TypeScript 绑定
+
 ## 使用（Kotlin/Java）
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils)
