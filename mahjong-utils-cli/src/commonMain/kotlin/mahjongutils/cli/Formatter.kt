@@ -8,6 +8,7 @@ import mahjongutils.hora.Hora
 
 object Formatter {
     var language: Language = Language.detect()
+    private val messages: Messages get() = Messages.get(language)
     
     fun formatTiles(tiles: List<Tile>): String = tiles.joinToString("")
     
@@ -28,9 +29,9 @@ object Formatter {
         val info = result.shantenInfo
         
         when (info.shantenNum) {
-            -1 -> println(Messages.agari(language))
-            0 -> println(Messages.tenpai(language))
-            else -> println(Messages.shanten(info.shantenNum, language))
+            -1 -> println(messages.agari)
+            0 -> println(messages.tenpai)
+            else -> println(messages.shanten(info.shantenNum))
         }
         println()
         
@@ -42,7 +43,7 @@ object Formatter {
     
     private fun formatShantenWithoutGot(info: ShantenWithoutGot) {
         val advanceCount = info.advance.size * 4
-        println("${Messages.advance(language)} (${info.advanceNum}${Messages.types(language)}${advanceCount}${Messages.tiles(language)}):")
+        println("${messages.advance} (${info.advanceNum}${messages.types}${advanceCount}${messages.tiles}):")
         println(formatTiles(info.advance.sorted()))
         
         if (info.shantenNum == 1) {
@@ -50,7 +51,7 @@ object Formatter {
             if (goodShapeAdvance != null) {
                 val goodShapeCount = goodShapeAdvance.size * 4
                 println()
-                println("${Messages.goodShapeAdvance(language)} (${info.goodShapeAdvanceNum}${Messages.types(language)}${goodShapeCount}${Messages.tiles(language)}):")
+                println("${messages.goodShapeAdvance} (${info.goodShapeAdvanceNum}${messages.types}${goodShapeCount}${messages.tiles}):")
                 println(formatTiles(goodShapeAdvance.sorted()))
             }
         }
@@ -59,7 +60,7 @@ object Formatter {
             val improvement = info.improvement
             if (improvement != null && improvement.isNotEmpty()) {
                 println()
-                println("${Messages.improvement(language)} (${info.improvementNum}${Messages.types(language)}):")
+                println("${messages.improvement} (${info.improvementNum}${messages.types}):")
                 improvement.forEach { (tile, improvements) ->
                     println("  $tile -> ${improvements.map { "${it.discard}(${it.advanceNum})" }.joinToString(", ")}")
                 }
@@ -68,7 +69,7 @@ object Formatter {
             val goodShapeImprovement = info.goodShapeImprovement
             if (goodShapeImprovement != null && goodShapeImprovement.isNotEmpty()) {
                 println()
-                println("${Messages.goodShapeImprovement(language)} (${info.goodShapeImprovementNum}${Messages.types(language)}):")
+                println("${messages.goodShapeImprovement} (${info.goodShapeImprovementNum}${messages.types}):")
                 goodShapeImprovement.forEach { (tile, improvements) ->
                     println("  $tile -> ${improvements.map { "${it.discard}(${it.advanceNum})" }.joinToString(", ")}")
                 }
@@ -77,27 +78,27 @@ object Formatter {
     }
     
     private fun formatShantenWithGot(info: ShantenWithGot) {
-        println("${Messages.discardChoice(language)}:")
+        println("${messages.discardChoice}:")
         info.discardToAdvance.forEach { (discard, advance) ->
             val advanceCount = advance.advance.size * 4
-            println("  ${Messages.discard(language)}$discard: ${advance.advanceNum}${Messages.types(language)}${advanceCount}${Messages.tiles(language)}${Messages.advance(language)}")
+            println("  ${messages.discard}$discard: ${advance.advanceNum}${messages.types}${advanceCount}${messages.tiles}${messages.advance}")
         }
     }
     
     fun formatHoraResult(result: Hora) {
-        println("${Messages.yaku(language)}:")
+        println("${messages.yaku}:")
         result.yaku.forEach { println("  - $it") }
         println()
-        println("${Messages.han(language)}: ${result.han}")
-        println("${Messages.hu(language)}: ${result.hu}")
+        println("${messages.han}: ${result.han}")
+        println("${messages.hu}: ${result.hu}")
         println()
         
         if (result.tsumo) {
-            println("${Messages.parentTsumo(language)}: ${result.parentPoint.tsumo}${Messages.points(language)}")
-            println("${Messages.childTsumo(language)}: ${Messages.parent(language)}${result.childPoint.tsumoParent}${Messages.points(language)} ${Messages.child(language)}${result.childPoint.tsumoChild}${Messages.points(language)}")
+            println("${messages.parentTsumo}: ${result.parentPoint.tsumo}${messages.points}")
+            println("${messages.childTsumo}: ${messages.parent}${result.childPoint.tsumoParent}${messages.points} ${messages.child}${result.childPoint.tsumoChild}${messages.points}")
         } else {
-            println("${Messages.parentRon(language)}: ${result.parentPoint.ron}${Messages.points(language)}")
-            println("${Messages.childRon(language)}: ${result.childPoint.ron}${Messages.points(language)}")
+            println("${messages.parentRon}: ${result.parentPoint.ron}${messages.points}")
+            println("${messages.childRon}: ${result.childPoint.ron}${messages.points}")
         }
     }
 }

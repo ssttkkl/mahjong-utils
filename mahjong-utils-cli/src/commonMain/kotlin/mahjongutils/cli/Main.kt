@@ -142,31 +142,10 @@ fun handleHora(args: List<String>) {
     println(Formatter.formatHand(tiles, furo))
     println()
     
-    val lang = Formatter.language
-    val agariLabel = when (lang) {
-        Language.ZH -> "和牌张"
-        Language.EN -> "Winning tile"
-        Language.JA -> "和了牌"
-    }
-    val tsumoLabel = when (lang) {
-        Language.ZH -> "自摸"
-        Language.EN -> "Tsumo"
-        Language.JA -> "ツモ"
-    }
-    val ronLabel = when (lang) {
-        Language.ZH -> "荣和"
-        Language.EN -> "Ron"
-        Language.JA -> "ロン"
-    }
-    val doraLabel = when (lang) {
-        Language.ZH -> "宝牌"
-        Language.EN -> "Dora"
-        Language.JA -> "ドラ"
-    }
-    
-    println("$agariLabel: $finalAgari")
-    println(if (tsumo) tsumoLabel else ronLabel)
-    if (dora > 0) println("$doraLabel: $dora")
+    val msg = Messages.get(Formatter.language)
+    println("${msg.winningTile}: $finalAgari")
+    println(if (tsumo) msg.tsumo else msg.ron)
+    if (dora > 0) println("${msg.dora}: $dora")
     println()
     
     Formatter.formatHoraResult(result)
@@ -206,18 +185,19 @@ fun handlePoint(args: List<String>) {
         }
     }
     
-    println("${Messages.han(Formatter.language)}: $han")
-    println("${Messages.hu(Formatter.language)}: $hu")
+    val msg = Messages.get(Formatter.language)
+    println("${msg.han}: $han")
+    println("${msg.hu}: $hu")
     println()
     
     val parentPoint = mahjongutils.hanhu.getParentPointByHanHu(han, hu)
     val childPoint = mahjongutils.hanhu.getChildPointByHanHu(han, hu)
     
     if (tsumo) {
-        println("${Messages.parentTsumo(Formatter.language)}: ${parentPoint.tsumo}${Messages.points(Formatter.language)}")
-        println("${Messages.childTsumo(Formatter.language)}: ${Messages.parent(Formatter.language)}${childPoint.tsumoParent}${Messages.points(Formatter.language)} ${Messages.child(Formatter.language)}${childPoint.tsumoChild}${Messages.points(Formatter.language)}")
+        println("${msg.parentTsumo}: ${parentPoint.tsumo}${msg.points}")
+        println("${msg.childTsumo}: ${msg.parent}${childPoint.tsumoParent}${msg.points} ${msg.child}${childPoint.tsumoChild}${msg.points}")
     } else {
-        println("${Messages.parentRon(Formatter.language)}: ${parentPoint.ron}${Messages.points(Formatter.language)}")
-        println("${Messages.childRon(Formatter.language)}: ${childPoint.ron}${Messages.points(Formatter.language)}")
+        println("${msg.parentRon}: ${parentPoint.ron}${msg.points}")
+        println("${msg.childRon}: ${childPoint.ron}${msg.points}")
     }
 }
