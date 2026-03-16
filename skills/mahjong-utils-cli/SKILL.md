@@ -25,10 +25,10 @@ mahjong-utils-cli.sh shanten <tiles> [--furo <furo>] [--lang <zh|en|ja>]
 ```
 
 **Tile code format**: `123m456p789s1122z`
-- `m` = 万/Man/萬 (1-9)
-- `p` = 筒/Pin/筒 (1-9)
-- `s` = 索/Sou/索 (1-9)
-- `z` = 字/Honor/字 (1-7: 东南西北白发中 / E-S-W-N-White-Green-Red / 東南西北白發中)
+- `m` = 万/Man/萬(マンズ) (1-9)
+- `p` = 筒/Pin/筒(ピンズ) (1-9)
+- `s` = 索/Sou/索(ソーズ) (1-9)
+- `z` = 字/Honor/字牌(ジハイ) (1-7: 东南西北白发中 / E-S-W-N-White-Green-Red / 東南西北白發中(トンナンシャーペーパイハクハツチュン))
 
 **Furo format**: `123m,456p,789s` (comma-separated)
 
@@ -43,7 +43,7 @@ mahjong-utils-cli.sh hora <tiles> [options]
 - `--agari <tile>`: Winning tile (default: last tile)
 - `--tsumo`: Self-draw (default: ron)
 - `--dora <n>`: Dora count
-- `--self-wind <E|S|W|N>`: Self wind (东/East/東, 南/South/南, 西/West/西, 北/North/北)
+- `--self-wind <E|S|W|N>`: Self wind (东/East/東(トン), 南/South/南(ナン), 西/West/西(シャー), 北/North/北(ペー))
 - `--round-wind <E|S|W|N>`: Round wind
 - `--furo <furo>`: Melds
 - `--lang <zh|en|ja>`: Output language (auto-detected from LANG env if not specified)
