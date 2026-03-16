@@ -1,11 +1,13 @@
 package mahjongutils.cli
 
+expect fun getEnv(name: String): String?
+
 enum class Language {
     ZH, EN, JA;
     
     companion object {
         fun detect(): Language {
-            val lang = System.getenv("LANG") ?: System.getenv("LC_ALL") ?: ""
+            val lang = getEnv("LANG") ?: getEnv("LC_ALL") ?: ""
             return when {
                 lang.startsWith("zh", ignoreCase = true) -> ZH
                 lang.startsWith("ja", ignoreCase = true) -> JA
