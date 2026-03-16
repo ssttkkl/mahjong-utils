@@ -4,11 +4,6 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 plugins {
     alias(libs.plugins.buildlogic.kmplib)
     alias(libs.plugins.kotlin.serialization)
-    application
-}
-
-application {
-    mainClass.set("mahjongutils.cli.MainKt")
 }
 
 java {
@@ -46,5 +41,15 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
             }
         }
+    }
+}
+
+tasks.register<Jar>("executableJar") {
+    archiveClassifier.set("executable")
+    from(kotlin.jvm().compilations.getByName("main").output)
+    from(configurations.getByName("jvmRuntimeClasspath").map { if (it.isDirectory) it else zipTree(it) })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "mahjongutils.cli.MainKt"
     }
 }
