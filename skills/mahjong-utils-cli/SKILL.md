@@ -1,6 +1,6 @@
 ---
 name: mahjong-utils-cli
-description: Command-line tools for Japanese Mahjong calculations (shanten analysis, hora evaluation, han/hu to points conversion). Use when user needs to calculate mahjong game metrics via CLI with tile code format (e.g., 123m456p789s).
+description: Command-line tools for Japanese Mahjong calculations including shanten analysis (with advance tiles and improvements), hora evaluation (yaku recognition, han/hu calculation), furo (meld) analysis, and han/hu to points conversion. Use when user needs to calculate mahjong game metrics via CLI with tile code format (e.g., 123m456p789s1122z).
 ---
 
 # Mahjong Utils CLI
