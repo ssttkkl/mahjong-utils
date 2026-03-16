@@ -21,13 +21,13 @@ jobs:
           distribution: 'temurin'
       
       - name: Build JVM JAR
-        run: ./gradlew :mahjong-utils-cli:jvmJar
+        run: ./gradlew :mahjong-utils-cli:executableJar
       
       - name: Upload JVM artifact
         uses: actions/upload-artifact@v4
         with:
           name: mahjong-utils-cli-jvm
-          path: mahjong-utils-cli/build/libs/mahjong-utils-cli-jvm-*.jar
+          path: mahjong-utils-cli/build/libs/*-executable.jar
 
   build-native:
     strategy:
