@@ -7,11 +7,21 @@ description: Command-line tools for Japanese Mahjong calculations (shanten analy
 
 Command-line tools for Japanese Mahjong calculations with user-friendly tile code format.
 
+## Usage
+
+Use the wrapper script that auto-downloads the binary:
+
+```bash
+SKILL_DIR/scripts/mahjong-utils-cli.sh <command> [options]
+```
+
+Replace `SKILL_DIR` with the actual skill directory path.
+
 ## Commands
 
 ### shanten - Calculate Shanten Number
 ```bash
-java -jar mahjong-utils-cli-0.7.7-executable.jar shanten <tiles> [--furo <furo>]
+mahjong-utils-cli.sh shanten <tiles> [--furo <furo>]
 ```
 
 **Tile code format**: `123m456p789s1122z`
@@ -23,7 +33,7 @@ java -jar mahjong-utils-cli-0.7.7-executable.jar shanten <tiles> [--furo <furo>]
 
 ### hora - Analyze Winning Hand
 ```bash
-java -jar mahjong-utils-cli-0.7.7-executable.jar hora <tiles> [options]
+mahjong-utils-cli.sh hora <tiles> [options]
 ```
 
 **Options**:
@@ -38,34 +48,17 @@ java -jar mahjong-utils-cli-0.7.7-executable.jar hora <tiles> [options]
 
 ### point - Convert Han/Hu to Points
 ```bash
-java -jar mahjong-utils-cli-0.7.7-executable.jar point <han> <hu> [--tsumo]
+mahjong-utils-cli.sh point <han> <hu> [--tsumo]
 ```
 
 **Output**: Parent and child points for given han/hu
 
-## Build Paths
+## How It Works
 
-**JVM JAR**: `~/.openclaw/workspace/mahjong-utils/mahjong-utils-cli/build/libs/mahjong-utils-cli-0.7.7-executable.jar`
+The wrapper script (`scripts/mahjong-utils-cli.sh`):
+1. Checks for existing binary (JVM JAR or Native executable)
+2. If not found, downloads latest release from GitHub
+3. Prefers JVM version if Java 17+ is available, otherwise Native
+4. Caches binary in `scripts/` directory for future use
 
-**Native**: `~/.openclaw/workspace/mahjong-utils/mahjong-utils-cli/build/bin/macosArm64/releaseExecutable/mahjong-utils-cli.kexe`
-
-**Build commands**:
-```bash
-cd ~/.openclaw/workspace/mahjong-utils
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)
-./gradlew :mahjong-utils-cli:executableJar  # JVM
-./gradlew :mahjong-utils-cli:linkReleaseExecutableMacosArm64  # Native
-```
-
-## Examples
-
-```bash
-# Shanten with furo
-java -jar mahjong-utils-cli-0.7.7-executable.jar shanten 1122z --furo 123m,456p,789s
-
-# Hora with full parameters
-java -jar mahjong-utils-cli-0.7.7-executable.jar hora 123m456p789s1122z --agari 2z --tsumo --dora 2 --self-wind E --round-wind E
-
-# Point calculation
-java -jar mahjong-utils-cli-0.7.7-executable.jar point 3 40 --tsumo
-```
+No Gradle build required for end users.
