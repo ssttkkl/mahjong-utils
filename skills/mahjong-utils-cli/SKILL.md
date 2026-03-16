@@ -31,6 +31,11 @@ mahjong-utils-cli.sh shanten <tiles> [--furo <furo>] [--lang <zh|en|ja>]
 - `z` = 字/Honor/字牌(ジハイ) (1-7: 东南西北白发中 / E-S-W-N-White-Green-Red / 東南西北白發中(トンナンシャーペーパイハクハツチュン))
 
 **Furo format**: `123m,456p,789s` (comma-separated)
+- Chi (吃/Chii/チー): `123m` (sequence)
+- Pon (碰/Pon/ポン): `111m` (triplet)
+- Minkan (明杠/Open Kan/明カン): `1111m` (open quad)
+- Kakan (加杠/Added Kan/加カン): `1111m` (added kan, same format as minkan)
+- Ankan (暗杠/Closed Kan/暗カン): `1111m` (closed quad, same format)
 
 **Output**: Shanten number, advance tiles, improvements (for tenpai)
 
