@@ -13,3 +13,13 @@ kotlin {
         }
     }
 }
+
+tasks.register<Jar>("executableJar") {
+    archiveClassifier.set("executable")
+    from(kotlin.jvm().compilations.getByName("main").output)
+    from(configurations.getByName("jvmRuntimeClasspath").map { if (it.isDirectory) it else zipTree(it) })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "mahjongutils.cli.MainKt"
+    }
+}
