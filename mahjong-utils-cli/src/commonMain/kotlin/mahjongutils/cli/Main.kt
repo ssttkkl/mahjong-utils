@@ -10,16 +10,25 @@ fun main(args: Array<String>) {
     if (args.isEmpty()) {
         println("Usage: mahjong-utils-cli <command> <tiles> [options]")
         println("Commands:")
-        println("  shanten <tiles> [--furo <furo>]")
-        println("  hora <tiles> [--agari <tile>] [--tsumo] [--dora <n>] [--self-wind <E|S|W|N>] [--round-wind <E|S|W|N>] [--furo <furo>]")
-        println("  point <han> <hu> [--tsumo] [--parent]")
-        println("Example: mahjong-utils-cli hora 123m456p789s1122z --agari 2z --tsumo --dora 2")
-        println("         mahjong-utils-cli hora 123m456p11z --furo 123m,456p --agari 1z")
-        println("         mahjong-utils-cli point 3 40 --tsumo")
+        println("  shanten <tiles> [--furo <furo>] [--lang <zh|en|ja>]")
+        println("  hora <tiles> [--agari <tile>] [--tsumo] [--dora <n>] [--self-wind <E|S|W|N>] [--round-wind <E|S|W|N>] [--furo <furo>] [--lang <zh|en|ja>]")
+        println("  point <han> <hu> [--tsumo] [--parent] [--lang <zh|en|ja>]")
+        println("Example: mahjong-utils-cli hora 123m456p789s1122z --agari 2z --tsumo --dora 2 --lang en")
         return
     }
     
     val command = args[0]
+    
+    // Parse global --lang option
+    val langIndex = args.indexOf("--lang")
+    if (langIndex != -1 && langIndex + 1 < args.size) {
+        Formatter.language = when (args[langIndex + 1].lowercase()) {
+            "zh" -> Language.ZH
+            "en" -> Language.EN
+            "ja" -> Language.JA
+            else -> Language.detect()
+        }
+    }
     
     try {
         when (command) {
@@ -132,9 +141,32 @@ fun handleHora(args: List<String>) {
     val result = hora(horaArgs)
     println(Formatter.formatHand(tiles, furo))
     println()
-    println("和牌张: $finalAgari")
-    println("${if (tsumo) "自摸" else "荣和"}")
-    if (dora > 0) println("宝牌: ${dora}枚")
+    
+    val lang = Formatter.language
+    val agariLabel = when (lang) {
+        Language.ZH -> "和牌张"
+        Language.EN -> "Winning tile"
+        Language.JA -> "和了牌"
+    }
+    val tsumoLabel = when (lang) {
+        Language.ZH -> "自摸"
+        Language.EN -> "Tsumo"
+        Language.JA -> "ツモ"
+    }
+    val ronLabel = when (lang) {
+        Language.ZH -> "荣和"
+        Language.EN -> "Ron"
+        Language.JA -> "ロン"
+    }
+    val doraLabel = when (lang) {
+        Language.ZH -> "宝牌"
+        Language.EN -> "Dora"
+        Language.JA -> "ドラ"
+    }
+    
+    println("$agariLabel: $finalAgari")
+    println(if (tsumo) tsumoLabel else ronLabel)
+    if (dora > 0) println("$doraLabel: $dora")
     println()
     
     Formatter.formatHoraResult(result)
@@ -174,18 +206,18 @@ fun handlePoint(args: List<String>) {
         }
     }
     
-    println("番数: ${han}番")
-    println("符数: ${hu}符")
+    println("${Messages.han(Formatter.language)}: $han")
+    println("${Messages.hu(Formatter.language)}: $hu")
     println()
     
     val parentPoint = mahjongutils.hanhu.getParentPointByHanHu(han, hu)
     val childPoint = mahjongutils.hanhu.getChildPointByHanHu(han, hu)
     
     if (tsumo) {
-        println("亲家自摸: ${parentPoint.tsumo}点")
-        println("子家自摸: 亲${childPoint.tsumoParent}点 子${childPoint.tsumoChild}点")
+        println("${Messages.parentTsumo(Formatter.language)}: ${parentPoint.tsumo}${Messages.points(Formatter.language)}")
+        println("${Messages.childTsumo(Formatter.language)}: ${Messages.parent(Formatter.language)}${childPoint.tsumoParent}${Messages.points(Formatter.language)} ${Messages.child(Formatter.language)}${childPoint.tsumoChild}${Messages.points(Formatter.language)}")
     } else {
-        println("亲家荣和: ${parentPoint.ron}点")
-        println("子家荣和: ${childPoint.ron}点")
+        println("${Messages.parentRon(Formatter.language)}: ${parentPoint.ron}${Messages.points(Formatter.language)}")
+        println("${Messages.childRon(Formatter.language)}: ${childPoint.ron}${Messages.points(Formatter.language)}")
     }
 }

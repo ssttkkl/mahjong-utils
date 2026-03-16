@@ -7,6 +7,8 @@ import mahjongutils.shanten.*
 import mahjongutils.hora.Hora
 
 object Formatter {
+    var language: Language = Language.detect()
+    
     fun formatTiles(tiles: List<Tile>): String = tiles.joinToString("")
     
     fun formatHand(tiles: List<Tile>, furo: List<Furo> = emptyList()): String {
@@ -26,9 +28,9 @@ object Formatter {
         val info = result.shantenInfo
         
         when (info.shantenNum) {
-            -1 -> println("和牌")
-            0 -> println("听牌")
-            else -> println("${info.shantenNum}向听")
+            -1 -> println(Messages.agari(language))
+            0 -> println(Messages.tenpai(language))
+            else -> println(Messages.shanten(info.shantenNum, language))
         }
         println()
         
@@ -40,7 +42,7 @@ object Formatter {
     
     private fun formatShantenWithoutGot(info: ShantenWithoutGot) {
         val advanceCount = info.advance.size * 4
-        println("进张 (${info.advanceNum}种${advanceCount}张):")
+        println("${Messages.advance(language)} (${info.advanceNum}${Messages.types(language)}${advanceCount}${Messages.tiles(language)}):")
         println(formatTiles(info.advance.sorted()))
         
         if (info.shantenNum == 1) {
@@ -48,7 +50,7 @@ object Formatter {
             if (goodShapeAdvance != null) {
                 val goodShapeCount = goodShapeAdvance.size * 4
                 println()
-                println("好型进张 (${info.goodShapeAdvanceNum}种${goodShapeCount}张):")
+                println("${Messages.goodShapeAdvance(language)} (${info.goodShapeAdvanceNum}${Messages.types(language)}${goodShapeCount}${Messages.tiles(language)}):")
                 println(formatTiles(goodShapeAdvance.sorted()))
             }
         }
@@ -57,7 +59,7 @@ object Formatter {
             val improvement = info.improvement
             if (improvement != null && improvement.isNotEmpty()) {
                 println()
-                println("改良张 (${info.improvementNum}种):")
+                println("${Messages.improvement(language)} (${info.improvementNum}${Messages.types(language)}):")
                 improvement.forEach { (tile, improvements) ->
                     println("  $tile -> ${improvements.map { "${it.discard}(${it.advanceNum})" }.joinToString(", ")}")
                 }
@@ -66,7 +68,7 @@ object Formatter {
             val goodShapeImprovement = info.goodShapeImprovement
             if (goodShapeImprovement != null && goodShapeImprovement.isNotEmpty()) {
                 println()
-                println("好型改良张 (${info.goodShapeImprovementNum}种):")
+                println("${Messages.goodShapeImprovement(language)} (${info.goodShapeImprovementNum}${Messages.types(language)}):")
                 goodShapeImprovement.forEach { (tile, improvements) ->
                     println("  $tile -> ${improvements.map { "${it.discard}(${it.advanceNum})" }.joinToString(", ")}")
                 }
@@ -75,27 +77,27 @@ object Formatter {
     }
     
     private fun formatShantenWithGot(info: ShantenWithGot) {
-        println("弃牌选择:")
+        println("${Messages.discardChoice(language)}:")
         info.discardToAdvance.forEach { (discard, advance) ->
             val advanceCount = advance.advance.size * 4
-            println("  打$discard: ${advance.advanceNum}种${advanceCount}张进张")
+            println("  ${Messages.discard(language)}$discard: ${advance.advanceNum}${Messages.types(language)}${advanceCount}${Messages.tiles(language)}${Messages.advance(language)}")
         }
     }
     
     fun formatHoraResult(result: Hora) {
-        println("役种:")
+        println("${Messages.yaku(language)}:")
         result.yaku.forEach { println("  - $it") }
         println()
-        println("番数: ${result.han}番")
-        println("符数: ${result.hu}符")
+        println("${Messages.han(language)}: ${result.han}")
+        println("${Messages.hu(language)}: ${result.hu}")
         println()
         
         if (result.tsumo) {
-            println("亲家自摸: ${result.parentPoint.tsumo}点")
-            println("子家自摸: 亲${result.childPoint.tsumoParent}点 子${result.childPoint.tsumoChild}点")
+            println("${Messages.parentTsumo(language)}: ${result.parentPoint.tsumo}${Messages.points(language)}")
+            println("${Messages.childTsumo(language)}: ${Messages.parent(language)}${result.childPoint.tsumoParent}${Messages.points(language)} ${Messages.child(language)}${result.childPoint.tsumoChild}${Messages.points(language)}")
         } else {
-            println("亲家荣和: ${result.parentPoint.ron}点")
-            println("子家荣和: ${result.childPoint.ron}点")
+            println("${Messages.parentRon(language)}: ${result.parentPoint.ron}${Messages.points(language)}")
+            println("${Messages.childRon(language)}: ${result.childPoint.ron}${Messages.points(language)}")
         }
     }
 }
@@ -129,3 +131,4 @@ object TileCodeParser {
         return code.split(",").map { Furo(it.trim()) }
     }
 }
+
