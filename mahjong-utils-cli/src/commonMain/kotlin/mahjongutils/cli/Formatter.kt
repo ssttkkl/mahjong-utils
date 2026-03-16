@@ -123,4 +123,9 @@ object TileCodeParser {
         }
         return tiles
     }
+    
+    fun parseFuro(code: String): List<Furo> {
+        if (code.isEmpty()) return emptyList()
+        return code.split(",").map { Furo(it.trim()) }
+    }
 }
