@@ -27,6 +27,7 @@ object Formatter {
     
     fun formatShantenResult(result: CommonShantenResult<*>) {
         val info = result.shantenInfo
+        val hand = result.hand
         
         when (info.shantenNum) {
             -1 -> println(messages.agari)
@@ -36,19 +37,40 @@ object Formatter {
         println()
         
         when (info) {
-            is ShantenWithoutGot -> formatShantenWithoutGot(info)
+            is ShantenWithoutGot -> formatShantenWithoutGot(info, hand.tiles, hand.furo)
             is ShantenWithGot -> formatShantenWithGot(info)
         }
     }
     
-    private fun formatShantenWithoutGot(info: ShantenWithoutGot) {
+    private fun formatShantenWithoutGot(info: ShantenWithoutGot, tiles: List<Tile>, furo: List<Furo>) {
         val advanceCount = info.advance.size * 4
         println("${messages.advance} (${info.advanceNum}${messages.types}${advanceCount}${messages.tiles}):")
         println(formatTiles(info.advance.sorted()))
         
+        // 对每种进张计算摸牌后的弃牌选择
+        if (info.advance.isNotEmpty()) {
+            println()
+            println("${messages.advanceDiscardChoice}:")
+            info.advance.sorted().forEach { advanceTile ->
+                // 构建摸牌后的手牌
+                val newTiles = tiles + advanceTile
+                val newArgs = CommonShantenArgs(tiles = newTiles, furo = furo)
+                val newResult = shanten(newArgs)
+                val newInfo = newResult.shantenInfo as? ShantenWithGot
+                
+                if (newInfo != null) {
+                    val bestDiscard = newInfo.discardToAdvance.maxByOrNull { it.value.advanceNum }
+                    if (bestDiscard != null) {
+                        val (discard, shantenInfo) = bestDiscard
+                        println("  摸$advanceTile${messages.discard}$discard: ${shantenInfo.advanceNum}${messages.types}")
+                    }
+                }
+            }
+        }
+        
         if (info.shantenNum == 1) {
             val goodShapeAdvance = info.goodShapeAdvance
-            if (goodShapeAdvance != null) {
+            if (goodShapeAdvance != null && goodShapeAdvance.isNotEmpty()) {
                 val goodShapeCount = goodShapeAdvance.size * 4
                 println()
                 println("${messages.goodShapeAdvance} (${info.goodShapeAdvanceNum}${messages.types}${goodShapeCount}${messages.tiles}):")
@@ -82,6 +104,7 @@ object Formatter {
         info.discardToAdvance.forEach { (discard, advance) ->
             val advanceCount = advance.advance.size * 4
             println("  ${messages.discard}$discard: ${advance.advanceNum}${messages.types}${advanceCount}${messages.tiles}${messages.advance}")
+            println("    ${messages.advanceTiles}: ${formatTiles(advance.advance.sorted())}")
         }
     }
     
@@ -142,6 +165,9 @@ object Formatter {
         // Pass
         info.pass?.let { pass ->
             println("$passLabel: ${messages.shanten(pass.shantenNum)}")
+            if (pass.advance.isNotEmpty()) {
+                println("    ${messages.advanceTiles}: ${formatTiles(pass.advance.sorted())}")
+            }
         }
         
         // Chi
@@ -150,6 +176,15 @@ object Formatter {
             println("$chiLabel:")
             info.chi.forEach { (tatsu, shanten) ->
                 println("  $tatsu: ${messages.shanten(shanten.shantenNum)}")
+                // Chi后需要弃牌，显示弃牌选择及进张
+                if (shanten.discardToAdvance.isNotEmpty()) {
+                    println("    ${messages.discardChoice}:")
+                    shanten.discardToAdvance.forEach { (discard, advance) ->
+                        val advanceCount = advance.advance.size * 4
+                        println("      ${messages.discard}$discard: ${advance.advanceNum}${messages.types}${advanceCount}${messages.tiles}")
+                        println("        ${messages.advanceTiles}: ${formatTiles(advance.advance.sorted())}")
+                    }
+                }
             }
         }
         
@@ -157,12 +192,24 @@ object Formatter {
         info.pon?.let { pon ->
             println()
             println("$ponLabel: ${messages.shanten(pon.shantenNum)}")
+            // Pon后需要弃牌，显示弃牌选择及进张
+            if (pon.discardToAdvance.isNotEmpty()) {
+                println("    ${messages.discardChoice}:")
+                pon.discardToAdvance.forEach { (discard, advance) ->
+                    val advanceCount = advance.advance.size * 4
+                    println("      ${messages.discard}$discard: ${advance.advanceNum}${messages.types}${advanceCount}${messages.tiles}")
+                    println("        ${messages.advanceTiles}: ${formatTiles(advance.advance.sorted())}")
+                }
+            }
         }
         
         // Minkan
         info.minkan?.let { minkan ->
             println()
             println("$minkanLabel: ${messages.shanten(minkan.shantenNum)}")
+            if (minkan.advance.isNotEmpty()) {
+                println("    ${messages.advanceTiles}: ${formatTiles(minkan.advance.sorted())}")
+            }
         }
     }
 }

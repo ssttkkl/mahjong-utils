@@ -22,6 +22,8 @@ interface Messages {
     val tenpai: String
     fun shanten(n: Int): String
     val advance: String
+    val advanceTiles: String
+    val advanceDiscardChoice: String
     val goodShapeAdvance: String
     val improvement: String
     val goodShapeImprovement: String
@@ -58,6 +60,8 @@ object ChineseMessages : Messages {
     override val tenpai = "听牌"
     override fun shanten(n: Int) = "${n}向听"
     override val advance = "进张"
+    override val advanceTiles = "进张牌"
+    override val advanceDiscardChoice = "进张后弃牌"
     override val goodShapeAdvance = "好型进张"
     override val improvement = "改良张"
     override val goodShapeImprovement = "好型改良张"
@@ -86,6 +90,8 @@ object EnglishMessages : Messages {
     override val tenpai = "Tenpai"
     override fun shanten(n: Int) = "$n-shanten"
     override val advance = "Advance"
+    override val advanceTiles = "Advance tiles"
+    override val advanceDiscardChoice = "After advance discard"
     override val goodShapeAdvance = "Good Shape Advance"
     override val improvement = "Improvement"
     override val goodShapeImprovement = "Good Shape Improvement"
@@ -114,6 +120,8 @@ object JapaneseMessages : Messages {
     override val tenpai = "聴牌"
     override fun shanten(n: Int) = "${n}向聴"
     override val advance = "有効牌"
+    override val advanceTiles = "有効牌"
+    override val advanceDiscardChoice = "有効牌後の打牌"
     override val goodShapeAdvance = "良形有効牌"
     override val improvement = "改良牌"
     override val goodShapeImprovement = "良形改良牌"
