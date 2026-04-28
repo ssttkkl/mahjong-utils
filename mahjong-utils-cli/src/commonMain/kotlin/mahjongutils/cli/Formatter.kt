@@ -218,7 +218,8 @@ object TileCodeParser {
     fun parse(code: String): List<Tile> {
         val tiles = mutableListOf<Tile>()
         var nums = mutableListOf<Int>()
-        
+        val invalidChars = mutableListOf<Char>()
+
         for (c in code) {
             when {
                 c.isDigit() -> nums.add(c.digitToInt())
@@ -233,8 +234,16 @@ object TileCodeParser {
                     nums.forEach { tiles.add(Tile.get(type, it)) }
                     nums.clear()
                 }
+                else -> invalidChars.add(c)
             }
         }
+
+        if (invalidChars.isNotEmpty()) {
+            val uniqueChars = invalidChars.distinct().joinToString("'") { "$it" }
+            println("Error: Invalid character '$uniqueChars' in tile code. Valid characters are digits and m/p/s/z.")
+            return emptyList()
+        }
+
         return tiles
     }
     
