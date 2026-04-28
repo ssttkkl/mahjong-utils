@@ -1,3 +1,9 @@
+<!--
+NOTE: This documentation may contain hardcoded version numbers (e.g., 0.7.7).
+When releasing a new version, search and replace all version references.
+Use X.Y.Z as a placeholder in examples to indicate version-specific paths.
+-->
+
 ---
 name: mahjong-utils-cli
 description: Command-line tools for Japanese Mahjong calculations including shanten analysis (with advance tiles and improvements), hora evaluation (yaku recognition, han/hu calculation), furo (meld) analysis, and han/hu to points conversion. Supports multi-step推演 (simulation) for deeper analysis - after calculating current shanten, you can simulate "discard X then draw Y" scenarios to explore optimal strategies. Note that local optimal choices (e.g., max advance tiles) may not be globally optimal due to tile flow, opponent discards, and hand development potential.
@@ -137,6 +143,17 @@ The wrapper script (`scripts/mahjong-utils-cli.sh`):
 4. Caches binary in `scripts/` directory for future use
 
 No Gradle build required for end users.
+
+## Build from Source
+
+To build the executable JAR locally:
+
+```bash
+./gradlew :mahjong-utils-cli:executableJar
+# Output: mahjong-utils-cli/build/libs/mahjong-utils-cli-X.Y.Z-executable.jar
+```
+
+Replace `X.Y.Z` with the actual version number from `gradle.properties`.
 
 ## Strategic Analysis Tips
 
