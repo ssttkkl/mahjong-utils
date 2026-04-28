@@ -33,6 +33,17 @@ For Python: We provide Python bindings - see [python-lib/README.md](python-lib/R
 
 For JavaScript/TypeScript: We provide JS/TS bindings - see [js-lib/README.md](js-lib/README.md)
 
+For CLI: We provide command-line tools - see [skills/mahjong-utils-cli/SKILL.md](skills/mahjong-utils-cli/SKILL.md)
+
+## Project Modules
+
+- **mahjong-utils**: Core library with shanten analysis, hora calculation, and point calculation
+- **mahjong-utils-cli**: Command-line interface with user-friendly tile code format
+- **mahjong-utils-entry**: Dynamic library entry point for cross-language integration
+- **mahjong-utils-webapi**: Web API server (Spring Boot)
+- **python-lib**: Python bindings
+- **js-lib**: JavaScript/TypeScript bindings
+
 ## Usage (Kotlin/Java)
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.ssttkkl/mahjong-utils)

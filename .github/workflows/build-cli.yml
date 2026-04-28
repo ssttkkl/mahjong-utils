@@ -1,0 +1,81 @@
+name: Build CLI
+
+on:
+  pull_request:
+    paths:
+      - 'mahjong-utils-cli/**'
+      - '.github/workflows/build-cli.yml'
+  release:
+    types: [published]
+
+jobs:
+  build-jvm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      - name: Build JVM JAR
+        run: ./gradlew :mahjong-utils-cli:executableJar
+      
+      - name: Upload JVM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mahjong-utils-cli-jvm
+          path: mahjong-utils-cli/build/libs/*-executable.jar
+
+  build-native:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            target: macosArm64
+          - os: macos-latest
+            target: macosX64
+          - os: ubuntu-latest
+            target: linuxX64
+          - os: ubuntu-latest
+            target: linuxArm64
+          - os: windows-latest
+            target: mingwX64
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      - name: Build Native executable
+        run: ./gradlew :mahjong-utils-cli:linkReleaseExecutable${{ matrix.target }}
+      
+      - name: Upload Native artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mahjong-utils-cli-${{ matrix.target }}
+          path: mahjong-utils-cli/build/bin/${{ matrix.target }}/releaseExecutable/*
+
+  release:
+    if: github.event_name == 'release'
+    needs: [build-jvm, build-native]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+      
+      - name: Upload to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            mahjong-utils-cli-jvm/*
+            mahjong-utils-cli-*/*
