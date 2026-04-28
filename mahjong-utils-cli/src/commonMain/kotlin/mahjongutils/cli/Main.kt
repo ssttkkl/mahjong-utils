@@ -49,8 +49,12 @@ fun handleShanten(args: List<String>) {
         println("Usage: shanten <tiles> [--furo <furo>]")
         return
     }
-    
+
     val tiles = TileCodeParser.parse(args[0])
+    if (tiles.isEmpty()) {
+        println("Error: Failed to parse tiles. Please provide valid tile notation (e.g., 123m456p789s1122z).")
+        return
+    }
     var furo = emptyList<Furo>()
     
     var i = 1
@@ -79,9 +83,16 @@ fun handleFuroChance(args: List<String>) {
         println("Usage: furo-chance <tiles> <chance-tile> [--no-chi]")
         return
     }
-    
+
     val tiles = TileCodeParser.parse(args[0])
-    val chanceTile = TileCodeParser.parse(args[1]).firstOrNull() ?: return
+    if (tiles.isEmpty()) {
+        println("Error: Failed to parse tiles. Please provide valid tile notation (e.g., 123m456p789s1122z).")
+        return
+    }
+    val chanceTile = TileCodeParser.parse(args[1]).firstOrNull() ?: run {
+        println("Error: Failed to parse chance tile. Please provide a valid single tile (e.g., 5m).")
+        return
+    }
     var allowChi = true
     
     var i = 2
@@ -115,6 +126,10 @@ fun handleHora(args: List<String>) {
     }
     
     val tiles = TileCodeParser.parse(args[0])
+    if (tiles.isEmpty()) {
+        println("Error: Failed to parse tiles. Please provide valid tile notation (e.g., 123m456p789s1122z).")
+        return
+    }
     var agari: Tile? = null
     var tsumo = false
     var dora = 0
@@ -163,7 +178,10 @@ fun handleHora(args: List<String>) {
         }
     }
     
-    val finalAgari = agari ?: tiles.lastOrNull() ?: return
+    val finalAgari = agari ?: tiles.lastOrNull() ?: run {
+        println("Error: Cannot determine winning tile (agari). Please specify with --agari or ensure hand has at least one tile.")
+        return
+    }
     val horaArgs = HoraArgs(
         tiles = tiles,
         furo = furo,
@@ -201,8 +219,14 @@ fun handlePoint(args: List<String>) {
         return
     }
     
-    val han = args[0].toIntOrNull() ?: return
-    val hu = args[1].toIntOrNull() ?: return
+    val han = args[0].toIntOrNull() ?: run {
+        println("Error: Invalid han value. Please provide a valid number.")
+        return
+    }
+    val hu = args[1].toIntOrNull() ?: run {
+        println("Error: Invalid hu value. Please provide a valid number.")
+        return
+    }
     var tsumo = false
     var parent = false
     
