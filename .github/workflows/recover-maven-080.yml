@@ -1,0 +1,72 @@
+name: Recover Maven 0.8.0
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: recover-maven-080
+  cancel-in-progress: false
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            task: publishAllPublicationsToSonatypeRepository
+          - os: ubuntu-latest
+            task: publishLinuxX64PublicationToSonatypeRepository
+          - os: windows-latest
+            task: publishMingwX64PublicationToSonatypeRepository
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tooling
+      - uses: actions/checkout@v4
+        with:
+          ref: 964f603761c91dd6b570c472675fcab12ca4897b
+          path: source
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tooling/.github/scripts/prepare-maven-recovery.py
+      - name: Build signed local Maven repository
+        shell: bash
+        working-directory: source
+        env:
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEYID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          SIGNING_SECRET_KEY_RING_FILE: secret_ring.gpg
+          SIGNING_SECRET_KEY_RING_BASE64: ${{ secrets.SIGNING_SECRET_KEY_RING_BASE64 }}
+          MAVEN_TASK: ${{ matrix.task }}
+        run: |
+          python -c 'import os,base64,pathlib; pathlib.Path("secret_ring.gpg").write_bytes(base64.b64decode(os.environ["SIGNING_SECRET_KEY_RING_BASE64"]))'
+          ./gradlew "$MAVEN_TASK"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maven-${{ matrix.os }}
+          path: source/build/central-recovery/
+          if-no-files-found: error
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: maven-*
+          path: artifacts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check coordinates and publish Portal bundle
+        env:
+          CENTRAL_PORTAL_USERNAME: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+          CENTRAL_PORTAL_PASSWORD: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
+        run: python .github/scripts/publish-maven-recovery.py
