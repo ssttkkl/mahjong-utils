@@ -57,11 +57,17 @@ jobs:
       - name: Build Native executable
         run: ./gradlew :mahjong-utils-cli:linkReleaseExecutable${{ matrix.target }}
       
+      - name: Package Native executable
+        shell: bash
+        run: |
+          mkdir -p dist
+          tar -czf dist/mahjong-utils-cli-${{ matrix.target }}.tar.gz -C mahjong-utils-cli/build/bin/${{ matrix.target }}/releaseExecutable .
+
       - name: Upload Native artifact
         uses: actions/upload-artifact@v4
         with:
           name: mahjong-utils-cli-${{ matrix.target }}
-          path: mahjong-utils-cli/build/bin/${{ matrix.target }}/releaseExecutable/*
+          path: dist/*.tar.gz
 
   release:
     if: github.event_name == 'release'

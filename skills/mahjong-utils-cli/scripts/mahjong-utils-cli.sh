@@ -69,13 +69,22 @@ download_binary() {
     echo "Downloading mahjong-utils-cli $version..." >&2
     
     if [[ "$use_jvm" == "true" ]]; then
-        local url="https://github.com/$REPO/releases/download/$version/mahjong-utils-cli-jvm/mahjong-utils-cli-${version#v}-executable.jar"
+        local url="https://github.com/$REPO/releases/download/$version/mahjong-utils-cli-${version#v}-executable.jar"
         curl -fL -o "$SCRIPT_DIR/mahjong-utils-cli.jar" "$url" && echo "$SCRIPT_DIR/mahjong-utils-cli.jar"
     else
         local filename="mahjong-utils-cli.kexe"
         [[ "$platform" == "mingwX64" ]] && filename="mahjong-utils-cli.exe"
-        local url="https://github.com/$REPO/releases/download/$version/mahjong-utils-cli-$platform/$filename"
-        curl -fL -o "$SCRIPT_DIR/mahjong-utils-cli" "$url" && chmod +x "$SCRIPT_DIR/mahjong-utils-cli" && echo "$SCRIPT_DIR/mahjong-utils-cli"
+        local url="https://github.com/$REPO/releases/download/$version/mahjong-utils-cli-$platform.tar.gz"
+        local download_dir
+        download_dir=$(mktemp -d) || return 1
+        if curl -fL -o "$download_dir/archive.tar.gz" "$url" &&
+            tar -xzf "$download_dir/archive.tar.gz" -C "$download_dir" &&
+            cp "$download_dir/$filename" "$SCRIPT_DIR/mahjong-utils-cli"; then
+            chmod +x "$SCRIPT_DIR/mahjong-utils-cli"
+            echo "$SCRIPT_DIR/mahjong-utils-cli"
+        else
+            return 1
+        fi
     fi
 }
 
@@ -93,7 +102,7 @@ main() {
     
     # 2. Check local build
     if [[ -z "$binary" ]]; then
-        binary=$(find_local_build "$platform")
+        binary=$(find_local_build "$platform") || true
     fi
     
     # 3. Download from release

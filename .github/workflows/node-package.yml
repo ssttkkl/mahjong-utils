@@ -39,4 +39,4 @@ jobs:
         working-directory: js-lib
         if: ${{ github.event_name == 'release' }}
         env:
-          npm-auth-token: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
