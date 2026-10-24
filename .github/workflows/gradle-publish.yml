@@ -21,11 +21,11 @@ jobs:
       - id: create
         uses: nexus-actions/create-nexus-staging-repo@main
         with:
-          username: ${{ secrets.OSSRH_USERNAME }}
-          password: ${{ secrets.OSSRH_PASSWORD }}
-          staging_profile_id: ${{ secrets.OSSRH_PROFILE_ID }}
+          username: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+          password: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
+          staging_profile_id: io.github.ssttkkl
           description: ${{ github.repository }}/gradle-publish#${{ github.run_number }}
-          base_url: https://s01.oss.sonatype.org/service/local/
+          base_url: https://ossrh-staging-api.central.sonatype.com/service/local/
 
   publish:
     strategy:
@@ -39,8 +39,8 @@ jobs:
       packages: write
 
     env:
-      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-      OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      CENTRAL_PORTAL_USERNAME: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+      CENTRAL_PORTAL_PASSWORD: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
       OSSRH_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository_id }}
       SIGNING_KEY_ID: ${{ secrets.SIGNING_KEYID }}
       SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
@@ -130,15 +130,15 @@ jobs:
         if: ${{ needs.publish.result != 'success' || needs.publish_npm.result != 'success' }}
         uses: nexus-actions/drop-nexus-staging-repo@main
         with:
-          username: ${{ secrets.OSSRH_USERNAME }}
-          password: ${{ secrets.OSSRH_PASSWORD }}
+          username: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+          password: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
           staging_repository_id: ${{ needs.create_staging_repository.outputs.repository_id }}
-          base_url: https://s01.oss.sonatype.org/service/local/
+          base_url: https://ossrh-staging-api.central.sonatype.com/service/local/
       - name: Release
         if: ${{ needs.publish.result == 'success' && needs.publish_npm.result == 'success' }}
         uses: nexus-actions/release-nexus-staging-repo@main
         with:
-          username: ${{ secrets.OSSRH_USERNAME }}
-          password: ${{ secrets.OSSRH_PASSWORD }}
+          username: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+          password: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
           staging_repository_id: ${{ needs.create_staging_repository.outputs.repository_id }}
-          base_url: https://s01.oss.sonatype.org/service/local/
+          base_url: https://ossrh-staging-api.central.sonatype.com/service/local/
