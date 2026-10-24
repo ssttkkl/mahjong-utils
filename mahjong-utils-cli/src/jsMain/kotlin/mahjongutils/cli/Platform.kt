@@ -1,3 +1,4 @@
 package mahjongutils.cli
 
-actual fun getEnv(name: String): String? = js("process.env[name]") as? String
+actual fun getEnv(name: String): String? =
+    js("typeof process !== 'undefined' && process.env ? process.env[name] : null") as? String
