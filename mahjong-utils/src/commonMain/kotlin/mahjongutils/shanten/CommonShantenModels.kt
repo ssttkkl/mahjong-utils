@@ -73,6 +73,10 @@ data class ShantenWithoutGot(
      * 仅当听牌时进行计算
      */
     @EncodeDefault val goodShapeImprovementNum: Int? = if (shantenNum == 0) 0 else null,
+    /**
+     * 结构向听数，不将自己手牌和副露中已用满的和牌张排除在外。
+     */
+    @EncodeDefault override val structuralShantenNum: Int = shantenNum,
 ) : CommonShanten
 
 /**
@@ -89,7 +93,11 @@ data class ShantenWithGot(
     /**
      * 每种暗杠后的向听信息
      */
-    @EncodeDefault val ankanToAdvance: Map<Tile, ShantenWithoutGot> = emptyMap()
+    @EncodeDefault val ankanToAdvance: Map<Tile, ShantenWithoutGot> = emptyMap(),
+    /**
+     * 结构向听数，不将自己手牌和副露中已用满的和牌张排除在外。
+     */
+    @EncodeDefault override val structuralShantenNum: Int = shantenNum,
 ) : CommonShanten
 
 val CommonShanten.asWithoutGot: ShantenWithoutGot

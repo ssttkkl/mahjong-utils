@@ -1,7 +1,10 @@
 import { type Tile, type Tatsu } from '../../models'
 
 interface _ShantenInfo {
+  /** Effective shanten, excluding waits that require a fifth copy in your hand or own melds. */
   shantenNum: number
+  /** Shape-only shanten, ignoring whether a wait requires a fifth copy in your hand or own melds. */
+  structuralShantenNum: number
 }
 
 export interface Improvement {

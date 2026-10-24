@@ -103,6 +103,14 @@ print(shantenInfo.discardToAdvance)
 */
 ```
 
+`shantenNum` excludes a wait that would require a fifth copy of a tile already held in your hand or own melds. `structuralShantenNum` reports the shape-only count. The analysis does not account for tiles visible in other players' hands, melds, or discards.
+
+```kotlin
+val result = shanten(Tile.parseTiles("111z222z333z4444z"))
+print(result.shantenInfo.shantenNum)  // 1
+print(result.shantenInfo.structuralShantenNum)  // 0
+```
+
 ### Winning Hand Analysis
 
 - Winning Hand Analysis: [hora](docs/mahjong-utils/mahjongutils.hora/hora.md)

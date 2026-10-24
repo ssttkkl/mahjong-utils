@@ -71,7 +71,11 @@ internal fun <T : CommonShanten> T.fillNumByRemaining(remaining: IntArray): T {
 
         is ShantenWithGot -> {
             copy(
-                discardToAdvance = discardToAdvance.mapValues { (_, v) -> v.fillNumByRemaining(remaining) },
+                discardToAdvance = discardToAdvance.mapValues { (discard, v) ->
+                    val remainingAfterDiscard = remaining.copyOf()
+                    remainingAfterDiscard[discard.code] += 1
+                    v.fillNumByRemaining(remainingAfterDiscard)
+                },
                 ankanToAdvance = ankanToAdvance.mapValues { (_, v) -> v.fillNumByRemaining(remaining) },
             ) as T
         }

@@ -192,22 +192,26 @@ private fun handleRegularShantenWithoutGot(
     val remaining = getRemainingFromTileCount(tilesCount)
 
     val advance = bestPatterns.flatMap { it.calcAdvance() }.filter { remaining[it.code] > 0 }.toSet()
+    val shantenNum = if (bestShanten == 0 && advance.isEmpty()) 1 else bestShanten
 
     // 一向听时计算好型进张
     val goodShape = if (calcGoodShapeAdvance && bestShanten == 1) {
         getGoodShapeAdvance(tiles, furo, remaining, advance)
+    } else if (bestShanten == 0 && shantenNum == 1) {
+        emptySet()
     } else {
         null
     }
 
     var shanten = ShantenWithoutGot(
-        shantenNum = bestShanten,
+        shantenNum = shantenNum,
         advance = advance,
-        goodShapeAdvance = goodShape
+        goodShapeAdvance = goodShape,
+        structuralShantenNum = bestShanten,
     )
 
     // 听牌时计算改良张
-    if (bestShanten == 0) {
+    if (shantenNum == 0) {
         shanten = if (calcImprovement) {
             val advanceNum = advance.sumOf { remaining[it.code] }
             val tryAllTile = bestPatterns.any { it.remaining.isNotEmpty() }  // 如果有单吊听牌就计算换听
@@ -249,7 +253,9 @@ private fun handleRegularShantenWithGot(
                             pat.remaining.slice(i + 1 until pat.remaining.size)
                 )
 
-                val advance = patAfterDiscard.calcAdvance().filter { tilesCount[it.code] < 4 }
+                val advance = patAfterDiscard.calcAdvance().filter {
+                    tilesCount[it.code] - (if (it == discard) 1 else 0) < 4
+                }
                 if (!discardToAdvance.containsKey(discard)) {
                     discardToAdvance[discard] = advance.toMutableSet()
                 } else {
@@ -259,21 +265,27 @@ private fun handleRegularShantenWithGot(
         }
 
         for ((discard, advance) in discardToAdvance) {
+            val structuralShantenNum = bestShanten
+            val shantenNum = if (structuralShantenNum == 0 && advance.isEmpty()) 1 else structuralShantenNum
+
             // 一向听时计算好型进张
-            val goodShape = if (calcGoodShapeAdvance && bestShanten == 1) {
+            val goodShape = if (calcGoodShapeAdvance && structuralShantenNum == 1) {
                 getGoodShapeAdvance(tiles - discard, furo, remaining, advance)
+            } else if (structuralShantenNum == 0 && shantenNum == 1) {
+                emptySet()
             } else {
                 null
             }
 
             var shanten = ShantenWithoutGot(
-                shantenNum = bestShanten,
+                shantenNum = shantenNum,
                 advance = advance,
-                goodShapeAdvance = goodShape
+                goodShapeAdvance = goodShape,
+                structuralShantenNum = structuralShantenNum,
             )
 
             // 听牌时计算改良张
-            if (bestShanten == 0) {
+            if (shantenNum == 0) {
                 shanten = if (calcImprovement) {
                     val advanceNum = advance.sumOf { remaining[it.code] }
                     val tryAllTile = bestPatterns.any { it.remaining.any { it != discard } }  // 如果有单吊听牌就计算换听
@@ -309,6 +321,12 @@ private fun handleRegularShantenWithGot(
         }
     }
 
+    val effectiveBestShanten = if (bestShanten == -1) {
+        -1
+    } else {
+        discardToShanten.values.minOfOrNull { it.shantenNum } ?: bestShanten
+    }
+
     // 最后计算暗杠
     var ankanToAdvance: Map<Tile, ShantenWithoutGot>? = null
     if (allowAnkan) {
@@ -327,14 +345,15 @@ private fun handleRegularShantenWithGot(
         }
 
         if (bestShantenOnly) {
-            ankanToAdvance = ankanToAdvance.filterValues { it.shantenNum == bestShanten }
+            ankanToAdvance = ankanToAdvance.filterValues { it.shantenNum == effectiveBestShanten }
         }
     }
 
     val shantenInfo = ShantenWithGot(
-        shantenNum = bestShanten,
+        shantenNum = effectiveBestShanten,
         discardToAdvance = discardToShanten,
-        ankanToAdvance = ankanToAdvance ?: emptyMap()
+        ankanToAdvance = ankanToAdvance ?: emptyMap(),
+        structuralShantenNum = bestShanten,
     )
     return Pair(shantenInfo, bestPatterns)
 }
