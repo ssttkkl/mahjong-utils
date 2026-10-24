@@ -2,6 +2,9 @@ package mahjongutils.shanten
 
 import mahjongutils.models.Tile
 import mahjongutils.models.Pon
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -287,6 +290,23 @@ class TestShanten {
         assertEquals(0, fourteenTileResult.structuralShantenNum)
         assertTrue(fourteenTileResult.discardToAdvance.values.any { it.structuralShantenNum == 0 })
         assertTrue(fourteenTileResult.discardToAdvance.values.all { it.shantenNum > 0 })
+    }
+
+    @Test
+    fun testStructuralShantenIsSerializedEvenWhenDifferentFromShanten() {
+        val shantenInfo = ShantenWithoutGot(
+            shantenNum = 1,
+            structuralShantenNum = 0,
+            advance = emptySet(),
+            advanceNum = 0,
+        )
+
+        val serialized = Json.encodeToString(ShantenWithoutGot.serializer(), shantenInfo)
+        assertTrue(serialized.contains("\"structuralShantenNum\":0"))
+        assertEquals(
+            0,
+            Json.decodeFromString(ShantenWithoutGot.serializer(), serialized).structuralShantenNum,
+        )
     }
 
     @Test
