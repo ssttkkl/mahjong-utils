@@ -8,7 +8,7 @@ import urllib.request
 
 
 def request(url, credential):
-    req = urllib.request.Request(url, headers={'Authorization': credential, 'Accept': 'application/json'})
+    req = urllib.request.Request(url, data=b'' if '/publisher/status?' in url else None, headers={'Authorization': credential, 'Accept': 'application/json'})
     try:
         with urllib.request.urlopen(req, timeout=30) as response:
             return response.status, json.load(response)
@@ -44,6 +44,21 @@ def maven():
     if not username or not password:
         print('Maven: secret missing'); return
     auth = 'Bearer ' + base64.b64encode((username + ':' + password).encode()).decode()
+    deployment = os.environ.get('CENTRAL_DEPLOYMENT_ID', '')
+    if deployment:
+        import uuid
+        uuid.UUID(deployment)
+        status, data = request('https://central.sonatype.com/api/v1/publisher/status?id=' + deployment, auth)
+        print('Central validation HTTP:', status)
+        if isinstance(data, dict):
+            print('Central state:', data.get('deploymentState') if data.get('deploymentState') in ('FAILED','PUBLISHED','VALIDATING','PENDING','PUBLISHING','VALIDATED') else 'unknown')
+            errors = data.get('errors', {})
+            messages = sorted(set(str(message) for values in errors.values() for message in (values if isinstance(values,list) else [values]))) if isinstance(errors,dict) else []
+            for message in messages:
+                for secret in (username, password, auth, auth.removeprefix('Bearer ')):
+                    message = message.replace(secret, '[redacted]')
+                print('Central validation error:', message[:2000])
+        return
     status, data = request('https://ossrh-staging-api.central.sonatype.com/manual/search/repositories?ip=any&profile_id=io.github.ssttkkl', auth)
     print('Maven staging search HTTP:', status)
     repositories = data.get('repositories') if isinstance(data, dict) else None
@@ -59,5 +74,6 @@ def maven():
 
 
 if __name__ == '__main__':
-    npm()
+    if not os.environ.get('CENTRAL_DEPLOYMENT_ID'):
+        npm()
     maven()

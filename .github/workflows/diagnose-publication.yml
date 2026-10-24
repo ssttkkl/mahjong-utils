@@ -1,6 +1,11 @@
 name: Diagnose publication access
 on:
   workflow_dispatch:
+    inputs:
+      central_deployment_id:
+        description: Optional Portal deployment ID for Maven-only validation diagnosis
+        type: string
+        default: ''
 permissions:
   contents: read
 jobs:
@@ -14,6 +19,7 @@ jobs:
           python-version: '3.12'
       - name: Read-only npm and Central status
         env:
+          CENTRAL_DEPLOYMENT_ID: ${{ inputs.central_deployment_id }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           CENTRAL_PORTAL_USERNAME: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
           CENTRAL_PORTAL_PASSWORD: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
