@@ -170,10 +170,13 @@ internal fun CalcContext.furoChanceShanten(
         }
 
         var shantenNum: Int
+        var structuralShantenNum: Int
         if (canRon) {
             shantenNum = -1
+            structuralShantenNum = -1
         } else {
             shantenNum = pass.shantenNum
+            structuralShantenNum = pass.structuralShantenNum
             chi.minOfOrNull { it.value.shantenNum }?.let {
                 shantenNum = min(shantenNum, it)
             }
@@ -182,6 +185,16 @@ internal fun CalcContext.furoChanceShanten(
             }
             minkan?.shantenNum?.let {
                 shantenNum = min(shantenNum, it)
+            }
+
+            chi.minOfOrNull { it.value.structuralShantenNum }?.let {
+                structuralShantenNum = min(structuralShantenNum, it)
+            }
+            pon?.structuralShantenNum?.let {
+                structuralShantenNum = min(structuralShantenNum, it)
+            }
+            minkan?.structuralShantenNum?.let {
+                structuralShantenNum = min(structuralShantenNum, it)
             }
         }
 
@@ -193,12 +206,16 @@ internal fun CalcContext.furoChanceShanten(
 
             FuroChanceShantenResult(
                 hand = passShanten.hand,
-                shantenInfo = ShantenWithFuroChance(shantenNum, canRon, pass_, chi_, pon_, minkan_)
+                shantenInfo = ShantenWithFuroChance(
+                    shantenNum, canRon, pass_, chi_, pon_, minkan_, structuralShantenNum
+                )
             )
         } else {
             FuroChanceShantenResult(
                 hand = passShanten.hand,
-                shantenInfo = ShantenWithFuroChance(shantenNum, canRon, pass, chi, pon, minkan)
+                shantenInfo = ShantenWithFuroChance(
+                    shantenNum, canRon, pass, chi, pon, minkan, structuralShantenNum
+                )
             )
         }
     }

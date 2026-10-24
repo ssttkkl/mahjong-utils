@@ -105,6 +105,13 @@ internal fun CalcContext.shanten(
             ),
             kokushi.shantenInfo.shantenNum
         )
+        val structuralShantenNum = min(
+            min(
+                regular.shantenInfo.structuralShantenNum,
+                chitoi.shantenInfo.structuralShantenNum
+            ),
+            kokushi.shantenInfo.structuralShantenNum
+        )
         val patterns = ArrayList<CommonHandPattern>()
 
         var shantenInfo = if (!withGot) {
@@ -118,6 +125,7 @@ internal fun CalcContext.shanten(
             ShantenWithoutGot(
                 shantenNum, advance,
                 goodShapeAdvance = if (shantenNum == 1) goodShapeAdvance else null,
+                structuralShantenNum = structuralShantenNum,
                 improvement = (regular.shantenInfo.asWithoutGot).improvement
                     ?: (if (shantenNum == 0) emptyMap() else null),
                 goodShapeImprovement = (regular.shantenInfo.asWithoutGot).goodShapeImprovement
@@ -132,7 +140,8 @@ internal fun CalcContext.shanten(
 
             ShantenWithGot(
                 shantenNum, discardToAdvance,
-                ankanToAdvance = (regular.shantenInfo.asWithGot).ankanToAdvance
+                ankanToAdvance = (regular.shantenInfo.asWithGot).ankanToAdvance,
+                structuralShantenNum = structuralShantenNum,
             )
         }
 
@@ -178,11 +187,18 @@ private fun <S : CommonShanten> mergeIntoWithGot(
     for ((discard, shantenAfterDiscard) in shantenInfo.discardToAdvance) {
         if (!bestShantenOnly || shantenAfterDiscard.shantenNum == targetShantenNum) {
             val oldShantenAfterDiscard = discardToAdvance[discard]
+            val structuralShantenNum = minOf(
+                oldShantenAfterDiscard?.structuralShantenNum ?: Int.MAX_VALUE,
+                shantenAfterDiscard.structuralShantenNum
+            )
             if (oldShantenAfterDiscard == null || oldShantenAfterDiscard.shantenNum > shantenAfterDiscard.shantenNum) {
-                discardToAdvance[discard] = shantenAfterDiscard
+                discardToAdvance[discard] = shantenAfterDiscard.copy(
+                    structuralShantenNum = structuralShantenNum
+                )
             } else if (oldShantenAfterDiscard.shantenNum == shantenAfterDiscard.shantenNum) {
                 discardToAdvance[discard] = oldShantenAfterDiscard.copy(
                     advance = oldShantenAfterDiscard.advance + shantenAfterDiscard.advance,
+                    structuralShantenNum = structuralShantenNum,
                     goodShapeAdvance = shantenAfterDiscard.goodShapeAdvance?.let {
                         oldShantenAfterDiscard.goodShapeAdvance?.plus(it)
                     }

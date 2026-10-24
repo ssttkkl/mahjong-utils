@@ -101,6 +101,14 @@ print(shantenInfo.discardToAdvance)
 */
 ```
 
+`shantenNum` 会排除需要从自己手牌或副露中凑出第五张的等待；`structuralShantenNum` 则只按牌型结构计算。由于接口不接收他家手牌、副露和牌河，这两项都不会根据他家已见牌调整。
+
+```kotlin
+val result = shanten(Tile.parseTiles("111z222z333z4444z"))
+print(result.shantenInfo.shantenNum)  // 1
+print(result.shantenInfo.structuralShantenNum)  // 0
+```
+
 ### 和牌分析
 
 - 和牌分析：[hora](docs/mahjong-utils/mahjongutils.hora/hora.md)

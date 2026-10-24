@@ -31,6 +31,7 @@ export const encodeImprovement: Encoder<Improvement> = (data) => {
 export const decodeShantenWithoutGot: Decoder<ShantenWithoutGot> = (raw) => {
   return {
     shantenNum: raw.shantenNum,
+    structuralShantenNum: raw.structuralShantenNum ?? raw.shantenNum,
     advance: raw.advance.map(decodeTile),
     advanceNum: raw.advanceNum,
     goodShapeAdvance: raw.goodShapeAdvance?.map(decodeTile) ?? null,
@@ -55,6 +56,7 @@ export const decodeShantenWithoutGot: Decoder<ShantenWithoutGot> = (raw) => {
 export const encodeShantenWithoutGot: Encoder<ShantenWithoutGot> = (data) => {
   return {
     shantenNum: data.shantenNum,
+    structuralShantenNum: data.structuralShantenNum,
     advance: data.advance.map(encodeTile),
     advanceNum: data.advanceNum,
     goodShapeAdvance: data.goodShapeAdvance?.map(encodeTile),
@@ -79,6 +81,7 @@ export const encodeShantenWithoutGot: Encoder<ShantenWithoutGot> = (data) => {
 export const decodeShantenWithGot: Decoder<ShantenWithGot> = (raw) => {
   return {
     shantenNum: raw.shantenNum,
+    structuralShantenNum: raw.structuralShantenNum ?? raw.shantenNum,
     discardToAdvance: objToMap(raw.discardToAdvance, {
       keyMapper: decodeTile,
       valueMapper: decodeShantenWithoutGot
@@ -93,6 +96,7 @@ export const decodeShantenWithGot: Decoder<ShantenWithGot> = (raw) => {
 export const encodeShantenWithGot: Encoder<ShantenWithGot> = (data) => {
   return {
     shantenNum: data.shantenNum,
+    structuralShantenNum: data.structuralShantenNum,
     discardToAdvance: mapToObj(data.discardToAdvance, {
       keyMapper: encodeTile,
       valueMapper: encodeShantenWithoutGot
@@ -139,6 +143,7 @@ export const encodeCommonShantenInfo: Encoder<AbstractCommonShantenInfo> = (data
 export const decodeShantenWithFuroChance: Decoder<ShantenWithFuroChance> = (raw) => {
   return {
     shantenNum: raw.shantenNum,
+    structuralShantenNum: raw.structuralShantenNum ?? raw.shantenNum,
     pass: raw.pass !== null ? decodeShantenWithoutGot(raw.pass) : null,
     chi: Object.entries(raw.chi).map(([key, value]) => [decodeTatsu(key), decodeShantenWithGot(value)]),
     pon: raw.pon !== null ? decodeShantenWithGot(raw.pon) : null,
@@ -149,6 +154,7 @@ export const decodeShantenWithFuroChance: Decoder<ShantenWithFuroChance> = (raw)
 export const encodeShantenWithFuroChance: Encoder<ShantenWithFuroChance> = (data) => {
   return {
     shantenNum: data.shantenNum,
+    structuralShantenNum: data.structuralShantenNum,
     pass: data.pass !== null ? encodeShantenWithoutGot(data.pass) : null,
     chi: Object.fromEntries(data.chi.map(([tatsu, shanten]) => [encodeTatsu(tatsu), encodeShantenWithGot(shanten)])),
     pon: data.pon !== null ? encodeShantenWithGot(data.pon) : null,
