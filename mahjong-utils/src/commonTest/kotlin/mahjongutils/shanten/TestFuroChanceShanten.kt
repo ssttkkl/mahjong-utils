@@ -26,19 +26,10 @@ class TestFuroChanceShanten {
                 shantenNum = 0,
                 discardToAdvance = mapOf(
                     Tile.get("8m") to ShantenWithoutGot(
-                        shantenNum = 0,
+                        shantenNum = 1,
                         advance = setOf(),
                         advanceNum = 0,
-                        improvement = Tile.allExcludeAkaDora.filter { it != Tile.get("9m") }.associateWith {
-                            listOf(
-                                Improvement(
-                                    discard = Tile.get("9m"),
-                                    advance = setOf(it),
-                                    advanceNum = if (it == Tile.get("8m")) 2 else 3
-                                )
-                            )
-                        },
-                        improvementNum = 131,
+                        structuralShantenNum = 0,
                     ),
                     Tile.get("9m") to ShantenWithoutGot(
                         shantenNum = 0,

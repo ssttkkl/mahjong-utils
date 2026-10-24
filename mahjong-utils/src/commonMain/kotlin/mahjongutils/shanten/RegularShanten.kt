@@ -253,9 +253,9 @@ private fun handleRegularShantenWithGot(
                             pat.remaining.slice(i + 1 until pat.remaining.size)
                 )
 
-                val advance = patAfterDiscard.calcAdvance().filter {
-                    tilesCount[it.code] - (if (it == discard) 1 else 0) < 4
-                }
+                // The discard stays a known tile in the player's river, so do
+                // not make it available again when filtering fifth-copy waits.
+                val advance = patAfterDiscard.calcAdvance().filter { tilesCount[it.code] < 4 }
                 if (!discardToAdvance.containsKey(discard)) {
                     discardToAdvance[discard] = advance.toMutableSet()
                 } else {
