@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import subprocess
+import time
 import urllib.error
 import urllib.request
 
@@ -30,6 +31,14 @@ for name, directory in packages:
     except urllib.error.HTTPError as e:
         if e.code!=404: raise
     subprocess.run(['npm','publish',str(tarball),'--provenance','--access','public'],cwd=directory,check=True)
-    with urllib.request.urlopen('https://registry.npmjs.org/'+name+'/0.8.0',timeout=30) as response:
-        assert json.load(response)['version']=='0.8.0'
+    for attempt in range(60):
+        try:
+            with urllib.request.urlopen('https://registry.npmjs.org/'+name+'/0.8.0',timeout=30) as response:
+                assert json.load(response)['version']=='0.8.0'
+                break
+        except urllib.error.HTTPError as error:
+            if error.code != 404: raise
+            time.sleep(10)
+    else:
+        raise SystemExit('Publish accepted but registry propagation pending; do not republish '+name)
     print(name,'0.8.0 registry verified',flush=True)
