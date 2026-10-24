@@ -25,13 +25,15 @@ class KmpExeConventionPlugin : Plugin<Project> {
         configure<KotlinMultiplatformExtension> {
             jvm {
                 mainRun {
-                    mainClass.set("MainKt")
+                    mainClass.set("mahjongutils.cli.MainKt")
                 }
             }
 
             if (enableNative) {
                 targets.withType<KotlinNativeTarget>().configureEach {
-                    binaries.executable()
+                    binaries.executable {
+                        entryPoint = "mahjongutils.cli.main"
+                    }
                 }
             }
             if (enableJs) {

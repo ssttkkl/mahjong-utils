@@ -40,8 +40,8 @@ class MavenPublishConventionPlugin : Plugin<Project> {
             extra["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
             extra["signing.password"] = System.getenv("SIGNING_PASSWORD")
             extra["signing.secretKeyRingFile"] = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
-            extra["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
-            extra["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
+            extra["ossrhUsername"] = System.getenv("CENTRAL_PORTAL_USERNAME")
+            extra["ossrhPassword"] = System.getenv("CENTRAL_PORTAL_PASSWORD")
             extra["ossrhRepositoryId"] = System.getenv("OSSRH_REPOSITORY_ID")
             extra["gprUsername"] = System.getenv("GPR_USERNAME")
             extra["gprToken"] = System.getenv("GPR_TOKEN")
@@ -67,11 +67,11 @@ class MavenPublishConventionPlugin : Plugin<Project> {
                     val repositoryId = extra["ossrhRepositoryId"]?.toString()
                     val url =
                         if (version.toString().endsWith("SNAPSHOT"))
-                            "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                            "https://central.sonatype.com/repository/maven-snapshots/"
                         else if (repositoryId != null)
-                            "https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/"
+                            "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/${repositoryId}/"
                         else
-                            "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                            "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
                     setUrl(url)
                     credentials {
                         username = getExtraString("ossrhUsername")
