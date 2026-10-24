@@ -43,8 +43,8 @@ object Formatter {
     }
     
     private fun formatShantenWithoutGot(info: ShantenWithoutGot, tiles: List<Tile>, furo: List<Furo>) {
-        val advanceCount = info.advance.size * 4
-        println("${messages.advance} (${info.advanceNum}${messages.types}${advanceCount}${messages.tiles}):")
+        val advanceCount = info.advanceNum
+        println("${messages.advance} (${info.advance.size}${messages.types}${advanceCount}${messages.tiles}):")
         println(formatTiles(info.advance.sorted()))
         
         // 对每种进张计算摸牌后的弃牌选择
@@ -62,7 +62,7 @@ object Formatter {
                     val bestDiscard = newInfo.discardToAdvance.maxByOrNull { it.value.advanceNum }
                     if (bestDiscard != null) {
                         val (discard, shantenInfo) = bestDiscard
-                        println("  摸$advanceTile${messages.discard}$discard: ${shantenInfo.advanceNum}${messages.types}")
+                        println("  摸$advanceTile${messages.discard}$discard: ${shantenInfo.advanceNum}${messages.tiles}")
                     }
                 }
             }
@@ -71,9 +71,9 @@ object Formatter {
         if (info.shantenNum == 1) {
             val goodShapeAdvance = info.goodShapeAdvance
             if (goodShapeAdvance != null && goodShapeAdvance.isNotEmpty()) {
-                val goodShapeCount = goodShapeAdvance.size * 4
+                val goodShapeCount = info.goodShapeAdvanceNum
                 println()
-                println("${messages.goodShapeAdvance} (${info.goodShapeAdvanceNum}${messages.types}${goodShapeCount}${messages.tiles}):")
+                println("${messages.goodShapeAdvance} (${goodShapeAdvance.size}${messages.types}${goodShapeCount}${messages.tiles}):")
                 println(formatTiles(goodShapeAdvance.sorted()))
             }
         }
@@ -102,8 +102,8 @@ object Formatter {
     private fun formatShantenWithGot(info: ShantenWithGot) {
         println("${messages.discardChoice}:")
         info.discardToAdvance.forEach { (discard, advance) ->
-            val advanceCount = advance.advance.size * 4
-            println("  ${messages.discard}$discard: ${advance.advanceNum}${messages.types}${advanceCount}${messages.tiles}${messages.advance}")
+            val advanceCount = advance.advanceNum
+            println("  ${messages.discard}$discard: ${advance.advance.size}${messages.types}${advanceCount}${messages.tiles}${messages.advance}")
             println("    ${messages.advanceTiles}: ${formatTiles(advance.advance.sorted())}")
         }
     }
@@ -180,8 +180,8 @@ object Formatter {
                 if (shanten.discardToAdvance.isNotEmpty()) {
                     println("    ${messages.discardChoice}:")
                     shanten.discardToAdvance.forEach { (discard, advance) ->
-                        val advanceCount = advance.advance.size * 4
-                        println("      ${messages.discard}$discard: ${advance.advanceNum}${messages.types}${advanceCount}${messages.tiles}")
+                        val advanceCount = advance.advanceNum
+                        println("      ${messages.discard}$discard: ${advance.advance.size}${messages.types}${advanceCount}${messages.tiles}")
                         println("        ${messages.advanceTiles}: ${formatTiles(advance.advance.sorted())}")
                     }
                 }
@@ -196,8 +196,8 @@ object Formatter {
             if (pon.discardToAdvance.isNotEmpty()) {
                 println("    ${messages.discardChoice}:")
                 pon.discardToAdvance.forEach { (discard, advance) ->
-                    val advanceCount = advance.advance.size * 4
-                    println("      ${messages.discard}$discard: ${advance.advanceNum}${messages.types}${advanceCount}${messages.tiles}")
+                    val advanceCount = advance.advanceNum
+                    println("      ${messages.discard}$discard: ${advance.advance.size}${messages.types}${advanceCount}${messages.tiles}")
                     println("        ${messages.advanceTiles}: ${formatTiles(advance.advance.sorted())}")
                 }
             }
