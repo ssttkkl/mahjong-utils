@@ -39,8 +39,17 @@ from mahjong_utils.shanten import shanten
 result = shanten(parse_tiles("34568m235p68s"))
 result.shanten
 # 1
+result.structural_shanten
+# 1
 result.advance
 # {3m, 6m, 7m, 8m, 1p, 2p, 3p, 4p, 5p, 6s, 7s, 8s}
+
+# 结构听牌但自家已用完全部和牌张时，两个向听数会不同
+result = shanten(parse_tiles("111z222z333z4444z"))
+result.shanten
+# 1
+result.structural_shanten
+# 0
 ```
 
 ### 摸牌何切分析
@@ -50,6 +59,8 @@ from mahjong_utils.shanten import shanten
 
 result = shanten(parse_tiles("112233p44556s127z"))
 result.shanten
+# 1
+result.structural_shanten
 # 1
 result.discard_to_advance
 # {1p: ShantenWithoutGot(shanten=2, advance={2z, 7z, 1p, 4p, 3s, 6s, 1z}, advance_num=22, good_shape_advance=None, good_shape_advance_num=None),
