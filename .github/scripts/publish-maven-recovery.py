@@ -15,7 +15,14 @@ files = {}
 for path in Path('artifacts').rglob('*'):
     if not path.is_file() or '/0.8.0/' not in path.as_posix():
         continue
-    relative = 'io/github/ssttkkl/' + path.as_posix().split('/io/github/ssttkkl/', 1)[1]
+    if path.name.endswith(('.md5', '.sha1', '.sha256', '.sha512')):
+        continue
+    artifact = path.as_posix().split('/io/github/ssttkkl/', 1)[1].split('/')[0]
+    origin = path.parts[1]
+    owner = 'maven-ubuntu-latest' if artifact.endswith('-linuxx64') else 'maven-windows-latest' if artifact.endswith('-mingwx64') else 'maven-macos-latest'
+    if origin != owner:
+        continue
+    relative = 'io/github/ssttkkl/'  + path.as_posix().split('/io/github/ssttkkl/', 1)[1]
     data = path.read_bytes()
     if relative in files and files[relative] != data:
         raise SystemExit('Conflicting platform artifact: ' + relative)
