@@ -7,7 +7,7 @@
 
 @SerialName(value = &quot;ShantenWithFuroChance&quot;)
 
-data class [ShantenWithFuroChance](index.md)(val shantenNum: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), val canRon: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html), val pass: [ShantenWithoutGot](../-shanten-without-got/index.md)?, val chi: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[Tatsu](../../mahjongutils.models/-tatsu/index.md), [ShantenWithGot](../-shanten-with-got/index.md)&gt;, val pon: [ShantenWithGot](../-shanten-with-got/index.md)?, val minkan: [ShantenWithoutGot](../-shanten-without-got/index.md)?) : [Shanten](../-shanten/index.md)
+data class [ShantenWithFuroChance](index.md)(val shantenNum: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), val canRon: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html), val pass: [ShantenWithoutGot](../-shanten-without-got/index.md)?, val chi: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[Tatsu](../../mahjongutils.models/-tatsu/index.md), [ShantenWithGot](../-shanten-with-got/index.md)&gt;, val pon: [ShantenWithGot](../-shanten-with-got/index.md)?, val minkan: [ShantenWithoutGot](../-shanten-without-got/index.md)?, val structuralShantenNum: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = shantenNum) : [Shanten](../-shanten/index.md)
 
 有副露机会的手牌的向听信息
 
@@ -15,7 +15,7 @@ data class [ShantenWithFuroChance](index.md)(val shantenNum: [Int](https://kotli
 
 | | |
 |---|---|
-| [ShantenWithFuroChance](-shanten-with-furo-chance.md) | [common]<br>constructor(shantenNum: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), canRon: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html), pass: [ShantenWithoutGot](../-shanten-without-got/index.md)?, chi: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[Tatsu](../../mahjongutils.models/-tatsu/index.md), [ShantenWithGot](../-shanten-with-got/index.md)&gt;, pon: [ShantenWithGot](../-shanten-with-got/index.md)?, minkan: [ShantenWithoutGot](../-shanten-without-got/index.md)?) |
+| [ShantenWithFuroChance](-shanten-with-furo-chance.md) | [common]<br>constructor(shantenNum: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), canRon: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html), pass: [ShantenWithoutGot](../-shanten-without-got/index.md)?, chi: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[Tatsu](../../mahjongutils.models/-tatsu/index.md), [ShantenWithGot](../-shanten-with-got/index.md)&gt;, pon: [ShantenWithGot](../-shanten-with-got/index.md)?, minkan: [ShantenWithoutGot](../-shanten-without-got/index.md)?, structuralShantenNum: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = shantenNum) |
 
 ## Properties
 
@@ -26,4 +26,5 @@ data class [ShantenWithFuroChance](index.md)(val shantenNum: [Int](https://kotli
 | [minkan](minkan.md) | [common]<br>val [minkan](minkan.md): [ShantenWithoutGot](../-shanten-without-got/index.md)?<br>明杠后的向听信息（若无法明杠则为null） |
 | [pass](pass.md) | [common]<br>val [pass](pass.md): [ShantenWithoutGot](../-shanten-without-got/index.md)?<br>Pass后的向听信息 |
 | [pon](pon.md) | [common]<br>val [pon](pon.md): [ShantenWithGot](../-shanten-with-got/index.md)?<br>碰后的向听信息（若无法碰则为null） |
-| [shantenNum](shanten-num.md) | [common]<br>open override val [shantenNum](shanten-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)<br>向听数 |
+| [shantenNum](shanten-num.md) | [common]<br>open override val [shantenNum](shanten-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)<br>向听数，考虑自己手牌和副露中已用满的牌。 |
+| [structuralShantenNum](structural-shanten-num.md) | [common]<br>@EncodeDefault<br>open override val [structuralShantenNum](structural-shanten-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)<br>结构向听数，不将自己手牌和副露中已用满的和牌张排除在外。 |

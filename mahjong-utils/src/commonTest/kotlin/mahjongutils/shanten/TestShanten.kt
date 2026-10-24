@@ -1,8 +1,13 @@
 package mahjongutils.shanten
 
 import mahjongutils.models.Tile
+import mahjongutils.models.Pon
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class TestShanten {
     private fun tester(
@@ -257,6 +262,50 @@ class TestShanten {
                 advance = (Tile.all.filter { it.num != 0 } - Tile.parseTiles("12345z").toSet()).toSet(),
                 advanceNum = 115
             )
+        )
+    }
+
+    @Test
+    fun testWaitOnFifthCopyIsNotTenpai() {
+        val thirteenTiles = Tile.parseTiles("111z222z333z4444z")
+        assertEquals(13, thirteenTiles.size)
+
+        val thirteenTileResult = shanten(thirteenTiles).shantenInfo.asWithoutGot
+        assertEquals(1, thirteenTileResult.shantenNum)
+        assertEquals(0, thirteenTileResult.structuralShantenNum)
+        assertTrue(thirteenTileResult.advance.isEmpty())
+
+        val furoResult = shanten(
+            Tile.parseTiles("111z222z333z4z"),
+            listOf(Pon(Tile.get("4z")))
+        ).shantenInfo.asWithoutGot
+        assertEquals(1, furoResult.shantenNum)
+        assertEquals(0, furoResult.structuralShantenNum)
+
+        val fourteenTiles = Tile.parseTiles("111z222z3333z4444z")
+        assertEquals(14, fourteenTiles.size)
+
+        val fourteenTileResult = shanten(fourteenTiles).shantenInfo.asWithGot
+        assertEquals(1, fourteenTileResult.shantenNum)
+        assertEquals(0, fourteenTileResult.structuralShantenNum)
+        assertTrue(fourteenTileResult.discardToAdvance.values.any { it.structuralShantenNum == 0 })
+        assertTrue(fourteenTileResult.discardToAdvance.values.all { it.shantenNum > 0 })
+    }
+
+    @Test
+    fun testStructuralShantenIsSerializedEvenWhenDifferentFromShanten() {
+        val shantenInfo = ShantenWithoutGot(
+            shantenNum = 1,
+            structuralShantenNum = 0,
+            advance = emptySet(),
+            advanceNum = 0,
+        )
+
+        val serialized = Json.encodeToString(ShantenWithoutGot.serializer(), shantenInfo)
+        assertTrue(serialized.contains("\"structuralShantenNum\":0"))
+        assertEquals(
+            0,
+            Json.decodeFromString(ShantenWithoutGot.serializer(), serialized).structuralShantenNum,
         )
     }
 

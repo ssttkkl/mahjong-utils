@@ -10,6 +10,7 @@ import {
 import { Tile } from '../models'
 
 function checkShantenWithoutGot (match: ShantenWithoutGot, actual: ShantenWithoutGot): void {
+  expect(actual.structuralShantenNum).toEqual(match.structuralShantenNum ?? match.shantenNum)
   expect(actual).toMatchObject({
     ...match,
     advance: expect.arrayContaining(match.advance),
@@ -30,6 +31,7 @@ function checkShantenWithoutGot (match: ShantenWithoutGot, actual: ShantenWithou
 }
 
 function checkShantenWithGot (match: ShantenWithGot, actual: ShantenWithGot): void {
+  expect(actual.structuralShantenNum).toEqual(match.structuralShantenNum ?? match.shantenNum)
   const match_: any = { ...match }
   delete match_.discardToAdvance
   delete match_.ankanToAdvance
@@ -57,6 +59,7 @@ test('regularShanten-withoutGot', () => {
 
   checkShantenWithoutGot({
     shantenNum: 2,
+    structuralShantenNum: 2,
     advance: Tile.parseTiles('3678m12345p678s')!,
     advanceNum: 40,
     goodShapeAdvance: null,
@@ -75,6 +78,7 @@ test('chitoiShanten-withoutGot', () => {
 
   checkShantenWithoutGot({
     shantenNum: 1,
+    structuralShantenNum: 1,
     advance: Tile.parseTiles('6s12z')!,
     advanceNum: 9,
     goodShapeAdvanceNum: 0,
@@ -93,6 +97,7 @@ test('shanten-withoutGot', () => {
 
   checkShantenWithoutGot({
     shantenNum: 0,
+    structuralShantenNum: 0,
     advance: Tile.parseTiles('123456789p')!,
     advanceNum: 23,
     goodShapeAdvance: null,
@@ -111,6 +116,7 @@ test('regularShanten-withoutGot', () => {
 
   checkShantenWithoutGot({
     shantenNum: 2,
+    structuralShantenNum: 2,
     advance: Tile.parseTiles('3678m12345p678s')!,
     advanceNum: 40,
     goodShapeAdvance: null,
@@ -128,9 +134,11 @@ test('regularShanten-withGot', () => {
   )
   checkShantenWithGot({
     shantenNum: 2,
+    structuralShantenNum: 2,
     discardToAdvance: new Map([
       [Tile.byText('5p')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('3678m1234p3678s')!,
         advanceNum: 40,
         goodShapeAdvance: null,
@@ -142,6 +150,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('3s')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('3678m12345p678s')!,
         advanceNum: 40,
         goodShapeAdvance: null,
@@ -153,6 +162,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('2p')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('3678m345p3678s')!,
         advanceNum: 36,
         goodShapeAdvance: null,
@@ -164,6 +174,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('8m')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('36m1245p37s')!,
         advanceNum: 27,
         goodShapeAdvance: null,
@@ -175,6 +186,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('6s')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('7m1245p38s')!,
         advanceNum: 24,
         goodShapeAdvance: null,
@@ -186,6 +198,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('8s')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('7m1245p36s')!,
         advanceNum: 24,
         goodShapeAdvance: null,
@@ -197,6 +210,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('6m')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('8m1245p37s')!,
         advanceNum: 24,
         goodShapeAdvance: null,
@@ -208,6 +222,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('3m')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('8m1245p37s')!,
         advanceNum: 24,
         goodShapeAdvance: null,
@@ -219,6 +234,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('3p')!, {
         shantenNum: 2,
+        structuralShantenNum: 2,
         advance: Tile.parseTiles('7m25p37s')!,
         advanceNum: 17,
         goodShapeAdvance: null,
@@ -230,6 +246,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('5m')!, {
         shantenNum: 3,
+        structuralShantenNum: 3,
         advance: Tile.parseTiles('2345678m12345p3678s')!,
         advanceNum: 53,
         goodShapeAdvance: null,
@@ -241,6 +258,7 @@ test('regularShanten-withGot', () => {
       }],
       [Tile.byText('4m')!, {
         shantenNum: 3,
+        structuralShantenNum: 3,
         advance: Tile.parseTiles('345678m12345p3678s')!,
         advanceNum: 49,
         goodShapeAdvance: null,
@@ -264,9 +282,11 @@ test('chitoiShanten-withGot', () => {
   )
   checkShantenWithGot({
     shantenNum: 1,
+    structuralShantenNum: 1,
     discardToAdvance: new Map([
       [Tile.byText('8m')!, {
         shantenNum: 1,
+        structuralShantenNum: 1,
         advance: Tile.parseTiles('345s')!,
         advanceNum: 9,
         goodShapeAdvance: [],
@@ -278,6 +298,7 @@ test('chitoiShanten-withGot', () => {
       }],
       [Tile.byText('3s')!, {
         shantenNum: 1,
+        structuralShantenNum: 1,
         advance: Tile.parseTiles('8m45s')!,
         advanceNum: 9,
         goodShapeAdvance: [],
@@ -289,6 +310,7 @@ test('chitoiShanten-withGot', () => {
       }],
       [Tile.byText('4s')!, {
         shantenNum: 1,
+        structuralShantenNum: 1,
         advance: Tile.parseTiles('8m35s')!,
         advanceNum: 9,
         goodShapeAdvance: [],
@@ -300,6 +322,7 @@ test('chitoiShanten-withGot', () => {
       }],
       [Tile.byText('5s')!, {
         shantenNum: 1,
+        structuralShantenNum: 1,
         advance: Tile.parseTiles('8m34s')!,
         advanceNum: 9,
         goodShapeAdvance: [],
@@ -323,9 +346,11 @@ test('kokushiShanten-withGot', () => {
   )
   checkShantenWithGot({
     shantenNum: 3,
+    structuralShantenNum: 3,
     discardToAdvance: new Map([
       [Tile.byText('2s')!, {
         shantenNum: 3,
+        structuralShantenNum: 3,
         advance: Tile.parseTiles('2467z')!,
         advanceNum: 16,
         goodShapeAdvance: null,
@@ -337,6 +362,7 @@ test('kokushiShanten-withGot', () => {
       }],
       [Tile.byText('6s')!, {
         shantenNum: 3,
+        structuralShantenNum: 3,
         advance: Tile.parseTiles('2467z')!,
         advanceNum: 16,
         goodShapeAdvance: null,
@@ -348,6 +374,7 @@ test('kokushiShanten-withGot', () => {
       }],
       [Tile.byText('3s')!, {
         shantenNum: 3,
+        structuralShantenNum: 3,
         advance: Tile.parseTiles('2467z')!,
         advanceNum: 16,
         goodShapeAdvance: null,
@@ -371,9 +398,11 @@ test('shanten-withGot', () => {
   )
   checkShantenWithGot({
     shantenNum: 1,
+    structuralShantenNum: 1,
     discardToAdvance: new Map([
       [Tile.byText('1z')!, {
         shantenNum: 1,
+        structuralShantenNum: 1,
         advance: Tile.parseTiles('36s27z')!,
         advanceNum: 13,
         goodShapeAdvance: Tile.parseTiles('27z')!,
@@ -385,6 +414,7 @@ test('shanten-withGot', () => {
       }],
       [Tile.byText('2z')!, {
         shantenNum: 1,
+        structuralShantenNum: 1,
         advance: Tile.parseTiles('36s17z')!,
         advanceNum: 13,
         goodShapeAdvance: Tile.parseTiles('17z')!,
@@ -396,6 +426,7 @@ test('shanten-withGot', () => {
       }],
       [Tile.byText('7z')!, {
         shantenNum: 1,
+        structuralShantenNum: 1,
         advance: Tile.parseTiles('36s12z')!,
         advanceNum: 13,
         goodShapeAdvance: Tile.parseTiles('12z')!,
@@ -407,6 +438,7 @@ test('shanten-withGot', () => {
       }],
       [Tile.byText('6s')!, {
         shantenNum: 1,
+        structuralShantenNum: 1,
         advance: Tile.parseTiles('127z')!,
         advanceNum: 9,
         goodShapeAdvance: [],
@@ -433,9 +465,11 @@ test('furoChanceShanten', () => {
   expect(result).toMatchObject({
     shantenInfo: {
       shantenNum: 0,
+      structuralShantenNum: 0,
       pass: null,
       pon: null,
       minkan: null
     }
   })
+  expect(result.shantenInfo.structuralShantenNum).toBe(result.shantenInfo.shantenNum)
 })

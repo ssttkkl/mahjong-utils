@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Set, Dict, Generic, TypeVar, List, cast
 
-from pydantic import BaseModel
+from pydantic import BaseModel, root_validator
 from pydantic.generics import GenericModel
 from typing_extensions import Self
 
@@ -13,6 +13,13 @@ from mahjong_utils.models.tile import Tile
 
 class Shanten(BaseModel, ABC):
     shanten: int
+    structural_shanten: int
+
+    @root_validator(pre=True)
+    def _default_structural_shanten(cls, values):
+        if "structural_shanten" not in values:
+            values = {**values, "structural_shanten": values.get("shanten")}
+        return values
 
     @abstractmethod
     def __encode__(self) -> dict:
@@ -86,6 +93,7 @@ class ShantenWithoutGot(CommonShanten):
         return dict(
             type="ShantenWithoutGot",
             shantenNum=self.shanten,
+            structuralShantenNum=self.structural_shanten,
             advance=[t.__encode__() for t in self.advance],
             advanceNum=self.advance_num,
             goodShapeAdvance=[t.__encode__() for t in self.good_shape_advance]
@@ -103,6 +111,7 @@ class ShantenWithoutGot(CommonShanten):
     def __decode__(cls, data: dict) -> "ShantenWithoutGot":
         return ShantenWithoutGot(
             shanten=data["shantenNum"],
+            structural_shanten=data.get("structuralShantenNum", data["shantenNum"]),
             advance=set(Tile.__decode__(x) for x in data["advance"]),
             advance_num=data["advanceNum"],
             good_shape_advance=set(Tile.__decode__(x) for x in data["goodShapeAdvance"])
@@ -128,6 +137,7 @@ class ShantenWithGot(CommonShanten):
         return dict(
             type="ShantenWithGot",
             shantenNum=self.shanten,
+            structuralShantenNum=self.structural_shanten,
             discardToAdvance=dict((k.__encode__(), v.__encode__()) for (k, v) in self.discard_to_advance.items()),
             ankanToAdvance=dict((k.__encode__(), v.__encode__()) for (k, v) in self.ankan_to_advance.items())
         )
@@ -136,6 +146,7 @@ class ShantenWithGot(CommonShanten):
     def __decode__(cls, data: dict) -> "ShantenWithGot":
         return ShantenWithGot(
             shanten=data["shantenNum"],
+            structural_shanten=data.get("structuralShantenNum", data["shantenNum"]),
             discard_to_advance=dict(
                 (Tile.__decode__(k), ShantenWithoutGot.__decode__(v))
                 for (k, v) in data["discardToAdvance"].items()),
@@ -155,6 +166,7 @@ class ShantenWithFuroChance(Shanten):
         return {
             'type': "ShantenWithFuroChance",
             'shantenNum': self.shanten,
+            'structuralShantenNum': self.structural_shanten,
             'pass': self.pass_.__encode__()
             if self.pass_ is not None else None,
             'chi': dict((k.__encode__(), v.__encode__()) for (k, v) in self.chi.items()),
@@ -168,6 +180,7 @@ class ShantenWithFuroChance(Shanten):
     def __decode__(cls, data: dict) -> "ShantenWithFuroChance":
         return ShantenWithFuroChance(
             shanten=data["shantenNum"],
+            structural_shanten=data.get("structuralShantenNum", data["shantenNum"]),
             pass_=ShantenWithoutGot.__decode__(data["pass"])
             if data["pass"] is not None else None,
             chi=dict((Tatsu.__decode__(k), ShantenWithGot.__decode__(v)) for (k, v) in data["chi"].items()),
@@ -199,6 +212,10 @@ class ShantenResult(GenericModel, Generic[T_Shanten, T_HandPattern], ABC):
     @property
     def shanten(self) -> int:
         return self.shanten_info.shanten
+
+    @property
+    def structural_shanten(self) -> int:
+        return self.shanten_info.structural_shanten
 
 
 class CommonShantenResult(ShantenResult[CommonShanten, T_HandPattern], GenericModel, Generic[T_HandPattern], ABC):

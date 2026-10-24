@@ -5,4 +5,4 @@
 [common]\
 open override val [shantenNum](shanten-num.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
 
-向听数
+向听数，考虑自己手牌和副露中已用满的牌。

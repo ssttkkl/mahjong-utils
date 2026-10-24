@@ -32,7 +32,11 @@ data class ShantenWithFuroChance(
     /**
      * 明杠后的向听信息（若无法明杠则为null）
      */
-    val minkan: ShantenWithoutGot?
+    val minkan: ShantenWithoutGot?,
+    /**
+     * 结构向听数，不将自己手牌和副露中已用满的和牌张排除在外。
+     */
+    @kotlinx.serialization.EncodeDefault override val structuralShantenNum: Int = shantenNum
 ) : Shanten
 
 
