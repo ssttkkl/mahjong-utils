@@ -11,6 +11,8 @@
   "scripts": {
     "build": "rimraf ./dist && tsc",
     "test": "jest",
+    "test:package": "node scripts/test-package.js",
+    "prepack": "npm run build",
     "lint": "eslint src/**/*.ts --fix",
     "format": "prettier-eslint \"src/**/*.ts\""
   },
