@@ -132,7 +132,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setup(
     name="mahjong-utils",
-    version="0.7.7",
+    version="0.8.0",
     author="ssttkkl",
     author_email="huang.wen.long@hotmail.com",
     license="MIT",
