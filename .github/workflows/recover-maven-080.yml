@@ -1,13 +1,20 @@
 name: Recover Maven 0.8.0
 on:
   workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: Prior successful signed build run to reuse (leave blank to build)
+        type: string
+        default: ''
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: recover-maven-080
   cancel-in-progress: false
 jobs:
   build:
+    if: inputs.build_run_id == ''
     strategy:
       fail-fast: false
       matrix:
@@ -53,6 +60,7 @@ jobs:
           path: source/build/central-recovery/
           if-no-files-found: error
   publish:
+    if: always() && (needs.build.result == 'success' || (needs.build.result == 'skipped' && inputs.build_run_id != ''))
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 40
@@ -60,6 +68,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.build_run_id || github.run_id }}
           pattern: maven-*
           path: artifacts
       - uses: actions/setup-python@v5
