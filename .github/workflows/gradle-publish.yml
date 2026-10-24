@@ -85,49 +85,13 @@ jobs:
       run: |
         ./gradlew publishMingwX64PublicationToSonatypeRepository
 
-  publish_npm:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v4
-        name: Set up Node.js
-        with:
-          node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: 'gradle'
-
-      - name: Cache Kotlin/Native compiler
-        id: cache-konan
-        uses: actions/cache@v3
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan
-
-      - name: Publish mahjong-utils-entry for JS/WASM
-        run: |
-          ./gradlew publishJsPackageToNpmjsRegistry
-          ./gradlew publishWasmJsPackageToNpmjsRegistry
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
   finalize:
     runs-on: ubuntu-latest
-    needs: [create_staging_repository, publish, publish_npm]
+    needs: [create_staging_repository, publish]
     if: ${{ always() && needs.create_staging_repository.result == 'success' }}
     steps:
       - name: Discard
-        if: ${{ needs.publish.result != 'success' || needs.publish_npm.result != 'success' }}
+        if: ${{ needs.publish.result != 'success' }}
         uses: nexus-actions/drop-nexus-staging-repo@main
         with:
           username: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
@@ -135,7 +99,7 @@ jobs:
           staging_repository_id: ${{ needs.create_staging_repository.outputs.repository_id }}
           base_url: https://ossrh-staging-api.central.sonatype.com/service/local/
       - name: Release
-        if: ${{ needs.publish.result == 'success' && needs.publish_npm.result == 'success' }}
+        if: ${{ needs.publish.result == 'success' }}
         uses: nexus-actions/release-nexus-staging-repo@main
         with:
           username: ${{ secrets.CENTRAL_PORTAL_USERNAME }}

@@ -10,9 +10,10 @@ on:
     branches: [ "main" ]
   release:
     types: [published]
+  workflow_dispatch:
 
 permissions:
-  id-token: write
+  contents: read
 
 
 jobs:
@@ -38,8 +39,34 @@ jobs:
       - run: yarn test:package
         working-directory: js-lib
 
-      - run: npm publish
-        working-directory: js-lib
-        if: ${{ github.event_name == 'release' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  publish:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tooling
+      - uses: actions/checkout@v4
+        with:
+          ref: 964f603761c91dd6b570c472675fcab12ca4897b
+          path: source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --global npm@11.6.2
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: ./gradlew :mahjong-utils-entry:assembleJsPackage :mahjong-utils-entry:assembleWasmJsPackage
+        working-directory: source
+      - run: yarn install --immutable && yarn build && yarn test --runInBand && yarn test:package
+        working-directory: source/js-lib
+      - name: Publish exact release packages through OIDC
+        run: python tooling/.github/scripts/publish-npm-080.py
