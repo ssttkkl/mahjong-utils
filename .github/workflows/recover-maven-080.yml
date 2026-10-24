@@ -5,7 +5,7 @@ on:
       build_run_id:
         description: Prior successful signed build run to reuse (leave blank to build)
         type: string
-        default: '' 
+        default: ''
 permissions:
   contents: read
   actions: read
