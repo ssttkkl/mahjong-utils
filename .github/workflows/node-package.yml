@@ -35,6 +35,9 @@ jobs:
       - run: yarn test
         working-directory: js-lib
 
+      - run: yarn test:package
+        working-directory: js-lib
+
       - run: npm publish
         working-directory: js-lib
         if: ${{ github.event_name == 'release' }}
