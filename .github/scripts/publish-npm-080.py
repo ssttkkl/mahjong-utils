@@ -23,7 +23,7 @@ for name, directory in packages:
     p.write_text(json.dumps(data,indent=2)+'\n')
     packed=json.loads(subprocess.check_output(['npm','pack','--json'],cwd=directory,text=True))[0]
     tarball=directory/packed['filename']
-    assert any(f['path']==data.get('main','index.js') for f in packed['files']), 'Entrypoint missing'
+    assert any(f['path']==data.get('main','index.js').removeprefix('./') for f in packed['files']), 'Entrypoint missing'
     try:
         with urllib.request.urlopen('https://registry.npmjs.org/'+name+'/0.8.0',timeout=30):
             print(name,'0.8.0 exists; skip without overwrite',flush=True);continue
